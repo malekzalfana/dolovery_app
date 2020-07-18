@@ -37,8 +37,8 @@ class _ProductImageState extends State<ProductImage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  height: 150,
-                  width: 150,
+                  height: 180,
+                  width: 180,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(

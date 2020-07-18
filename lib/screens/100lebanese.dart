@@ -239,7 +239,7 @@ class _TabsDemoState extends State<TabsDemo> {
                               return GridView.count(
                                 crossAxisCount: 2,
                                 childAspectRatio:
-                                    MediaQuery.of(context).size.height / 1000,
+                                    MediaQuery.of(context).size.height / 1150,
                                 controller: new ScrollController(
                                     keepScrollOffset: false),
                                 shrinkWrap: true,

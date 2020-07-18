@@ -10,6 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../screens/100lebanese.dart';
 import '../screens/profile.dart';
+import 'package:dolovery_app/widgets/shopImage.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -367,7 +368,7 @@ class HomeScreenState extends State<HomeScreen> {
                     return GridView.count(
                       crossAxisCount: 2,
                       childAspectRatio:
-                          MediaQuery.of(context).size.height / 1000,
+                          MediaQuery.of(context).size.height / 1100,
                       controller: new ScrollController(keepScrollOffset: false),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
@@ -587,7 +588,7 @@ class HomeScreenState extends State<HomeScreen> {
                     return GridView.count(
                       crossAxisCount: 2,
                       childAspectRatio:
-                          MediaQuery.of(context).size.height / 1000,
+                          MediaQuery.of(context).size.height / 1100,
                       controller: new ScrollController(keepScrollOffset: false),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
@@ -640,6 +641,55 @@ class HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "Pet Shops",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26.0,
+                    fontFamily: 'Axiforma',
+                    color: Colors.black,
+                  ),
+                ),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ProfileScreen()));
+                    },
+                    child: Image.asset("assets/images/fullfilldolovery.png",
+                        height: 23))
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: StreamBuilder(
+              stream: Firestore.instance.collection('shops').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  print(snapshot);
+                  return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                          children: List<Widget>.generate(10, (int index) {
+                        // print(categories[index]);
+                        return ShopImage(
+                            shopName: snapshot.data.documents[1]['name'],
+                            shopImage: snapshot.data.documents[1]['image'],
+                            shopTime:
+                                snapshot.data.documents[1]['time'].toString());
+                      })));
+                } else if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                }
+                return Center(child: CircularProgressIndicator());
+              },
             ),
           ),
         ],
