@@ -51,7 +51,7 @@ class _ProductImageState extends State<ProductImage> {
                     child: Image.network(productImage, height: 120, width: 120),
                   )),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0, bottom: 2),
                 child: Text(
                   productName,
                   textAlign: TextAlign.left,
@@ -59,6 +59,7 @@ class _ProductImageState extends State<ProductImage> {
                     fontWeight: FontWeight.bold,
                     fontSize: 13.5,
                     fontFamily: 'Axiforma',
+                    height: 1.2,
                     color: Colors.black,
                   ),
                 ),
