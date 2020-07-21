@@ -11,6 +11,7 @@ import 'package:hexcolor/hexcolor.dart';
 import '../screens/100lebanese.dart';
 import '../screens/profile.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
+import 'package:dolovery_app/main.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -98,13 +99,16 @@ class HomeScreenState extends State<HomeScreen> {
                 left: 20.0, right: 10.0, top: 0.0, bottom: 10.0),
             child: Row(
               children: <Widget>[
-                Text(
-                  "What are you looking for?",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.black,
+                GestureDetector(
+                  onTap: () {},
+                  child: Text(
+                    "What are you looking for?",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0,
+                      fontFamily: 'Axiforma',
+                      color: Colors.black,
+                    ),
                   ),
                 )
               ],
@@ -293,10 +297,7 @@ class HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   GestureDetector(
-                    onTap: () {
-                      // Navigator.of(context).pop();
-                      // _welcomePopUp(context, "Malek Zalfana");
-                    },
+                    onTap: () {},
                     child: Padding(
                       padding: const EdgeInsets.only(top: 40.0, left: 15),
                       child: Column(
@@ -570,8 +571,7 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
                 GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProfileScreen()));
+                      () {};
                     },
                     child: Image.asset("assets/images/fullfilldolovery.png",
                         height: 23))

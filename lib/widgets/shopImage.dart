@@ -75,7 +75,7 @@ class _ShopImageState extends State<ShopImage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(top: 10.0, left: 10),
+                padding: const EdgeInsets.only(top: 10.0, left: 14),
                 child: Text(
                   shopName,
                   textAlign: TextAlign.left,
@@ -91,9 +91,9 @@ class _ShopImageState extends State<ShopImage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(top: 0.0, left: 10),
+                padding: const EdgeInsets.only(top: 0.0, left: 14),
                 child: Text(
-                  shopTime,
+                  shopTime + " mins",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
