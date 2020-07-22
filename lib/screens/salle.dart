@@ -4,347 +4,174 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:flutter_svg/svg.dart';
 // ignore: unused_import
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:dolovery_app/widgets/salle.dart';
 
-class ProfileScreen extends StatefulWidget {
+class SalleScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return FormScreenState();
   }
 }
 
-class FormScreenState extends State<ProfileScreen> {
-  String _address;
-  String _streetaddress;
-  String _landmark;
-  String _city;
-  String _apartment;
-  String _phone;
+// String finalDate = '';
 
+getCurrentDate() {
+  final DateTime now = DateTime.now();
+  final DateFormat formatter = DateFormat('yMMMMd');
+  final String formatted = formatter.format(now);
+  return formatted; // s
+}
+
+class FormScreenState extends State<SalleScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  Widget _phoneNumber() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-      child: TextFormField(
-        style: new TextStyle(
-          fontFamily: "Axiforma",
-        ),
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          // focusedBorder: InputBorder.none,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[200], width: 1.0),
-          ),
-          // errorBorder: InputBorder.none,
-          // disabledBorder: InputBorder.none,
-          labelText: "Phone Number",
-
-          // contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-          fillColor: Colors.grey[300],
-        ),
-        maxLength: 10,
-        keyboardType: TextInputType.phone,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Phone number is Required';
-          }
-
-          return null;
-        },
-        onSaved: (String value) {
-          _phone = value;
-        },
-      ),
-    );
-  }
-
-  var currentSelectedValue;
-  static const deviceTypes = ["Beirut", "Tripoli", "Saida"];
-
-  Widget _address1Build() {
-    String _selectedCity = "Beirut";
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-      child: Container(
-        // padding: EdgeInsets.symmetric(horizontal: 20),
-        width: MediaQuery.of(context).size.width,
-        child: FormField<String>(
-          builder: (FormFieldState<String> state) {
-            return InputDecorator(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-
-                // focusedBorder: InputBorder.none,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey[200], width: 1.0),
-                ),
-              ),
-
-              // errorBorder: InputBorder.none,
-              // disabledBorder: InputBorder.none,),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  hint: Text("Select City"),
-                  isExpanded: true,
-                  value: currentSelectedValue,
-                  isDense: true,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedCity = newValue;
-                      currentSelectedValue = _selectedCity;
-                    });
-                    print(currentSelectedValue);
-                  },
-                  items: deviceTypes.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  // Widget _address1Build() {
-  //   return TextFormField(
-  //     decoration: InputDecoration(
-  //         border: InputBorder.none,
-  //         focusedBorder: InputBorder.none,
-  //         enabledBorder: InputBorder.none,
-  //         errorBorder: InputBorder.none,
-  //         disabledBorder: InputBorder.none,
-  //         labelText: 'City'),
-  //     maxLength: 10,
-  //     style: new TextStyle(
-  //       fontFamily: "Axiforma",
-  //     ),
-  //     validator: (String value) {
-  //       if (value.isEmpty) {
-  //         return 'City is Required';
-  //       }
-
-  //       return null;
-  //     },
-  //     onSaved: (String value) {
-  //       _address1 = value;
-  //     },
-  //   );
-  // }
-
-  Widget _address2Build() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            // focusedBorder: InputBorder.none,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey[200], width: 1.0),
-            ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
-            labelText: 'Street Adress'),
-        maxLength: 95,
-        style: new TextStyle(
-          fontFamily: "Axiforma",
-        ),
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Street Adress is Required';
-          }
-
-          return null;
-        },
-        onSaved: (String value) {
-          _streetaddress = value;
-        },
-      ),
-    );
-  }
-
-  Widget _address3Build() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            // focusedBorder: InputBorder.none,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey[200], width: 1.0),
-            ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
-            labelText: 'Landmark'),
-        maxLength: 50,
-        style: new TextStyle(
-          fontFamily: "Axiforma",
-        ),
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Landmark is Required';
-          }
-
-          return null;
-        },
-        onSaved: (String value) {
-          _landmark = value;
-        },
-      ),
-    );
-  }
-
-  Widget _address4Build() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            // focusedBorder: InputBorder.none,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey[200], width: 1.0),
-            ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
-
-            labelText: 'Apartment / Floor'),
-        maxLength: 50,
-        style: new TextStyle(
-          fontFamily: "Axiforma",
-        ),
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Apartment is Required';
-          }
-
-          return null;
-        },
-        onSaved: (String value) {
-          _apartment = value;
-        },
-      ),
-    );
-  }
+  final weeks = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        leading: BackButton(color: Colors.black),
-        centerTitle: true,
-        title: Text(
-          "Enter Details",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            fontSize: 16.0,
-            fontFamily: 'Axiforma',
-            color: Colors.black,
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.all(44),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                // Text(
-                //   "Enter the details",
-                //   textAlign: TextAlign.left,
-                //   style: TextStyle(
-                //     fontWeight: FontWeight.w800,
-                //     fontSize: 28.0,
-                //     fontFamily: 'Axiforma',
-                //     color: Colors.black,
-                //   ),
-                // ),
-                _phoneNumber(),
-                _address1Build(),
-                _address2Build(),
-                _address3Build(),
-                _address4Build(),
-                SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        side: BorderSide(color: Colors.red)),
-                    onPressed: () {
-                      if (!_formKey.currentState.validate()) {
-                        return;
-                      }
-
-                      _formKey.currentState.save();
-
-                      print("adding profile");
-                      void inputData() async {
-                        final FirebaseUser user =
-                            await FirebaseAuth.instance.currentUser();
-                        final uid = user.uid;
-                        final name = user.displayName;
-                        final uemail = user.email;
-                        // print("USERNAME")
-                        Firestore.instance.collection("users").add({
-                          "Full Name": name,
-                          "Number": _phone,
-                          "Email": uemail,
-                          "City": _city,
-                          "Address": _address,
-                          "Street Address": _streetaddress,
-                          "Landmark": _landmark,
-                          "Apartment": _apartment,
-                        });
-
-                        // here you write the codes to input the data into firestore
-                      }
-
-                      inputData();
-
-                      //Send to API
-                    },
-                    color: Colors.redAccent[700],
-                    textColor: Colors.white,
-                    minWidth: 0,
-                    height: 0,
-                    // padding: EdgeInsets.zero,
-                    padding: EdgeInsets.only(
-                        left: 20, top: 10, right: 20, bottom: 10),
-                    child: Text(
-                      "Confirm",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15.0,
-                        fontFamily: 'Axiforma',
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+    double height = MediaQuery.of(context).size.height;
+    return ListView(
+      children: <Widget>[
+        // AppBar(
+        //   backgroundColor: Colors.transparent,
+        //   elevation: 0.0,
+        //   automaticallyImplyLeading: false,
+        //   //BackButton(color: Colors.black),
+        //   centerTitle: true,
+        //   title: Text(
+        //     getCurrentDate(),
+        //     textAlign: TextAlign.center,
+        //     style: TextStyle(
+        //       fontWeight: FontWeight.w800,
+        //       fontSize: 16.0,
+        //       fontFamily: 'Axiforma',
+        //       color: Colors.black,
+        //     ),
+        //   ),
+        // ),
+        Padding(
+          padding: const EdgeInsets.all(13.0),
+          child: Text(
+            getCurrentDate(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+              fontSize: 16.0,
+              fontFamily: 'Axiforma',
+              color: Colors.black,
             ),
           ),
         ),
-      ),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+          child: Container(
+            // color: Colors.orangeAccent,
+            height: 150,
+            child: Hero(
+              tag: 'salle',
+              child: Image.asset(
+                'assets/images/lebsec.png',
+                width: 400,
+                height: 150,
+              ),
+            ),
+          ),
+        ),
+        DefaultTabController(
+            length: 4,
+            initialIndex: 0,
+            child: Column(
+              children: <Widget>[
+                TabBar(
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.grey[500],
+                    tabs: [
+                      Tab(text: 'Week 1'),
+                      Tab(text: 'Week 2'),
+                      Tab(text: 'Week 3'),
+                      Tab(text: 'Week 4')
+                    ]),
+                Container(
+                  height: height - 345,
+                  child: TabBarView(children: [
+                    buildSalleList(),
+                    buildSalleList(),
+                    buildSalleList(),
+                    buildSalleList(),
+                  ]),
+                )
+              ],
+            ))
+      ],
+    );
+  }
+
+  Center buildSalleList() {
+    return Center(
+      child: Padding(
+          padding:
+              const EdgeInsets.only(left: 5.0, right: 5, top: 0, bottom: 0),
+          child: StreamBuilder(
+            stream: Firestore.instance
+                .collection('products')
+                .where('salle', isEqualTo: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView(
+                  // MediaQuery.of(context).size.height / 1100,
+                  controller: new ScrollController(keepScrollOffset: true),
+                  // shrinkWrap: true,
+                  // scrollDirection: Axis.vertical,
+                  children: List.generate(5, (index) {
+                    return Column(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20.0, top: 13),
+                            child: Text(
+                              weeks[index],
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 16.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SalleImage(
+                            salleName: snapshot.data.documents[0]['name'],
+                            sallePhoto: snapshot.data.documents[0]['image'],
+                            salleArabicName: snapshot.data.documents[0]
+                                ['arabicname'],
+                            salleItems:
+                                snapshot.data.documents[0]['item'].toString(),
+                            salleTime:
+                                snapshot.data.documents[0]['time'].toString(),
+                            salleStartingPrice: snapshot
+                                .data.documents[0]['starting_price']
+                                .toString())
+                      ],
+                    );
+                  }).toList(),
+                );
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          )),
     );
   }
 }

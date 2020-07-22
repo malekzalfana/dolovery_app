@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'tools/hex.dart';
 import 'screens/home.dart';
 import 'screens/profile.dart';
+import 'screens/salle.dart';
 
 void main() => runApp(MyApp());
 
@@ -54,8 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedItemIndex = 0;
   final List pages = [
     HomeScreen(),
-    // Salle(),
-    null,
+    SalleScreen(),
+    // null,
     ProfileScreen()
   ];
 
