@@ -79,6 +79,22 @@ class FormScreenState extends State<ProfileScreen> {
     }
   }
 
+  bool newuser = true;
+  Future setupVerification() async {
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final uid = user.uid;
+    // final name = user.displayName;
+    // final uemail = user.email;
+    // print("USERNAME")
+    var usercollection =
+        await Firestore.instance.collection("users").document(uid).get();
+
+    if (usercollection.exists) {
+      newuser = false;
+    }
+    return newuser = false;
+  }
+
   void getPhoneNumber(String phoneNumber) async {
     PhoneNumber number =
         await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber, 'US');
@@ -361,22 +377,39 @@ class FormScreenState extends State<ProfileScreen> {
                           final uid = user.uid;
                           final name = user.displayName;
                           final uemail = user.email;
+                          Map<String, dynamic> thisuser = {
+                            "fullname": name,
+                            "number": _phone,
+                            "email": uemail,
+                            // "id": uid,
+                            "city": _city,
+                            "street_address": _streetaddress,
+                            "landmark": _landmark,
+                            "apartment": _apartment,
+                          };
+
                           // print("USERNAME")
-                          Firestore.instance.collection("users").add({
-                            "Full Name": name,
-                            "Number": _phone,
-                            "Email": uemail,
-                            "City": _city,
-                            // "Address": _address,
-                            "Street Address": _streetaddress,
-                            "Landmark": _landmark,
-                            "Apartment": _apartment,
-                          });
+                          Firestore.instance
+                              .collection("users")
+                              .document(uid)
+                              .setData(thisuser);
+                          //     .add({
+                          //   "fullname": name,
+                          //   "number": _phone,
+                          //   "email": uemail,
+                          //   "id": uid,
+                          //   "city": _city,
+                          //   "street_address": _streetaddress,
+                          //   "landmark": _landmark,
+                          //   "apartment": _apartment,
+                          // });
 
                           // here you write the codes to input the data into firestore
                         }
 
                         inputData();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
 
                         //Send to API
                       },

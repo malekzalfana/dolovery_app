@@ -46,6 +46,27 @@ class HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  bool newuser = true;
+  Future setupVerification() async {
+    print("USER BEING WATCHED");
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final uid = user.uid;
+    final name = user.displayName;
+    final uemail = user.email;
+    // print("USERNAME")
+    var usercollection =
+        await Firestore.instance.collection("users").document(uid).get();
+
+    if (usercollection.exists) {
+      newuser = false;
+    }
+    // return newuser = false;
+  }
+
+  void runsetupVerification() {
+    setupVerification().then((value) => null);
+  }
+
   void signOut() {
     FirebaseAuth.instance.signOut().then((onValue) {
       print("JUST LOGGED OUT");
@@ -74,11 +95,24 @@ class HomeScreenState extends State<HomeScreen> {
       // _onLoading();
       // var docRef = db.collection("cities").doc("SF");
       print("signed in " + user.uid);
-      Navigator.of(context).pop();
-      _welcomePopUp(context, user.displayName);
+
       // used before user.uid
+      bool notsetup;
+      double welcomeheight;
       final newUser =
           await Firestore.instance.collection("users").document(user.uid).get();
+      if (newUser.exists) {
+        print('USER EXISTSSSSSSSSSSSSSSSSSSSSSSS');
+        notsetup = false;
+        welcomeheight = 350;
+      } else {
+        print('NOTTTTTTTTTT EXISTSSSSSSSSSSSSSSSSSSSSSSS');
+        notsetup = true;
+        welcomeheight = 400;
+      }
+      Navigator.of(context).pop();
+
+      _welcomePopUp(context, user.displayName, notsetup, welcomeheight);
       setState(() {
         _readtosignin = true;
       });
@@ -123,10 +157,30 @@ class HomeScreenState extends State<HomeScreen> {
         final FirebaseUser user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
         print('signed in ' + user.displayName);
+        bool notsetup;
+        double welcomeheight;
+        final newUser = await Firestore.instance
+            .collection("users")
+            .document(user.uid)
+            .get();
+        if (newUser.exists) {
+          print('USER EXISTSSSSSSSSSSSSSSSSSSSSSSS');
+          notsetup = false;
+          welcomeheight = 350;
+        } else {
+          print('NOTTTTTTTTTT EXISTSSSSSSSSSSSSSSSSSSSSSSS');
+          notsetup = true;
+          welcomeheight = 400;
+        }
+        Navigator.of(context).pop();
+
+        _welcomePopUp(context, user.displayName, notsetup, welcomeheight);
+        setState(() {
+          _readtosignin = true;
+        });
         return user;
       }
     } catch (e) {
-      // print("dddddddddddddddddddddddddddddddddddddddddd");
       if (e.message ==
           "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {
         showError(
@@ -139,7 +193,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   bool showerrortextbool = false;
-  void _welcomePopUp(context, name) {
+  void _welcomePopUp(context, name, bool notsetup, double welcomeheight) {
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -147,7 +201,7 @@ class HomeScreenState extends State<HomeScreen> {
         context: context,
         builder: (BuildContext bc) {
           return Container(
-            height: 400,
+            height: welcomeheight,
             child: Column(
               children: <Widget>[
                 Align(
@@ -193,30 +247,33 @@ class HomeScreenState extends State<HomeScreen> {
                     color: Colors.redAccent[700],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        side: BorderSide(color: Colors.red)),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProfileScreen()));
-                    },
-                    color: Colors.redAccent[700],
-                    textColor: Colors.white,
-                    minWidth: 0,
-                    height: 0,
-                    // padding: EdgeInsets.zero,
-                    padding: EdgeInsets.only(
-                        left: 20, top: 10, right: 20, bottom: 10),
-                    child: Text(
-                      "Setup your profile",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13.0,
-                        fontFamily: 'Axiforma',
-                        color: Colors.white,
+                Visibility(
+                  visible: notsetup,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          side: BorderSide(color: Colors.red)),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ProfileScreen()));
+                      },
+                      color: Colors.redAccent[700],
+                      textColor: Colors.white,
+                      minWidth: 0,
+                      height: 0,
+                      // padding: EdgeInsets.zero,
+                      padding: EdgeInsets.only(
+                          left: 20, top: 10, right: 20, bottom: 10),
+                      child: Text(
+                        "Setup your profile",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13.0,
+                          fontFamily: 'Axiforma',
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -266,7 +323,10 @@ class HomeScreenState extends State<HomeScreen> {
                     child: GestureDetector(
                       child:
                           Image.asset('assets/images/fblogin.jpg', width: 300),
-                      onTap: () => signUpWithFacebook(),
+                      onTap: () {
+                        hideSignIn();
+                        signUpWithFacebook();
+                      },
                     ),
                   ),
                 ),
