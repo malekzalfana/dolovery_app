@@ -10,6 +10,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../screens/100lebanese.dart';
+import '../screens/supplements.dart';
 import '../screens/profile.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
 import 'package:dolovery_app/main.dart';
@@ -656,35 +657,35 @@ class HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              height: 135,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.07),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 8), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProfileScreen()));
-                    },
-                    child: Padding(
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SupplementsScreen()));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                height: 135,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.07),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 8), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Padding(
                       padding: const EdgeInsets.only(top: 40.0, left: 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -712,12 +713,12 @@ class HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                  ),
-                  Image.asset(
-                    'assets/images/supsec.png',
-                    width: 120,
-                  )
-                ],
+                    Image.asset(
+                      'assets/images/supsec.png',
+                      width: 120,
+                    )
+                  ],
+                ),
               ),
             ),
           ),
