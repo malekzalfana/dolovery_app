@@ -15,6 +15,7 @@ import 'tools/hex.dart';
 import 'screens/home.dart';
 import 'screens/profile.dart';
 import 'screens/salle.dart';
+import 'screens/profilemain.dart';
 
 void main() => runApp(MyApp());
 
@@ -57,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
     HomeScreen(),
     SalleScreen(),
     // null,
-    ProfileScreen()
+    ProfileMainScreen()
   ];
 
   @override
