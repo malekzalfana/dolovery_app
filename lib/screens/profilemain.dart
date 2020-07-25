@@ -5,9 +5,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // ignore: unused_import
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:intl/intl.dart';
-// import 'package:dolovery_app/widgets/shopList.dart';
+import 'package:dolovery_app/widgets/recentorder.dart';
 
 class ProfileMainScreen extends StatefulWidget {
+  dynamic thisUser;
+  // ProfileMainScreen(thisUser);
+  ProfileMainScreen({Key key, @required this.thisUser}) : super(key: key);
+
+  // @override
+  // FormScreenState createState() => new FormScreenState();
+
   @override
   State<StatefulWidget> createState() {
     return FormScreenState();
@@ -44,15 +51,14 @@ class FormScreenState extends State<ProfileMainScreen> {
         await Firestore.instance.collection("users").document(uid).get();
 
     print(this_user.data['number']);
+    print('ss');
+    print(widget.thisUser);
+    print('ss');
 
     if (this_user.exists) {
       newuser = false;
     }
     // return this_user;
-  }
-
-  void runsetupVerification() {
-    setupVerification().then((value) => null);
   }
 
   @override
@@ -75,7 +81,7 @@ class FormScreenState extends State<ProfileMainScreen> {
                     children: <Widget>[
                       Center(
                         child: Text(
-                          this_user.data['fullname'],
+                          widget.thisUser.data['fullname'],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 40.0,
@@ -89,15 +95,200 @@ class FormScreenState extends State<ProfileMainScreen> {
                   ),
                 ),
                 Text(
-                  this_user.data['email'],
+                  widget.thisUser.data['email'],
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14.0,
                     fontFamily: 'Axiforma',
-                    color: Colors.black,
+                    color: Colors.black54,
                   ),
                 ),
               ],
+            ),
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 30.0, top: 30, bottom: 10),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Recent Orders",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13.0,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                ),
+                StreamBuilder(
+                  stream: Firestore.instance.collection('shops').snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      print(snapshot);
+                      return SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: List<Widget>.generate(3, (int index) {
+                                // print(categories[index]);
+                                return RecentOrder(
+                                    orderDate: "12 May, 2020",
+                                    orderCount: '3',
+                                    orderImage:
+                                        'https://cdn.cnn.com/cnnnext/dam/assets/180316113418-travel-with-a-dog-3-full-169.jpeg',
+                                    orderPrice: 7500.toString());
+                              })));
+                    } else if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  },
+                )
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 30.0, top: 30, bottom: 10),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "My Addresses",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13.0,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                ),
+                for (var address in widget.thisUser.data["Address"])
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        right: 30.0, bottom: 10, left: 30, top: 12),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      // color: Colors.grey,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15.0),
+                            child: Image.asset(
+                              widget.thisUser.data["default_address"] == 5555612
+                                  ? 'assets/icons/address_enabled.png'
+                                  : 'assets/icons/address_disabled.png',
+                              height: 30.0,
+                              width: 30.0,
+                            ),
+                          ),
+                          Container(
+                              // color: Colors.green,
+                              margin: new EdgeInsets.only(left: 10.0, right: 0),
+                              child: Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10.0, left: 6, bottom: 5),
+                                            child: Text(
+                                              address["name"],
+                                              // textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                                fontFamily: 'Axiforma',
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0, bottom: 8),
+                                              child: Text(
+                                                address["street_address"],
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  height: 1.1,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 14.5,
+                                                  fontFamily: 'Axiforma',
+                                                  color: Colors.grey[500],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0, left: 30, bottom: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          side: BorderSide(color: Colors.grey[200])),
+                      onPressed: () {},
+                      color: Colors.grey[200],
+                      elevation: 0,
+                      textColor: Colors.white,
+                      minWidth: 0,
+                      height: 0,
+                      // padding: EdgeInsets.zero,
+                      padding: EdgeInsets.only(
+                          left: 20, top: 10, right: 20, bottom: 10),
+                      child: Text(
+                        "Log Out",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13.0,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             )
           ],
         ),

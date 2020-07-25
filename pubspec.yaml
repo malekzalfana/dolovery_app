@@ -68,4 +68,5 @@ flutter:
         - asset: assets/fonts/Axiforma-Regular.ttf
         - asset: assets/fonts/Axiforma-Bold.ttf
         - asset: assets/fonts/Axiforma-SemiBold.ttf
+        - asset: assets/fonts/Axiforma-ExtraBold.ttf
         - asset: assets/fonts/Axiforma-Heavy.ttf

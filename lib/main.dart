@@ -18,6 +18,52 @@ import 'screens/salle.dart';
 import 'screens/profilemain.dart';
 
 void main() => runApp(MyApp());
+var this_user;
+String name;
+String uid;
+String uemail;
+bool newuser = true;
+Future setupVerification() async {
+  print("USER BEING WATCHED");
+  final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+  uid = user.uid;
+  name = user.displayName;
+  uemail = user.email;
+  // print("USERNAME")
+  this_user = await Firestore.instance.collection("users").document(uid).get();
+
+  print(this_user.data['number']);
+
+  if (this_user.exists) {
+    newuser = false;
+  }
+  print("newuser is:" + newuser.toString());
+  // return this_user;
+}
+
+List pages;
+// @override
+profilestatus() {
+  var profilescreen;
+  setupVerification();
+  if (newuser == false) {
+    profilescreen = ProfileMainScreen(
+      thisUser: this_user,
+    );
+    print('user NOT set up');
+  } else {
+    profilescreen = ProfileScreen();
+    print('user already set up');
+  }
+  pages = [
+    HomeScreen(),
+    SalleScreen(),
+    // profilescreen
+    // null,
+    // ProfileScreen(),
+    ProfileMainScreen(thisUser: this_user),
+  ];
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -54,12 +100,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
   int _selectedItemIndex = 0;
-  final List pages = [
-    HomeScreen(),
-    SalleScreen(),
-    // null,
-    ProfileMainScreen()
-  ];
 
   @override
   void dispose() {
@@ -85,6 +125,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    setupVerification();
+    profilestatus();
     var size = MediaQuery.of(context).size;
 
     /*24 is for notification bar on Android*/
@@ -116,6 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.all(14.0),
         child: GestureDetector(
           onTap: () {
+            print('page changed');
             setState(() {
               _selectedItemIndex = index;
             });
