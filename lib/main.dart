@@ -32,7 +32,7 @@ Future setupVerification() async {
   // print("USERNAME")
   this_user = await Firestore.instance.collection("users").document(uid).get();
 
-  print(this_user.data['number']);
+  // print(this_user.data['number']);
 
   if (this_user.exists) {
     newuser = false;
@@ -57,7 +57,8 @@ profilestatus() {
   }
   pages = [
     HomeScreen(),
-    SalleScreen(),
+    null,
+    // SalleScreen(),
     // profilescreen
     // null,
     // ProfileScreen(),

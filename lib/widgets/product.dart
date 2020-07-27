@@ -40,6 +40,14 @@ class _ProductImageState extends State<ProductImage> {
                   height: 180,
                   width: 180,
                   decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 2.2,
+                        blurRadius: 2.5,
+                        offset: Offset(0, 4), // changes position of shadow
+                      ),
+                    ],
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
@@ -51,7 +59,7 @@ class _ProductImageState extends State<ProductImage> {
                     child: Image.network(productImage, height: 120, width: 120),
                   )),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0, bottom: 2),
+                padding: const EdgeInsets.only(top: 15.0, bottom: 2),
                 child: Text(
                   productName,
                   textAlign: TextAlign.left,

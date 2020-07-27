@@ -64,6 +64,7 @@ class FormScreenState extends State<ProfileMainScreen> {
   @override
   Widget build(BuildContext context) {
     setupVerification();
+    setState(() {});
     // final this_user = setupVerification();
     return Scaffold(
       body: SingleChildScrollView(
@@ -84,7 +85,7 @@ class FormScreenState extends State<ProfileMainScreen> {
                           widget.thisUser.data['fullname'],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 40.0,
+                            fontSize: 38.0,
                             height: 1.1,
                             fontFamily: 'Axiforma',
                             color: Colors.black,
@@ -97,10 +98,20 @@ class FormScreenState extends State<ProfileMainScreen> {
                 Text(
                   widget.thisUser.data['email'],
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontSize: 14.0,
                     fontFamily: 'Axiforma',
-                    color: Colors.black54,
+                    color: Colors.black45,
+                  ),
+                ),
+                Text(
+                  widget.thisUser.data['number'],
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.0,
+                    letterSpacing: 1.1,
+                    fontFamily: 'Axiforma',
+                    color: Colors.black45,
                   ),
                 ),
               ],
@@ -167,12 +178,21 @@ class FormScreenState extends State<ProfileMainScreen> {
                     ),
                   ),
                 ),
-                for (var address in widget.thisUser.data["Address"])
+                for (var address in widget.thisUser.data["address"])
                   Padding(
                     padding: const EdgeInsets.only(
                         right: 30.0, bottom: 10, left: 30, top: 12),
                     child: Container(
                       decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 2.2,
+                              blurRadius: 2.5,
+                              offset:
+                                  Offset(0, 4), // changes position of shadow
+                            ),
+                          ],
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       // color: Colors.grey,
@@ -182,7 +202,7 @@ class FormScreenState extends State<ProfileMainScreen> {
                           Padding(
                             padding: const EdgeInsets.only(left: 15.0),
                             child: Image.asset(
-                              widget.thisUser.data["default_address"] == 5555612
+                              widget.thisUser.data["address"] == address["name"]
                                   ? 'assets/icons/address_enabled.png'
                                   : 'assets/icons/address_disabled.png',
                               height: 30.0,

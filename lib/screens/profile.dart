@@ -22,6 +22,7 @@ class FormScreenState extends State<ProfileScreen> {
   // String _city;
   String _apartment = "";
   String _phone = "";
+  String _fullname = "";
   String _city = "";
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -298,13 +299,22 @@ class FormScreenState extends State<ProfileScreen> {
       _apartment = value;
     } else if (fieldname == "Phone") {
       _phone = value;
+    } else if (fieldname == "Full Name") {
+      _fullname = value;
       print(_phone);
     }
   }
 
   void onFieldChange() {
     // print()
-    var fields = <String>[_phone, _city, _streetaddress, _landmark, _apartment];
+    var fields = <String>[
+      _fullname,
+      _phone,
+      _city,
+      _streetaddress,
+      _landmark,
+      _apartment
+    ];
     bool allgood = true;
     print(fields);
     // for (var i = 0; i <= fields.length; i++) {
@@ -524,6 +534,45 @@ class FormScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget _fullnameBuild() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            // focusedBorder: InputBorder.none,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey[500], width: 1.0),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            // errorBorder: InputBorder.none,
+            // disabledBorder: InputBorder.none,
+            labelText: 'Full Name'),
+        maxLength: 50,
+        style: new TextStyle(
+          fontFamily: "Axiforma",
+        ),
+        // validator: (String value) {
+        //   if (value.isEmpty) {
+        //     return 'Landmark is Required';
+        //   }
+
+        //   return null;
+        // },
+        onSaved: (String value) {
+          _fullname = value;
+          // onFieldChange();
+        },
+        onChanged: (value) {
+          onTextChange("Full Name", value);
+          onFieldChange();
+        },
+      ),
+    );
+  }
+
   Widget _address4Build() {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
@@ -601,6 +650,7 @@ class FormScreenState extends State<ProfileScreen> {
                 //     color: Colors.black,
                 //   ),
                 // ),
+                _fullnameBuild(),
                 _address1Build(),
                 _newPhoneNumber(),
                 _address2Build(),
@@ -629,15 +679,24 @@ class FormScreenState extends State<ProfileScreen> {
                           final uid = user.uid;
                           final name = user.displayName;
                           final uemail = user.email;
-                          Map<String, dynamic> thisuser = {
-                            "fullname": name,
-                            "number": _phone,
-                            "email": uemail,
-                            // "id": uid,
+                          Map<String, dynamic> thisAddress = {
+                            "name": 'Home',
                             "city": _city,
                             "street_address": _streetaddress,
                             "landmark": _landmark,
                             "apartment": _apartment,
+                          };
+                          List addresses = [thisAddress];
+                          Map<String, dynamic> thisuser = {
+                            "fullname": _fullname,
+                            "number": _phone,
+                            "email": uemail,
+                            "address": addresses
+                            // "id": uid,
+                            // "city": _city,
+                            // "street_address": _streetaddress,
+                            // "landmark": _landmark,
+                            // "apartment": _apartment,
                           };
 
                           // print("USERNAME")

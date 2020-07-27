@@ -14,6 +14,7 @@ import '../screens/supplements.dart';
 import '../screens/profile.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
 import 'package:dolovery_app/main.dart';
+import 'package:dolovery_app/widgets/popupproduct.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -535,17 +536,13 @@ class HomeScreenState extends State<HomeScreen> {
                 height: 135,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.07),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 8), // changes position of shadow
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 2.2,
+                      blurRadius: 2.5,
+                      offset: Offset(0, 4), // changes position of shadow
                     ),
                   ],
                 ),
@@ -583,7 +580,7 @@ class HomeScreenState extends State<HomeScreen> {
                     Hero(
                       tag: 'salle',
                       child: Image.asset(
-                        'assets/images/lebsec.png',
+                        'assets/images/salle.png',
                         width: 120,
                       ),
                     )
@@ -605,10 +602,10 @@ class HomeScreenState extends State<HomeScreen> {
                     bottomRight: Radius.circular(10)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.07),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 8), // changes position of shadow
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 2.2,
+                    blurRadius: 2.5,
+                    offset: Offset(0, 4), // changes position of shadow
                   ),
                 ],
               ),
@@ -617,8 +614,8 @@ class HomeScreenState extends State<HomeScreen> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => TabsDemo()));
+                      // Navigator.of(context).push(
+                      //     MaterialPageRoute(builder: (context) => TabsDemo()));
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(top: 40.0, left: 15),
@@ -650,7 +647,7 @@ class HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Image.asset(
-                    'assets/images/lebsec.png',
+                    'assets/images/lebsec.jpg',
                     width: 120,
                   )
                 ],
@@ -659,8 +656,8 @@ class HomeScreenState extends State<HomeScreen> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SupplementsScreen()));
+              // Navigator.of(context).push(
+              //     MaterialPageRoute(builder: (context) => SupplementsScreen()));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -675,10 +672,10 @@ class HomeScreenState extends State<HomeScreen> {
                       bottomRight: Radius.circular(10)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.07),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 8), // changes position of shadow
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 2.2,
+                      blurRadius: 2.5,
+                      offset: Offset(0, 4), // changes position of shadow
                     ),
                   ],
                 ),
@@ -735,10 +732,10 @@ class HomeScreenState extends State<HomeScreen> {
                     bottomRight: Radius.circular(10)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.07),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 8), // changes position of shadow
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 2.2,
+                    blurRadius: 2.5,
+                    offset: Offset(0, 4), // changes position of shadow
                   ),
                 ],
               ),
@@ -818,17 +815,22 @@ class HomeScreenState extends State<HomeScreen> {
                     return GridView.count(
                       crossAxisCount: 2,
                       childAspectRatio:
-                          MediaQuery.of(context).size.height / 1100,
+                          MediaQuery.of(context).size.height / 1200,
                       controller: new ScrollController(keepScrollOffset: false),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       children: List.generate(8, (index) {
-                        return ProductImage(
-                            productName: snapshot.data.documents[0]['name'],
-                            productImage: snapshot.data.documents[0]['image'],
-                            productPrice: snapshot
-                                .data.documents[0]['shop_price']
-                                .toString());
+                        return GestureDetector(
+                          onTap: () {
+                            openProductPopUp(context, snapshot.data);
+                          },
+                          child: ProductImage(
+                              productName: snapshot.data.documents[0]['name'],
+                              productImage: snapshot.data.documents[0]['image'],
+                              productPrice: snapshot
+                                  .data.documents[0]['shop_price']
+                                  .toString()),
+                        );
                       }).toList(),
                     );
                   } else if (snapshot.hasError) {
@@ -915,10 +917,10 @@ class HomeScreenState extends State<HomeScreen> {
                             bottomRight: Radius.circular(10)),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.07),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 8), // changes position of shadow
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 2.2,
+                            blurRadius: 2.5,
+                            offset: Offset(0, 4), // changes position of shadow
                           ),
                         ],
                       ),
@@ -1037,7 +1039,7 @@ class HomeScreenState extends State<HomeScreen> {
                     return GridView.count(
                       crossAxisCount: 2,
                       childAspectRatio:
-                          MediaQuery.of(context).size.height / 1100,
+                          MediaQuery.of(context).size.height / 1200,
                       controller: new ScrollController(keepScrollOffset: false),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
