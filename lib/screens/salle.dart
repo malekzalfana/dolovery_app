@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:dolovery_app/widgets/salle.dart';
+import 'package:dolovery_app/screens/salleitem.dart';
 
 class SalleScreen extends StatefulWidget {
   @override
@@ -75,13 +76,10 @@ class FormScreenState extends State<SalleScreen> {
           child: Container(
             // color: Colors.orangeAccent,
             height: 150,
-            child: Hero(
-              tag: 'salle',
-              child: Image.asset(
-                'assets/images/lebsec.png',
-                width: 400,
-                height: 150,
-              ),
+            child: Image.asset(
+              'assets/images/salle.png',
+              width: 400,
+              height: 150,
             ),
           ),
         ),
@@ -131,7 +129,7 @@ class FormScreenState extends State<SalleScreen> {
                   controller: new ScrollController(keepScrollOffset: true),
                   // shrinkWrap: true,
                   // scrollDirection: Axis.vertical,
-                  children: List.generate(5, (index) {
+                  children: List.generate(1, (index) {
                     return Column(
                       children: <Widget>[
                         Align(
@@ -150,18 +148,30 @@ class FormScreenState extends State<SalleScreen> {
                             ),
                           ),
                         ),
-                        SalleImage(
-                            salleName: snapshot.data.documents[0]['name'],
-                            sallePhoto: snapshot.data.documents[0]['image'],
-                            salleArabicName: snapshot.data.documents[0]
-                                ['arabicname'],
-                            salleItems:
-                                snapshot.data.documents[0]['item'].toString(),
-                            salleTime:
-                                snapshot.data.documents[0]['time'].toString(),
-                            salleStartingPrice: snapshot
-                                .data.documents[0]['starting_price']
-                                .toString())
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    SalleItem(snapshot.data, weeks[index])));
+                          },
+                          child: SalleImage(
+                              salleName: snapshot.data.documents[index]['name'],
+                              sallePhoto: snapshot.data.documents[index]
+                                  ['image'],
+                              salleArabicName: snapshot.data.documents[0]
+                                  ['arabic_name'],
+                              salleItems: snapshot
+                                  .data.documents[index]['items']
+                                  .toString(),
+                              salleTime: snapshot
+                                  .data.documents[index]['salle_time']
+                                  .toString(),
+                              salleID:
+                                  snapshot.data.documents[index].documentID,
+                              salleStartingPrice: snapshot
+                                  .data.documents[index]['shop_price']
+                                  .toString()),
+                        )
                       ],
                     );
                   }).toList(),

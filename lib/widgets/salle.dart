@@ -12,6 +12,7 @@ class SalleImage extends StatefulWidget {
   final String salleTime;
   final String salleItems;
   final String salleStartingPrice;
+  final String salleID;
 
   SalleImage(
       {Key key,
@@ -20,7 +21,8 @@ class SalleImage extends StatefulWidget {
       this.salleArabicName,
       this.salleItems,
       this.salleStartingPrice,
-      this.salleTime})
+      this.salleTime,
+      this.salleID})
       : super(key: key);
 
   @override
@@ -30,7 +32,8 @@ class SalleImage extends StatefulWidget {
       this.salleArabicName,
       this.salleItems,
       this.salleStartingPrice,
-      this.salleTime);
+      this.salleTime,
+      this.salleID);
 }
 
 class _SalleImageState extends State<SalleImage> {
@@ -40,9 +43,11 @@ class _SalleImageState extends State<SalleImage> {
   String salleTime;
   String salleItems;
   String salleStartingPrice;
+  String salleID;
+  // var date = new DateTime.fromMicrosecondsSinceEpoch(timestamp);
 
   _SalleImageState(this.sallePhoto, this.salleName, this.salleArabicName,
-      this.salleItems, this.salleStartingPrice, this.salleTime);
+      this.salleItems, this.salleStartingPrice, this.salleTime, this.salleID);
   // _SalleImageState(this.salleImage);
   @override
   Widget build(BuildContext context) {
@@ -62,10 +67,10 @@ class _SalleImageState extends State<SalleImage> {
                   bottomRight: Radius.circular(10)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.07),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 8), // changes position of shadow
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 2.2,
+                  blurRadius: 2.5,
+                  offset: Offset(0, 4), // changes position of shadow
                 ),
               ],
             ),
@@ -135,7 +140,7 @@ class _SalleImageState extends State<SalleImage> {
                         ),
                       ),
                       Text(
-                        "Starting from " + salleStartingPrice,
+                        "Starting from " + salleStartingPrice + " L.L.",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -149,7 +154,7 @@ class _SalleImageState extends State<SalleImage> {
                   ),
                 ),
                 Hero(
-                  tag: 'salle',
+                  tag: 'salle' + salleID,
                   child: Image.network(sallePhoto, height: 120, width: 120),
                 )
               ],

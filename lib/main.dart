@@ -57,8 +57,8 @@ profilestatus() {
   }
   pages = [
     HomeScreen(),
-    null,
-    // SalleScreen(),
+    // null,
+    SalleScreen(),
     // profilescreen
     // null,
     // ProfileScreen(),
