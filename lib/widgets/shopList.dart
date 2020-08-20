@@ -35,133 +35,136 @@ class _ShopListState extends State<ShopList> {
   @override
   Widget build(BuildContext context) {
     double width = 200; //MediaQuery.of(context).size.width - 22;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          // color: Colors.green,
-          margin: new EdgeInsets.only(left: 12.0, right: 0),
-          child: Container(
-              height: 90,
-              width: 90,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(shopImage),
-                  fit: BoxFit.cover,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            // color: Colors.green,
+            margin: new EdgeInsets.only(left: 12.0, right: 10),
+            child: Container(
+                height: 90,
+                width: 90,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(shopImage),
+                    fit: BoxFit.cover,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.07),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 8), // changes position of shadow
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.07),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 8), // changes position of shadow
+                child: null),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                                              child: Text(
+                          shopName,
+                          // textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            height: 1.1,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(
+                          Icons.timer,
+                          color: Colors.grey[500],
+                          size: 18.0,
+                          semanticLabel: 'time for shop to deliver',
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              shopTime + " mins",
+                              // overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                height: 1.1,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 11.5,
+                                fontFamily: 'Axiforma',
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 1),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Icon(
+                            Icons.location_on,
+                            color: Colors.grey[500],
+                            size: 16.0,
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              shopAddress,
+                              // overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                height: 1.1,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 11.5,
+                                fontFamily: 'Axiforma',
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10)),
               ),
-              child: null),
-        ),
-        // Expanded(
-        //   child: Padding(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       mainAxisAlignment: MainAxisAlignment.start,
-        //       children: <Widget>[
-        //         Row(
-        //           mainAxisAlignment: MainAxisAlignment.start,
-        //           children: <Widget>[
-        //             Padding(
-        //               padding: const EdgeInsets.only(
-        //                   top: 10.0, left: 3, bottom: 10),
-        //               child: Text(
-        //                 shopName,
-        //                 // textAlign: TextAlign.left,
-        //                 style: TextStyle(
-        //                   fontWeight: FontWeight.bold,
-        //                   fontSize: 18,
-        //                   fontFamily: 'Axiforma',
-        //                   color: Colors.black,
-        //                 ),
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //         Row(
-        //           mainAxisSize: MainAxisSize.min,
-        //           mainAxisAlignment: MainAxisAlignment.start,
-        //           children: <Widget>[
-        //             Icon(
-        //               Icons.timer,
-        //               color: Colors.grey[500],
-        //               size: 18.0,
-        //               semanticLabel: 'time for shop to deliver',
-        //             ),
-        //             Expanded(
-        //               child: Padding(
-        //                 padding: const EdgeInsets.only(left: 8.0),
-        //                 child: Text(
-        //                   shopTime + " mins",
-        //                   // overflow: TextOverflow.ellipsis,
-        //                   textAlign: TextAlign.left,
-        //                   style: TextStyle(
-        //                     height: 1.1,
-        //                     fontWeight: FontWeight.normal,
-        //                     fontSize: 12.5,
-        //                     fontFamily: 'Axiforma',
-        //                     color: Colors.grey[500],
-        //                   ),
-        //                 ),
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //         Padding(
-        //           padding: const EdgeInsets.only(top: 1),
-        //           child: Row(
-        //             mainAxisSize: MainAxisSize.min,
-        //             mainAxisAlignment: MainAxisAlignment.start,
-        //             children: <Widget>[
-        //               Align(
-        //                 alignment: Alignment.topCenter,
-        //                 child: Icon(
-        //                   Icons.location_on,
-        //                   color: Colors.grey[500],
-        //                   size: 18.0,
-        //                   semanticLabel:
-        //                       'Text to announce in accessibility modes',
-        //                 ),
-        //               ),
-        //               Expanded(
-        //                 child: Padding(
-        //                   padding: const EdgeInsets.all(8.0),
-        //                   child: Text(
-        //                     shopAddress,
-        //                     // overflow: TextOverflow.ellipsis,
-        //                     textAlign: TextAlign.left,
-        //                     style: TextStyle(
-        //                       height: 1.1,
-        //                       fontWeight: FontWeight.normal,
-        //                       fontSize: 12.5,
-        //                       fontFamily: 'Axiforma',
-        //                       color: Colors.grey[500],
-        //                     ),
-        //                   ),
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // )
-      ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

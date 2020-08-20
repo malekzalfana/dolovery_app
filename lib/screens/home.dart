@@ -11,12 +11,18 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../screens/100lebanese.dart';
 import '../screens/supplements.dart';
+import '../screens/pets.dart';
+import '../screens/shoppage.dart';
 import '../screens/profile.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
 import 'package:dolovery_app/main.dart';
 import 'package:dolovery_app/widgets/popupproduct.dart';
 
 class HomeScreen extends StatefulWidget {
+  final Function() notifyParent;
+  final Function() notifyParent2;
+  // ProfileMainScreen(thisUser);
+  HomeScreen({Key key, @required this.notifyParent, @required this.notifyParent2}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return HomeScreenState();
@@ -381,6 +387,11 @@ class HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  refreshcart(){
+    // print("sssss");
+    widget.notifyParent2();
+  }
+
   String showerrortext = "Error";
   void showError(String text) {
     Navigator.pop(context);
@@ -527,8 +538,15 @@ class HomeScreenState extends State<HomeScreen> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => SalleScreen()));
+              // Navigator.of(context)
+              //     .push(MaterialPageRoute(builder: (context) => SalleScreen() ));
+              // setState(
+              //   () {
+              //     widget._selectedItemIndex = 2;
+              //   },
+              // );
+              print('clicked');
+              widget.notifyParent();
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -577,47 +595,44 @@ class HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    Hero(
-                      tag: 'salle',
-                      child: Image.asset(
-                        'assets/images/salle.png',
-                        width: 120,
-                      ),
+                    Image.asset(
+                      'assets/images/salle.png',
+                      width: 120,
                     )
                   ],
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              height: 135,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 2.2,
-                    blurRadius: 2.5,
-                    offset: Offset(0, 4), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      // Navigator.of(context).push(
-                      //     MaterialPageRoute(builder: (context) => TabsDemo()));
-                    },
-                    child: Padding(
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => TabsDemo()));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                height: 135,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 2.2,
+                      blurRadius: 2.5,
+                      offset: Offset(0, 4), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Padding(
                       padding: const EdgeInsets.only(top: 40.0, left: 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -645,19 +660,19 @@ class HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                  ),
-                  Image.asset(
-                    'assets/images/lebsec.jpg',
-                    width: 120,
-                  )
-                ],
+                    Image.asset(
+                      'assets/images/lebsec.jpg',
+                      width: 120,
+                    )
+                  ],
+                ),
               ),
             ),
           ),
           GestureDetector(
             onTap: () {
-              // Navigator.of(context).push(
-              //     MaterialPageRoute(builder: (context) => SupplementsScreen()));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SupplementsScreen()));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -719,32 +734,35 @@ class HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              height: 135,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 2.2,
-                    blurRadius: 2.5,
-                    offset: Offset(0, 4), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {},
-                    child: Padding(
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => PetsScreen()));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                height: 135,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 2.2,
+                      blurRadius: 2.5,
+                      offset: Offset(0, 4), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Padding(
                       padding: const EdgeInsets.only(top: 40.0, left: 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -772,12 +790,12 @@ class HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                  ),
-                  Image.asset(
-                    'assets/images/petsec.png',
-                    width: 120,
-                  )
-                ],
+                    Image.asset(
+                      'assets/images/petsec.png',
+                      width: 120,
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -809,7 +827,10 @@ class HomeScreenState extends State<HomeScreen> {
               padding:
                   const EdgeInsets.only(left: 5.0, right: 5, top: 0, bottom: 0),
               child: StreamBuilder(
-                stream: Firestore.instance.collection('products').snapshots(),
+                stream: Firestore.instance
+                    .collection('products')
+                    .where('type', isEqualTo: 'lebanese')
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return GridView.count(
@@ -822,7 +843,7 @@ class HomeScreenState extends State<HomeScreen> {
                       children: List.generate(8, (index) {
                         return GestureDetector(
                           onTap: () {
-                            openProductPopUp(context, snapshot.data);
+                            openProductPopUp(context, snapshot.data, refreshcart);
                           },
                           child: ProductImage(
                               productName: snapshot.data.documents[0]['name'],
@@ -1033,7 +1054,7 @@ class HomeScreenState extends State<HomeScreen> {
               padding:
                   const EdgeInsets.only(left: 5.0, right: 5, top: 0, bottom: 0),
               child: StreamBuilder(
-                stream: Firestore.instance.collection('products').snapshots(),
+                stream: Firestore.instance.collection('products').where('type', isEqualTo: 'supplements').snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return GridView.count(
@@ -1044,12 +1065,17 @@ class HomeScreenState extends State<HomeScreen> {
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       children: List.generate(8, (index) {
-                        return ProductImage(
-                            productName: snapshot.data.documents[1]['name'],
-                            productImage: snapshot.data.documents[1]['image'],
-                            productPrice: snapshot
-                                .data.documents[0]['shop_price']
-                                .toString());
+                        return GestureDetector(
+                          onTap: () {
+                            openProductPopUp(context, snapshot.data);
+                          },
+                                                  child: ProductImage(
+                              productName: snapshot.data.documents[0]['name'],
+                              productImage: snapshot.data.documents[0]['image'],
+                              productPrice: snapshot
+                                  .data.documents[0]['shop_price']
+                                  .toString()),
+                        );
                       }).toList(),
                     );
                   } else if (snapshot.hasError) {
@@ -1121,7 +1147,7 @@ class HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: StreamBuilder(
-              stream: Firestore.instance.collection('shops').snapshots(),
+              stream: Firestore.instance.collection('shops').where('type', isEqualTo: 'pets').snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   print(snapshot);
@@ -1130,11 +1156,19 @@ class HomeScreenState extends State<HomeScreen> {
                       child: Row(
                           children: List<Widget>.generate(10, (int index) {
                         // print(categories[index]);
-                        return ShopImage(
-                            shopName: snapshot.data.documents[1]['name'],
-                            shopImage: snapshot.data.documents[1]['image'],
-                            shopTime:
-                                snapshot.data.documents[1]['time'].toString());
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    ShopPage(snapshot.data.documents[1])));
+                          },
+                          child: ShopImage(
+                              shopName: snapshot.data.documents[0]['name'], 
+                              shopIndex:index,
+                              shopImage: snapshot.data.documents[0]['image'],
+                              shopTime: snapshot.data.documents[0]['time']
+                                  .toString()),
+                        );
                       })));
                 } else if (snapshot.hasError) {
                   return Text(snapshot.error.toString());

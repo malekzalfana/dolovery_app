@@ -60,6 +60,9 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyAAijo0phLBRn4Rcy6lMpAr7kE0fd29Sgw"/>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>

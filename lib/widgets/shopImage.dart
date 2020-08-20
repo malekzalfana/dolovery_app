@@ -11,32 +11,31 @@ class ShopImage extends StatefulWidget {
   final String shopTime;
 
   final String shopImage;
+  final int shopIndex;
 
-  ShopImage({Key key, this.shopName, this.shopTime, this.shopImage})
+  ShopImage({Key key, this.shopName, this.shopTime, this.shopImage, this.shopIndex})
       : super(key: key);
 
   @override
   _ShopImageState createState() =>
-      _ShopImageState(this.shopImage, this.shopName, this.shopTime);
+      _ShopImageState(this.shopImage, this.shopName, this.shopTime, this.shopIndex);
 }
 
 class _ShopImageState extends State<ShopImage> {
   String shopImage;
   String shopName;
   String shopTime;
+  int shopIndex;
 
-  _ShopImageState(this.shopImage, this.shopName, this.shopTime);
+  _ShopImageState(this.shopImage, this.shopName, this.shopTime, this.shopIndex);
   // _shopImageState(this.shopImage);
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 10.0, bottom: 20),
-      child: Container(
-        height: 260,
-        // 180
-        width: 180,
-
-        child: Column(
+      child: SizedBox(
+        width: 200,
+              child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
@@ -75,13 +74,14 @@ class _ShopImageState extends State<ShopImage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(top: 10.0, left: 14),
+                padding: const EdgeInsets.only(top: 13.0, left: 14, bottom:6),
                 child: Text(
                   shopName,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 15,
+                    height: 1.1,
                     fontFamily: 'Axiforma',
                     color: Colors.black,
                   ),
@@ -97,7 +97,7 @@ class _ShopImageState extends State<ShopImage> {
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 14,
+                    fontSize: 13.7,
                     fontFamily: 'Axiforma',
                     color: Colors.black54,
                   ),

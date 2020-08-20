@@ -1,3 +1,4 @@
+import 'package:dolovery_app/screens/cart.dart';
 import 'package:dolovery_app/widgets/product.dart';
 
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'screens/home.dart';
 import 'screens/profile.dart';
 import 'screens/salle.dart';
 import 'screens/profilemain.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
 var this_user;
@@ -23,48 +25,25 @@ String name;
 String uid;
 String uemail;
 bool newuser = true;
-Future setupVerification() async {
-  print("USER BEING WATCHED");
-  final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-  uid = user.uid;
-  name = user.displayName;
-  uemail = user.email;
-  // print("USERNAME")
-  this_user = await Firestore.instance.collection("users").document(uid).get();
+// DELETEDDDDDDD
+// Future setupVerification() async {
+//   print("USER BEING WATCHED");
+//   final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+//   if (user != null) {
+//     uid = user.uid;
+//     name = user.displayName;
+//     uemail = user.email;
+//   }
 
-  // print(this_user.data['number']);
+//   // print("USERNAME")
+//   this_user = await Firestore.instance.collection("users").document(uid).get();
 
-  if (this_user.exists) {
-    newuser = false;
-  }
-  print("newuser is:" + newuser.toString());
-  // return this_user;
-}
-
-List pages;
-// @override
-profilestatus() {
-  var profilescreen;
-  setupVerification();
-  if (newuser == false) {
-    profilescreen = ProfileMainScreen(
-      thisUser: this_user,
-    );
-    print('user NOT set up');
-  } else {
-    profilescreen = ProfileScreen();
-    print('user already set up');
-  }
-  pages = [
-    HomeScreen(),
-    // null,
-    SalleScreen(),
-    // profilescreen
-    // null,
-    // ProfileScreen(),
-    ProfileMainScreen(thisUser: this_user),
-  ];
-}
+//   if (this_user.exists) {
+//     newuser = false;
+//   }
+//   print("newuser is:" + newuser.toString());
+//   // return this_user;
+// }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -102,6 +81,45 @@ class _MyHomePageState extends State<MyHomePage> {
   final passwordTextController = TextEditingController();
   int _selectedItemIndex = 0;
 
+  refresh() {
+    setState(() {
+      print(_selectedItemIndex);
+      _selectedItemIndex = 1;
+    });
+  }
+
+  refreshcart() {
+    setState(() {
+      
+    });
+  }
+
+  List pages;
+// @override
+  profilestatus() {
+    var profilescreen;
+    // setupVerification();
+    if (newuser == false) {
+      profilescreen = ProfileMainScreen(
+        thisUser: this_user,
+      );
+      print('user NOT set up');
+    } else {
+      profilescreen = ProfileScreen();
+      print('user already set up');
+    }
+
+    pages = [
+      HomeScreen(notifyParent: refresh, notifyParent2: refreshcart),
+      // null,
+      SalleScreen(),
+      // profilescreen
+      // null,
+      // ProfileScreen(),
+      ProfileMainScreen(thisUser: this_user),
+    ];
+  }
+
   @override
   void dispose() {
     emailTextController.dispose();
@@ -124,23 +142,151 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  // _addtocart() async {
+  //       final prefs = await SharedPreferences.getInstance();
+
+  //       final key = 'cart';
+  //       final value = ['sss','aaa'];
+  //       prefs.setInt(key, value);
+  //       print('saved $value');
+  //     }
+  double items;
+  double total;
+  String type;
+  // Future loadcart() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   // setState(() {
+  //   type = prefs.getString('type');
+  //   total = prefs.getDouble('total');
+  //   items = prefs.getDouble('items');
+  //   // });
+  //   return print(type);
+  //   // print('saved $total');
+  //   // print('saved $type');
+  // }
+  SharedPreferences prefs;
+
   @override
   Widget build(BuildContext context) {
-    setupVerification();
+    // setupVerification();
     profilestatus();
+    // _getPrefs();
+    // loadcart();
     var size = MediaQuery.of(context).size;
 
     /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
+    print(newuser.toString() + 'this is the new user');
     return Scaffold(
-        bottomNavigationBar: Row(
-          children: <Widget>[
-            buildNavItem(context, 'home', true, 0),
-            buildNavItem(context, 'salle', false, 1),
-            buildNavItem(context, 'profile', false, 2)
-          ],
+      
+        bottomNavigationBar: FutureBuilder(
+          future: _getPrefs(),
+
+          // stream: null,
+          builder: (context, snapshot) {
+            print(snapshot);
+            if (/*snapshot.hasData*/ 1 ==1) {
+            return SizedBox(
+              height: prefs.getDouble('items').toInt() > 0 ? 105 : 50,
+              child: Container(
+                color: Colors.redAccent[700],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Visibility(
+                      visible: prefs.getDouble('items').toInt() > 0 ? true : false,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(13, 5, 10, 0),
+                        child: Row(
+                          children: [
+                            Text(
+                              prefs.getDouble('items').toInt().toString() +
+                                  " Items",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.white,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                prefs.getDouble('total').toInt().toString() + "L.L.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16.0,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Spacer(),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: MaterialButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => Cart(newuser)));
+                                },
+                                color: Colors.white.withOpacity(0.25),
+                                textColor: Colors.white,
+                                minWidth: 0,
+                                height: 0,
+                                elevation: 0,
+                                // padding: EdgeInsets.zero,
+                                padding: EdgeInsets.only(
+                                    left: 9, top: 6, right: 9, bottom: 4),
+                                child: Text(
+                                  "OPEN CART",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0,
+                                    fontFamily: 'Axiforma',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+
+                              // IconButton(
+                              //     icon: Icon(
+                              //       Icons.shopping_basket,
+                              //       color: Colors.white,
+                              //       size: 30,
+                              //     ),
+                              //     onPressed: () {
+                              //       // Navigator.of(context).pop();
+                              //     }),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // ),
+                    Container(
+                      color: Colors.white,
+                      child: Row(
+                        children: <Widget>[
+                          buildNavItem(context, 'home', true, 0),
+                          buildNavItem(context, 'salle', false, 1),
+                          buildNavItem(context, 'profile', false, 2)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+            }
+            return CircularProgressIndicator();
+          }
         ),
+
         // appBar: AppBar(
         //   backgroundColor: Colors.white,
         //   title: Text(
@@ -155,15 +301,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return Container(
       height: 50,
       width: MediaQuery.of(context).size.width / 3,
-      child: Padding(
-        padding: const EdgeInsets.all(14.0),
-        child: GestureDetector(
-          onTap: () {
-            print('page changed');
-            setState(() {
-              _selectedItemIndex = index;
-            });
-          },
+      child: GestureDetector(
+        onTap: () {
+          print('page changed');
+          setState(() {
+            _selectedItemIndex = index;
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
           child: Image.asset(
             index == _selectedItemIndex
                 ? 'assets/icons/' + iconname + '2' + '.png'
@@ -174,6 +320,15 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _getPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    // setState(() {
+    //   type = prefs.getString('type');
+    // total = prefs.getDouble('total');
+    // items = prefs.getDouble('items');
+    // });
   }
 
   void _signInPopUp(context) {
@@ -449,3 +604,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 }
+// void refresh(){
+//   print ('refreshed');
+// }

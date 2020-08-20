@@ -152,7 +152,7 @@ class FormScreenState extends State<SalleScreen> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
-                                    SalleItem(snapshot.data, weeks[index])));
+                                    SalleItem(snapshot.data, weeks[index], snapshot.data.documents[index]['serving_prices'], snapshot.data.documents[index]['descriptions'] )));
                           },
                           child: SalleImage(
                               salleName: snapshot.data.documents[index]['name'],

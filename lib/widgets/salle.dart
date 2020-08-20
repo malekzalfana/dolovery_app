@@ -153,10 +153,11 @@ class _SalleImageState extends State<SalleImage> {
                     ],
                   ),
                 ),
-                Hero(
-                  tag: 'salle' + salleID,
-                  child: Image.network(sallePhoto, height: 120, width: 120),
-                )
+                Image.network(sallePhoto, height: 120, width: 120),
+                // Hero(
+                //   tag: 'salle' + salleID,
+                //   child: Image.network(sallePhoto, height: 120, width: 120),
+                // )
               ],
             ),
           ),

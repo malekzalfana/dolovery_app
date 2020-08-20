@@ -13,11 +13,11 @@ class ProfileMainScreen extends StatefulWidget {
   ProfileMainScreen({Key key, @required this.thisUser}) : super(key: key);
 
   // @override
-  // FormScreenState createState() => new FormScreenState();
+  // ProfileScreenState createState() => new ProfileScreenState();
 
   @override
   State<StatefulWidget> createState() {
-    return FormScreenState();
+    return ProfileScreenState();
   }
 }
 
@@ -33,7 +33,7 @@ getCurrentDate() {
 
 var this_user;
 
-class FormScreenState extends State<ProfileMainScreen> {
+class ProfileScreenState extends State<ProfileMainScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String name;
   String uid;
@@ -43,21 +43,24 @@ class FormScreenState extends State<ProfileMainScreen> {
   Future setupVerification() async {
     print("USER BEING WATCHED");
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    uid = user.uid;
-    name = user.displayName;
-    uemail = user.email;
-    // print("USERNAME")
-    this_user =
-        await Firestore.instance.collection("users").document(uid).get();
+    if ( user != null ) {
+      uid = user.uid;
+      name = user.displayName;
+      uemail = user.email;
+      // print("USERNAME")
+      this_user =
+          await Firestore.instance.collection("users").document(uid).get();
 
-    print(this_user.data['number']);
-    print('ss');
-    print(widget.thisUser);
-    print('ss');
+      print(this_user.data['number']);
+      print('ss');
+      print(widget.thisUser);
+      print('ss');
 
-    if (this_user.exists) {
-      newuser = false;
+      if (this_user.exists) {
+        newuser = false;
+      }
     }
+    
     // return this_user;
   }
 
@@ -65,8 +68,78 @@ class FormScreenState extends State<ProfileMainScreen> {
   Widget build(BuildContext context) {
     setupVerification();
     setState(() {});
-    // final this_user = setupVerification();
-    return Scaffold(
+    if (newuser == true) {
+      return Center(
+        child:
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+ crossAxisAlignment: CrossAxisAlignment.center,
+ 
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom:28.0),
+                child: Image.asset("assets/images/profile_illustration.png", width: 330),
+              ),
+              Text(
+          "Let's Get Started",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 23.0,
+            fontFamily: 'Axiforma',
+            color: Colors.black,
+          ),
+        ),
+              Padding(
+                padding: const EdgeInsets.only(top:8.0),
+                child: SizedBox(
+                  width: 320,
+                  // height:200,
+                    child: Text(
+            "Create and account and get everything you need delivered to your doorstep!",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 14.0,
+                fontFamily: 'Axiforma',
+                color: Colors.grey[400],
+            ),
+          ),
+                ),
+              ),
+              Padding(
+            padding: const EdgeInsets.fromLTRB(38,32,38,12),
+            child: MaterialButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            elevation: 0,
+            onPressed: (){},
+            color: Colors.redAccent[700],
+            // disabledColor: Colors.grey[200],
+            textColor: Colors.white,
+            minWidth: MediaQuery.of(context).size.width,
+            height: 0,
+            // padding: EdgeInsets.zero,
+            padding: EdgeInsets.only(
+                left: 33, top: 10, right: 33, bottom: 10),
+            child: Text(
+              "Get Started",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15.0,
+                fontFamily: 'Axiforma',
+                // color: Colors.white,
+              ),
+            ),
+          ),
+          ),
+            ],
+          ),
+      );
+    }
+    else {
+      return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -314,44 +387,9 @@ class FormScreenState extends State<ProfileMainScreen> {
         ),
       ),
     );
+    }
+    
   }
 }
 
-//   Widget displayUserInformation(BuildContext context, AsyncSnapshot snapshot) {
-//     return Column(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: <Widget>[
-//         Padding(
-//           padding: const EdgeInsets.only(top: 100.0),
-//           child: Row(
-//             mainAxisSize: MainAxisSize.max,
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: <Widget>[
-//               Center(
-//                 child: Text(
-//                   snapshot.data.displayName,
-//                   style: TextStyle(
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 40.0,
-//                     height: 1.1,
-//                     fontFamily: 'Axiforma',
-//                     color: Colors.black,
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//         Text(
-//           snapshot.data.email,
-//           style: TextStyle(
-//             fontWeight: FontWeight.bold,
-//             fontSize: 16.0,
-//             fontFamily: 'Axiforma',
-//             color: Colors.black,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
+
