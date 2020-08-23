@@ -68,7 +68,7 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
   int _n = 0;
   bool minimum = true;
   bool maximum = false;
-  
+
   // int serving = 0;
 
   showModalBottomSheet(
@@ -76,6 +76,7 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
         borderRadius: BorderRadius.circular(10.0),
       ),
       context: context,
+      isDismissible: false,
       isScrollControlled: true,
       builder: (BuildContext context) {
         // mpesachecked =false;
@@ -101,14 +102,20 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
             final key = 'cart';
-            String type = data.documents[0]['type'];//prefs.getString('type') == null? 'nothing': prefs.getString('type');
+            String type = data.documents[0][
+                'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
             prefs.setString('type', type);
-            double total = prefs.getDouble('total') == null ? 0 : prefs.getDouble('total') + data.documents[0]['shop_price'];
-            prefs.setDouble('total', total );
+            double total = prefs.getDouble('total') == null
+                ? 0
+                : prefs.getDouble('total') + data.documents[0]['shop_price'];
+            prefs.setDouble('total', total);
+            if (cart == null) {
+              cart = [];
+            }
             cart.add(itemid);
             final value = cart;
             final double items = cart.length.toDouble();
-            prefs.setDouble('items', items );
+            prefs.setDouble('items', items);
             prefs.setStringList(key, value);
             print('saved $value');
             print('saved $total');
@@ -134,21 +141,24 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
             final key = 'cart';
-            String type = data.documents[0]['type'];//prefs.getString('type') == null? 'nothing': prefs.getString('type');
+            String type = data.documents[0][
+                'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
             prefs.setString('type', type);
-            double total = prefs.getDouble('total') == null ? 0 : prefs.getDouble('total') - data.documents[0]['shop_price'];
-            prefs.setDouble('total', total );
+            double total = prefs.getDouble('total') == null
+                ? 0
+                : prefs.getDouble('total') - data.documents[0]['shop_price'];
+            prefs.setDouble('total', total);
             cart.remove(itemid);
             final value = cart;
             final double items = cart.length.toDouble();
-            prefs.setDouble('items', items );
+            prefs.setDouble('items', items);
             prefs.setStringList(key, value);
             print('saved $value');
             print('saved $total');
             print('saved $type');
             print('saved $items');
           }
-          
+
           int countOccurrencesUsingLoop(List<String> list, String element) {
             if (list == null || list.isEmpty) {
               return 0;
@@ -163,20 +173,23 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
 
             return count;
           }
+
           _setnumber() async {
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
             mystate(() {
-            _n = countOccurrencesUsingLoop(cart, data.documents[0].documentID);
-            if (_n > 0) {
-              minimum = false;
-            }
+              _n =
+                  countOccurrencesUsingLoop(cart, data.documents[0].documentID);
+              if (_n > 0) {
+                minimum = false;
+              }
             });
             // print (count)
           }
+
           _setnumber();
           // print(_n);
-          
+
           // print(_setnumber());
 
           return Container(
@@ -344,7 +357,7 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 30.0, right: 30.0, top: 0, bottom: 10),
+                        left: 30.0, right: 30.0, top: 0, bottom: 35),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(

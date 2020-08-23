@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:dolovery_app/screens/cart.dart';
 import 'package:dolovery_app/widgets/product.dart';
 
@@ -89,9 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   refreshcart() {
-    setState(() {
-      
-    });
+    print('refreshed');
+    setState(() {});
   }
 
   List pages;
@@ -179,113 +180,120 @@ class _MyHomePageState extends State<MyHomePage> {
     final double itemWidth = size.width / 2;
     print(newuser.toString() + 'this is the new user');
     return Scaffold(
-      
         bottomNavigationBar: FutureBuilder(
-          future: _getPrefs(),
-
-          // stream: null,
-          builder: (context, snapshot) {
-            print(snapshot);
-            if (/*snapshot.hasData*/ 1 ==1) {
-            return SizedBox(
-              height: prefs.getDouble('items').toInt() > 0 ? 105 : 50,
-              child: Container(
-                color: Colors.redAccent[700],
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Visibility(
-                      visible: prefs.getDouble('items').toInt() > 0 ? true : false,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(13, 5, 10, 0),
-                        child: Row(
-                          children: [
-                            Text(
-                              prefs.getDouble('items').toInt().toString() +
-                                  " Items",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                                fontFamily: 'Axiforma',
-                                color: Colors.white,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                prefs.getDouble('total').toInt().toString() + "L.L.",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 16.0,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: MaterialButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Cart(newuser)));
-                                },
-                                color: Colors.white.withOpacity(0.25),
-                                textColor: Colors.white,
-                                minWidth: 0,
-                                height: 0,
-                                elevation: 0,
-                                // padding: EdgeInsets.zero,
-                                padding: EdgeInsets.only(
-                                    left: 9, top: 6, right: 9, bottom: 4),
-                                child: Text(
-                                  "OPEN CART",
+            future: _getPrefs(),
+            builder: (context, snapshot) {
+              print(snapshot);
+              int cart_items = prefs.getDouble('items') != null
+                  ? prefs.getDouble('items').toInt()
+                  : 0;
+              int cart_total = prefs.getDouble('total') != null
+                  ? prefs.getDouble('total').toInt()
+                  : 0;
+              cart_total = cart_total == null ? 0 : cart_total;
+              cart_total = cart_total == null ? 0 : cart_total;
+              print(cart_items.toString() + cart_total.toString());
+              //prefs.getDouble('total').toInt();
+              if (/*snapshot.hasData*/ 1 == 1) {
+                return SizedBox(
+                  height: cart_items == 0 ? 50 : 105,
+                  child: Container(
+                    color: Colors.redAccent[700],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Visibility(
+                          visible: cart_items > 0 ? true : false,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(13, 5, 10, 0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  cart_items.toString() + " Items",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 14.0,
+                                    fontSize: 16.0,
                                     fontFamily: 'Axiforma',
                                     color: Colors.white,
                                   ),
                                 ),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    cart_total.toString() + "L.L.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 16.0,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Cart(newuser)));
+                                    },
+                                    color: Colors.white.withOpacity(0.25),
+                                    textColor: Colors.white,
+                                    minWidth: 0,
+                                    height: 0,
+                                    elevation: 0,
+                                    // padding: EdgeInsets.zero,
+                                    padding: EdgeInsets.only(
+                                        left: 9, top: 6, right: 9, bottom: 4),
+                                    child: Text(
+                                      "OPEN CART",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
 
-                              // IconButton(
-                              //     icon: Icon(
-                              //       Icons.shopping_basket,
-                              //       color: Colors.white,
-                              //       size: 30,
-                              //     ),
-                              //     onPressed: () {
-                              //       // Navigator.of(context).pop();
-                              //     }),
+                                  // IconButton(
+                                  //     icon: Icon(
+                                  //       Icons.shopping_basket,
+                                  //       color: Colors.white,
+                                  //       size: 30,
+                                  //     ),
+                                  //     onPressed: () {
+                                  //       // Navigator.of(context).pop();
+                                  //     }),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                        // ),
+                        Container(
+                          color: Colors.white,
+                          child: Row(
+                            children: <Widget>[
+                              buildNavItem(context, 'home', true, 0),
+                              buildNavItem(context, 'salle', false, 1),
+                              buildNavItem(context, 'profile', false, 2)
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    // ),
-                    Container(
-                      color: Colors.white,
-                      child: Row(
-                        children: <Widget>[
-                          buildNavItem(context, 'home', true, 0),
-                          buildNavItem(context, 'salle', false, 1),
-                          buildNavItem(context, 'profile', false, 2)
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-            }
-            return CircularProgressIndicator();
-          }
-        ),
+                  ),
+                );
+              }
+              return CircularProgressIndicator();
+            }),
 
         // appBar: AppBar(
         //   backgroundColor: Colors.white,

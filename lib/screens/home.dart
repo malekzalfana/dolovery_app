@@ -1,4 +1,3 @@
-import 'package:dolovery_app/screens/salle.dart';
 import 'package:dolovery_app/widgets/product.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,14 +14,15 @@ import '../screens/pets.dart';
 import '../screens/shoppage.dart';
 import '../screens/profile.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
-import 'package:dolovery_app/main.dart';
 import 'package:dolovery_app/widgets/popupproduct.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function() notifyParent;
   final Function() notifyParent2;
   // ProfileMainScreen(thisUser);
-  HomeScreen({Key key, @required this.notifyParent, @required this.notifyParent2}) : super(key: key);
+  HomeScreen(
+      {Key key, @required this.notifyParent, @required this.notifyParent2})
+      : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return HomeScreenState();
@@ -387,7 +387,7 @@ class HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  refreshcart(){
+  refreshcart() {
     // print("sssss");
     widget.notifyParent2();
   }
@@ -843,7 +843,8 @@ class HomeScreenState extends State<HomeScreen> {
                       children: List.generate(8, (index) {
                         return GestureDetector(
                           onTap: () {
-                            openProductPopUp(context, snapshot.data, refreshcart);
+                            openProductPopUp(
+                                context, snapshot.data, refreshcart);
                           },
                           child: ProductImage(
                               productName: snapshot.data.documents[0]['name'],
@@ -1054,7 +1055,10 @@ class HomeScreenState extends State<HomeScreen> {
               padding:
                   const EdgeInsets.only(left: 5.0, right: 5, top: 0, bottom: 0),
               child: StreamBuilder(
-                stream: Firestore.instance.collection('products').where('type', isEqualTo: 'supplements').snapshots(),
+                stream: Firestore.instance
+                    .collection('products')
+                    .where('type', isEqualTo: 'supplements')
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return GridView.count(
@@ -1067,9 +1071,10 @@ class HomeScreenState extends State<HomeScreen> {
                       children: List.generate(8, (index) {
                         return GestureDetector(
                           onTap: () {
-                            openProductPopUp(context, snapshot.data);
+                            openProductPopUp(
+                                context, snapshot.data, refreshcart);
                           },
-                                                  child: ProductImage(
+                          child: ProductImage(
                               productName: snapshot.data.documents[0]['name'],
                               productImage: snapshot.data.documents[0]['image'],
                               productPrice: snapshot
@@ -1147,7 +1152,10 @@ class HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: StreamBuilder(
-              stream: Firestore.instance.collection('shops').where('type', isEqualTo: 'pets').snapshots(),
+              stream: Firestore.instance
+                  .collection('shops')
+                  .where('type', isEqualTo: 'pets')
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   print(snapshot);
@@ -1163,8 +1171,8 @@ class HomeScreenState extends State<HomeScreen> {
                                     ShopPage(snapshot.data.documents[1])));
                           },
                           child: ShopImage(
-                              shopName: snapshot.data.documents[0]['name'], 
-                              shopIndex:index,
+                              shopName: snapshot.data.documents[0]['name'],
+                              shopIndex: index,
                               shopImage: snapshot.data.documents[0]['image'],
                               shopTime: snapshot.data.documents[0]['time']
                                   .toString()),

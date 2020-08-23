@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:flutter_svg/svg.dart';
-// ignore: unused_import
-import 'package:country_code_picker/country_code_picker.dart';
-import 'package:dolovery_app/widgets/product.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter_counter/flutter_counter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:dolovery_app/widgets/counter.dart';
 
 class Cart extends StatefulWidget {
   final dynamic user; //if you have multiple values add here
@@ -26,6 +19,7 @@ class _CartState extends State<Cart> {
   bool minimum = true;
   bool maximum = false;
   // int serving = 0;
+  List<String> finalcart = [];
 
   void add() {
     // print ( _n );
@@ -58,7 +52,15 @@ class _CartState extends State<Cart> {
   double total;
   String type;
   List<String> cart;
+  Map<String, int> cartmap = {};
+  Map<String, String> carttype = {
+    'supplements': 'Supplements',
+    'lebanese': '100% Lebbanese',
+    'pets': 'Pet Shops',
+    'salle': 'Meal Basket'
+  };
   String imagetype = 'assets/images/supsec.png';
+
   Future<void> loadcart() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -75,9 +77,25 @@ class _CartState extends State<Cart> {
       } else {
         imagetype = 'assets/images/salle.png';
       }
+      for (var i = 0; i < items.toInt(); i++) {
+        // print("${ls[i].name} is electric? ${ls[i].isElectric}");
+        print('stared to seeeeeee');
+        if (!cartmap.containsKey(cart[i])) {
+          cartmap[cart[i]] = 1;
+          finalcart.add(cart[i]);
+          print(finalcart);
+          print('adedddddd');
+        } else {
+          print('its insdedeeeeeee');
+          // print(cart[i]);
+          cartmap[cart[i]] = cartmap[cart[i]].toInt() + 1;
+          // cartmap[cart[i]] = cartmap[i] + 1;
+        }
+      }
       // cart
     });
-    return print("TYPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" + type);
+
+    return print(cartmap);
     // print('saved $total');
     // print('saved $type');
   }
@@ -99,7 +117,8 @@ class _CartState extends State<Cart> {
     // var timestamp =
     //     (widget.data.documents[0]['salle_date'] as Timestamp).toDate();
     num _defaultValue = 0;
-    print(cart);
+    double width = MediaQuery.of(context).size.width;
+    // print(cart);
     List<Widget> list = new List<Widget>();
     // loadcart();
     // String formatted_date = DateFormat.yMMMMd().format(timestamp);
@@ -128,7 +147,7 @@ class _CartState extends State<Cart> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 30, bottom: 10),
+            padding: const EdgeInsets.only(left: 22.0, top: 30, bottom: 10),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -145,36 +164,36 @@ class _CartState extends State<Cart> {
           Row(
             // mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Container(
-                // color: Colors.green,
-                margin: new EdgeInsets.only(left: 12.0, right: 10),
-                child: Container(
-                    height: 90,
-                    width: 90,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(imagetype),
-                        fit: BoxFit.fitWidth,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.07),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0, 8), // changes position of shadow
-                        ),
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10)),
-                    ),
-                    child: null),
-              ),
+              // Container(
+              //   // color: Colors.green,
+              //   margin: new EdgeInsets.only(left: 12.0, right: 10),
+              //   child: Container(
+              //       height: 90,
+              //       width: 90,
+              //       decoration: BoxDecoration(
+              //         image: DecorationImage(
+              //           image: AssetImage(imagetype),
+              //           fit: BoxFit.fitWidth,
+              //         ),
+              //         boxShadow: [
+              //           BoxShadow(
+              //             color: Colors.grey.withOpacity(0.07),
+              //             spreadRadius: 5,
+              //             blurRadius: 7,
+              //             offset: Offset(0, 8), // changes position of shadow
+              //           ),
+              //         ],
+              //         color: Colors.white,
+              //         borderRadius: BorderRadius.only(
+              //             topLeft: Radius.circular(10),
+              //             topRight: Radius.circular(10),
+              //             bottomLeft: Radius.circular(10),
+              //             bottomRight: Radius.circular(10)),
+              //       ),
+              //       child: null),
+              // ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(22, 10, 10, 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -183,7 +202,8 @@ class _CartState extends State<Cart> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          type == null ? "nothing" : type,
+                          // type == null ? "nothing" : type,
+                          carttype[type],
                           // 'ssssss',
                           // textAlign: TextAlign.left,
                           style: TextStyle(
@@ -196,47 +216,47 @@ class _CartState extends State<Cart> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Icon(
-                            Icons.timer,
-                            color: Colors.grey[500],
-                            size: 24.0,
-                            semanticLabel: 'time for shop to deliver',
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              'widget',
-                              // overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                height: 1.1,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 15,
-                                fontFamily: 'Axiforma',
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 8.0),
+                    //   child: Row(
+                    //     mainAxisSize: MainAxisSize.min,
+                    //     mainAxisAlignment: MainAxisAlignment.start,
+                    //     children: <Widget>[
+                    //       Icon(
+                    //         Icons.timer,
+                    //         color: Colors.grey[500],
+                    //         size: 24.0,
+                    //         semanticLabel: 'time for shop to deliver',
+                    //       ),
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(left: 8.0),
+                    //         child: Text(
+                    //           'widget',
+                    //           // overflow: TextOverflow.ellipsis,
+                    //           textAlign: TextAlign.left,
+                    //           style: TextStyle(
+                    //             height: 1.1,
+                    //             fontWeight: FontWeight.normal,
+                    //             fontSize: 15,
+                    //             fontFamily: 'Axiforma',
+                    //             color: Colors.grey[500],
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               )
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(left: 22.0, top: 20, bottom: 10),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "7 Items",
+                "Your Items",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 13.0,
@@ -248,168 +268,193 @@ class _CartState extends State<Cart> {
           ),
           Column(
             children: [
-              for (var item in cart)
-                new Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        // color: Colors.green,
-                        margin: new EdgeInsets.only(left: 12.0, right: 10),
-                        child: Container(
-                            height: 90,
-                            width: 90,
-                            decoration: BoxDecoration(
-                              // image: DecorationImage(
-                              //   image: AssetImage(imagetype),
-                              //   fit: BoxFit.fitWidth,
-                              // ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.07),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(
-                                      0, 8), // changes position of shadow
-                                ),
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  topRight: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10)),
-                            ),
-                            child: Image.asset(
-                              imagetype.toString(),
-                              width: 120,
-                            )),
-                      ),
-                      Padding(
+              for (var i = 0; i < finalcart.length; i++)
+                StreamBuilder(
+                    stream: Firestore.instance
+                        .collection('products')
+                        .document(finalcart[i])
+                        .snapshots(),
+                    builder:
+                        (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return Text("Loading");
+                      }
+                      var cartitem = snapshot.data;
+                      return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  type == null ? "nothing" : type,
-                                  // textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    height: 1.1,
-                                    fontFamily: 'Axiforma',
-                                    color: Colors.black,
+                            Container(
+                              // color: Colors.green,
+                              margin:
+                                  new EdgeInsets.only(left: 12.0, right: 10),
+                              child: Container(
+                                  height: 90,
+                                  width: 90,
+                                  decoration: BoxDecoration(
+                                    // image: DecorationImage(
+                                    //   image: NetworkImage(cartitem["image"]),
+                                    //   fit: BoxFit.fit,
+                                    // ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.07),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: Offset(
+                                            0, 8), // changes position of shadow
+                                      ),
+                                    ],
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10)),
                                   ),
-                                ),
-                              ],
+                                  child: Center(
+                                    child: Image.network(cartitem['image'],
+                                        height: 60, width: 60),
+                                  )),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Row(
-                                // mainAxisSize: MainAxisSize.min,
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 0.0),
-                                    child: Text(
-                                      '12000L.L.',
-                                      // overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        height: 1.1,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 13.5,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.redAccent[700],
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        cartitem['name'],
+                                        // textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          height: 1.1,
+                                          fontFamily: 'Axiforma',
+                                          color: Colors.black,
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
-                                    child: Text(
-                                      'Unit',
-                                      // overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        height: 1.1,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 13.5,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.grey[500],
-                                      ),
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Row(
+                                      // mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 0.0),
+                                          child: Text(
+                                            // Firestore.instance
+                                            //     .collection("products")
+                                            //     .document(item)
+                                            //     .get()
+                                            //     .toString(),
+                                            cartitem['shop_price'].toString() +
+                                                'L.L.',
+                                            // overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              height: 1.1,
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 13.5,
+                                              fontFamily: 'Axiforma',
+                                              color: Colors.redAccent[700],
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: Text(
+                                            cartitem['unit'],
+                                            // overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              height: 1.1,
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 13,
+                                              fontFamily: 'Axiforma',
+                                              color: Colors.grey[500],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                  ),
+                                  Row(
+                                    // crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: 35,
+                                        child: RawMaterialButton(
+                                          onPressed: () {
+                                            setState(() {});
+                                          },
+                                          elevation: !minimum ? 2 : 0,
+                                          fillColor: !minimum
+                                              ? Colors.redAccent[700]
+                                              : Colors.grey[200],
+                                          child: Icon(
+                                            Icons.remove,
+                                            size: 13,
+                                            color: !minimum
+                                                ? Colors.white
+                                                : Colors.grey[800],
+                                          ),
+                                          // padding: EdgeInsets.all(0.0),
+                                          shape: CircleBorder(),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            15, 0, 15, 0),
+                                        child: new Text(
+                                            cartmap[cart[i]].toString(),
+                                            style:
+                                                new TextStyle(fontSize: 14.5)),
+                                      ),
+                                      SizedBox(
+                                        width: 35,
+                                        child: RawMaterialButton(
+                                          onPressed: add,
+                                          elevation: !maximum ? 2 : 0,
+                                          fillColor: !maximum
+                                              ? Colors.redAccent[700]
+                                              : Colors.grey[200],
+                                          child: Icon(
+                                            Icons.add,
+                                            size: 13,
+                                            color: !maximum
+                                                ? Colors.white
+                                                : Colors.grey[800],
+                                          ),
+                                          padding: EdgeInsets.all(0.0),
+                                          shape: CircleBorder(),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ),
-                            Row(
-                              // crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(
-                                  width: 35,
-                                  child: RawMaterialButton(
-                                    onPressed: minus,
-                                    elevation: !minimum ? 2 : 0,
-                                    fillColor: !minimum
-                                        ? Colors.redAccent[700]
-                                        : Colors.grey[200],
-                                    child: Icon(
-                                      Icons.remove,
-                                      size: 13,
-                                      color: !minimum
-                                          ? Colors.white
-                                          : Colors.grey[800],
-                                    ),
-                                    // padding: EdgeInsets.all(0.0),
-                                    shape: CircleBorder(),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                                  child: new Text('$_n',
-                                      style: new TextStyle(fontSize: 14.5)),
-                                ),
-                                SizedBox(
-                                  width: 35,
-                                  child: RawMaterialButton(
-                                    onPressed: add,
-                                    elevation: !maximum ? 2 : 0,
-                                    fillColor: !maximum
-                                        ? Colors.redAccent[700]
-                                        : Colors.grey[200],
-                                    child: Icon(
-                                      Icons.add,
-                                      size: 13,
-                                      color: !maximum
-                                          ? Colors.white
-                                          : Colors.grey[800],
-                                    ),
-                                    padding: EdgeInsets.all(0.0),
-                                    shape: CircleBorder(),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            )
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                ),
-
-              // return new Row(children: list);
+                      );
+                    }),
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 30, bottom: 10),
+            padding: const EdgeInsets.only(left: 30.0, top: 20, bottom: 10),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -605,30 +650,27 @@ class _CartState extends State<Cart> {
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8.0, bottom: 8),
-                                    child: Text(
-                                      'Pay when the delivery arrives',
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        height: 1.1,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 14.5,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.grey[500],
-                                      ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, bottom: 8),
+                                  child: Text(
+                                    'Pay when the delivery arrives',
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      height: 1.1,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 14.5,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.grey[500],
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -638,7 +680,7 @@ class _CartState extends State<Cart> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.fromLTRB(25, 22, 25, 12),
             child: MaterialButton(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
@@ -664,28 +706,36 @@ class _CartState extends State<Cart> {
               ),
             ),
           ),
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 18.0),
-                child: Icon(
-                  Icons.info,
-                  size: 18,
-                  color: Colors.grey[500],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
+            child: Center(
+              child: SizedBox(
+                width: width - 44,
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 18.0),
+                      child: Icon(
+                        Icons.info,
+                        size: 18,
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        "All meal baskets come with a detailed cooking instructions!",
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 12.0,
+                          fontFamily: 'Axiforma',
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Expanded(
-                child: Text(
-                  "All meal baskets come with a detailed cooking instructions!",
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 12.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.grey[500],
-                  ),
-                ),
-              ),
-            ],
+            ),
           )
         ],
       )),
