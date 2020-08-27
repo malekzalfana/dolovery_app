@@ -237,10 +237,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                   alignment: Alignment.centerRight,
                                   child: MaterialButton(
                                     onPressed: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
                                               builder: (context) =>
-                                                  Cart(newuser)));
+                                                  Cart(newuser)))
+                                          .then((_) {
+                                        refreshcart();
+// Here you will get callback after coming back from NextPage()
+// Do your code here
+                                      });
                                     },
                                     color: Colors.white.withOpacity(0.25),
                                     textColor: Colors.white,

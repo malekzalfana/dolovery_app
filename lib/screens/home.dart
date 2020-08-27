@@ -8,6 +8,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/100lebanese.dart';
 import '../screens/supplements.dart';
 import '../screens/pets.dart';
@@ -1141,8 +1142,9 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
                 GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProfileScreen()));
+                      // reset();
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //     builder: (context) => ProfileScreen()));
                     },
                     child: Image.asset("assets/images/fullfilldolovery.png",
                         height: 23))

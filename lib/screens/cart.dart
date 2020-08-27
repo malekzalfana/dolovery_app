@@ -25,7 +25,7 @@ class _CartState extends State<Cart> {
     // print ( _n );
     setState(() {
       if (_n < 10) _n++;
-      if (_n == 10) {
+      if (_n == 30) {
         maximum = true;
       } else {
         minimum = false;
@@ -61,6 +61,59 @@ class _CartState extends State<Cart> {
   };
   String imagetype = 'assets/images/supsec.png';
 
+  Future<void> reset() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('type');
+    prefs.remove('total');
+    prefs.remove('items');
+    prefs.remove('cart');
+    Navigator.of(context).pop();
+    print(prefs.getKeys());
+    return true;
+  }
+
+  Future<void> refreshcartnumbers(
+      String itemid, int quantity, int price, bool add, bool remove) async {
+    final prefs = await SharedPreferences.getInstance();
+    // List<String> cart = prefs.getStringList('cart');
+
+    // setState(() {
+    if (cart.length == 1) {
+      reset();
+
+      return print('XXXXXXXXXXXXX');
+    }
+    if (remove) {
+      for (var i; i <= quantity; i++) {
+        print('removed completely');
+        prefs.setDouble('items', prefs.getDouble('items') - quantity);
+        prefs.setDouble('total', prefs.getDouble('total') - (quantity * price));
+        cart.remove(itemid);
+      }
+    } else {
+      if (add) {
+        // print(prefs.getDouble('cart'));
+        prefs.setDouble('items', prefs.getDouble('items') + 1);
+        prefs.setDouble('total', prefs.getDouble('total') + (1 * price));
+
+        print('added');
+        cart.add(itemid);
+      } else {
+        print('removed');
+        prefs.setDouble('items', prefs.getDouble('items') - 1);
+        prefs.setDouble('total', prefs.getDouble('total') - (1 * price));
+        cart.remove(itemid);
+      }
+    }
+    prefs.setStringList('cart', cart);
+    print(prefs.getStringList('cart'));
+    // loadcart();
+    // print(cart);
+    // });
+
+    loadcart();
+  }
+
   Future<void> loadcart() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -77,25 +130,31 @@ class _CartState extends State<Cart> {
       } else {
         imagetype = 'assets/images/salle.png';
       }
-      for (var i = 0; i < items.toInt(); i++) {
-        // print("${ls[i].name} is electric? ${ls[i].isElectric}");
-        print('stared to seeeeeee');
-        if (!cartmap.containsKey(cart[i])) {
-          cartmap[cart[i]] = 1;
-          finalcart.add(cart[i]);
-          print(finalcart);
-          print('adedddddd');
-        } else {
-          print('its insdedeeeeeee');
-          // print(cart[i]);
-          cartmap[cart[i]] = cartmap[cart[i]].toInt() + 1;
-          // cartmap[cart[i]] = cartmap[i] + 1;
+      cartmap = {};
+      finalcart = [];
+      if (items > 0) {
+        for (var i = 0; i < items.toInt(); i++) {
+          // print("${ls[i].name} is electric? ${ls[i].isElectric}");
+          // print('stared to seeeeeee');
+
+          if (!cartmap.containsKey(cart[i])) {
+            cartmap[cart[i]] = 1;
+            finalcart.add(cart[i]);
+            print(finalcart);
+            print('adedddddd');
+          } else {
+            // print('its insdedeeeeeee');
+            // print(cart[i]);
+            cartmap[cart[i]] = cartmap[cart[i]].toInt() + 1;
+            // cartmap[cart[i]] = cartmap[i] + 1;
+          }
         }
       }
+
       // cart
     });
 
-    return print(cartmap);
+    return print("zzzzzzzz" + cartmap.toString());
     // print('saved $total');
     // print('saved $type');
   }
@@ -279,7 +338,12 @@ class _CartState extends State<Cart> {
                       if (!snapshot.hasData) {
                         return Text("Loading");
                       }
+                      var minimum2 = false;
                       var cartitem = snapshot.data;
+                      if (cartmap[cart[i]] == 0) {
+                        minimum2 = true;
+                      }
+
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -358,7 +422,9 @@ class _CartState extends State<Cart> {
                                             //     .document(item)
                                             //     .get()
                                             //     .toString(),
-                                            cartitem['shop_price'].toString() +
+                                            (cartitem['shop_price'] *
+                                                        cartmap[finalcart[i]])
+                                                    .toString() +
                                                 'L.L.',
                                             // overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.left,
@@ -395,19 +461,29 @@ class _CartState extends State<Cart> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
                                       SizedBox(
-                                        width: 35,
+                                        width: 25,
                                         child: RawMaterialButton(
                                           onPressed: () {
-                                            setState(() {});
+                                            // refreshcartnumbers(
+                                            //     cart[i], cartmap[cart[i]] - 1);
+                                            // setState(() {});
+                                            // loadcart();
+                                            refreshcartnumbers(
+                                                finalcart[i],
+                                                cartmap[finalcart[i]],
+                                                cartitem['shop_price'],
+                                                false,
+                                                false);
+                                            // loadcart();
                                           },
-                                          elevation: !minimum ? 2 : 0,
-                                          fillColor: !minimum
+                                          elevation: !minimum2 ? 2 : 0,
+                                          fillColor: !minimum2
                                               ? Colors.redAccent[700]
                                               : Colors.grey[200],
                                           child: Icon(
                                             Icons.remove,
                                             size: 13,
-                                            color: !minimum
+                                            color: !minimum2
                                                 ? Colors.white
                                                 : Colors.grey[800],
                                           ),
@@ -419,14 +495,21 @@ class _CartState extends State<Cart> {
                                         padding: const EdgeInsets.fromLTRB(
                                             15, 0, 15, 0),
                                         child: new Text(
-                                            cartmap[cart[i]].toString(),
+                                            cartmap[finalcart[i]].toString(),
                                             style:
                                                 new TextStyle(fontSize: 14.5)),
                                       ),
                                       SizedBox(
-                                        width: 35,
+                                        width: 25,
                                         child: RawMaterialButton(
-                                          onPressed: add,
+                                          onPressed: () {
+                                            refreshcartnumbers(
+                                                finalcart[i],
+                                                cartmap[finalcart[i]],
+                                                cartitem['shop_price'],
+                                                true,
+                                                false);
+                                          },
                                           elevation: !maximum ? 2 : 0,
                                           fillColor: !maximum
                                               ? Colors.redAccent[700]
@@ -599,83 +682,86 @@ class _CartState extends State<Cart> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-                right: 30.0, bottom: 10, left: 30, top: 12),
-            child: Container(
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 2.2,
-                      blurRadius: 2.5,
-                      offset: Offset(0, 4), // changes position of shadow
-                    ),
+          Opacity(
+            opacity: 0.4,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  right: 30.0, bottom: 10, left: 30, top: 12),
+              child: Container(
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 2.2,
+                        blurRadius: 2.5,
+                        offset: Offset(0, 4), // changes position of shadow
+                      ),
+                    ],
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                // color: Colors.grey,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                        child:
+                            Icon(Icons.payment, size: 30, color: Colors.black)),
+                    Container(
+                        // color: Colors.green,
+                        margin: new EdgeInsets.only(left: 10.0, right: 0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10.0, left: 6, bottom: 5),
+                                    child: Text(
+                                      'Cash On Delivery',
+                                      // textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0, bottom: 8),
+                                    child: Text(
+                                      'Pay when the delivery arrives',
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        height: 1.1,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 14.5,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ))
                   ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              // color: Colors.grey,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                      padding: const EdgeInsets.only(left: 15.0),
-                      child:
-                          Icon(Icons.payment, size: 30, color: Colors.black)),
-                  Container(
-                      // color: Colors.green,
-                      margin: new EdgeInsets.only(left: 10.0, right: 0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10.0, left: 6, bottom: 5),
-                                  child: Text(
-                                    'Cash On Delivery',
-                                    // textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 8.0, bottom: 8),
-                                  child: Text(
-                                    'Pay when the delivery arrives',
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      height: 1.1,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 14.5,
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.grey[500],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ))
-                ],
+                ),
               ),
             ),
           ),

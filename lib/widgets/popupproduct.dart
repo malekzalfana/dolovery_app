@@ -71,12 +71,12 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
 
   // int serving = 0;
 
-  showModalBottomSheet(
+  Future<void> future = showModalBottomSheet<void>(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
       context: context,
-      isDismissible: false,
+      // isDismissible: false,
       isScrollControlled: true,
       builder: (BuildContext context) {
         // mpesachecked =false;
@@ -101,10 +101,12 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
             add();
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
-            final key = 'cart';
             String type = data.documents[0][
                 'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
             prefs.setString('type', type);
+            if (prefs.getDouble('total') == null) {
+              prefs.setDouble('total', 0);
+            }
             double total = prefs.getDouble('total') == null
                 ? 0
                 : prefs.getDouble('total') + data.documents[0]['shop_price'];
@@ -116,7 +118,7 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
             final value = cart;
             final double items = cart.length.toDouble();
             prefs.setDouble('items', items);
-            prefs.setStringList(key, value);
+            prefs.setStringList('cart', value);
             print('saved $value');
             print('saved $total');
             print('saved $type');
@@ -377,6 +379,7 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
           );
         });
       });
+  future.then((void value) => sendrefreshtohome());
 }
 
 // openProductPopUp2(context, data) {
