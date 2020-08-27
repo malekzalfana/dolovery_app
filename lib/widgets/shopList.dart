@@ -79,7 +79,7 @@ class _ShopListState extends State<ShopList> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Expanded(
-                                              child: Text(
+                        child: Text(
                           shopName,
                           // textAlign: TextAlign.left,
                           style: TextStyle(

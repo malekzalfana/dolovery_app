@@ -1,3 +1,4 @@
+import 'package:dolovery_app/screens/shoppage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -83,7 +84,7 @@ class FormScreenState extends State<PetsScreen> {
                     alignment: Alignment.centerRight,
                     child: IconButton(
                         icon: Icon(
-                          Icons.keyboard_arrow_down,
+                          Icons.clear,
                           color: Colors.grey,
                           size: 30,
                         ),
@@ -121,7 +122,10 @@ class FormScreenState extends State<PetsScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: StreamBuilder(
-                stream: Firestore.instance.collection('shops').where('type', isEqualTo: 'pets').snapshots(),
+                stream: Firestore.instance
+                    .collection('shops')
+                    .where('type', isEqualTo: 'pets')
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     print(snapshot);
@@ -130,13 +134,20 @@ class FormScreenState extends State<PetsScreen> {
                         child: Column(
                             children: List<Widget>.generate(10, (int index) {
                           // print(categories[index]);
-                          return ShopList(
-                              shopName: snapshot.data.documents[1]['name'],
-                              shopImage: snapshot.data.documents[1]['image'],
-                              shopTime:
-                                  snapshot.data.documents[1]['time'].toString(),
-                              shopAddress: snapshot.data.documents[1]
-                                  ['address']);
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      ShopPage(snapshot.data.documents[1])));
+                            },
+                            child: ShopList(
+                                shopName: snapshot.data.documents[1]['name'],
+                                shopImage: snapshot.data.documents[1]['image'],
+                                shopTime: snapshot.data.documents[1]['time']
+                                    .toString(),
+                                shopAddress: snapshot.data.documents[1]
+                                    ['address']),
+                          );
                         })));
                   } else if (snapshot.hasError) {
                     return Text(snapshot.error.toString());

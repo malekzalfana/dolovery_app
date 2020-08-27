@@ -10,7 +10,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class ShopPage extends StatefulWidget {
   final dynamic data;
 
-
   ShopPage(this.data, {Key key}) : super(key: key);
   @override
   _ShopPageState createState() => _ShopPageState();
@@ -20,7 +19,6 @@ class _ShopPageState extends State<ShopPage> {
   Completer<GoogleMapController> _controller = Completer();
 
   TabController _controller2;
-  
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
@@ -41,10 +39,7 @@ class _ShopPageState extends State<ShopPage> {
     Set<Marker> markers = Set();
     LatLng _center = new LatLng(lat, lng);
     markers.addAll([
-      Marker(
-          markerId: MarkerId('value'),
-          position: LatLng(lat, lng)),
-      
+      Marker(markerId: MarkerId('value'), position: LatLng(lat, lng)),
     ]);
     // const LatLng _center = const LatLng(45.521563, -122.677433);
     var size = MediaQuery.of(ctxt).size;
@@ -58,7 +53,7 @@ class _ShopPageState extends State<ShopPage> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 0.0, right: 0.0, top: 30.0, bottom: 0.0),
+                    left: 17.0, right: 0.0, top: 30.0, bottom: 0.0),
                 child: Row(
                   children: <Widget>[
                     Padding(
@@ -123,7 +118,6 @@ class _ShopPageState extends State<ShopPage> {
                     left: 0.0, right: 0.0, top: 0.0, bottom: 10.0),
                 child: Column(
                   children: <Widget>[
-                    
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
@@ -145,7 +139,8 @@ class _ShopPageState extends State<ShopPage> {
                                       color: Colors.grey.withOpacity(0.07),
                                       spreadRadius: 5,
                                       blurRadius: 7,
-                                      offset: Offset(0, 8), // changes position of shadow
+                                      offset: Offset(
+                                          0, 8), // changes position of shadow
                                     ),
                                   ],
                                   color: Colors.white,
@@ -168,7 +163,7 @@ class _ShopPageState extends State<ShopPage> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
                                       Expanded(
-                                          child: Text(
+                                        child: Text(
                                           widget.data['name'],
                                           // textAlign: TextAlign.left,
                                           style: TextStyle(
@@ -186,19 +181,23 @@ class _ShopPageState extends State<ShopPage> {
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: <Widget>[
                                         Icon(
                                           Icons.timer,
                                           color: Colors.grey[500],
                                           size: 18.0,
-                                          semanticLabel: 'time for shop to deliver',
+                                          semanticLabel:
+                                              'time for shop to deliver',
                                         ),
                                         Expanded(
                                           child: Padding(
-                                            padding: const EdgeInsets.only(left: 8.0),
+                                            padding: const EdgeInsets.only(
+                                                left: 8.0),
                                             child: Text(
-                                              widget.data['time'].toString() + " mins",
+                                              widget.data['time'].toString() +
+                                                  " mins",
                                               // overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
@@ -218,7 +217,8 @@ class _ShopPageState extends State<ShopPage> {
                                     padding: const EdgeInsets.only(top: 1),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: <Widget>[
                                         Align(
                                           alignment: Alignment.topCenter,
@@ -248,7 +248,6 @@ class _ShopPageState extends State<ShopPage> {
                                       ],
                                     ),
                                   ),
-                                  
                                 ],
                               ),
                             ),
@@ -258,27 +257,26 @@ class _ShopPageState extends State<ShopPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 30.0),
-                      child:Row(children: [
-                    SizedBox(
-                      width: width,
-                      height: 180,
-                      child: GoogleMap(
-                      onMapCreated: _onMapCreated,
-                      myLocationButtonEnabled: false,
-                      mapToolbarEnabled: false,
-                      zoomControlsEnabled: false, 
-                      markers: markers,
-                      initialCameraPosition: CameraPosition(
-                        target: _center,
-                        zoom: 14.0,
-                        
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: width,
+                            height: 180,
+                            child: GoogleMap(
+                              onMapCreated: _onMapCreated,
+                              myLocationButtonEnabled: false,
+                              mapToolbarEnabled: false,
+                              zoomControlsEnabled: false,
+                              markers: markers,
+                              initialCameraPosition: CameraPosition(
+                                target: _center,
+                                zoom: 14.0,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),    
                     ),
-
-                    ],),
-                    ),
-                    
 
                     Padding(
                       padding: const EdgeInsets.only(top: 30.0),
@@ -412,13 +410,19 @@ class _ShopPageState extends State<ShopPage> {
                                 scrollDirection: Axis.vertical,
                                 children: List.generate(60, (index) {
                                   return ProductImage(
-                                      productName: snapshot.data.documents[0]
-                                          ['name'],
-                                      productImage: snapshot.data.documents[0]
-                                          ['image'],
-                                      productPrice: snapshot
-                                          .data.documents[0]['shop_price']
-                                          .toString());
+                                    productName: snapshot.data.documents[0]
+                                        ['name'],
+                                    productImage: snapshot.data.documents[0]
+                                        ['image'],
+                                    productPrice: snapshot
+                                        .data.documents[0]['shop_price']
+                                        .toString(),
+                                    productUnit: snapshot.data.documents[0]
+                                                ['unit'] !=
+                                            null
+                                        ? snapshot.data.documents[0]['unit']
+                                        : '',
+                                  );
                                 }).toList(),
                               );
                             } else if (snapshot.hasError) {

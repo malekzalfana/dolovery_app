@@ -10,23 +10,32 @@ class ProductImage extends StatefulWidget {
 
   final String productPrice;
 
+  final String productUnit;
+
   final String productImage;
 
-  ProductImage(
-      {Key key, this.productName, this.productPrice, this.productImage})
-      : super(key: key);
+  ProductImage({
+    Key key,
+    this.productName,
+    this.productImage,
+    this.productUnit,
+    this.productPrice,
+  }) : super(key: key);
 
   @override
   _ProductImageState createState() => _ProductImageState(
-      this.productImage, this.productName, this.productPrice);
+      this.productImage, this.productName, this.productPrice, this.productUnit);
 }
 
 class _ProductImageState extends State<ProductImage> {
   String productImage;
   String productName;
-  String productPrice;
 
-  _ProductImageState(this.productImage, this.productName, this.productPrice);
+  String productPrice;
+  String productUnit;
+
+  _ProductImageState(
+      this.productImage, this.productName, this.productPrice, this.productUnit);
   // _ProductImageState(this.productImage);
   @override
   Widget build(BuildContext context) {
@@ -65,7 +74,7 @@ class _ProductImageState extends State<ProductImage> {
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 13.5,
+                    fontSize: 12.5,
                     fontFamily: 'Axiforma',
                     height: 1.2,
                     color: Colors.black,
@@ -73,18 +82,38 @@ class _ProductImageState extends State<ProductImage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 0.0),
-                child: Text(
-                  productPrice + "L.L.",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 12,
-                    fontFamily: 'Axiforma',
-                    color: Colors.black54,
-                  ),
+                padding: const EdgeInsets.only(top: 2.0),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 0.0),
+                      child: Text(
+                        productPrice + "L.L.",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 11.7,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: Text(
+                        productUnit,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 11.7,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black26,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+              )
             ]));
   }
 }

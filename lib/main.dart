@@ -95,6 +95,17 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
+  @override
+  void initState() {
+    print('Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+    super.initState();
+    @override
+    void initState() {
+      print('Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+      super.initState();
+    }
+  }
+
   List pages;
 // @override
   profilestatus() {

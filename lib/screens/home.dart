@@ -608,7 +608,10 @@ class HomeScreenState extends State<HomeScreen> {
           GestureDetector(
             onTap: () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => TabsDemo()));
+                  .push(MaterialPageRoute(builder: (context) => TabsDemo()))
+                  .then((_) {
+                refreshcart();
+              });
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -672,8 +675,13 @@ class HomeScreenState extends State<HomeScreen> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SupplementsScreen()));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: (context) => SupplementsScreen()))
+                  .then((_) {
+                refreshcart();
+              });
+              ;
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -738,7 +746,11 @@ class HomeScreenState extends State<HomeScreen> {
           GestureDetector(
             onTap: () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => PetsScreen()));
+                  .push(MaterialPageRoute(builder: (context) => PetsScreen()))
+                  .then((_) {
+                refreshcart();
+              });
+              ;
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -836,8 +848,7 @@ class HomeScreenState extends State<HomeScreen> {
                   if (snapshot.hasData) {
                     return GridView.count(
                       crossAxisCount: 2,
-                      childAspectRatio:
-                          MediaQuery.of(context).size.height / 1200,
+                      childAspectRatio: .635,
                       controller: new ScrollController(keepScrollOffset: false),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
@@ -848,11 +859,16 @@ class HomeScreenState extends State<HomeScreen> {
                                 context, snapshot.data, refreshcart);
                           },
                           child: ProductImage(
-                              productName: snapshot.data.documents[0]['name'],
-                              productImage: snapshot.data.documents[0]['image'],
-                              productPrice: snapshot
-                                  .data.documents[0]['shop_price']
-                                  .toString()),
+                            productName: snapshot.data.documents[0]['name'],
+                            productImage: snapshot.data.documents[0]['image'],
+                            productPrice: snapshot
+                                .data.documents[0]['shop_price']
+                                .toString(),
+                            productUnit:
+                                snapshot.data.documents[0]['unit'] != null
+                                    ? snapshot.data.documents[0]['unit']
+                                    : '',
+                          ),
                         );
                       }).toList(),
                     );
@@ -1064,8 +1080,7 @@ class HomeScreenState extends State<HomeScreen> {
                   if (snapshot.hasData) {
                     return GridView.count(
                       crossAxisCount: 2,
-                      childAspectRatio:
-                          MediaQuery.of(context).size.height / 1200,
+                      childAspectRatio: 0.635,
                       controller: new ScrollController(keepScrollOffset: false),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
@@ -1076,11 +1091,16 @@ class HomeScreenState extends State<HomeScreen> {
                                 context, snapshot.data, refreshcart);
                           },
                           child: ProductImage(
-                              productName: snapshot.data.documents[0]['name'],
-                              productImage: snapshot.data.documents[0]['image'],
-                              productPrice: snapshot
-                                  .data.documents[0]['shop_price']
-                                  .toString()),
+                            productName: snapshot.data.documents[0]['name'],
+                            productImage: snapshot.data.documents[0]['image'],
+                            productPrice: snapshot
+                                .data.documents[0]['shop_price']
+                                .toString(),
+                            productUnit:
+                                snapshot.data.documents[0]['unit'] != null
+                                    ? snapshot.data.documents[0]['unit']
+                                    : '',
+                          ),
                         );
                       }).toList(),
                     );

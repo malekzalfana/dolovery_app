@@ -1,3 +1,4 @@
+import 'package:dolovery_app/widgets/popupproduct.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:flutter_svg/svg.dart';
@@ -14,8 +15,11 @@ class _TabsDemoState extends State<TabsDemo> {
   TabController _controller;
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    // TODO: implement dispose
+    // print("Back To old Screen");
+
+    super.dispose();
   }
 
   @override
@@ -233,26 +237,38 @@ class _TabsDemoState extends State<TabsDemo> {
                         child: StreamBuilder(
                           stream: Firestore.instance
                               .collection('products')
+                              .where('type', isEqualTo: 'lebanese')
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return GridView.count(
                                 crossAxisCount: 2,
-                                childAspectRatio:
-                                    MediaQuery.of(context).size.height / 1150,
+                                childAspectRatio: 0.635,
                                 controller: new ScrollController(
                                     keepScrollOffset: false),
                                 shrinkWrap: true,
                                 scrollDirection: Axis.vertical,
                                 children: List.generate(60, (index) {
-                                  return ProductImage(
+                                  return GestureDetector(
+                                    onTap: () {
+                                      openProductPopUp(context,
+                                          snapshot.data /*, refreshcart*/);
+                                    },
+                                    child: ProductImage(
                                       productName: snapshot.data.documents[0]
                                           ['name'],
                                       productImage: snapshot.data.documents[0]
                                           ['image'],
                                       productPrice: snapshot
                                           .data.documents[0]['shop_price']
-                                          .toString());
+                                          .toString(),
+                                      productUnit: snapshot.data.documents[0]
+                                                  ['unit'] !=
+                                              null
+                                          ? snapshot.data.documents[0]['unit']
+                                          : '',
+                                    ),
+                                  );
                                 }).toList(),
                               );
                             } else if (snapshot.hasError) {
