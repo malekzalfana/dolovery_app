@@ -281,51 +281,56 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0, top: 20.0),
-                    child: Container(
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          RawMaterialButton(
-                            onPressed: () {
-                              _remove(data.documents[0].documentID);
-                            },
-                            elevation: !minimum ? 2 : 0,
-                            fillColor: !minimum
-                                ? Colors.redAccent[700]
-                                : Colors.grey[200],
-                            child: Icon(
-                              Icons.remove,
-                              size: 18,
-                              color: !minimum ? Colors.white : Colors.grey[800],
+                  Visibility(
+                    visible: true,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 0, top: 20.0),
+                      child: Container(
+                        child: new Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            RawMaterialButton(
+                              onPressed: () {
+                                _remove(data.documents[0].documentID);
+                              },
+                              elevation: !minimum ? 2 : 0,
+                              fillColor: !minimum
+                                  ? Colors.redAccent[700]
+                                  : Colors.grey[200],
+                              child: Icon(
+                                Icons.remove,
+                                size: 18,
+                                color:
+                                    !minimum ? Colors.white : Colors.grey[800],
+                              ),
+                              padding: EdgeInsets.all(0.0),
+                              shape: CircleBorder(),
                             ),
-                            padding: EdgeInsets.all(0.0),
-                            shape: CircleBorder(),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: new Text('$_n',
-                                style: new TextStyle(fontSize: 20.0)),
-                          ),
-                          RawMaterialButton(
-                            onPressed: () {
-                              // add;
-                              _save(data.documents[0].documentID);
-                            },
-                            elevation: !maximum ? 2 : 0,
-                            fillColor: !maximum
-                                ? Colors.redAccent[700]
-                                : Colors.grey[200],
-                            child: Icon(
-                              Icons.add,
-                              size: 18,
-                              color: !maximum ? Colors.white : Colors.grey[800],
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              child: new Text('$_n',
+                                  style: new TextStyle(fontSize: 20.0)),
                             ),
-                            padding: EdgeInsets.all(0.0),
-                            shape: CircleBorder(),
-                          ),
-                        ],
+                            RawMaterialButton(
+                              onPressed: () {
+                                // add;
+                                _save(data.documents[0].documentID);
+                              },
+                              elevation: !maximum ? 2 : 0,
+                              fillColor: !maximum
+                                  ? Colors.redAccent[700]
+                                  : Colors.grey[200],
+                              child: Icon(
+                                Icons.add,
+                                size: 18,
+                                color:
+                                    !maximum ? Colors.white : Colors.grey[800],
+                              ),
+                              padding: EdgeInsets.all(0.0),
+                              shape: CircleBorder(),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

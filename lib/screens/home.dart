@@ -1,3 +1,4 @@
+import 'package:dolovery_app/screens/search.dart';
 import 'package:dolovery_app/widgets/product.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,7 @@ import '../screens/100lebanese.dart';
 import '../screens/supplements.dart';
 import '../screens/pets.dart';
 import '../screens/shoppage.dart';
+import '../screens/search.dart';
 import '../screens/profile.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
 import 'package:dolovery_app/widgets/popupproduct.dart';
@@ -508,32 +510,41 @@ class HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 0, right: 10),
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: 0),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              height: 55,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                // color: Color(0xFFF5F5F7),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: <Widget>[
-                  Image.asset("assets/icons/searchicon.png", height: 16),
-                  SizedBox(width: 16),
-                  Container(
-                    child: Text(
-                      "Search for anything",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontFamily: "Axiforma",
-                        color: Color(0xFFA0A5BD),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => Search()))
+                  .then((_) {
+                refreshcart();
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 0, right: 10),
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 0),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                height: 55,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  // color: Color(0xFFF5F5F7),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Image.asset("assets/icons/searchicon.png", height: 16),
+                    SizedBox(width: 16),
+                    Container(
+                      child: Text(
+                        "Search for anything",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontFamily: "Axiforma",
+                          color: Colors.black26,
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
