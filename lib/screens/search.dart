@@ -181,11 +181,13 @@ class _SearchState extends State<Search> {
                   height: height - 70,
                   child: _searching == true
                       ? Center(
-                          child: Text("Searching, please wait..."),
+                          child: CircularProgressIndicator(),
                         )
                       : _results.length == 0
                           ? Center(
-                              child: Text("No results found."),
+                              child: Image.asset(
+                                "assets/images/searchback.png",
+                              ),
                             )
                           : ListView.builder(
                               itemCount: _results.length,
