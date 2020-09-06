@@ -334,54 +334,48 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 30.0, top: 30, bottom: 10),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Description",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13.0,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black54,
+                  Visibility(
+                    visible:
+                        data.documents[0]['description'] != null ? true : false,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 30.0, top: 30, bottom: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Description",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 30.0, right: 30.0, top: 0, bottom: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              data.documents[0]['description'] != null
+                                  ? data.documents[0]['description']
+                                  : "",
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 13.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 30.0, right: 30.0, top: 0, bottom: 10),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        data.documents[0]['description'],
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 13.0,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 30.0, right: 30.0, top: 0, bottom: 35),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        data.documents[0]['description'],
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 13.0,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),

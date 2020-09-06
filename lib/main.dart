@@ -104,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    _getPrefs();
     print('Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
     super.initState();
     @override
@@ -120,8 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // setupVerification();
     if (newuser == false) {
       profilescreen = ProfileMainScreen(
-        thisUser: this_user,
-      );
+          // thisUser: this_user,
+          );
       print('user NOT set up');
     } else {
       profilescreen = ProfileScreen();
@@ -135,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // profilescreen
       // null,
       // ProfileScreen(),
-      ProfileMainScreen(thisUser: this_user),
+      ProfileMainScreen(),
     ];
   }
 
@@ -214,7 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
               //prefs.getDouble('total').toInt();
               if (_getPrefs() != null) {
                 return SizedBox(
-                  height: cart_items == 0 ? 50 : 105,
+                  height: cart_items == 0 ? 50 : 108,
                   child: Container(
                     color: Colors.redAccent[700],
                     child: Column(
@@ -224,7 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Visibility(
                           visible: cart_items > 0 ? true : false,
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(13, 5, 10, 0),
+                            padding: const EdgeInsets.fromLTRB(13, 4, 10, 0),
                             child: Row(
                               children: [
                                 Text(
@@ -251,49 +252,52 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                 ),
                                 Spacer(),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: MaterialButton(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Cart(newuser)))
-                                          .then((_) {
-                                        refreshcart();
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 4.0),
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: MaterialButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Cart(newuser)))
+                                            .then((_) {
+                                          refreshcart();
 // Here you will get callback after coming back from NextPage()
 // Do your code here
-                                      });
-                                    },
-                                    color: Colors.white.withOpacity(0.25),
-                                    textColor: Colors.white,
-                                    minWidth: 0,
-                                    height: 0,
-                                    elevation: 0,
-                                    // padding: EdgeInsets.zero,
-                                    padding: EdgeInsets.only(
-                                        left: 9, top: 6, right: 9, bottom: 4),
-                                    child: Text(
-                                      "OPEN CART",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14.0,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.white,
+                                        });
+                                      },
+                                      color: Colors.white.withOpacity(0.25),
+                                      textColor: Colors.white,
+                                      minWidth: 0,
+                                      height: 0,
+                                      elevation: 0,
+                                      // padding: EdgeInsets.zero,
+                                      padding: EdgeInsets.only(
+                                          left: 9, top: 6, right: 9, bottom: 4),
+                                      child: Text(
+                                        "OPEN CART",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14.0,
+                                          fontFamily: 'Axiforma',
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
-                                  ),
 
-                                  // IconButton(
-                                  //     icon: Icon(
-                                  //       Icons.shopping_basket,
-                                  //       color: Colors.white,
-                                  //       size: 30,
-                                  //     ),
-                                  //     onPressed: () {
-                                  //       // Navigator.of(context).pop();
-                                  //     }),
+                                    // IconButton(
+                                    //     icon: Icon(
+                                    //       Icons.shopping_basket,
+                                    //       color: Colors.white,
+                                    //       size: 30,
+                                    //     ),
+                                    //     onPressed: () {
+                                    //       // Navigator.of(context).pop();
+                                    //     }),
+                                  ),
                                 ),
                               ],
                             ),

@@ -29,8 +29,27 @@ class _ShopPageState extends State<ShopPage> {
     super.initState();
   }
 
+  dynamic type;
+  Future getcategories() async {
+    print("USER BEING WATCHED");
+    String shoptype = widget.data['type'];
+    type = await Firestore.instance
+        .collection("types")
+        .document(shoptype.toLowerCase())
+        .get();
+    if (type != null) {
+      type.data['categories'].forEach((cat, sub) {
+        print("Key : $cat, Value : $sub");
+        for (var i = 0; i < sub.length; i++) {
+          print(sub[i]);
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext ctxt) {
+    getcategories();
     // GeoPoint shoplocation;
     // GeoPoint geoPoint = widget.data['location'].getGeoPoint("position");
     // print (widget.data['location']);
@@ -46,6 +65,7 @@ class _ShopPageState extends State<ShopPage> {
     final double itemHeight = (size.height) / 2;
     final double itemWidth = size.width / 2;
     double width = MediaQuery.of(context).size.width;
+    // Firestore.instance.collection("types").document(widget.data['type']).get()
     return new Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -277,7 +297,78 @@ class _ShopPageState extends State<ShopPage> {
                         ],
                       ),
                     ),
-
+                    FutureBuilder(
+                      future: getcategories(),
+                      builder: (context, snapshot) {
+                        print(type);
+                        // return Text("dsddd");
+                        type.data['categories'].forEach((cat, sub) {
+                          // return Text("sss");
+                          // print("Key : $cat, Value : $sub");
+                          // for (var i = 0; i < sub.length; i++) {
+                          //   return Text(i.toString());
+                          // }
+                          return SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                  children:
+                                      //type.data['categories'].length
+                                      List<Widget>.generate(3, (int index) {
+                                // print(categories[index]);
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 10.0, bottom: 20),
+                                  child: Container(
+                                      height: 90,
+                                      // 180
+                                      width: 90,
+                                      decoration: BoxDecoration(
+                                        // image: DecorationImage(
+                                        //   image: AssetImage(
+                                        //       'assets/images/meat.png'),
+                                        //   fit: BoxFit.cover,
+                                        // ),
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(15),
+                                            topRight: Radius.circular(15),
+                                            bottomLeft: Radius.circular(15),
+                                            bottomRight: Radius.circular(15)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.grey.withOpacity(0.07),
+                                            spreadRadius: 5,
+                                            blurRadius: 7,
+                                            offset: Offset(0,
+                                                8), // changes position of shadow
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: <Widget>[
+                                          Image.asset(
+                                              "assets/images/meaticon.png",
+                                              height: 30),
+                                          Text(
+                                            "type.data['categories'].keys[index]",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 14.0,
+                                              fontFamily: 'Axiforma',
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                );
+                              })));
+                        });
+                      },
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 30.0),
                       child: StreamBuilder(
@@ -397,6 +488,7 @@ class _ShopPageState extends State<ShopPage> {
                         child: StreamBuilder(
                           stream: Firestore.instance
                               .collection('products')
+                              .where('shop', isEqualTo: widget.data['username'])
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
@@ -408,19 +500,19 @@ class _ShopPageState extends State<ShopPage> {
                                     keepScrollOffset: false),
                                 shrinkWrap: true,
                                 scrollDirection: Axis.vertical,
-                                children: List.generate(60, (index) {
+                                children: List.generate(20, (index) {
                                   return ProductImage(
-                                    productName: snapshot.data.documents[0]
+                                    productName: snapshot.data.documents[index]
                                         ['name'],
-                                    productImage: snapshot.data.documents[0]
+                                    productImage: snapshot.data.documents[index]
                                         ['image'],
                                     productPrice: snapshot
-                                        .data.documents[0]['shop_price']
+                                        .data.documents[index]['shop_price']
                                         .toString(),
-                                    productUnit: snapshot.data.documents[0]
+                                    productUnit: snapshot.data.documents[index]
                                                 ['unit'] !=
                                             null
-                                        ? snapshot.data.documents[0]['unit']
+                                        ? snapshot.data.documents[index]['unit']
                                         : '',
                                   );
                                 }).toList(),

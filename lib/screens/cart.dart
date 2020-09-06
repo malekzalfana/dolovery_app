@@ -170,9 +170,9 @@ class _CartState extends State<Cart> {
 
   @override
   void initState() {
-    super.initState();
     loadcart();
     setupVerification();
+    super.initState();
   }
 
   var this_user;
@@ -405,7 +405,7 @@ class _CartState extends State<Cart> {
       this_user =
           await Firestore.instance.collection("users").document(uid).get();
 
-      print(this_user.data['number']);
+      // print(this_user.data['number']);
       // print(widget.thisUser);
 
       if (this_user.exists) {
@@ -593,7 +593,7 @@ class _CartState extends State<Cart> {
                     builder:
                         (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                       if (!snapshot.hasData) {
-                        return Text("Loading");
+                        return Text("...");
                       }
                       var minimum2 = false;
                       var cartitem = snapshot.data;
@@ -822,315 +822,407 @@ class _CartState extends State<Cart> {
               ),
             ),
           ),
-          Visibility(
-            visible: notsetup ? false : true,
-            child: Column(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Delivering to",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13.0,
-                        fontFamily: 'Axiforma',
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      right: 30.0, bottom: 10, left: 30, top: 12),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 2.2,
-                            blurRadius: 2.5,
-                            offset: Offset(0, 4), // changes position of shadow
+          FutureBuilder(
+              future: setupVerification(), // async work
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Text('Loading....');
+                  default:
+                    if ((snapshot.hasError)) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Column(
+                        children: [
+                          Visibility(
+                            visible: notsetup ? false : true,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 30.0, top: 10, bottom: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Delivering to",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 30.0,
+                                      bottom: 10,
+                                      left: 30,
+                                      top: 12),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.1),
+                                            spreadRadius: 2.2,
+                                            blurRadius: 2.5,
+                                            offset: Offset(0,
+                                                4), // changes position of shadow
+                                          ),
+                                        ],
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20))),
+                                    // color: Colors.grey,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        // Padding(
+                                        //   padding: const EdgeInsets.only(left: 15.0),
+                                        //   child: Image.asset(
+                                        //     'assets/icons/address_enabled.png',
+                                        //     height: 30.0,
+                                        //     width: 30.0,
+                                        //   ),
+                                        // ),
+                                        Container(
+                                            // color: Colors.green,
+                                            margin: new EdgeInsets.only(
+                                                left: 10.0, right: 0),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.5),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 10.0,
+                                                                left: 6,
+                                                                bottom: 5),
+                                                        child: Text(
+                                                          'Home',
+                                                          // textAlign: TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16,
+                                                            fontFamily:
+                                                                'Axiforma',
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 0),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 8.0,
+                                                                  bottom: 8),
+                                                          child: Text(
+                                                            'This is a demo address so you know',
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              height: 1.1,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              fontSize: 14.5,
+                                                              fontFamily:
+                                                                  'Axiforma',
+                                                              color: Colors
+                                                                  .grey[500],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 30.0, top: 10, bottom: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Payment",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Opacity(
+                                  opacity: 1,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 30.0,
+                                        bottom: 20,
+                                        left: 30,
+                                        top: 12),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.1),
+                                              spreadRadius: 2.2,
+                                              blurRadius: 2.5,
+                                              offset: Offset(0,
+                                                  4), // changes position of shadow
+                                            ),
+                                          ],
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20))),
+                                      // color: Colors.grey,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 15.0),
+                                              child: Icon(Icons.payment,
+                                                  size: 30,
+                                                  color: Colors.black)),
+                                          Container(
+                                              // color: Colors.green,
+                                              margin: new EdgeInsets.only(
+                                                  left: 10.0,
+                                                  right: 0,
+                                                  bottom: 0),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.5),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 10.0,
+                                                                  left: 6,
+                                                                  bottom: 5),
+                                                          child: Text(
+                                                            'Cash On Delivery',
+                                                            // textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 16,
+                                                              fontFamily:
+                                                                  'Axiforma',
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 8.0,
+                                                                  bottom: 8),
+                                                          child: Text(
+                                                            'Pay when the delivery arrives',
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              height: 1.1,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              fontSize: 14.5,
+                                                              fontFamily:
+                                                                  'Axiforma',
+                                                              color: Colors
+                                                                  .grey[500],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ))
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Visibility(
+                            visible: usersignedin ? false : true,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                              child: MaterialButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                elevation: 0,
+                                onPressed: () {
+                                  print("xlicked");
+                                  _signInPopUp(context);
+                                },
+                                color: Colors.redAccent[700],
+                                disabledColor: Colors.grey[200],
+                                textColor: Colors.white,
+                                minWidth: MediaQuery.of(context).size.width,
+                                height: 0,
+                                // padding: EdgeInsets.zero,
+                                padding: EdgeInsets.only(
+                                    left: 23, top: 10, right: 23, bottom: 10),
+                                child: Text(
+                                  "Sign in to continue",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.0,
+                                    fontFamily: 'Axiforma',
+                                    // color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Visibility(
+                            visible: usersignedin ? true : false,
+                            child: Visibility(
+                              visible: notsetup ? true : false,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                                child: MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  elevation: 0,
+                                  onPressed: () {
+                                    // print("xlicked");
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProfileScreen()))
+                                        .then((_) {
+                                      // refreshcart();
+                                      setupVerification();
+                                      setState(() {});
+                                    });
+                                  },
+                                  color: Colors.redAccent[700],
+                                  disabledColor: Colors.grey[200],
+                                  textColor: Colors.white,
+                                  minWidth: MediaQuery.of(context).size.width,
+                                  height: 0,
+                                  // padding: EdgeInsets.zero,
+                                  padding: EdgeInsets.only(
+                                      left: 23, top: 10, right: 23, bottom: 10),
+                                  child: Text(
+                                    "Setup your profile to continue",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15.0,
+                                      fontFamily: 'Axiforma',
+                                      // color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(25, 10, 25, 12),
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              elevation: 0,
+                              onPressed: notsetup ? null : () {},
+                              color: Colors.redAccent[700],
+                              disabledColor: Colors.grey[200],
+                              textColor: Colors.white,
+                              minWidth: MediaQuery.of(context).size.width,
+                              height: 0,
+                              // padding: EdgeInsets.zero,
+                              padding: EdgeInsets.only(
+                                  left: 23, top: 12, right: 23, bottom: 10),
+                              child: Text(
+                                "Confirm Order",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  fontFamily: 'Axiforma',
+                                  // color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                    // color: Colors.grey,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 15.0),
-                        //   child: Image.asset(
-                        //     'assets/icons/address_enabled.png',
-                        //     height: 30.0,
-                        //     width: 30.0,
-                        //   ),
-                        // ),
-                        Container(
-                            // color: Colors.green,
-                            margin: new EdgeInsets.only(left: 10.0, right: 0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.5),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 10.0, left: 6, bottom: 5),
-                                        child: Text(
-                                          'Home',
-                                          // textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            fontFamily: 'Axiforma',
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 8.0, bottom: 8),
-                                          child: Text(
-                                            'This is a demo address so you know',
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              height: 1.1,
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 14.5,
-                                              fontFamily: 'Axiforma',
-                                              color: Colors.grey[500],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ))
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Payment",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13.0,
-                        fontFamily: 'Axiforma',
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
-                ),
-                Opacity(
-                  opacity: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        right: 30.0, bottom: 10, left: 30, top: 12),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              spreadRadius: 2.2,
-                              blurRadius: 2.5,
-                              offset:
-                                  Offset(0, 4), // changes position of shadow
-                            ),
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
-                      // color: Colors.grey,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.only(left: 15.0),
-                              child: Icon(Icons.payment,
-                                  size: 30, color: Colors.black)),
-                          Container(
-                              // color: Colors.green,
-                              margin: new EdgeInsets.only(left: 10.0, right: 0),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 10.0, left: 6, bottom: 5),
-                                          child: Text(
-                                            'Cash On Delivery',
-                                            // textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              fontFamily: 'Axiforma',
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 8.0, bottom: 8),
-                                          child: Text(
-                                            'Pay when the delivery arrives',
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              height: 1.1,
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 14.5,
-                                              fontFamily: 'Axiforma',
-                                              color: Colors.grey[500],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Visibility(
-            visible: usersignedin ? false : true,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
-              child: MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                elevation: 0,
-                onPressed: () {
-                  print("xlicked");
-                  _signInPopUp(context);
-                },
-                color: Colors.redAccent[700],
-                disabledColor: Colors.grey[200],
-                textColor: Colors.white,
-                minWidth: MediaQuery.of(context).size.width,
-                height: 0,
-                // padding: EdgeInsets.zero,
-                padding:
-                    EdgeInsets.only(left: 23, top: 10, right: 23, bottom: 10),
-                child: Text(
-                  "Sign in to continue",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15.0,
-                    fontFamily: 'Axiforma',
-                    // color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Visibility(
-            visible: usersignedin ? true : false,
-            child: Visibility(
-              visible: notsetup ? true : false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
-                child: MaterialButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  elevation: 0,
-                  onPressed: () {
-                    // print("xlicked");
-                    _welcomePopUp(context, name);
-                  },
-                  color: Colors.redAccent[700],
-                  disabledColor: Colors.grey[200],
-                  textColor: Colors.white,
-                  minWidth: MediaQuery.of(context).size.width,
-                  height: 0,
-                  // padding: EdgeInsets.zero,
-                  padding:
-                      EdgeInsets.only(left: 23, top: 10, right: 23, bottom: 10),
-                  child: Text(
-                    "Setup your profile to continue",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.0,
-                      fontFamily: 'Axiforma',
-                      // color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(25, 10, 25, 12),
-            child: MaterialButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              elevation: 0,
-              onPressed: notsetup ? null : () {},
-              color: Colors.redAccent[700],
-              disabledColor: Colors.grey[200],
-              textColor: Colors.white,
-              minWidth: MediaQuery.of(context).size.width,
-              height: 0,
-              // padding: EdgeInsets.zero,
-              padding:
-                  EdgeInsets.only(left: 23, top: 12, right: 23, bottom: 10),
-              child: Text(
-                "Confirm Order",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15.0,
-                  fontFamily: 'Axiforma',
-                  // color: Colors.white,
-                ),
-              ),
-            ),
-          ),
+                      );
+                    }
+                }
+              }),
           Text(usersignedin ? "user is signed in" : "user not signed in"),
           Text(notsetup ? "user is not setup" : "user is setup"),
           Padding(

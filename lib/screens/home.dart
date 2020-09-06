@@ -1095,7 +1095,7 @@ class HomeScreenState extends State<HomeScreen> {
               child: StreamBuilder(
                 stream: Firestore.instance
                     .collection('products')
-                    .where('type', isEqualTo: 'supplements')
+                    .where('type', isEqualTo: 'Supplements')
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -1112,14 +1112,15 @@ class HomeScreenState extends State<HomeScreen> {
                                 context, snapshot.data, refreshcart);
                           },
                           child: ProductImage(
-                            productName: snapshot.data.documents[0]['name'],
-                            productImage: snapshot.data.documents[0]['image'],
+                            productName: snapshot.data.documents[index]['name'],
+                            productImage: snapshot.data.documents[index]
+                                ['image'],
                             productPrice: snapshot
-                                .data.documents[0]['shop_price']
+                                .data.documents[index]['shop_price']
                                 .toString(),
                             productUnit:
-                                snapshot.data.documents[0]['unit'] != null
-                                    ? snapshot.data.documents[0]['unit']
+                                snapshot.data.documents[index]['unit'] != null
+                                    ? snapshot.data.documents[index]['unit']
                                     : '',
                           ),
                         );
