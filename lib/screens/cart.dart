@@ -1,6 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:dolovery_app/widgets/signinpopup.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dolovery_app/screens/profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Cart extends StatefulWidget {
   final dynamic user; //if you have multiple values add here
@@ -78,11 +86,7 @@ class _CartState extends State<Cart> {
     // List<String> cart = prefs.getStringList('cart');
 
     // setState(() {
-    if (cart.length == 1) {
-      reset();
 
-      return print('XXXXXXXXXXXXX');
-    }
     if (remove) {
       for (var i; i <= quantity; i++) {
         print('removed completely');
@@ -103,6 +107,11 @@ class _CartState extends State<Cart> {
         prefs.setDouble('items', prefs.getDouble('items') - 1);
         prefs.setDouble('total', prefs.getDouble('total') - (1 * price));
         cart.remove(itemid);
+        if (cart.length == 0) {
+          reset();
+
+          return print('XXXXXXXXXXXXX');
+        }
       }
     }
     prefs.setStringList('cart', cart);
@@ -163,6 +172,252 @@ class _CartState extends State<Cart> {
   void initState() {
     super.initState();
     loadcart();
+    setupVerification();
+  }
+
+  var this_user;
+  String name;
+  String uid;
+  String uemail;
+  bool notsetup = true;
+  bool usersignedin = true;
+
+  void _signInPopUp(context) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            height: 450,
+            child: Column(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        color: Colors.grey,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 50.0),
+                  child: Image.asset(
+                    'assets/images/doloverywhiteback.png',
+                    // height: 120.0,
+                    width: 120.0,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: GestureDetector(
+                    child: Image.asset('assets/images/fblogin.jpg', width: 300),
+                    onTap: () => signUpWithFacebook(),
+                  ),
+                ),
+                GestureDetector(
+                  child: Image.asset('assets/images/glogin.jpg', width: 300),
+                  onTap: () => _googleSignUp(),
+                )
+              ],
+            ),
+          );
+        });
+    setState(() {});
+  }
+
+  void _welcomePopUp(context, name) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            height: 400,
+            child: Column(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        color: Colors.grey,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 50.0),
+                  child: Image.asset(
+                    'assets/images/doloverywhiteback.png',
+                    // height: 120.0,
+                    width: 120.0,
+                  ),
+                ),
+                Text(
+                  "Welcome",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    fontFamily: 'Axiforma',
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 28.0,
+                    fontFamily: 'Axiforma',
+                    color: Colors.redAccent[700],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: BorderSide(color: Colors.red)),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ProfileScreen()));
+                    },
+                    color: Colors.redAccent[700],
+                    textColor: Colors.white,
+                    minWidth: 0,
+                    height: 0,
+                    // padding: EdgeInsets.zero,
+                    padding: EdgeInsets.only(
+                        left: 20, top: 10, right: 20, bottom: 10),
+                    child: Text(
+                      "Setup your profile",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13.0,
+                        fontFamily: 'Axiforma',
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+    setState(() {});
+  }
+
+  Future<void> _googleSignUp() async {
+    try {
+      final GoogleSignIn _googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+      );
+      final FirebaseAuth _auth = FirebaseAuth.instance;
+
+      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final FirebaseUser user =
+          (await _auth.signInWithCredential(credential)).user;
+      final snackBar = SnackBar(
+        content: Text('Welcome to Dolovery!'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            // Some code to undo the change.
+          },
+        ),
+      );
+      // var docRef = db.collection("cities").doc("SF");
+      print("signed in " + user.uid);
+      Navigator.of(context).pop();
+      _welcomePopUp(context, user.displayName);
+      // used before user.uid
+      final notsetup =
+          await Firestore.instance.collection("users").document(user.uid).get();
+      if (!notsetup.exists) {
+        print("user exists");
+      } else {
+        Firestore.instance.collection("users").add({
+          "name": "john",
+          "age": 50,
+          "email": "example@example.com",
+          "address": {"street": "street 24", "city": "new york"}
+        }).then((value) {
+          print(value.documentID);
+        });
+      }
+
+      // if (Firestore.instance.collection("users").document(user.uid).get() != null) {
+
+      // Scaffold.of(context).showSnackBar(snackBar);
+      // }
+
+      return user;
+    } catch (e) {
+      print(e.message);
+    }
+  }
+
+  Future<void> signUpWithFacebook() async {
+    try {
+      var facebookLogin = new FacebookLogin();
+      var result = await facebookLogin.logIn(['email']);
+
+      if (result.status == FacebookLoginStatus.loggedIn) {
+        final AuthCredential credential = FacebookAuthProvider.getCredential(
+          accessToken: result.accessToken.token,
+        );
+        final FirebaseUser user =
+            (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+        print('signed in ' + user.displayName);
+        return user;
+      }
+    } catch (e) {
+      print(e.message);
+    }
+  }
+
+  Future setupVerification() async {
+    // print("USER BEING WATCHED");
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    if (user != null) {
+      uid = user.uid;
+      name = user.displayName;
+      uemail = user.email;
+      // print("USERNAME")
+      this_user =
+          await Firestore.instance.collection("users").document(uid).get();
+
+      print(this_user.data['number']);
+      // print(widget.thisUser);
+
+      if (this_user.exists) {
+        notsetup = false;
+        print("user is not setup");
+      }
+    } else {
+      usersignedin = false;
+      print("usre is not signed in");
+    }
+
+    // return this_user;
   }
 
   @override
@@ -179,6 +434,8 @@ class _CartState extends State<Cart> {
     double width = MediaQuery.of(context).size.width;
     // print(cart);
     List<Widget> list = new List<Widget>();
+    // setupVerification();
+    // setState(() {});
     // loadcart();
     // String formatted_date = DateFormat.yMMMMd().format(timestamp);
     return new Scaffold(
@@ -565,222 +822,304 @@ class _CartState extends State<Cart> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Delivering to",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13.0,
-                  fontFamily: 'Axiforma',
-                  color: Colors.black54,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-                right: 30.0, bottom: 10, left: 30, top: 12),
-            child: Container(
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 2.2,
-                      blurRadius: 2.5,
-                      offset: Offset(0, 4), // changes position of shadow
+          Visibility(
+            visible: notsetup ? false : true,
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Delivering to",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13.0,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black54,
+                      ),
                     ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              // color: Colors.grey,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  // Padding(
-                  //   padding: const EdgeInsets.only(left: 15.0),
-                  //   child: Image.asset(
-                  //     'assets/icons/address_enabled.png',
-                  //     height: 30.0,
-                  //     width: 30.0,
-                  //   ),
-                  // ),
-                  Container(
-                      // color: Colors.green,
-                      margin: new EdgeInsets.only(left: 10.0, right: 0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10.0, left: 6, bottom: 5),
-                                  child: Text(
-                                    'Home',
-                                    // textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      right: 30.0, bottom: 10, left: 30, top: 12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 2.2,
+                            blurRadius: 2.5,
+                            offset: Offset(0, 4), // changes position of shadow
+                          ),
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    // color: Colors.grey,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 15.0),
+                        //   child: Image.asset(
+                        //     'assets/icons/address_enabled.png',
+                        //     height: 30.0,
+                        //     width: 30.0,
+                        //   ),
+                        // ),
+                        Container(
+                            // color: Colors.green,
+                            margin: new EdgeInsets.only(left: 10.0, right: 0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.5),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8.0, bottom: 8),
-                                    child: Text(
-                                      'This is a demo address so you know',
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        height: 1.1,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 14.5,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.grey[500],
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10.0, left: 6, bottom: 5),
+                                        child: Text(
+                                          'Home',
+                                          // textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            fontFamily: 'Axiforma',
+                                            color: Colors.black,
+                                          ),
+                                        ),
                                       ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 8.0, bottom: 8),
+                                          child: Text(
+                                            'This is a demo address so you know',
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              height: 1.1,
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 14.5,
+                                              fontFamily: 'Axiforma',
+                                              color: Colors.grey[500],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
+                            ))
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Payment",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13.0,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                ),
+                Opacity(
+                  opacity: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        right: 30.0, bottom: 10, left: 30, top: 12),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 2.2,
+                              blurRadius: 2.5,
+                              offset:
+                                  Offset(0, 4), // changes position of shadow
                             ),
                           ],
-                        ),
-                      ))
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Payment",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13.0,
-                  fontFamily: 'Axiforma',
-                  color: Colors.black54,
-                ),
-              ),
-            ),
-          ),
-          Opacity(
-            opacity: 0.4,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  right: 30.0, bottom: 10, left: 30, top: 12),
-              child: Container(
-                decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 2.2,
-                        blurRadius: 2.5,
-                        offset: Offset(0, 4), // changes position of shadow
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      // color: Colors.grey,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: Icon(Icons.payment,
+                                  size: 30, color: Colors.black)),
+                          Container(
+                              // color: Colors.green,
+                              margin: new EdgeInsets.only(left: 10.0, right: 0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.5),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10.0, left: 6, bottom: 5),
+                                          child: Text(
+                                            'Cash On Delivery',
+                                            // textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              fontFamily: 'Axiforma',
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 8.0, bottom: 8),
+                                          child: Text(
+                                            'Pay when the delivery arrives',
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              height: 1.1,
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 14.5,
+                                              fontFamily: 'Axiforma',
+                                              color: Colors.grey[500],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ))
+                        ],
                       ),
-                    ],
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                // color: Colors.grey,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.only(left: 15.0),
-                        child:
-                            Icon(Icons.payment, size: 30, color: Colors.black)),
-                    Container(
-                        // color: Colors.green,
-                        margin: new EdgeInsets.only(left: 10.0, right: 0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.5),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 10.0, left: 6, bottom: 5),
-                                    child: Text(
-                                      'Cash On Delivery',
-                                      // textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8.0, bottom: 8),
-                                    child: Text(
-                                      'Pay when the delivery arrives',
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        height: 1.1,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 14.5,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.grey[500],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ))
-                  ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Visibility(
+            visible: usersignedin ? false : true,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+              child: MaterialButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                elevation: 0,
+                onPressed: () {
+                  print("xlicked");
+                  _signInPopUp(context);
+                },
+                color: Colors.redAccent[700],
+                disabledColor: Colors.grey[200],
+                textColor: Colors.white,
+                minWidth: MediaQuery.of(context).size.width,
+                height: 0,
+                // padding: EdgeInsets.zero,
+                padding:
+                    EdgeInsets.only(left: 23, top: 10, right: 23, bottom: 10),
+                child: Text(
+                  "Sign in to continue",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.0,
+                    fontFamily: 'Axiforma',
+                    // color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: usersignedin ? true : false,
+            child: Visibility(
+              visible: notsetup ? true : false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                child: MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  elevation: 0,
+                  onPressed: () {
+                    // print("xlicked");
+                    _welcomePopUp(context, name);
+                  },
+                  color: Colors.redAccent[700],
+                  disabledColor: Colors.grey[200],
+                  textColor: Colors.white,
+                  minWidth: MediaQuery.of(context).size.width,
+                  height: 0,
+                  // padding: EdgeInsets.zero,
+                  padding:
+                      EdgeInsets.only(left: 23, top: 10, right: 23, bottom: 10),
+                  child: Text(
+                    "Setup your profile to continue",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.0,
+                      fontFamily: 'Axiforma',
+                      // color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(25, 22, 25, 12),
+            padding: const EdgeInsets.fromLTRB(25, 10, 25, 12),
             child: MaterialButton(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
               elevation: 0,
-              onPressed: () {},
+              onPressed: notsetup ? null : () {},
               color: Colors.redAccent[700],
-              // disabledColor: Colors.grey[200],
+              disabledColor: Colors.grey[200],
               textColor: Colors.white,
               minWidth: MediaQuery.of(context).size.width,
               height: 0,
               // padding: EdgeInsets.zero,
               padding:
-                  EdgeInsets.only(left: 23, top: 10, right: 23, bottom: 10),
+                  EdgeInsets.only(left: 23, top: 12, right: 23, bottom: 10),
               child: Text(
                 "Confirm Order",
                 style: TextStyle(
@@ -792,6 +1131,8 @@ class _CartState extends State<Cart> {
               ),
             ),
           ),
+          Text(usersignedin ? "user is signed in" : "user not signed in"),
+          Text(notsetup ? "user is not setup" : "user is setup"),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
             child: Center(

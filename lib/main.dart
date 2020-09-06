@@ -83,10 +83,17 @@ class _MyHomePageState extends State<MyHomePage> {
   final passwordTextController = TextEditingController();
   int _selectedItemIndex = 0;
 
-  refresh() {
+  gotosalle() {
     setState(() {
       print(_selectedItemIndex);
       _selectedItemIndex = 1;
+    });
+  }
+
+  gotohome() {
+    setState(() {
+      print(_selectedItemIndex);
+      _selectedItemIndex = 0;
     });
   }
 
@@ -122,9 +129,9 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     pages = [
-      HomeScreen(notifyParent: refresh, notifyParent2: refreshcart),
+      HomeScreen(notifyParent: gotosalle, notifyParent2: refreshcart),
       // null,
-      SalleScreen(),
+      SalleScreen(notifyParent: gotohome),
       // profilescreen
       // null,
       // ProfileScreen(),
@@ -205,7 +212,7 @@ class _MyHomePageState extends State<MyHomePage> {
               cart_total = cart_total == null ? 0 : cart_total;
               print(cart_items.toString() + cart_total.toString());
               //prefs.getDouble('total').toInt();
-              if (/*snapshot.hasData*/ 1 == 1) {
+              if (_getPrefs() != null) {
                 return SizedBox(
                   height: cart_items == 0 ? 50 : 105,
                   child: Container(
@@ -348,6 +355,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _getPrefs() async {
     prefs = await SharedPreferences.getInstance();
+    return true;
     // setState(() {
     //   type = prefs.getString('type');
     // total = prefs.getDouble('total');

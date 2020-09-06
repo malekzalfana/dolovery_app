@@ -692,7 +692,6 @@ class HomeScreenState extends State<HomeScreen> {
                   .then((_) {
                 refreshcart();
               });
-              ;
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -842,8 +841,15 @@ class HomeScreenState extends State<HomeScreen> {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => ProfileScreen()));
                     },
-                    child: Image.asset("assets/images/fullfilldolovery.png",
-                        height: 23))
+                    child: GestureDetector(
+                      onTap: () {
+                        FirebaseAuth.instance.signOut().then((onValue) {
+                          print("JUST LOGGED OUT");
+                        });
+                      },
+                      child: Image.asset("assets/images/fullfilldolovery.png",
+                          height: 23),
+                    ))
               ],
             ),
           ),
@@ -895,7 +901,11 @@ class HomeScreenState extends State<HomeScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(8)),
               onPressed: () {
-                // _signInOut();
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => TabsDemo()))
+                    .then((_) {
+                  refreshcart();
+                });
               },
               elevation: 0,
               color: Colors.grey[100],
@@ -941,8 +951,8 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
                 GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProfileScreen()));
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //     builder: (context) => ProfileScreen()));
                     },
                     child: Image.asset("assets/images/fullfilldolovery.png",
                         height: 23))
@@ -1127,7 +1137,12 @@ class HomeScreenState extends State<HomeScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(8)),
               onPressed: () {
-                // _signInOut();
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => SupplementsScreen()))
+                    .then((_) {
+                  refreshcart();
+                });
               },
               elevation: 0,
               color: Colors.grey[100],

@@ -9,9 +9,13 @@ import 'package:dolovery_app/widgets/salle.dart';
 import 'package:dolovery_app/screens/salleitem.dart';
 
 class SalleScreen extends StatefulWidget {
+  final Function() notifyParent;
+  // final Function() notifyParent2;
+  // ProfileMainScreen(thisUser);
+  SalleScreen({Key key, @required this.notifyParent}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
-    return FormScreenState();
+    return SalleScreenState();
   }
 }
 
@@ -24,7 +28,7 @@ getCurrentDate() {
   return formatted; // s
 }
 
-class FormScreenState extends State<SalleScreen> {
+class SalleScreenState extends State<SalleScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final weeks = [
     "Monday",
@@ -44,7 +48,7 @@ class FormScreenState extends State<SalleScreen> {
         // AppBar(
         //   backgroundColor: Colors.transparent,
         //   elevation: 0.0,
-        //   automaticallyImplyLeading: false,
+        //   // automaticallyImplyLeading: false,
         //   //BackButton(color: Colors.black),
         //   centerTitle: true,
         //   title: Text(
@@ -58,18 +62,43 @@ class FormScreenState extends State<SalleScreen> {
         //     ),
         //   ),
         // ),
-        Padding(
-          padding: const EdgeInsets.all(13.0),
-          child: Text(
-            getCurrentDate(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.w800,
-              fontSize: 16.0,
-              fontFamily: 'Axiforma',
-              color: Colors.black,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(
+              width: 7,
             ),
-          ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: GestureDetector(
+                  onTap: () {
+                    widget.notifyParent();
+                    // Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.keyboard_arrow_left,
+                    color: Colors.black,
+                    size: 30.0,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: Text(
+                getCurrentDate(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 16.0,
+                  fontFamily: 'Axiforma',
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            Spacer()
+          ],
         ),
         Padding(
           padding: const EdgeInsets.only(top: 8.0, bottom: 8),
@@ -151,8 +180,13 @@ class FormScreenState extends State<SalleScreen> {
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    SalleItem(snapshot.data, weeks[index], snapshot.data.documents[index]['serving_prices'], snapshot.data.documents[index]['descriptions'] )));
+                                builder: (context) => SalleItem(
+                                    snapshot.data,
+                                    weeks[index],
+                                    snapshot.data.documents[index]
+                                        ['serving_prices'],
+                                    snapshot.data.documents[index]
+                                        ['descriptions'])));
                           },
                           child: SalleImage(
                               salleName: snapshot.data.documents[index]['name'],
