@@ -300,187 +300,136 @@ class _ShopPageState extends State<ShopPage> {
                     FutureBuilder(
                       future: getcategories(),
                       builder: (context, snapshot) {
-                        print(type);
+                        // print(type.data['categories'].keys[0]);
                         // return Text("dsddd");
-                        type.data['categories'].forEach((cat, sub) {
-                          // return Text("sss");
-                          // print("Key : $cat, Value : $sub");
-                          // for (var i = 0; i < sub.length; i++) {
-                          //   return Text(i.toString());
-                          // }
+
+                        for (var cat in type.data['categories'].keys) {
+                          print('$type was written by ${type[cat]}');
+                        }
+
+                        return SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                                children: type['categories']
+                                    .keys
+                                    .map<Widget>((entry) {
+                              print(entry);
+                              // var w = Text("ssss");
+                              // type['categories'](entry.key);
+                              // return w;
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 10.0, bottom: 20, top: 26),
+                                child: Container(
+                                    height: 110,
+                                    // 180
+                                    width: 110,
+                                    decoration: BoxDecoration(
+                                      // image: DecorationImage(
+                                      //   image: AssetImage(
+                                      //       'assets/images/meat.png'),
+                                      //   fit: BoxFit.cover,
+                                      // ),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15),
+                                          bottomLeft: Radius.circular(15),
+                                          bottomRight: Radius.circular(15)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.07),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: Offset(0,
+                                              8), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: <Widget>[
+                                        // Image.asset(
+                                        //     "assets/images/meaticon.png",
+                                        //     height: 30),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            entry,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 12.0,
+                                              height: 1.3,
+                                              fontFamily: 'Axiforma',
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              );
+                            }).toList()));
+                      },
+                    ),
+                    FutureBuilder(
+                      future: getcategories(),
+                      builder: (context, snapshot) {
+                        // print(type.data['categories'].keys[0]);
+                        // return Text("dsddd");
+
+                        for (var cat in type.data['categories'].keys) {
+                          print('$type was written by ${type[cat]}');
+                        }
+
+                        return Column(
+                            children:
+                                type['categories'].keys.map<Widget>((entry) {
+                          print(entry);
+                          // var w = Text("ssss");
+                          // type['categories'](entry.key);
+                          // return w;
                           return SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                   children:
-                                      //type.data['categories'].length
-                                      List<Widget>.generate(3, (int index) {
-                                // print(categories[index]);
+                                      entry.entries.map<Widget>((subcats) {
+                                print(entry);
+                                // var w = Text("ssss");
+                                // type['categories'](entry.key);
+                                // return w;
                                 return Padding(
                                   padding: const EdgeInsets.only(
-                                      right: 10.0, bottom: 20),
+                                      right: 10.0, bottom: 20, top: 26),
                                   child: Container(
-                                      height: 90,
+                                      height: 60,
                                       // 180
-                                      width: 90,
-                                      decoration: BoxDecoration(
-                                        // image: DecorationImage(
-                                        //   image: AssetImage(
-                                        //       'assets/images/meat.png'),
-                                        //   fit: BoxFit.cover,
-                                        // ),
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(15),
-                                            topRight: Radius.circular(15),
-                                            bottomLeft: Radius.circular(15),
-                                            bottomRight: Radius.circular(15)),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.grey.withOpacity(0.07),
-                                            spreadRadius: 5,
-                                            blurRadius: 7,
-                                            offset: Offset(0,
-                                                8), // changes position of shadow
-                                          ),
-                                        ],
-                                      ),
+                                      width: 80,
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: <Widget>[
-                                          Image.asset(
-                                              "assets/images/meaticon.png",
-                                              height: 30),
-                                          Text(
-                                            "type.data['categories'].keys[index]",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w800,
-                                              fontSize: 14.0,
-                                              fontFamily: 'Axiforma',
-                                              color: Colors.black,
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              subcats,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 12.0,
+                                                height: 1.3,
+                                                fontFamily: 'Axiforma',
+                                                color: Colors.black,
+                                              ),
                                             ),
                                           ),
                                         ],
                                       )),
                                 );
-                              })));
-                        });
+                              }).toList()));
+                        }).toList());
                       },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
-                      child: StreamBuilder(
-                        stream: Firestore.instance
-                            .collection('categroies')
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                    children:
-                                        List<Widget>.generate(10, (int index) {
-                                  // print(categories[index]);
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 10.0, bottom: 20),
-                                    child: Container(
-                                        height: 90,
-                                        // 180
-                                        width: 90,
-                                        decoration: BoxDecoration(
-                                          // image: DecorationImage(
-                                          //   image: AssetImage(
-                                          //       'assets/images/meat.png'),
-                                          //   fit: BoxFit.cover,
-                                          // ),
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(15),
-                                              topRight: Radius.circular(15),
-                                              bottomLeft: Radius.circular(15),
-                                              bottomRight: Radius.circular(15)),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.07),
-                                              spreadRadius: 5,
-                                              blurRadius: 7,
-                                              offset: Offset(0,
-                                                  8), // changes position of shadow
-                                            ),
-                                          ],
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: <Widget>[
-                                            Image.asset(
-                                                "assets/images/meaticon.png",
-                                                height: 30),
-                                            Text(
-                                              snapshot.data.documents[0]
-                                                  ['name'],
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 14.0,
-                                                fontFamily: 'Axiforma',
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        )),
-                                  );
-                                })));
-                          } else if (snapshot.hasError) {
-                            return Text(snapshot.error.toString());
-                          }
-                          return Center(child: CircularProgressIndicator());
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: StreamBuilder(
-                        stream: Firestore.instance
-                            .collection('categroies')
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                    children:
-                                        List<Widget>.generate(10, (int index) {
-                                  // print(categories[index]);
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 10.0, bottom: 20),
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: Text(
-                                        snapshot.data.documents[0]['name'],
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 16.0,
-                                          fontFamily: 'Axiforma',
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                })));
-                          } else if (snapshot.hasError) {
-                            return Text(snapshot.error.toString());
-                          }
-                          return Center(child: CircularProgressIndicator());
-                        },
-                      ),
                     ),
                     Padding(
                         padding: const EdgeInsets.only(
