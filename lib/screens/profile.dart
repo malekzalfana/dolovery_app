@@ -679,19 +679,24 @@ class FormScreenState extends State<ProfileScreen> {
                           final uid = user.uid;
                           final name = user.displayName;
                           final uemail = user.email;
+                          String chosen_address =
+                              UniqueKey().hashCode.toString();
                           Map<String, dynamic> thisAddress = {
                             "name": 'Home',
                             "city": _city,
                             "street_address": _streetaddress,
                             "landmark": _landmark,
                             "apartment": _apartment,
+                            "chosen_address": chosen_address,
+                            // "order": "1"
                           };
                           List addresses = [thisAddress];
                           Map<String, dynamic> thisuser = {
                             "fullname": _fullname,
                             "number": _phone,
                             "email": uemail,
-                            "address": addresses
+                            "address": addresses,
+                            "chosen_address": chosen_address
                             // "id": uid,
                             // "city": _city,
                             // "street_address": _streetaddress,

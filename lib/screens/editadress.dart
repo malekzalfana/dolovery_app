@@ -2,22 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AddAddress extends StatefulWidget {
+class EditAddress extends StatefulWidget {
   final List addressArray;
-  AddAddress(this.addressArray, {Key key}) : super(key: key);
+  final int addressCount;
+  final bool isDefault;
+  final String thisuser;
+  EditAddress(
+      this.addressArray, this.addressCount, this.isDefault, this.thisuser,
+      {Key key})
+      : super(key: key);
 
   // final List addressArray;
-  // // AddAddress(this.addressArray);
+  // // EditAddress(this.addressArray);
 
-  // const AddAddress({Key key, this.addressArray}) : super(key: key);
+  // const EditAddress({Key key, this.addressArray}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return AddAddressState();
+    return EditAddressState();
   }
 }
 
-class AddAddressState extends State<AddAddress> {
+class EditAddressState extends State<EditAddress> {
   // String _address = "";
   String _streetaddress = "";
   String _landmark = "";
@@ -26,12 +32,13 @@ class AddAddressState extends State<AddAddress> {
   String _phone = "";
   String _address_name = "";
   String _city = "";
+  String addressID = "";
   // List addressArray;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController controller = TextEditingController();
 
-  bool canSubmit = false;
+  bool canSubmit = true;
 
   // Future checklocation() async {
   //   Position position = await getLastKnownPosition();
@@ -92,6 +99,8 @@ class AddAddressState extends State<AddAddress> {
     return newuser = false;
   }
 
+  bool newIsDefault;
+  bool ult;
   // @override
   // void dispose() {
   //   controller?.dispose();
@@ -113,6 +122,20 @@ class AddAddressState extends State<AddAddress> {
     "Tripoli3",
     "Saida3"
   ];
+  Widget _defaultAddress() {
+    return CheckboxListTile(
+      title: Text("Set as default address"),
+      value: newIsDefault,
+      onChanged: (newValue) {
+        print(newValue);
+        setState(() {
+          newIsDefault = newValue;
+          addressEdited = true;
+        });
+      },
+      controlAffinity: ListTileControlAffinity.leading, //  <-- leading Checkbox
+    );
+  }
 
   Widget _address1Build() {
     return Padding(
@@ -141,7 +164,7 @@ class AddAddressState extends State<AddAddress> {
                 // disabledBorder: InputBorder.none,),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    hint: Text("Select City"),
+                    hint: Text(_city),
                     isExpanded: true,
                     value: currentSelectedValue,
                     isDense: true,
@@ -173,6 +196,7 @@ class AddAddressState extends State<AddAddress> {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: TextFormField(
+        initialValue: _streetaddress,
         decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
@@ -182,6 +206,7 @@ class AddAddressState extends State<AddAddress> {
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
+
             // errorBorder: InputBorder.none,
             // disabledBorder: InputBorder.none,
             labelText: 'Street Adress'),
@@ -212,6 +237,7 @@ class AddAddressState extends State<AddAddress> {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: TextFormField(
+        initialValue: _landmark,
         decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
@@ -251,6 +277,7 @@ class AddAddressState extends State<AddAddress> {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: TextFormField(
+        initialValue: _address_name,
         decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
@@ -290,6 +317,7 @@ class AddAddressState extends State<AddAddress> {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: TextFormField(
+        initialValue: _apartment,
         decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
@@ -326,8 +354,26 @@ class AddAddressState extends State<AddAddress> {
     );
   }
 
+  // @override
+  // void initState() {
+  //   newIsDefault = widget.isDefault;
+  //   super.initState();
+  // }
+  bool addressEdited = false;
   @override
   Widget build(BuildContext context) {
+    _streetaddress = widget.addressArray[widget.addressCount]["street_address"];
+    _landmark = widget.addressArray[widget.addressCount]["landmark"];
+    // String _city;
+
+    _address_name = widget.addressArray[widget.addressCount]["name"];
+    _city = widget.addressArray[widget.addressCount]["city"];
+    addressID = widget.addressArray[widget.addressCount]["id"];
+    _apartment = widget.addressArray[widget.addressCount]["apartment"];
+    if (!addressEdited) {
+      newIsDefault = widget.isDefault;
+    }
+
     print(widget.addressArray);
     print("above");
     return Scaffold(
@@ -337,7 +383,7 @@ class AddAddressState extends State<AddAddress> {
         leading: BackButton(color: Colors.black),
         centerTitle: true,
         title: Text(
-          "Add New Address",
+          "Edit " + _address_name,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontWeight: FontWeight.w800,
@@ -348,168 +394,173 @@ class AddAddressState extends State<AddAddress> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.all(44),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                // Text(
-                //   "Enter the details",
-                //   textAlign: TextAlign.left,
-                //   style: TextStyle(
-                //     fontWeight: FontWeight.w800,
-                //     fontSize: 28.0,
-                //     fontFamily: 'Axiforma',
-                //     color: Colors.black,
-                //   ),
-                // ),
-                _address_nameBuild(),
-                _address1Build(),
-                _address2Build(),
-                _address3Build(),
-                _address4Build(),
-                SizedBox(height: 10),
-                Visibility(
-                  visible: canSubmit,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          side: BorderSide(color: Colors.red)),
-                      onPressed: () {
-                        if (!_formKey.currentState.validate()) {
-                          return;
-                        }
+        child: FutureBuilder(
+            future: setupVerification(),
+            builder: (context, snapshot) {
+              return Container(
+                margin: EdgeInsets.all(44),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      // Text(
+                      //   "Enter the details",
+                      //   textAlign: TextAlign.left,
+                      //   style: TextStyle(
+                      //     fontWeight: FontWeight.w800,
+                      //     fontSize: 28.0,
+                      //     fontFamily: 'Axiforma',
+                      //     color: Colors.black,
+                      //   ),
+                      // ),
+                      _address_nameBuild(),
+                      _address1Build(),
+                      _address2Build(),
+                      _address3Build(),
+                      _address4Build(),
+                      _defaultAddress(),
+                      SizedBox(height: 10),
+                      Visibility(
+                        visible: canSubmit,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                side: BorderSide(color: Colors.red)),
+                            onPressed: () {
+                              if (!_formKey.currentState.validate()) {
+                                return;
+                              }
 
-                        _formKey.currentState.save();
+                              _formKey.currentState.save();
 
-                        print("adding profile");
-                        void inputData() async {
-                          final FirebaseUser user =
-                              await FirebaseAuth.instance.currentUser();
-                          final uid = user.uid;
-                          final name = user.displayName;
-                          final uemail = user.email;
-                          Map<String, dynamic> thisAddress = {
-                            "name": _address_name,
-                            "city": _city,
-                            "street_address": _streetaddress,
-                            "landmark": _landmark,
-                            "apartment": _apartment,
-                            "id": UniqueKey().hashCode.toString()
-                          };
-                          print('userid is' + uid.toString());
-                          print(thisAddress);
-                          print(widget.addressArray);
+                              print("adding profile");
+                              void inputData() async {
+                                final FirebaseUser user =
+                                    await FirebaseAuth.instance.currentUser();
+                                final uid = user.uid;
+                                final name = user.displayName;
+                                final uemail = user.email;
+                                Map<String, dynamic> thisAddress = {
+                                  "name": _address_name,
+                                  "city": _city,
+                                  "street_address": _streetaddress,
+                                  "landmark": _landmark,
+                                  "apartment": _apartment,
+                                  "id": addressID
+                                };
+                                print('userid is' + uid.toString());
+                                print(thisAddress);
+                                print(widget.addressArray);
 
-                          // addressArray  ;
-                          // List finalAdressArray = [];
-                          widget.addressArray.add(thisAddress);
+                                // addressArray  ;
+                                // List finalAdressArray = [];
+                                // widget.addressArray.add(thisAddress);
+                                // var rList = [0, 1, 2, 3, 4, 5, 6];
+                                widget.addressArray.replaceRange(
+                                    widget.addressCount,
+                                    widget.addressCount + 1,
+                                    [thisAddress]);
+                                // print('$rList'); // [0, 1, 10, 3, 4, 5, 6]
 
-                          // Future
-                          // List addresses = [thisAddress];
-                          // Map<String, dynamic> thisuser = {
-                          //   "fullname": _address_name,
-                          //   "number": _phone,
-                          //   "email": uemail,
-                          //   "address": addresses
-                          //   // "id": uid,
-                          //   // "city": _city,
-                          //   // "street_address": _streetaddress,
-                          //   // "landmark": _landmark,
-                          //   // "apartment": _apartment,
-                          // };
-                          Firestore.instance
-                              .collection('users')
-                              .document(uid)
-                              .updateData({
-                            "address": widget.addressArray
-                          }).then((result) {
-                            print("address added");
-                          }).catchError((onError) {
-                            print("onError");
-                          });
-                          // print("USERNAME")
-                          // Firestore.instance
-                          //     .collection("users")
-                          //     .document(uid)
-                          //     .setData(thisuser);
-                          //     .add({
-                          //   "fullname": name,
-                          //   "number": _phone,
-                          //   "email": uemail,
-                          //   "id": uid,
-                          //   "city": _city,
-                          //   "street_address": _streetaddress,
-                          //   "landmark": _landmark,
-                          //   "apartment": _apartment,
-                          // });
+                                // Future
+                                // List addresses = [thisAddress];
+                                // Map<String, dynamic> thisuser = {
+                                //   "fullname": _address_name,
+                                //   "number": _phone,
+                                //   "email": uemail,
+                                //   "address": addresses
+                                //   // "id": uid,
+                                //   // "city": _city,
+                                //   // "street_address": _streetaddress,
+                                //   // "landmark": _landmark,
+                                //   // "apartment": _apartment,
+                                // };
+                                Firestore.instance
+                                    .collection('users')
+                                    .document(uid)
+                                    .updateData({
+                                  "address": widget.addressArray
+                                }).then((result) {
+                                  print("address edited");
+                                }).catchError((onError) {
+                                  print("onError");
+                                });
+                                // print("USERNAME")
+                                if (newIsDefault) {
+                                  Firestore.instance
+                                      .collection("users")
+                                      .document(uid)
+                                      .updateData({
+                                    "chosen_address": addressID,
+                                  });
+                                }
 
-                          // here you write the codes to input the data into firestore
-                        }
+                                // here you write the codes to input the data into firestore
+                              }
 
-                        inputData();
-                        Navigator.of(context).pop();
-                        // Navigator.of(context).pop();
+                              inputData();
+                              Navigator.of(context).pop();
+                              // Navigator.of(context).pop();
 
-                        //Send to API
-                      },
-                      color: Colors.redAccent[700],
-                      textColor: Colors.white,
-                      minWidth: MediaQuery.of(context).size.width,
-                      height: 0,
-                      // padding: EdgeInsets.zero,
-                      padding: EdgeInsets.only(
-                          left: 20, top: 10, right: 20, bottom: 10),
-                      child: Text(
-                        "Confirm",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15.0,
-                          fontFamily: 'Axiforma',
-                          color: Colors.white,
+                              //Send to API
+                            },
+                            color: Colors.redAccent[700],
+                            textColor: Colors.white,
+                            minWidth: MediaQuery.of(context).size.width,
+                            height: 0,
+                            // padding: EdgeInsets.zero,
+                            padding: EdgeInsets.only(
+                                left: 20, top: 10, right: 20, bottom: 10),
+                            child: Text(
+                              "Confirm",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: canSubmit == false, //canSubmit,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      elevation: 0,
-                      onPressed: null,
-                      color: Colors.grey[200],
-                      disabledColor: Colors.grey[200],
-                      textColor: Colors.grey[300],
-                      minWidth: MediaQuery.of(context).size.width,
-                      height: 0,
-                      // padding: EdgeInsets.zero,
-                      padding: EdgeInsets.only(
-                          left: 20, top: 10, right: 20, bottom: 10),
-                      child: Text(
-                        "Confirm",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15.0,
-                          fontFamily: 'Axiforma',
-                          // color: Colors.white,
+                      Visibility(
+                        visible: canSubmit == false, //canSubmit,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: MaterialButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            elevation: 0,
+                            onPressed: null,
+                            color: Colors.grey[200],
+                            disabledColor: Colors.grey[200],
+                            textColor: Colors.grey[300],
+                            minWidth: MediaQuery.of(context).size.width,
+                            height: 0,
+                            // padding: EdgeInsets.zero,
+                            padding: EdgeInsets.only(
+                                left: 20, top: 10, right: 20, bottom: 10),
+                            child: Text(
+                              "Confirm",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15.0,
+                                fontFamily: 'Axiforma',
+                                // color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              );
+            }),
       ),
     );
   }

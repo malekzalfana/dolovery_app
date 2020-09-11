@@ -4,6 +4,7 @@ import 'package:dolovery_app/widgets/product.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 //import 'package:flutter_svg/svg.dart';
 // ignore: unused_import
@@ -19,7 +20,11 @@ import '../screens/search.dart';
 import '../screens/profile.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
 import 'package:dolovery_app/widgets/popupproduct.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
+import 'dart:async';
+import 'package:geocoder/geocoder.dart';
+import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function() notifyParent;
@@ -36,9 +41,78 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Position position;
-  Future getLocation() async {
-    position = await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  // Position position;
+  String c_position;
+
+  @override
+  void initState() {
+    super.initState();
+    @override
+    void initState() {
+      // print('Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+      getLocation();
+      super.initState();
+    }
+  }
+
+  // getLocation2() async {
+  //   bool isLocationServiceEnabled2 = await isLocationServiceEnabled();
+
+  //   // print("permissions are enabled?");
+  //   // print(isLocationServiceEnabled2);
+  //   LocationPermission permission = await checkPermission();
+  //   // print("location are enabled?");
+  //   // print(permission);
+
+  //   Position position =
+  //       await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  //   // print(position);
+
+  //   final coordinates = new Coordinates(position.altitude, position.latitude);
+  //   var addresses =
+  //       await Geocoder.local.findAddressesFromCoordinates(coordinates);
+
+  //   var first = addresses.first;
+  //   print("${first.featureName} : ${first.addressLine}");
+  //   c_position = first.featureName.toString();
+  //   print('----------------------------------------');
+  //   print("client position is: " + c_position);
+  //   // position = await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  // }
+  var currentLocation;
+  bool gotLocation = true;
+
+  getLocation() async {
+    //call this async method from whereever you need
+
+    LocationData myLocation;
+    String error;
+    Location location = new Location();
+    try {
+      myLocation = await location.getLocation();
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        error = 'please grant permission';
+        print(error);
+        gotLocation = false;
+      }
+      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+        error = 'permission denied- please enable it from app settings';
+        print(error);
+        gotLocation = false;
+      }
+      myLocation = null;
+    }
+    currentLocation = myLocation;
+    final coordinates =
+        new Coordinates(myLocation.latitude, myLocation.longitude);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    c_position = first.featureName;
+    print(
+        ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+    return first;
   }
 
 /************************************************************************************************** */
@@ -468,32 +542,67 @@ class HomeScreenState extends State<HomeScreen> {
                     color: Colors.redAccent[700],
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                  child: MaterialButton(
-                    onPressed: () {
-                      _signInPopUp(context);
-                    },
-                    color: Colors.redAccent[700],
-                    textColor: Colors.white,
-                    minWidth: 0,
-                    height: 0,
-                    // padding: EdgeInsets.zero,
-                    padding:
-                        EdgeInsets.only(left: 6, top: 0, right: 6, bottom: 1),
-                    child: FutureBuilder(
-                      future: getLocation(),
-                      builder: (context, snapshot) {
-                        return Text(
-                          position.toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                            fontFamily: 'Axiforma',
-                            color: Colors.white,
-                          ),
-                        );
+                Visibility(
+                  visible: c_position == null ? true : false,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                    child: MaterialButton(
+                      onPressed: () {
+                        _signInPopUp(context);
                       },
+                      color: Colors.redAccent[700],
+                      textColor: Colors.white,
+                      minWidth: 0,
+                      height: 0,
+                      // padding: EdgeInsets.zero,
+                      padding:
+                          EdgeInsets.only(left: 6, top: 0, right: 6, bottom: 1),
+                      child: FutureBuilder(
+                        future: getLocation(),
+                        builder: (context, snapshot) {
+                          return Text(
+                            'Enable Location',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              fontFamily: 'Axiforma',
+                              color: Colors.white,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: c_position == null ? false : true,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                    child: MaterialButton(
+                      onPressed: () {
+                        _signInPopUp(context);
+                      },
+                      color: Colors.redAccent[700],
+                      textColor: Colors.white,
+                      minWidth: 0,
+                      height: 0,
+                      // padding: EdgeInsets.zero,
+                      padding:
+                          EdgeInsets.only(left: 6, top: 0, right: 6, bottom: 1),
+                      child: FutureBuilder(
+                        future: getLocation(),
+                        builder: (context, snapshot) {
+                          return Text(
+                            c_position.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              fontFamily: 'Axiforma',
+                              color: Colors.white,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 )
