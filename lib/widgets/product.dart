@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_svg/svg.dart';
 // ignore: unused_import
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class ProductImage extends StatefulWidget {
   // final Widget child;
@@ -65,8 +67,19 @@ class _ProductImageState extends State<ProductImage> {
                         bottomRight: Radius.circular(10)),
                   ),
                   child: Center(
-                    child: Image.network(productImage, height: 120, width: 120),
-                  )),
+                      child: CachedNetworkImage(
+                    placeholder: (context, url) =>
+                        Image.asset("assets/images/loading.gif", height: 30),
+                    imageUrl: productImage,
+                  )
+
+                      // FadeInImage.assetNetwork(
+                      //   placeholder: 'assets/images/loading.gif',
+                      //   image: productImage,
+                      // ),
+
+                      // Image.network(productImage, height: 120, width: 120),
+                      )),
               Padding(
                 padding: const EdgeInsets.only(top: 15.0, bottom: 2),
                 child: Text(

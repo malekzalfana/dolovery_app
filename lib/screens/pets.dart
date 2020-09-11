@@ -132,20 +132,23 @@ class FormScreenState extends State<PetsScreen> {
                     return SingleChildScrollView(
                         scrollDirection: Axis.vertical,
                         child: Column(
-                            children: List<Widget>.generate(10, (int index) {
+                            children: List<Widget>.generate(
+                                snapshot.data.documents.length, (int index) {
                           // print(categories[index]);
                           return GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      ShopPage(snapshot.data.documents[1])));
+                                  builder: (context) => ShopPage(
+                                      snapshot.data.documents[index])));
                             },
                             child: ShopList(
-                                shopName: snapshot.data.documents[1]['name'],
-                                shopImage: snapshot.data.documents[1]['image'],
-                                shopTime: snapshot.data.documents[1]['time']
+                                shopName: snapshot.data.documents[index]
+                                    ['name'],
+                                shopImage: snapshot.data.documents[index]
+                                    ['image'],
+                                shopTime: snapshot.data.documents[index]['time']
                                     .toString(),
-                                shopAddress: snapshot.data.documents[1]
+                                shopAddress: snapshot.data.documents[index]
                                     ['address']),
                           );
                         })));

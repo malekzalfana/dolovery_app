@@ -1,3 +1,4 @@
+import 'package:dolovery_app/screens/addadress.dart';
 import 'package:dolovery_app/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -585,14 +586,26 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Center(
-                                    child: Text(
-                                      this_user.data['fullname'],
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 38.0,
-                                        height: 1.1,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.black,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        // Navigator.of(context)
+                                        //     .push(MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             AddAddress(this_user
+                                        //                 .data["address"])))
+                                        //     .then((_) {
+                                        //   setState(() {});
+                                        // });
+                                      },
+                                      child: Text(
+                                        this_user.data['fullname'],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 38.0,
+                                          height: 1.1,
+                                          fontFamily: 'Axiforma',
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -687,114 +700,155 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 ),
                               ),
                             ),
-                            /*
-                  for (var address in widget.thisUser.data["address"])
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          right: 30.0, bottom: 10, left: 30, top: 12),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
-                                spreadRadius: 2.2,
-                                blurRadius: 2.5,
-                                offset:
-                                    Offset(0, 4), // changes position of shadow
-                              ),
-                            ],
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        // color: Colors.grey,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            // Padding(
-                            //   padding: const EdgeInsets.only(left: 15.0),
-                            //   child: Image.asset(
-                            //     widget.thisUser.data["address"] ==
-                            //             address["name"]
-                            //         ? 'assets/icons/address_enabled.png'
-                            //         : 'assets/icons/address_disabled.png',
-                            //     height: 30.0,
-                            //     width: 30.0,
-                            //   ),
-                            // ),
-                            Container(
-                                // color: Colors.green,
-                                margin:
-                                    new EdgeInsets.only(left: 10.0, right: 0),
-                                child: Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.5),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10.0,
-                                                  left: 6,
-                                                  bottom: 5),
-                                              child: Text(
-                                                address["name"],
-                                                // textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                  fontFamily: 'Axiforma',
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8.0, bottom: 8),
-                                                child: Text(
-                                                  address["street_address"],
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    height: 1.1,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    fontSize: 14.5,
-                                                    fontFamily: 'Axiforma',
-                                                    color: Colors.grey[500],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                            for (var address in this_user.data["address"])
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 30.0, bottom: 10, left: 30, top: 12),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.1),
+                                          spreadRadius: 2.2,
+                                          blurRadius: 2.5,
+                                          offset: Offset(0,
+                                              4), // changes position of shadow
                                         ),
                                       ],
-                                    ),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
+                                  // color: Colors.grey,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Container(
+                                          // color: Colors.green,
+                                          margin: new EdgeInsets.only(
+                                              left: 10.0, right: 0),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.5),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 10.0,
+                                                              left: 6,
+                                                              bottom: 5),
+                                                      child: Text(
+                                                        address["name"],
+                                                        // textAlign: TextAlign.left,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16,
+                                                          fontFamily:
+                                                              'Axiforma',
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 8.0,
+                                                                bottom: 8),
+                                                        child: SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width -
+                                                              100,
+                                                          child: Text(
+                                                            address[
+                                                                "street_address"],
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              height: 1.1,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              fontSize: 14.5,
+                                                              fontFamily:
+                                                                  'Axiforma',
+                                                              color: Colors
+                                                                  .grey[500],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ))
+                                    ],
                                   ),
-                                ))
+                                ),
+                              )
                           ],
                         ),
-                      ),
-                    )
-                */
-                          ],
+                        GestureDetector(
+                          onTap: () {
+                            print(this_user.data["address"].runtimeType);
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        AddAddress(this_user.data["address"])))
+                                .then((_) {
+                              setState(() {});
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16.0, left: 30, bottom: 15),
+                            child: Row(children: [
+                              Icon(
+                                Icons.add,
+                                color: Colors.black38,
+                                size: 18.0,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  "Add new address".toUpperCase(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 13.0,
+                                    fontFamily: 'Axiforma',
+                                    color: Colors.black38,
+                                  ),
+                                ),
+                              ),
+                            ]),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(

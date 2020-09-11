@@ -45,23 +45,6 @@ class SalleScreenState extends State<SalleScreen> {
     double height = MediaQuery.of(context).size.height;
     return ListView(
       children: <Widget>[
-        // AppBar(
-        //   backgroundColor: Colors.transparent,
-        //   elevation: 0.0,
-        //   // automaticallyImplyLeading: false,
-        //   //BackButton(color: Colors.black),
-        //   centerTitle: true,
-        //   title: Text(
-        //     getCurrentDate(),
-        //     textAlign: TextAlign.center,
-        //     style: TextStyle(
-        //       fontWeight: FontWeight.w800,
-        //       fontSize: 16.0,
-        //       fontFamily: 'Axiforma',
-        //       color: Colors.black,
-        //     ),
-        //   ),
-        // ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

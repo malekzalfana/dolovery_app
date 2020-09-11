@@ -122,14 +122,14 @@ class _SearchState extends State<Search> {
                                   child: TextField(
                                 controller: _searchText,
                                 onChanged: (text) {
-                                  if ((text.length > 2) & tosearch) {
+                                  if ((text.length > 1) & tosearch) {
                                     _search();
                                     tosearch = false;
                                   }
                                   if (!tosearch) {
-                                    Future.delayed(Duration(seconds: 4), () {
+                                    Future.delayed(Duration(seconds: 2), () {
                                       tosearch = true;
-                                      print('backtoi');
+                                      print('search enabled again');
                                     });
                                   }
 

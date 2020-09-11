@@ -1,3 +1,4 @@
+import 'package:dolovery_app/screens/addadress.dart';
 import 'package:dolovery_app/screens/search.dart';
 import 'package:dolovery_app/widgets/product.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import '../screens/search.dart';
 import '../screens/profile.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
 import 'package:dolovery_app/widgets/popupproduct.dart';
+import 'package:geolocator/geolocator.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function() notifyParent;
@@ -34,6 +36,11 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Position position;
+  Future getLocation() async {
+    position = await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  }
+
 /************************************************************************************************** */
   void _onLoading() {
     showDialog(
@@ -474,14 +481,19 @@ class HomeScreenState extends State<HomeScreen> {
                     // padding: EdgeInsets.zero,
                     padding:
                         EdgeInsets.only(left: 6, top: 0, right: 6, bottom: 1),
-                    child: Text(
-                      "Badaro",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
-                        fontFamily: 'Axiforma',
-                        color: Colors.white,
-                      ),
+                    child: FutureBuilder(
+                      future: getLocation(),
+                      builder: (context, snapshot) {
+                        return Text(
+                          position.toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                            fontFamily: 'Axiforma',
+                            color: Colors.white,
+                          ),
+                        );
+                      },
                     ),
                   ),
                 )
@@ -952,7 +964,7 @@ class HomeScreenState extends State<HomeScreen> {
                 GestureDetector(
                     onTap: () {
                       // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) => ProfileScreen()));
+                      //     builder: (context) => AddAddress()));
                     },
                     child: Image.asset("assets/images/fullfilldolovery.png",
                         height: 23))

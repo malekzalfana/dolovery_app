@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_counter/flutter_counter.dart';
 import 'dart:async';
@@ -68,7 +69,6 @@ void sendrefreshtohome() {
 }
 
 void openProductPopUp(context, data, [sendrefreshtohome]) {
-  num _defaultValue = 0;
   int _n = 0;
   bool minimum = true;
   bool maximum = false;
@@ -113,7 +113,8 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
             }
             double total = prefs.getDouble('total') == null
                 ? 0
-                : prefs.getDouble('total') + data.documents[0]['shop_price'];
+                : prefs.getDouble('total') +
+                    int.parse(data.documents[0]['shop_price']);
             prefs.setDouble('total', total);
             if (cart == null) {
               cart = [];
@@ -152,7 +153,8 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
             prefs.setString('type', type);
             double total = prefs.getDouble('total') == null
                 ? 0
-                : prefs.getDouble('total') - data.documents[0]['shop_price'];
+                : prefs.getDouble('total') -
+                    int.parse(data.documents[0]['shop_price']);
             prefs.setDouble('total', total);
             cart.remove(itemid);
             final value = cart;
@@ -247,8 +249,14 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
                   ),
                   Padding(
                       padding: const EdgeInsets.only(bottom: 20.0, top: 20),
-                      child: Image.network(data.documents[0]['image'],
-                          width: 120)),
+                      child: Center(
+                          child: CachedNetworkImage(
+                        width: 170,
+                        placeholder: (context, url) => Image.asset(
+                            "assets/images/loading.png",
+                            height: 30),
+                        imageUrl: data.documents[0]['image'],
+                      ))),
                   Text(
                     data.documents[0]['name'],
                     style: TextStyle(

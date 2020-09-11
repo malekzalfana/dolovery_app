@@ -519,7 +519,7 @@ class _CartState extends State<Cart> {
                       children: <Widget>[
                         Text(
                           // type == null ? "nothing" : type,
-                          carttype[type],
+                          "carttype[type]",
                           // 'ssssss',
                           // textAlign: TextAlign.left,
                           style: TextStyle(

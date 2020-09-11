@@ -31,7 +31,6 @@ dependencies:
   hexcolor: ^1.0.4
   flutter_launcher_icons: ^0.7.5
   cloud_firestore: ^0.13.7
-  cached_network_image: ^2.2.0+1
   flutter_form_builder: ^3.11.5
   country_code_picker: ^1.4.0
   dropdownfield: ^1.0.3
@@ -43,6 +42,9 @@ dependencies:
   shared_preferences: 0.5.6+3
   google_maps_flutter: ^0.5.30
   algolia: ^0.1.7
+  transparent_image: ^1.0.0
+  cached_network_image: ^2.3.2+1
+  geolocator: ^6.0.0+4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
