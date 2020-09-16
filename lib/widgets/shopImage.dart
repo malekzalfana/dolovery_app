@@ -12,13 +12,20 @@ class ShopImage extends StatefulWidget {
 
   final String shopImage;
   final int shopIndex;
+  final String currency;
 
-  ShopImage({Key key, this.shopName, this.shopTime, this.shopImage, this.shopIndex})
+  ShopImage(
+      {Key key,
+      this.shopName,
+      this.shopTime,
+      this.shopImage,
+      this.shopIndex,
+      this.currency})
       : super(key: key);
 
   @override
-  _ShopImageState createState() =>
-      _ShopImageState(this.shopImage, this.shopName, this.shopTime, this.shopIndex);
+  _ShopImageState createState() => _ShopImageState(this.shopImage,
+      this.shopName, this.shopTime, this.shopIndex, this.currency);
 }
 
 class _ShopImageState extends State<ShopImage> {
@@ -26,8 +33,10 @@ class _ShopImageState extends State<ShopImage> {
   String shopName;
   String shopTime;
   int shopIndex;
+  String currency;
 
-  _ShopImageState(this.shopImage, this.shopName, this.shopTime, this.shopIndex);
+  _ShopImageState(this.shopImage, this.shopName, this.shopTime, this.shopIndex,
+      this.currency);
   // _shopImageState(this.shopImage);
   @override
   Widget build(BuildContext context) {
@@ -35,7 +44,7 @@ class _ShopImageState extends State<ShopImage> {
       padding: const EdgeInsets.only(right: 10.0, bottom: 20),
       child: SizedBox(
         width: 200,
-              child: Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
@@ -74,7 +83,7 @@ class _ShopImageState extends State<ShopImage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(top: 13.0, left: 14, bottom:6),
+                padding: const EdgeInsets.only(top: 13.0, left: 14, bottom: 6),
                 child: Text(
                   shopName,
                   textAlign: TextAlign.left,

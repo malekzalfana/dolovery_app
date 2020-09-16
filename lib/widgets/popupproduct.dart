@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_counter/flutter_counter.dart';
 import 'dart:async';
@@ -68,10 +72,119 @@ void sendrefreshtohome() {
   print('zooooooooom');
 }
 
-void openProductPopUp(context, data, [sendrefreshtohome]) {
+dynamic shopinfo;
+bool started = false;
+dynamic cachedshops;
+int rate = 1;
+getRate(shopName) async {
+  if (started == true) {
+    // print('skipedddddddd');
+    return rate;
+  }
+  print(
+      "started prefrererererererere_______________________________________________________________");
+  final prefs = await SharedPreferences.getInstance();
+  bool skip = false;
+  cachedshops = prefs.getString("cached_shops");
+  if (cachedshops != null) {
+    cachedshops = json.decode(cachedshops);
+  } else {
+    cachedshops = {};
+    skip = true;
+  }
+  if (!cachedshops.containsKey(shopName)) {
+    shopinfo = Firestore.instance
+        .collection('shops')
+        .where('username', isEqualTo: shopName)
+        .getDocuments()
+        .then(
+      (value) {
+        if (value.documents.length > 0) {
+          cachedshops[shopName] = value.documents[0].data['rate'];
+          prefs.setString('cached_shops', json.encode(cachedshops));
+          // print(prefs.getString("cached_shops").toString() +
+          //     "this is the cached");
+          started = true;
+          return rate = value.documents[0].data['rate'];
+        } else {
+          return null;
+        }
+      },
+    );
+  } else {
+    // cachedshops[shopName] = value.documents[0].data['rate'];
+    print("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    rate = json.decode(prefs.getString("cached_shops"))[shopName];
+    print(prefs.getString("cached_shops"));
+    started = true;
+    // print("just got: " + rate.toString());
+  }
+  debugPrint("rate is:::::" + rate.toString());
+  started = true;
+  // return rate = 1;
+}
+
+void openProductPopUp(context, data, index, [sendrefreshtohome]) {
+  started = false;
+  print("opened product fireddddddddddd");
   int _n = 0;
   bool minimum = true;
   bool maximum = false;
+
+  var productCurrency = data.documents[index]['currency'];
+  var productPrice = data.documents[index]['shop_price'];
+  var shopName = data.documents[index]['shop'];
+  // var rate = 6000;
+
+  // int rate;
+
+  // Map newCachedShops;
+  removeRate() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove("cached_shops");
+  }
+
+  Padding buildProductPrice() {
+    if (productCurrency == "dollar") {
+      return Padding(
+          padding: const EdgeInsets.only(top: 0.0),
+          child: EnhancedFutureBuilder(
+            future: getRate(shopName),
+            // this is where the magic happens
+            rememberFutureResult: true,
+            whenDone: (dynamic data) => Text(
+                (int.parse(productPrice.toString()) *
+                            int.parse(rate.toString()))
+                        .toString() +
+                    "L.L.",
+                // rate.toString(),
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 11.7,
+                  fontFamily: 'Axiforma',
+                  color: Colors.black54,
+                )),
+            whenNotDone: Center(child: Text('Loading...')),
+          ));
+    } else {
+      // print('product is not dollar');
+      rate = 1;
+      started = true;
+      return Padding(
+          padding: const EdgeInsets.only(top: 0.0),
+          child: Text(
+            productPrice + "L.L.",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 14.7,
+              fontFamily: 'Axiforma',
+              color: Colors.black54,
+            ),
+          ));
+    }
+  }
 
   // int serving = 0;
 
@@ -101,20 +214,57 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
             });
           }
 
-          _save(itemid) async {
+          dynamic usercartmap;
+
+          _save(itemid, rate) async {
+            // {
+            //   "shop1": {
+            //     "12123":1123,
+            //     "aasas":2133221
+            //   }
+            // }
             add();
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
-            String type = data.documents[0][
+            String shop_name = data.documents[index]['shop'];
+            // START
+            usercartmap = prefs.getString("usercartmap");
+            // prefs.remove('usercartmap');
+            if (usercartmap == null) {
+              usercartmap = {};
+              print('made an empty map');
+            } else {
+              usercartmap = json.decode(usercartmap);
+              print('found the map');
+              print(json.encode(usercartmap));
+            }
+            if (usercartmap.containsKey(shop_name)) {
+              if (usercartmap[shop_name].containsKey(itemid)) {
+                usercartmap[shop_name][itemid] =
+                    int.parse(usercartmap[shop_name][itemid].toString()) + 1;
+              } else {
+                usercartmap[shop_name][itemid] = 1;
+              }
+            } else {
+              usercartmap[shop_name] = {};
+              usercartmap[shop_name][itemid] = 1;
+            }
+            prefs.setString('usercartmap', json.encode(usercartmap));
+            // print(prefs.getString('usercartmap'));
+            String type = data.documents[index][
                 'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
             prefs.setString('type', type);
             if (prefs.getDouble('total') == null) {
               prefs.setDouble('total', 0);
             }
+            var shop_price =
+                int.parse(data.documents[index]['shop_price'].toString())
+                    .toDouble();
             double total = prefs.getDouble('total') == null
                 ? 0
                 : prefs.getDouble('total') +
-                    int.parse(data.documents[0]['shop_price']);
+                    (double.parse(shop_price.toString()) *
+                        double.parse(rate.toString()));
             prefs.setDouble('total', total);
             if (cart == null) {
               cart = [];
@@ -124,10 +274,22 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
             final double items = cart.length.toDouble();
             prefs.setDouble('items', items);
             prefs.setStringList('cart', value);
-            print('saved $value');
-            print('saved $total');
-            print('saved $type');
-            print('saved $items');
+            List<String> shops = prefs.getStringList('shops');
+            if (shops == null) {
+              shops = [];
+            }
+
+            print(shop_name);
+            print('shopaboive______________');
+            if (!shops.contains(shop_name)) {
+              shops.add(shop_name);
+              prefs.setStringList("shops", shops);
+            }
+
+            // print('saved $value');
+            // print('saved $total');
+            // print('saved $type');
+            // print('saved $items');
           }
 
           void minus() {
@@ -143,24 +305,67 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
             });
           }
 
-          _remove(itemid) async {
+          _remove(itemid, rate) async {
             minus();
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
-            final key = 'cart';
-            String type = data.documents[0][
+            String shop_name = data.documents[index]['shop'];
+            // START
+            usercartmap = prefs.getString("usercartmap");
+            // prefs.remove('usercartmap');
+            if (usercartmap == null) {
+              usercartmap = {};
+              print('made an empty map');
+            } else {
+              usercartmap = json.decode(usercartmap);
+              print('found the map');
+              print(json.encode(usercartmap));
+            }
+            if (usercartmap.containsKey(shop_name)) {
+              if (usercartmap[shop_name].containsKey(itemid)) {
+                usercartmap[shop_name][itemid] =
+                    int.parse(usercartmap[shop_name][itemid].toString()) - 1;
+                if (usercartmap[shop_name][itemid] == 0) {
+                  usercartmap[shop_name].remove(itemid);
+                }
+              }
+            }
+            prefs.setString('usercartmap', json.encode(usercartmap));
+            // print(prefs.getString('usercartmap'));
+            String type = data.documents[index][
                 'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
             prefs.setString('type', type);
+            if (prefs.getDouble('total') == null) {
+              prefs.setDouble('total', 0);
+            }
+            var shop_price =
+                int.parse(data.documents[index]['shop_price'].toString())
+                    .toDouble();
             double total = prefs.getDouble('total') == null
                 ? 0
                 : prefs.getDouble('total') -
-                    int.parse(data.documents[0]['shop_price']);
+                    (double.parse(shop_price.toString()) *
+                        double.parse(rate.toString()));
             prefs.setDouble('total', total);
+            if (cart == null) {
+              cart = [];
+            }
             cart.remove(itemid);
             final value = cart;
             final double items = cart.length.toDouble();
             prefs.setDouble('items', items);
-            prefs.setStringList(key, value);
+            prefs.setStringList('cart', value);
+            List<String> shops = prefs.getStringList('shops');
+            if (shops == null) {
+              shops = [];
+            }
+
+            print(shop_name);
+            print('shopaboive______________');
+            if (!shops.contains(shop_name)) {
+              shops.remove(shop_name);
+              prefs.setStringList("shops", shops);
+            }
             print('saved $value');
             print('saved $total');
             print('saved $type');
@@ -186,8 +391,8 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
             mystate(() {
-              _n =
-                  countOccurrencesUsingLoop(cart, data.documents[0].documentID);
+              _n = countOccurrencesUsingLoop(
+                  cart, data.documents[index].documentID);
               if (_n > 0) {
                 minimum = false;
               }
@@ -197,6 +402,8 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
 
           _setnumber();
           // print(_n);
+
+          double width = MediaQuery.of(context).size.width;
 
           // print(_setnumber());
 
@@ -221,7 +428,7 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
                       Align(
                           alignment: Alignment.topCenter,
                           child: Text(
-                            data.documents[0]['category'].toUpperCase(),
+                            data.documents[index]['category'].toUpperCase(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13.0,
@@ -255,31 +462,35 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
                         placeholder: (context, url) => Image.asset(
                             "assets/images/loading.png",
                             height: 30),
-                        imageUrl: data.documents[0]['image'],
+                        imageUrl: data.documents[index]['image'],
                       ))),
-                  Text(
-                    data.documents[0]['name'],
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                        fontFamily: 'Axiforma',
-                        color: Colors.black),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 0, right: 00),
+                    child: SizedBox(
+                      width: width - 50,
+                      child: Text(
+                        data.documents[index]['name'],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black),
+                      ),
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        data.documents[0]['shop_price'].toString() + " L.L.",
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16.0,
-                            fontFamily: 'Axiforma',
-                            color: Colors.black),
-                      ),
+                      // Text((int.parse(productPrice.toString()) *
+                      //             int.parse(rate.toString()))
+                      //         .toString() +
+                      //     "L.L."),
+                      buildProductPrice(),
                       Padding(
                         padding: const EdgeInsets.only(left: 18.0),
                         child: Text(
-                          data.documents[0]['unit'],
+                          data.documents[index]['unit'],
                           style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16.0,
@@ -299,7 +510,7 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
                           children: <Widget>[
                             RawMaterialButton(
                               onPressed: () {
-                                _remove(data.documents[0].documentID);
+                                _remove(data.documents[index].documentID, rate);
                               },
                               elevation: !minimum ? 2 : 0,
                               fillColor: !minimum
@@ -322,7 +533,7 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
                             RawMaterialButton(
                               onPressed: () {
                                 // add;
-                                _save(data.documents[0].documentID);
+                                _save(data.documents[index].documentID, rate);
                               },
                               elevation: !maximum ? 2 : 0,
                               fillColor: !maximum
@@ -343,8 +554,9 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
                     ),
                   ),
                   Visibility(
-                    visible:
-                        data.documents[0]['description'] != null ? true : false,
+                    visible: data.documents[index]['description'] != null
+                        ? true
+                        : false,
                     child: Column(
                       children: [
                         Padding(
@@ -369,8 +581,8 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              data.documents[0]['description'] != null
-                                  ? data.documents[0]['description']
+                              data.documents[index]['description'] != null
+                                  ? data.documents[index]['description']
                                   : "",
                               style: TextStyle(
                                 fontWeight: FontWeight.normal,
@@ -392,28 +604,3 @@ void openProductPopUp(context, data, [sendrefreshtohome]) {
       });
   future.then((void value) => sendrefreshtohome());
 }
-
-// openProductPopUp2(context, data) {
-//   num _defaultValue = 0;
-//   return DraggableScrollableSheet(
-//     initialChildSize: 0.3,
-//     minChildSize: 0.2,
-//     maxChildSize: 1.0,
-//     builder: (BuildContext context, myscrollController) {
-//       return Container(
-//         color: Colors.tealAccent[200],
-//         child: ListView.builder(
-//           controller: myscrollController,
-//           itemCount: 25,
-//           itemBuilder: (BuildContext context, int index) {
-//             return ListTile(
-//                 title: Text(
-//               'Dish $index',
-//               style: TextStyle(color: Colors.black54),
-//             ));
-//           },
-//         ),
-//       );
-//     },
-//   );
-// }

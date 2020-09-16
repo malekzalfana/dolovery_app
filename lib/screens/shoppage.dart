@@ -36,7 +36,7 @@ class _ShopPageState extends State<ShopPage> {
     // print("asdasd");
     setState(() {
       chosen_subcategory = subcat;
-      print(chosen_subcategory);
+      // print(chosen_subcategory);
     });
     // print(subcat);
   }
@@ -45,14 +45,14 @@ class _ShopPageState extends State<ShopPage> {
     // print("asdasd");
     setState(() {
       chosen_category = cat;
-      print(chosen_category);
+      // print(chosen_category);
     });
     // print(subcat);
   }
 
   dynamic type;
   Future getcategories() async {
-    print("USER BEING WATCHED");
+    // print("USER BEING WATCHED");
     String shoptype = widget.data['type'];
     type = await Firestore.instance
         .collection("types")
@@ -60,9 +60,9 @@ class _ShopPageState extends State<ShopPage> {
         .get();
     if (type != null) {
       type.data['categories'].forEach((cat, sub) {
-        print("Key : $cat, Value : $sub");
+        // print("Key : $cat, Value : $sub");
         for (var i = 0; i < sub.length; i++) {
-          print(sub[i]);
+          // print(sub[i]);
         }
       });
     }
@@ -324,9 +324,9 @@ class _ShopPageState extends State<ShopPage> {
                         // print(type.data['categories'].keys[0]);
                         // return Text("dsddd");
 
-                        for (var cat in type.data['categories'].keys) {
-                          print('$type was written by ${type[cat]}');
-                        }
+                        // for (var cat in type.data['categories'].keys) {
+                        //   print('$type was written by ${type[cat]}');
+                        // }
                         var first = 0;
 
                         return SingleChildScrollView(
@@ -436,7 +436,7 @@ class _ShopPageState extends State<ShopPage> {
                         return Column(
                             children:
                                 type['categories'].keys.map<Widget>((entry) {
-                          print("key");
+                          // print("key");
                           // var w = Text("ssss");
                           // type['categories'](entry.key);
                           // return w;
@@ -536,23 +536,28 @@ class _ShopPageState extends State<ShopPage> {
                                 children: List.generate(20, (index) {
                                   return GestureDetector(
                                     onTap: () {
-                                      openProductPopUp(context, snapshot.data);
+                                      openProductPopUp(context, snapshot.data, index);
                                     },
                                     child: ProductImage(
-                                      productName: snapshot
-                                          .data.documents[index]['name'],
-                                      productImage: snapshot
-                                          .data.documents[index]['image'],
-                                      productPrice: snapshot
-                                          .data.documents[index]['shop_price']
-                                          .toString(),
-                                      productUnit: snapshot.data
-                                                  .documents[index]['unit'] !=
-                                              null
-                                          ? snapshot.data.documents[index]
-                                              ['unit']
-                                          : '',
-                                    ),
+                                        productName: snapshot.data.documents[index]
+                                            ['name'],
+                                        productImage: snapshot
+                                            .data.documents[index]['image'],
+                                        productPrice: snapshot
+                                            .data.documents[index]['shop_price']
+                                            .toString(),
+                                        shopName: snapshot.data.documents[index]
+                                            ['shop'],
+                                        productUnit:
+                                            snapshot.data.documents[index]['unit'] != null
+                                                ? snapshot.data.documents[index]
+                                                    ['unit']
+                                                : '',
+                                        productCurrency:
+                                            snapshot.data.documents[index]['currency'] != null
+                                                ? snapshot.data.documents[index]
+                                                    ['currency']
+                                                : "lebanese"),
                                   );
                                 }).toList(),
                               );

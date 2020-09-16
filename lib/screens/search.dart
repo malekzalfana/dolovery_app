@@ -205,7 +205,8 @@ class _SearchState extends State<Search> {
                                       List.generate(_results.length, (index) {
                                     return GestureDetector(
                                         onTap: () {
-                                          openProductPopUp(context, snap.data);
+                                          openProductPopUp(
+                                              context, snap.data, index);
                                         },
                                         child: ProductImage(
                                           productName: snap.data['name'],

@@ -114,6 +114,19 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> reset() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('type');
+    prefs.remove('total');
+    prefs.remove('items');
+    prefs.remove('cart');
+    prefs.remove('shops');
+    prefs.remove('usercartmap');
+    // Navigator.of(context).pop();
+    print(prefs.getKeys());
+    return true;
+  }
+
   List pages;
 // @override
   profilestatus() {
@@ -266,6 +279,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                               .then((_) {
                                             refreshcart();
                                           });
+                                        },
+                                        onLongPress: () {
+                                          reset();
                                         },
                                         color: Colors.white.withOpacity(0.25),
                                         textColor: Colors.white,

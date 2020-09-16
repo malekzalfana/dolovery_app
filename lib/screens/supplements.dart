@@ -33,71 +33,74 @@ class FormScreenState extends State<SupplementsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 10.0, right: 10.0, top: 30.0, bottom: 0.0),
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5.0),
-                    child: Icon(
-                      Icons.near_me,
-                      color: Colors.redAccent[700],
-                      size: 20.0,
+            Visibility(
+              visible: false,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 10.0, right: 10.0, top: 30.0, bottom: 0.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 5.0),
+                      child: Icon(
+                        Icons.near_me,
+                        color: Colors.redAccent[700],
+                        size: 20.0,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "Delivering to",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                      fontFamily: 'Axiforma',
-                      color: Colors.redAccent[700],
+                    Text(
+                      "Delivering to",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                        fontFamily: 'Axiforma',
+                        color: Colors.redAccent[700],
+                      ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                    child: MaterialButton(
-                      onPressed: () {
-                        () {};
-                      },
-                      color: Colors.redAccent[700],
-                      textColor: Colors.white,
-                      minWidth: 0,
-                      height: 0,
-                      // padding: EdgeInsets.zero,
-                      padding:
-                          EdgeInsets.only(left: 6, top: 0, right: 6, bottom: 1),
-                      child: Text(
-                        "Badaro",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                          fontFamily: 'Axiforma',
-                          color: Colors.white,
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                      child: MaterialButton(
+                        onPressed: () {
+                          () {};
+                        },
+                        color: Colors.redAccent[700],
+                        textColor: Colors.white,
+                        minWidth: 0,
+                        height: 0,
+                        // padding: EdgeInsets.zero,
+                        padding: EdgeInsets.only(
+                            left: 6, top: 0, right: 6, bottom: 1),
+                        child: Text(
+                          "Badaro",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                            fontFamily: 'Axiforma',
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Spacer(),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                        icon: Icon(
-                          Icons.clear,
-                          color: Colors.grey,
-                          size: 30,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        }),
-                  ),
-                ],
+                    Spacer(),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.grey,
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          }),
+                    ),
+                  ],
+                ),
               ),
             ),
             Padding(
                 padding: const EdgeInsets.only(
-                    left: 5.0, right: 10.0, top: 0.0, bottom: 10.0),
+                    left: 5.0, right: 10.0, top: 40.0, bottom: 10.0),
                 child: Column(children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0),
@@ -108,13 +111,25 @@ class FormScreenState extends State<SupplementsScreen> {
                           "Supplements",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 26.0,
+                            fontSize: 28.0,
                             fontFamily: 'Axiforma',
                             color: Colors.black,
                           ),
                         ),
-                        Image.asset("assets/images/fullfilldolovery.png",
-                            height: 23),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.clear,
+                                color: Colors.grey,
+                                size: 30,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }),
+                        ),
+                        // Image.asset("assets/images/fullfilldolovery.png",
+                        //     height: 23),
                       ],
                     ),
                   ),

@@ -82,6 +82,19 @@ class HomeScreenState extends State<HomeScreen> {
   var currentLocation;
   bool gotLocation = true;
 
+  openLocation() async {
+    Location location = new Location();
+    bool _serviceEnabled;
+    LocationData _locationData;
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        debugPrint('Location Denied once');
+      }
+    }
+  }
+
   getLocation() async {
     //call this async method from whereever you need
 
@@ -112,7 +125,7 @@ class HomeScreenState extends State<HomeScreen> {
     c_position = first.featureName;
     print(
         ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
-    return first;
+    return c_position;
   }
 
 /************************************************************************************************** */
@@ -548,7 +561,7 @@ class HomeScreenState extends State<HomeScreen> {
                     margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
                     child: MaterialButton(
                       onPressed: () {
-                        _signInPopUp(context);
+                        getLocation();
                       },
                       color: Colors.redAccent[700],
                       textColor: Colors.white,
@@ -580,7 +593,7 @@ class HomeScreenState extends State<HomeScreen> {
                     margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
                     child: MaterialButton(
                       onPressed: () {
-                        _signInPopUp(context);
+                        // _signInPopUp(context);
                       },
                       color: Colors.redAccent[700],
                       textColor: Colors.white,
@@ -994,7 +1007,7 @@ class HomeScreenState extends State<HomeScreen> {
                         return GestureDetector(
                           onTap: () {
                             openProductPopUp(
-                                context, snapshot.data, refreshcart);
+                                context, snapshot.data, index, refreshcart);
                           },
                           child: ProductImage(
                             productName: snapshot.data.documents[0]['name'],
@@ -1002,10 +1015,15 @@ class HomeScreenState extends State<HomeScreen> {
                             productPrice: snapshot
                                 .data.documents[0]['shop_price']
                                 .toString(),
+                            shopName: snapshot.data.documents[0]['shop'],
                             productUnit:
                                 snapshot.data.documents[0]['unit'] != null
                                     ? snapshot.data.documents[0]['unit']
                                     : '',
+                            productCurrency:
+                                snapshot.data.documents[0]['currency'] != null
+                                    ? snapshot.data.documents[0]['currency']
+                                    : "lebanese",
                           ),
                         );
                       }).toList(),
@@ -1230,7 +1248,7 @@ class HomeScreenState extends State<HomeScreen> {
                         return GestureDetector(
                           onTap: () {
                             openProductPopUp(
-                                context, snapshot.data, refreshcart);
+                                context, snapshot.data, index, refreshcart);
                           },
                           child: ProductImage(
                             productName: snapshot.data.documents[index]['name'],
@@ -1239,10 +1257,16 @@ class HomeScreenState extends State<HomeScreen> {
                             productPrice: snapshot
                                 .data.documents[index]['shop_price']
                                 .toString(),
+                            shopName: snapshot.data.documents[index]['shop'],
                             productUnit:
                                 snapshot.data.documents[index]['unit'] != null
                                     ? snapshot.data.documents[index]['unit']
                                     : '',
+                            productCurrency: snapshot.data.documents[index]
+                                        ['currency'] !=
+                                    null
+                                ? snapshot.data.documents[index]['currency']
+                                : "lebanese",
                           ),
                         );
                       }).toList(),

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dolovery_app/screens/editadress.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -80,205 +78,58 @@ class _CartState extends State<Cart> {
     prefs.remove('items');
     prefs.remove('cart');
     prefs.remove('shops');
-    prefs.remove('usercartmap');
     Navigator.of(context).pop();
     print(prefs.getKeys());
     return true;
   }
 
-  // Future<void> refreshcartnumbers(
-  //     String itemid, int quantity, int price, bool add, bool remove) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   // List<String> cart = prefs.getStringList('cart');
-
-  //   // setState(() {
-
-  //   if (remove) {
-  //     for (var i; i <= quantity; i++) {
-  //       print('removed completely');
-  //       prefs.setDouble('items', prefs.getDouble('items') - quantity);
-  //       prefs.setDouble(
-  //           'total',
-  //           prefs.getDouble('total') -
-  //               (quantity * int.parse(price.toString())));
-  //       cart.remove(itemid);
-  //     }
-  //   } else {
-  //     if (add) {
-  //       // print(prefs.getDouble('cart'));
-  //       prefs.setDouble('items', prefs.getDouble('items') + 1);
-  //       prefs.setDouble('total',
-  //           prefs.getDouble('total') + (1 * int.parse(price.toString())));
-
-  //       print('added');
-  //       cart.add(itemid);
-  //       print(itemid);
-  //     } else {
-  //       print('removed');
-  //       prefs.setDouble('items', prefs.getDouble('items') - 1);
-  //       prefs.setDouble('total',
-  //           prefs.getDouble('total') - (1 * int.parse(price.toString())));
-  //       cart.remove(itemid);
-  //       if (cart.length == 0) {
-  //         reset();
-
-  //         return print('XXXXXXXXXXXXX');
-  //       }
-  //     }
-  //   }
-  //   prefs.setStringList('cart', cart);
-  //   print(prefs.getStringList('cart'));
-
-  //   // print(cart);
-  //   // });
-
-  //   // getcartmap();
-  // }
-  dynamic usercartmap;
-
-  _save(itemid, rate, shop_name, type, shop_price) async {
-    add();
+  Future<void> refreshcartnumbers(
+      String itemid, int quantity, int price, bool add, bool remove) async {
     final prefs = await SharedPreferences.getInstance();
-    List<String> cart = prefs.getStringList('cart');
-    // String shop_name = data.documents[index]['shop'];
-    // START
-    usercartmap = prefs.getString("usercartmap");
-    // prefs.remove('usercartmap');
-    if (usercartmap == null) {
-      usercartmap = {};
-      print('made an empty map');
-    } else {
-      usercartmap = json.decode(usercartmap);
-      print('found the map');
-      print(json.encode(usercartmap));
-    }
-    if (usercartmap.containsKey(shop_name)) {
-      if (usercartmap[shop_name].containsKey(itemid)) {
-        usercartmap[shop_name][itemid] =
-            int.parse(usercartmap[shop_name][itemid].toString()) + 1;
-      } else {
-        usercartmap[shop_name][itemid] = 1;
+    // List<String> cart = prefs.getStringList('cart');
+
+    // setState(() {
+
+    if (remove) {
+      for (var i; i <= quantity; i++) {
+        print('removed completely');
+        prefs.setDouble('items', prefs.getDouble('items') - quantity);
+        prefs.setDouble(
+            'total',
+            prefs.getDouble('total') -
+                (quantity * int.parse(price.toString())));
+        cart.remove(itemid);
       }
     } else {
-      usercartmap[shop_name] = {};
-      usercartmap[shop_name][itemid] = 1;
-    }
-    prefs.setString('usercartmap', json.encode(usercartmap));
-    // print(prefs.getString('usercartmap'));
-    // String type = data.documents[index][
-    //     'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
-    prefs.setString('type', type);
-    if (prefs.getDouble('total') == null) {
-      prefs.setDouble('total', 0);
-    }
-    // var shop_price =
-    //     int.parse(data.documents[index]['shop_price'].toString()).toDouble();
-    // double total = prefs.getDouble('total') == null
-    //     ? 0
-    //     : prefs.getDouble('total') +
-    //         (double.parse(shop_price.toString()) *
-    //             double.parse(rate.toString()));
-    prefs.setDouble('total', total);
-    if (cart == null) {
-      cart = [];
-    }
-    cart.add(itemid);
-    final value = cart;
-    final double items = cart.length.toDouble();
-    prefs.setDouble('items', items);
-    prefs.setStringList('cart', value);
-    List<String> shops = prefs.getStringList('shops');
-    if (shops == null) {
-      shops = [];
-    }
+      if (add) {
+        // print(prefs.getDouble('cart'));
+        prefs.setDouble('items', prefs.getDouble('items') + 1);
+        prefs.setDouble('total',
+            prefs.getDouble('total') + (1 * int.parse(price.toString())));
 
-    print(shop_name);
-    print('shopaboive______________');
-    if (!shops.contains(shop_name)) {
-      shops.add(shop_name);
-      prefs.setStringList("shops", shops);
-    }
+        print('added');
+        cart.add(itemid);
+        print(itemid);
+      } else {
+        print('removed');
+        prefs.setDouble('items', prefs.getDouble('items') - 1);
+        prefs.setDouble('total',
+            prefs.getDouble('total') - (1 * int.parse(price.toString())));
+        cart.remove(itemid);
+        if (cart.length == 0) {
+          reset();
 
-    // print('saved $value');
-    // print('saved $total');
-    // print('saved $type');
-    // print('saved $items');
-  }
-
-  _remove(itemid, rate, shop_name, type, shop_price) async {
-    minus();
-    final prefs = await SharedPreferences.getInstance();
-    List<String> cart = prefs.getStringList('cart');
-    // String shop_name = data.documents[index]['shop'];
-    // START
-    usercartmap = prefs.getString("usercartmap");
-    // prefs.remove('usercartmap');
-    if (usercartmap == null) {
-      usercartmap = {};
-      print('made an empty map');
-    } else {
-      usercartmap = json.decode(usercartmap);
-      print('found the map');
-      print(json.encode(usercartmap));
-    }
-    if (usercartmap.containsKey(shop_name)) {
-      if (usercartmap[shop_name].containsKey(itemid)) {
-        usercartmap[shop_name][itemid] =
-            int.parse(usercartmap[shop_name][itemid].toString()) - 1;
-        if (usercartmap[shop_name][itemid] == 0) {
-          usercartmap[shop_name].remove(itemid);
+          return print('XXXXXXXXXXXXX');
         }
       }
     }
-    prefs.setString('usercartmap', json.encode(usercartmap));
-    // print(prefs.getString('usercartmap'));
-    // String type = data.documents[index][
-    //     'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
-    prefs.setString('type', type);
-    if (prefs.getDouble('total') == null) {
-      prefs.setDouble('total', 0);
-    }
-    // var shop_price =
-    //     int.parse(data.documents[index]['shop_price'].toString()).toDouble();
-    double total = prefs.getDouble('total') == null
-        ? 0
-        : prefs.getDouble('total') -
-            (double.parse(shop_price.toString()) *
-                double.parse(rate.toString()));
-    prefs.setDouble('total', total);
-    if (cart == null) {
-      cart = [];
-    }
-    cart.remove(itemid);
-    final value = cart;
-    final double items = cart.length.toDouble();
-    prefs.setDouble('items', items);
-    prefs.setStringList('cart', value);
-    List<String> shops = prefs.getStringList('shops');
-    if (shops == null) {
-      shops = [];
-    }
+    prefs.setStringList('cart', cart);
+    print(prefs.getStringList('cart'));
 
-    print(shop_name);
-    print('shopaboive______________');
-    if (!shops.contains(shop_name)) {
-      shops.remove(shop_name);
-      prefs.setStringList("shops", shops);
-    }
-    print('saved $value');
-    print('saved $total');
-    print('saved $type');
-    print('saved $items');
-    if (cart.length == 0) {
-      reset();
+    // print(cart);
+    // });
 
-      return print('XXXXXXXXXXXXX');
-    }
-
-    // print('saved $value');
-    // print('saved $total');
-    // print('saved $type');
-    // print('saved $items');
+    // getcartmap();
   }
 
   // List supplementsCart = [];
@@ -385,12 +236,9 @@ class _CartState extends State<Cart> {
       });
   }
 
-  // dynamic usercartmap;
   Future<bool> loadcart() async =>
-      Future.delayed(Duration(milliseconds: 80), () async {
+      Future.delayed(Duration(milliseconds: 70), () async {
         final prefs = await SharedPreferences.getInstance();
-        usercartmap = prefs.getString("usercartmap");
-        usercartmap = json.decode(usercartmap);
 
         if (torestart)
           setState(() {
@@ -409,6 +257,40 @@ class _CartState extends State<Cart> {
               imagetype = 'assets/images/salle.png';
             }
 
+            for (var cartshop in shops) {
+              print("started" + cartshop.toString());
+              Map cartshopsproductsmap = {};
+              for (var cartitem in cart) {
+                print("started item: " + cartitem.toString());
+                Firestore.instance
+                    .collection("products")
+                    .document(cartitem)
+                    .get()
+                    .then((value) {
+                  print("shop 1 =" + value.data['shop'].toString());
+                  print("shop §1 =" + cartshop.toString());
+                  if (value.data['shop'] == cartshop.toString()) {
+                    if (!cartshopsproductsmap.containsKey(cartitem)) {
+                      cartshopsproductsmap[cartitem] = 1;
+                      print("added product to map_____________");
+                      print(cartshopsproductsmap[cartitem].toString());
+                      finalcart.add(cartshopsproductsmap[cartitem].toString());
+                    } else {
+                      print("counting:::::::::: ");
+                      //     cartshopsproductsmap[cartitem].toInt().toString());
+                      cartshopsproductsmap[cartitem] =
+                          cartshopsproductsmap[cartitem].toInt() + 1;
+                    }
+                    // cartshopsproductsmap.add(cartitem.toString());
+                    print(cartshopsproductsmap);
+                    cartshopsmap[cartshop.toString()] = cartshopsproductsmap;
+                  }
+                });
+              }
+
+              // print("shopmap_____________");
+              // print(cartshopsmap);
+            }
             torestart = false;
             // final finalshops = await cartshopsmap;
             // return shops;
@@ -749,48 +631,86 @@ class _CartState extends State<Cart> {
               ),
               Column(
                 children: [
-                  for (var shop in usercartmap.keys)
+                  for (var i = 0; i < shops.length; i++)
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        FutureBuilder(
-                            future: getRate(shop),
-                            builder: (context, snapshot) {
-                              return Column(
-                                children: [
-                                  Text(
-                                    shop,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 25.0,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.black),
-                                  ),
-                                  for (var product in usercartmap[shop].keys)
-                                    StreamBuilder<Object>(
-                                        stream: Firestore.instance
-                                            .collection("products")
-                                            // .where('id', isEqualTo: product)
-                                            .document(product.toString())
-                                            .snapshots(),
-                                        builder: (context, snapshot) {
-                                          print(snapshot.data);
-                                          return buildCartItem(
-                                              snapshot.data,
-                                              int.parse(usercartmap[shop]
-                                                      [product]
-                                                  .toString()),
-                                              rate);
-                                        })
-                                ],
-                              );
-                            }),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 30.0, top: 00, bottom: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              shops[i],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 25.0,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.black),
+                            ),
+                          ),
+                        ),
+                        // Row(
+                        //     // children: List<Widget>.generate(
+                        //     //     cartshopsmap[shops[i]].length, (int index) {
+                        //     children:
+                        //         cartshopsmap[shops[i]].keys.map<Widget>((entry) {
+                        //   return Text(cartshopsmap[shops[i]][entry].toString());
+                        //   // print(categories[index]);
+                        // })),
+                        for (var cat in cartshopsmap[shops[i]].keys)
+                          StreamBuilder(
+                              stream: Firestore.instance
+                                  .collection('products')
+                                  .document(cat)
+                                  .snapshots(),
+                              builder: (context,
+                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Text("...");
+                                }
+                                // FIX THISSSSSSS
+                                var minimum2 = false;
+                                var cartitem = snapshot.data;
+                                // enter the numbher of products count
+                                // if (cartmap[cart[i]] == 0) {
+                                //   minimum2 = true;
+                                // }
+                                print('data under this ______________');
+                                print(cat.toString());
+                                return buildCartItem(
+                                    cartitem,
+                                    i,
+                                    minimum2,
+                                    int.parse(cartshopsmap[shops[i]][cat]
+                                        .toString()));
+                                // int.parse(cartshopsmap[shops[i]][cat].toString())
+                              }),
                       ],
                     ),
+                  //  OLD WAY OF FETCHING CART PRODUCTS
+                  // Column(
+                  //   children: [
+                  //     for (var i = 0; i < finalcart.length; i++)
+                  //       StreamBuilder(
+                  //           stream: Firestore.instance
+                  //               .collection('products')
+                  //               .document(finalcart[i])
+                  //               .snapshots(),
+                  //           builder:
+                  //               (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  //             if (!snapshot.hasData) {
+                  //               return Text("...");
+                  //             }
+                  //             var minimum2 = false;
+                  //             var cartitem = snapshot.data;
+                  //             if (cartmap[cart[i]] == 0) {
+                  //               minimum2 = true;
+                  //             }
+
+                  //             return buildCartItem(cartitem, i, minimum2);
+                  //           }),
                 ],
               ),
-
               Padding(
                 padding: const EdgeInsets.only(left: 30.0, top: 20, bottom: 10),
                 child: Align(
@@ -1397,78 +1317,8 @@ class _CartState extends State<Cart> {
     );
   }
 
-  dynamic shopinfo;
-  bool started = false;
-  dynamic cachedshops;
-  int rate = 1;
-  getRate(shopName) async {
-    if (started == true) {
-      // print('skipedddddddd');
-      return rate;
-    }
-    print(
-        "started prefrererererererere_______________________________________________________________");
-    final prefs = await SharedPreferences.getInstance();
-    bool skip = false;
-    cachedshops = prefs.getString("cached_shops");
-    if (cachedshops != null) {
-      cachedshops = json.decode(cachedshops);
-    } else {
-      cachedshops = {};
-      skip = true;
-    }
-    if (!cachedshops.containsKey(shopName)) {
-      shopinfo = Firestore.instance
-          .collection('shops')
-          .where('username', isEqualTo: shopName)
-          .getDocuments()
-          .then(
-        (value) {
-          if (value.documents.length > 0) {
-            cachedshops[shopName] = value.documents[0].data['rate'];
-            prefs.setString('cached_shops', json.encode(cachedshops));
-            // print(prefs.getString("cached_shops").toString() +
-            //     "this is the cached");
-            started = true;
-            return rate = value.documents[0].data['rate'];
-          } else {
-            return null;
-          }
-        },
-      );
-    } else {
-      // cachedshops[shopName] = value.documents[0].data['rate'];
-      print("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-      rate = json.decode(prefs.getString("cached_shops"))[shopName];
-      print(prefs.getString("cached_shops"));
-      started = true;
-      // print("just got: " + rate.toString());
-    }
-    debugPrint("rate is:::::" + rate.toString());
-    started = true;
-    // return rate = 1;
-  }
-
-  // Widget buildShopName(shop) {
-  //   return FutureBuilder(
-  //       future: getRate(shop),
-  //       builder: (context, snapshot) {
-  //         return Text(
-  //           shop,
-  //           textAlign: TextAlign.left,
-  //           style: TextStyle(
-  //               fontWeight: FontWeight.w800,
-  //               fontSize: 25.0,
-  //               fontFamily: 'Axiforma',
-  //               color: Colors.black),
-  //         );
-  //       });
-  // }
-
-  Padding buildCartItem(DocumentSnapshot cartitem, int count, int rate) {
-    if (cartitem['currency'] != "dollar") {
-      rate = 1;
-    }
+  Padding buildCartItem(
+      DocumentSnapshot cartitem, int i, bool minimum2, int count) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -1533,11 +1383,14 @@ class _CartState extends State<Cart> {
                       Padding(
                         padding: const EdgeInsets.only(left: 0.0),
                         child: Text(
-                          (int.parse(cartitem['shop_price'].toString()) *
-                                      int.parse(rate.toString()) *
-                                      count)
+                          // Firestore.instance
+                          //     .collection("products")
+                          //     .document(item)
+                          //     .get()
+                          //     .toString(),
+                          (int.parse(cartitem['shop_price'].toString()) * count)
                                   .toString() +
-                              "L.L.",
+                              'L.L.',
                           // overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
                           style: TextStyle(
@@ -1575,21 +1428,23 @@ class _CartState extends State<Cart> {
                       width: 25,
                       child: RawMaterialButton(
                         onPressed: () {
-                          _remove(
+                          refreshcartnumbers(
+                              // id quantity price add remove
                               cartitem.documentID,
-                              rate,
-                              cartitem['shop'],
-                              cartitem['type'],
-                              (int.parse(cartitem['shop_price'].toString()) *
-                                  int.parse(rate.toString()) *
-                                  count));
+                              count,
+                              int.parse(cartitem['shop_price'].toString()),
+                              false,
+                              false);
+                          // loadcart();
                         },
-                        elevation: 2,
-                        fillColor: Colors.redAccent[700],
+                        elevation: !minimum2 ? 2 : 0,
+                        fillColor: !minimum2
+                            ? Colors.redAccent[700]
+                            : Colors.grey[200],
                         child: Icon(
                           Icons.remove,
                           size: 13,
-                          color: Colors.white,
+                          color: !minimum2 ? Colors.white : Colors.grey[800],
                         ),
                         // padding: EdgeInsets.all(0.0),
                         shape: CircleBorder(),
@@ -1604,21 +1459,12 @@ class _CartState extends State<Cart> {
                       width: 25,
                       child: RawMaterialButton(
                         onPressed: () {
-                          //   refreshcartnumbers(
-                          //       cartitem.documentID,
-                          //       count,
-                          //       int.parse(cartitem['shop_price'].toString()),
-                          //       true,
-                          //       false);
-                          // },
-                          _save(
+                          refreshcartnumbers(
                               cartitem.documentID,
-                              rate,
-                              cartitem['shop'],
-                              cartitem['type'],
-                              (int.parse(cartitem['shop_price'].toString()) *
-                                  int.parse(rate.toString()) *
-                                  count));
+                              count,
+                              int.parse(cartitem['shop_price'].toString()),
+                              true,
+                              false);
                         },
                         elevation: !maximum ? 2 : 0,
                         fillColor:

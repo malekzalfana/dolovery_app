@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_svg/svg.dart';
 // ignore: unused_import
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:transparent_image/transparent_image.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class ProductImage extends StatefulWidget {
   // final Widget child;
@@ -16,29 +18,46 @@ class ProductImage extends StatefulWidget {
 
   final String productImage;
 
-  ProductImage({
-    Key key,
-    this.productName,
-    this.productImage,
-    this.productUnit,
-    this.productPrice,
-  }) : super(key: key);
+  final String productCurrency;
+
+  final String shopName;
+
+  ProductImage(
+      {Key key,
+      this.productName,
+      this.productImage,
+      this.productUnit,
+      this.productPrice,
+      this.productCurrency,
+      this.shopName})
+      : super(key: key);
 
   @override
   _ProductImageState createState() => _ProductImageState(
-      this.productImage, this.productName, this.productPrice, this.productUnit);
+      this.productImage,
+      this.productName,
+      this.productPrice,
+      this.productUnit,
+      this.productCurrency,
+      this.shopName);
 }
 
 class _ProductImageState extends State<ProductImage> {
   String productImage;
   String productName;
-
+  String shopName;
   String productPrice;
   String productUnit;
-
-  _ProductImageState(
-      this.productImage, this.productName, this.productPrice, this.productUnit);
+  String productCurrency;
+  _ProductImageState(this.productImage, this.productName, this.productPrice,
+      this.productUnit, this.productCurrency, this.shopName);
   // _ProductImageState(this.productImage);
+  @override
+  void initState() {
+    super.initState();
+    getRate();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -98,29 +117,20 @@ class _ProductImageState extends State<ProductImage> {
                 padding: const EdgeInsets.only(top: 2.0),
                 child: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 0.0),
-                      child: Text(
-                        productPrice + "L.L.",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 11.7,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: Text(
-                        productUnit,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 11.7,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black26,
+                    buildProductPrice(),
+                    GestureDetector(
+                      onTap: () => removeRate(),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: Text(
+                          productUnit,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 11.7,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black26,
+                          ),
                         ),
                       ),
                     ),
@@ -128,5 +138,121 @@ class _ProductImageState extends State<ProductImage> {
                 ),
               )
             ]));
+  }
+
+  int rate;
+  dynamic shopinfo;
+  bool started = false;
+  dynamic cachedshops;
+  // Map newCachedShops;
+  removeRate() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove("cached_shops");
+  }
+
+  getRate() async {
+    print(
+        "started prefrererererererere_______________________________________________________________");
+    final prefs = await SharedPreferences.getInstance();
+    // prefs.remove("cached_shops");
+    // var newcachedshops = {"pro_nutrition": 2000};
+    bool skip = false;
+    // prefs.setString('cached_shops', json.encode(newcachedshops));
+    cachedshops = prefs.getString("cached_shops");
+    // print(cachedshops);
+    if (cachedshops != null) {
+      cachedshops = json.decode(cachedshops);
+      // print(cachedshops);
+    } else {
+      cachedshops = {};
+      skip = true;
+      // print('ITS NULLEDDDDDD');
+    }
+    // print("passed");
+    // cachedshops = {"pro_nutrition": 2000};
+    // print(cachedshops.toString());
+    // print("under the ");
+    if (!cachedshops.containsKey(shopName)) {
+      shopinfo = Firestore.instance
+          .collection('shops')
+          .where('username', isEqualTo: shopName)
+          .getDocuments()
+          .then(
+        (value) {
+          if (value.documents.length > 0) {
+            cachedshops[shopName] = value.documents[0].data['rate'];
+            prefs.setString('cached_shops', json.encode(cachedshops));
+            // print(prefs.getString("cached_shops").toString() +
+            //     "this is the cached");
+            return rate = value.documents[0].data['rate'];
+          } else {
+            return null;
+          }
+        },
+      );
+    } else {
+      // cachedshops[shopName] = value.documents[0].data['rate'];
+      rate = json.decode(prefs.getString("cached_shops"))[shopName];
+      print("just got: " + rate.toString());
+    }
+    // prefs.remove("cached_shops");
+    // rate = 1;
+    // print("rate is");
+    // print("++++++++++++++++");
+    // debugPrint(rate.toString());
+    started = true;
+  }
+
+  Padding buildProductPrice() {
+    if (productCurrency == "dollar") {
+      return Padding(
+        padding: const EdgeInsets.only(top: 0.0),
+        child: FutureBuilder(
+            future: getRate(),
+            builder: (context, snapshot) {
+              // print(started);
+              switch (snapshot.connectionState) {
+                case ConnectionState.done:
+                  if (snapshot.hasError)
+                    return new Text('Error: ${snapshot.error}');
+                  else
+                    return Text(
+                      (int.parse(productPrice.toString()) *
+                                  int.parse(rate.toString()))
+                              .toString() +
+                          "L.L.",
+                      // rate.toString(),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 11.7,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black54,
+                      ),
+                    );
+                  break;
+
+                default:
+                  debugPrint("Snapshot " + snapshot.toString());
+                  return Text(
+                      's'); // also check your listWidget(snapshot) as it may return null.
+              }
+            }),
+      );
+    } else {
+      print('product is not dollar');
+      return Padding(
+          padding: const EdgeInsets.only(top: 0.0),
+          child: Text(
+            productPrice + "L.Ld.",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 11.7,
+              fontFamily: 'Axiforma',
+              color: Colors.black54,
+            ),
+          ));
+    }
   }
 }
