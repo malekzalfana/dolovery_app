@@ -81,6 +81,7 @@ class HomeScreenState extends State<HomeScreen> {
   // }
   var currentLocation;
   bool gotLocation = true;
+  bool acquiredlocation = false;
 
   openLocation() async {
     Location location = new Location();
@@ -125,6 +126,13 @@ class HomeScreenState extends State<HomeScreen> {
     c_position = first.featureName;
     print(
         ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+    if (acquiredlocation == false) {
+      setState(() {
+        acquiredlocation = true;
+        print('added the correct location_________');
+      });
+    }
+
     return c_position;
   }
 
@@ -560,6 +568,9 @@ class HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
                     child: MaterialButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.0),
+                      ),
                       onPressed: () {
                         getLocation();
                       },
@@ -592,6 +603,9 @@ class HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
                     child: MaterialButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.0),
+                      ),
                       onPressed: () {
                         // _signInPopUp(context);
                       },

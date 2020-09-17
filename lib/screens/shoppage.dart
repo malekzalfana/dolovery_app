@@ -92,67 +92,87 @@ class _ShopPageState extends State<ShopPage> {
         child: Container(
           child: Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 17.0, right: 0.0, top: 30.0, bottom: 0.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 5.0),
-                      child: Icon(
-                        Icons.near_me,
-                        color: Colors.redAccent[700],
-                        size: 20.0,
+              Visibility(
+                visible: false,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 17.0, right: 0.0, top: 30.0, bottom: 0.0),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5.0),
+                        child: Icon(
+                          Icons.near_me,
+                          color: Colors.redAccent[700],
+                          size: 20.0,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "Delivering to",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
-                        fontFamily: 'Axiforma',
-                        color: Colors.redAccent[700],
+                      Text(
+                        "Delivering to",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                          fontFamily: 'Axiforma',
+                          color: Colors.redAccent[700],
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                      child: MaterialButton(
-                        onPressed: () {
-                          () {};
-                        },
-                        color: Colors.redAccent[700],
-                        textColor: Colors.white,
-                        minWidth: 0,
-                        height: 0,
-                        // padding: EdgeInsets.zero,
-                        padding: EdgeInsets.only(
-                            left: 6, top: 0, right: 6, bottom: 1),
-                        child: Text(
-                          "Badaro",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                            fontFamily: 'Axiforma',
-                            color: Colors.white,
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                        child: MaterialButton(
+                          onPressed: () {
+                            () {};
+                          },
+                          color: Colors.redAccent[700],
+                          textColor: Colors.white,
+                          minWidth: 0,
+                          height: 0,
+                          // padding: EdgeInsets.zero,
+                          padding: EdgeInsets.only(
+                              left: 6, top: 0, right: 6, bottom: 1),
+                          child: Text(
+                            "Badaro",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              fontFamily: 'Axiforma',
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Spacer(),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                          icon: Icon(
-                            Icons.clear,
-                            color: Colors.grey,
-                            size: 30,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          }),
-                    ),
-                  ],
+                      Spacer(),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.clear,
+                              color: Colors.grey,
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            }),
+                      ),
+                    ],
+                  ),
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.clear,
+                          color: Colors.grey,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        }),
+                  ),
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -522,6 +542,9 @@ class _ShopPageState extends State<ShopPage> {
                           stream: Firestore.instance
                               .collection('products')
                               .where('shop', isEqualTo: widget.data['username'])
+                              .where('category', isEqualTo: chosen_category)
+                              .where('subcategory',
+                                  isEqualTo: chosen_subcategory)
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
@@ -536,7 +559,8 @@ class _ShopPageState extends State<ShopPage> {
                                 children: List.generate(20, (index) {
                                   return GestureDetector(
                                     onTap: () {
-                                      openProductPopUp(context, snapshot.data, index);
+                                      openProductPopUp(
+                                          context, snapshot.data, index);
                                     },
                                     child: ProductImage(
                                         productName: snapshot.data.documents[index]

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dolovery_app/screens/editadress.dart';
+import 'package:dolovery_app/screens/salleitem.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -81,6 +82,7 @@ class _CartState extends State<Cart> {
     prefs.remove('cart');
     prefs.remove('shops');
     prefs.remove('usercartmap');
+    prefs.remove('cached_shops');
     Navigator.of(context).pop();
     print(prefs.getKeys());
     return true;
@@ -136,7 +138,7 @@ class _CartState extends State<Cart> {
   // }
   dynamic usercartmap;
 
-  _save(itemid, rate, shop_name, type, shop_price) async {
+  _save(itemid, rate, shop_name, type, shop_price, currency) async {
     add();
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
@@ -173,11 +175,12 @@ class _CartState extends State<Cart> {
     }
     // var shop_price =
     //     int.parse(data.documents[index]['shop_price'].toString()).toDouble();
-    // double total = prefs.getDouble('total') == null
-    //     ? 0
-    //     : prefs.getDouble('total') +
-    //         (double.parse(shop_price.toString()) *
-    //             double.parse(rate.toString()));
+    if (currency == 'dollar') {
+      rate = 1;
+    }
+    double total = prefs.getDouble('total') == null
+        ? 0
+        : prefs.getDouble('total') + shop_price;
     prefs.setDouble('total', total);
     if (cart == null) {
       cart = [];
@@ -205,7 +208,7 @@ class _CartState extends State<Cart> {
     // print('saved $items');
   }
 
-  _remove(itemid, rate, shop_name, type, shop_price) async {
+  _remove(itemid, rate, shop_name, type, shop_price, currency) async {
     minus();
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
@@ -238,13 +241,15 @@ class _CartState extends State<Cart> {
     if (prefs.getDouble('total') == null) {
       prefs.setDouble('total', 0);
     }
+
     // var shop_price =
     //     int.parse(data.documents[index]['shop_price'].toString()).toDouble();
+    if (currency == 'dollar') {
+      rate = 1;
+    }
     double total = prefs.getDouble('total') == null
         ? 0
-        : prefs.getDouble('total') -
-            (double.parse(shop_price.toString()) *
-                double.parse(rate.toString()));
+        : prefs.getDouble('total') - shop_price;
     prefs.setDouble('total', total);
     if (cart == null) {
       cart = [];
@@ -386,39 +391,39 @@ class _CartState extends State<Cart> {
   }
 
   // dynamic usercartmap;
-  Future<bool> loadcart() async =>
-      Future.delayed(Duration(milliseconds: 80), () async {
-        final prefs = await SharedPreferences.getInstance();
-        usercartmap = prefs.getString("usercartmap");
-        usercartmap = json.decode(usercartmap);
+  Future<bool> loadcart() async {
+    final prefs = await SharedPreferences.getInstance();
+    usercartmap = prefs.getString("usercartmap");
+    usercartmap = json.decode(usercartmap);
 
-        if (torestart)
-          setState(() {
-            type = prefs.getString('type');
-            total = prefs.getDouble('total');
-            items = prefs.getDouble('items');
-            cart = prefs.getStringList('cart');
-            shops = prefs.getStringList('shops');
-            if (type == 'supplements') {
-              imagetype = 'assets/images/supsec.png';
-            } else if (type == 'pets') {
-              imagetype = 'assets/images/petsec.png';
-            } else if (type == 'lebanese') {
-              imagetype = 'assets/images/lebsec.jpg';
-            } else {
-              imagetype = 'assets/images/salle.png';
-            }
+    if (torestart)
+      setState(() {
+        type = prefs.getString('type');
+        total = prefs.getDouble('total');
+        items = prefs.getDouble('items');
+        cart = prefs.getStringList('cart');
+        shops = prefs.getStringList('shops');
+        if (type == 'supplements') {
+          imagetype = 'assets/images/supsec.png';
+        } else if (type == 'pets') {
+          imagetype = 'assets/images/petsec.png';
+        } else if (type == 'lebanese') {
+          imagetype = 'assets/images/lebsec.jpg';
+        } else {
+          imagetype = 'assets/images/salle.png';
+        }
 
-            torestart = false;
-            // final finalshops = await cartshopsmap;
-            // return shops;
-            return true;
-          });
+        torestart = false;
+        // final finalshops = await cartshopsmap;
+        // return shops;
+        return true;
       });
+  }
+
   @override
   void initState() {
     // getcartmap();
-    // setupVerification();
+    setupVerification();
     // loadcart();
     super.initState();
     loadcart();
@@ -481,7 +486,9 @@ class _CartState extends State<Cart> {
   }
 
   void _welcomePopUp(context, name) {
+    setState(() {});
     showModalBottomSheet(
+        isDismissible: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -500,6 +507,7 @@ class _CartState extends State<Cart> {
                         size: 30,
                       ),
                       onPressed: () {
+                        Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       }),
                 ),
@@ -531,33 +539,41 @@ class _CartState extends State<Cart> {
                     color: Colors.redAccent[700],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        side: BorderSide(color: Colors.red)),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProfileScreen()));
-                    },
-                    color: Colors.redAccent[700],
-                    textColor: Colors.white,
-                    minWidth: 0,
-                    height: 0,
-                    // padding: EdgeInsets.zero,
-                    padding: EdgeInsets.only(
-                        left: 20, top: 10, right: 20, bottom: 10),
-                    child: Text(
-                      "Setup your profile",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13.0,
-                        fontFamily: 'Axiforma',
-                        color: Colors.white,
+                FutureBuilder(
+                  future: setupVerification(),
+                  builder: (context, snapshot) {
+                    return Visibility(
+                      visible: notsetup,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              side: BorderSide(color: Colors.red)),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ProfileScreen()));
+                          },
+                          color: Colors.redAccent[700],
+                          textColor: Colors.white,
+                          minWidth: 0,
+                          height: 0,
+                          // padding: EdgeInsets.zero,
+                          padding: EdgeInsets.only(
+                              left: 20, top: 10, right: 20, bottom: 10),
+                          child: Text(
+                            "Setup your profile",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13.0,
+                              fontFamily: 'Axiforma',
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -581,7 +597,7 @@ class _CartState extends State<Cart> {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-
+      bool hasprofile = false;
       final FirebaseUser user =
           (await _auth.signInWithCredential(credential)).user;
       final snackBar = SnackBar(
@@ -602,6 +618,7 @@ class _CartState extends State<Cart> {
           await Firestore.instance.collection("users").document(user.uid).get();
       if (!notsetup.exists) {
         print("user exists");
+        hasprofile = true;
       }
 
       // if (Firestore.instance.collection("users").document(user.uid).get() != null) {
@@ -655,7 +672,7 @@ class _CartState extends State<Cart> {
 
       if (this_user.exists) {
         notsetup = false;
-        print("user is not setup");
+        print("user is setup");
       }
     } else {
       usersignedin = false;
@@ -750,612 +767,662 @@ class _CartState extends State<Cart> {
               Column(
                 children: [
                   for (var shop in usercartmap.keys)
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        FutureBuilder(
-                            future: getRate(shop),
-                            builder: (context, snapshot) {
-                              return Column(
-                                children: [
-                                  Text(
-                                    shop,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 25.0,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.black),
-                                  ),
-                                  for (var product in usercartmap[shop].keys)
-                                    StreamBuilder<Object>(
-                                        stream: Firestore.instance
-                                            .collection("products")
-                                            // .where('id', isEqualTo: product)
-                                            .document(product.toString())
-                                            .snapshots(),
-                                        builder: (context, snapshot) {
-                                          print(snapshot.data);
-                                          return buildCartItem(
-                                              snapshot.data,
-                                              int.parse(usercartmap[shop]
-                                                      [product]
-                                                  .toString()),
-                                              rate);
-                                        })
-                                ],
-                              );
-                            }),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          FutureBuilder(
+                              future: getRate(shop),
+                              builder: (context, snapshot) {
+                                return Column(
+                                  children: [
+                                    FutureBuilder(
+                                      future: getShop(shop),
+                                      builder: (context, snapshot) {
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 22.0),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              snapshot.data['name'],
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 23.0,
+                                                  fontFamily: 'Axiforma',
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    // StreamBuilder(
+                                    //     stream: Firestore.instance
+                                    //         .collection('shops')
+                                    //         .where('username', isEqualTo: shop)
+                                    //         .snapshots(),
+                                    //     builder: (context, snapshot) {
+                                    //       var shopinfo =
+                                    //           snapshot.data.docuemnts[0];
+
+                                    //       return Text(
+                                    //         shopinfo['name'],
+                                    //         textAlign: TextAlign.left,
+                                    //         style: TextStyle(
+                                    //             fontWeight: FontWeight.w800,
+                                    //             fontSize: 25.0,
+                                    //             fontFamily: 'Axiforma',
+                                    //             color: Colors.black),
+                                    //       );
+                                    //     }),
+                                    for (var product in usercartmap[shop].keys)
+                                      StreamBuilder<Object>(
+                                          stream: Firestore.instance
+                                              .collection("products")
+                                              // .where('id', isEqualTo: product)
+                                              .document(product.toString())
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            print(snapshot.data);
+                                            return buildCartItem(
+                                                snapshot.data,
+                                                int.parse(usercartmap[shop]
+                                                        [product]
+                                                    .toString()),
+                                                rate);
+                                          })
+                                  ],
+                                );
+                              }),
+                        ],
+                      ),
                     ),
                 ],
               ),
+              FutureBuilder(
+                future: getTotal(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 30.0, top: 20, bottom: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Total",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 30.0, top: 00, bottom: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              total.toInt().toString() + 'L.L.',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 25.0,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.redAccent[700]),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return CircularProgressIndicator(); // or some other widget
+                },
+              ),
 
-              Padding(
-                padding: const EdgeInsets.only(left: 30.0, top: 20, bottom: 10),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Total",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13.0,
-                      fontFamily: 'Axiforma',
-                      color: Colors.black54,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 30.0, top: 00, bottom: 10),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    total.toInt().toString() + 'L.L.',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 25.0,
-                        fontFamily: 'Axiforma',
-                        color: Colors.redAccent[700]),
-                  ),
-                ),
-              ),
               // fixxxxxx
-              // FutureBuilder(
-              //     future: setupVerification(), // async work
-              //     builder: (context, snapshot) {
-              //       switch (snapshot.connectionState) {
-              //         case ConnectionState.waiting:
-              //           return Visibility(
-              //               visible: false, child: Text('Loading....'));
-              //         default:
-              //           if ((snapshot.hasError)) {
-              //             return Text('Error: ${snapshot.error}');
-              //           } else {
-              //             return Column(
-              //               children: [
-              //                 Visibility(
-              //                   visible: notsetup ? false : true,
-              //                   child: Column(
-              //                     children: [
-              //                       Padding(
-              //                         padding: const EdgeInsets.only(
-              //                             left: 30.0, top: 10, bottom: 10),
-              //                         child: Align(
-              //                           alignment: Alignment.centerLeft,
-              //                           child: Text(
-              //                             "Delivering to",
-              //                             style: TextStyle(
-              //                               fontWeight: FontWeight.bold,
-              //                               fontSize: 13.0,
-              //                               fontFamily: 'Axiforma',
-              //                               color: Colors.black54,
-              //                             ),
-              //                           ),
-              //                         ),
-              //                       ),
-              //                       for (var index = 0;
-              //                           index <
-              //                               this_user.data["address"].length;
-              //                           index++)
-              //                         Padding(
-              //                           padding: const EdgeInsets.only(
-              //                               right: 30.0,
-              //                               bottom: 10,
-              //                               left: 30,
-              //                               top: 12),
-              //                           child: GestureDetector(
-              //                             onTap: () {
-              //                               // print(this_user.data["address"]);
-              //                               // chosen_address ==
-              //                               //     this_user.data["address"][index]
-              //                               //         ["id"];
-              //                               // print(isDefault);
-              //                               print("______________________");
-              //                               selectAddress(
-              //                                   this_user.data["address"][index]
-              //                                       ["id"],
-              //                                   index);
-              //                             },
-              //                             child: Container(
-              //                               decoration: BoxDecoration(
-              //                                   boxShadow: [
-              //                                     BoxShadow(
-              //                                       color: Colors.grey
-              //                                           .withOpacity(0.1),
-              //                                       spreadRadius: 2.2,
-              //                                       blurRadius: 2.5,
-              //                                       offset: Offset(0,
-              //                                           4), // changes position of shadow
-              //                                     ),
-              //                                   ],
-              //                                   color: Colors.white,
-              //                                   borderRadius: BorderRadius.all(
-              //                                       Radius.circular(15))),
-              //                               // color: Colors.grey,
-              //                               child: Row(
-              //                                 mainAxisAlignment:
-              //                                     MainAxisAlignment.start,
-              //                                 children: <Widget>[
-              //                                   IconButton(
-              //                                       icon: Padding(
-              //                                         padding:
-              //                                             const EdgeInsets.only(
-              //                                                 left: 8.0),
-              //                                         child: Icon(
-              //                                           Icons.place,
-              //                                           color: chosen_address ==
-              //                                                   this_user.data[
-              //                                                           "address"]
-              //                                                       [
-              //                                                       index]["id"]
-              //                                               ? Colors.black
-              //                                               : Colors.grey[400],
-              //                                           size: 36,
-              //                                         ),
-              //                                       ),
-              //                                       onPressed: () {
-              //                                         // Navigator.of(context).pop();
-              //                                         // setState(() {
-              //                                         //   showerrortextbool = false;
-              //                                         // });
-              //                                       }),
-              //                                   Container(
-              //                                       // color: Colors.green,
-              //                                       margin: new EdgeInsets.only(
-              //                                           left: 10.0, right: 0),
-              //                                       child: Padding(
-              //                                         padding:
-              //                                             const EdgeInsets.all(
-              //                                                 8.5),
-              //                                         child: Column(
-              //                                           crossAxisAlignment:
-              //                                               CrossAxisAlignment
-              //                                                   .start,
-              //                                           mainAxisAlignment:
-              //                                               MainAxisAlignment
-              //                                                   .start,
-              //                                           children: <Widget>[
-              //                                             Row(
-              //                                               mainAxisAlignment:
-              //                                                   MainAxisAlignment
-              //                                                       .start,
-              //                                               children: <Widget>[
-              //                                                 Padding(
-              //                                                   padding:
-              //                                                       const EdgeInsets
-              //                                                               .only(
-              //                                                           top:
-              //                                                               10.0,
-              //                                                           left: 0,
-              //                                                           bottom:
-              //                                                               5),
-              //                                                   child: Text(
-              //                                                     this_user.data[
-              //                                                                 "address"]
-              //                                                             [
-              //                                                             index]
-              //                                                         ["name"],
-              //                                                     // textAlign: TextAlign.left,
-              //                                                     style:
-              //                                                         TextStyle(
-              //                                                       fontWeight:
-              //                                                           FontWeight
-              //                                                               .bold,
-              //                                                       fontSize:
-              //                                                           16,
-              //                                                       fontFamily:
-              //                                                           'Axiforma',
-              //                                                       color: chosen_address ==
-              //                                                               this_user.data["address"][index][
-              //                                                                   "id"]
-              //                                                           ? Colors
-              //                                                               .black
-              //                                                           : Colors
-              //                                                               .grey[500],
-              //                                                     ),
-              //                                                   ),
-              //                                                 ),
-              //                                               ],
-              //                                             ),
-              //                                             Padding(
-              //                                               padding:
-              //                                                   const EdgeInsets
-              //                                                           .only(
-              //                                                       top: 0),
-              //                                               child: Row(
-              //                                                 mainAxisSize:
-              //                                                     MainAxisSize
-              //                                                         .min,
-              //                                                 mainAxisAlignment:
-              //                                                     MainAxisAlignment
-              //                                                         .start,
-              //                                                 children: <
-              //                                                     Widget>[
-              //                                                   Padding(
-              //                                                     padding: const EdgeInsets
-              //                                                             .only(
-              //                                                         left: 0.0,
-              //                                                         bottom:
-              //                                                             8),
-              //                                                     child:
-              //                                                         SizedBox(
-              //                                                       width: MediaQuery.of(context)
-              //                                                               .size
-              //                                                               .width -
-              //                                                           145,
-              //                                                       child: Text(
-              //                                                         this_user.data["address"]
-              //                                                                 [
-              //                                                                 index]
-              //                                                             [
-              //                                                             "street_address"],
-              //                                                         overflow:
-              //                                                             TextOverflow
-              //                                                                 .ellipsis,
-              //                                                         textAlign:
-              //                                                             TextAlign
-              //                                                                 .left,
-              //                                                         style:
-              //                                                             TextStyle(
-              //                                                           height:
-              //                                                               1.1,
-              //                                                           fontWeight:
-              //                                                               FontWeight.normal,
-              //                                                           fontSize:
-              //                                                               14.5,
-              //                                                           fontFamily:
-              //                                                               'Axiforma',
-              //                                                           color: Colors
-              //                                                               .grey[500],
-              //                                                         ),
-              //                                                       ),
-              //                                                     ),
-              //                                                   ),
-              //                                                 ],
-              //                                               ),
-              //                                             ),
-              //                                           ],
-              //                                         ),
-              //                                       ))
-              //                                 ],
-              //                               ),
-              //                             ),
-              //                           ),
-              //                         ),
-              //                       Padding(
-              //                         padding: const EdgeInsets.only(
-              //                             left: 30.0, top: 10, bottom: 10),
-              //                         child: Align(
-              //                           alignment: Alignment.centerLeft,
-              //                           child: Text(
-              //                             "Payment",
-              //                             style: TextStyle(
-              //                               fontWeight: FontWeight.bold,
-              //                               fontSize: 13.0,
-              //                               fontFamily: 'Axiforma',
-              //                               color: Colors.black54,
-              //                             ),
-              //                           ),
-              //                         ),
-              //                       ),
-              //                       Opacity(
-              //                         opacity: 1,
-              //                         child: Padding(
-              //                           padding: const EdgeInsets.only(
-              //                               right: 30.0,
-              //                               bottom: 20,
-              //                               left: 30,
-              //                               top: 12),
-              //                           child: Container(
-              //                             decoration: BoxDecoration(
-              //                                 boxShadow: [
-              //                                   BoxShadow(
-              //                                     color: Colors.grey
-              //                                         .withOpacity(0.1),
-              //                                     spreadRadius: 2.2,
-              //                                     blurRadius: 2.5,
-              //                                     offset: Offset(0,
-              //                                         4), // changes position of shadow
-              //                                   ),
-              //                                 ],
-              //                                 color: Colors.white,
-              //                                 borderRadius: BorderRadius.all(
-              //                                     Radius.circular(14))),
-              //                             // color: Colors.grey,
-              //                             child: Row(
-              //                               mainAxisAlignment:
-              //                                   MainAxisAlignment.start,
-              //                               children: <Widget>[
-              //                                 Padding(
-              //                                     padding:
-              //                                         const EdgeInsets.only(
-              //                                             left: 15.0),
-              //                                     child: Icon(Icons.payment,
-              //                                         size: 30,
-              //                                         color: Colors.black)),
-              //                                 Container(
-              //                                     // color: Colors.green,
-              //                                     margin: new EdgeInsets.only(
-              //                                         left: 10.0,
-              //                                         right: 0,
-              //                                         bottom: 0),
-              //                                     child: Padding(
-              //                                       padding:
-              //                                           const EdgeInsets.all(
-              //                                               8.5),
-              //                                       child: Column(
-              //                                         crossAxisAlignment:
-              //                                             CrossAxisAlignment
-              //                                                 .start,
-              //                                         mainAxisAlignment:
-              //                                             MainAxisAlignment
-              //                                                 .start,
-              //                                         children: <Widget>[
-              //                                           Row(
-              //                                             mainAxisAlignment:
-              //                                                 MainAxisAlignment
-              //                                                     .start,
-              //                                             children: <Widget>[
-              //                                               Padding(
-              //                                                 padding:
-              //                                                     const EdgeInsets
-              //                                                             .only(
-              //                                                         top: 10.0,
-              //                                                         left: 6,
-              //                                                         bottom:
-              //                                                             5),
-              //                                                 child: Text(
-              //                                                   'Cash On Delivery',
-              //                                                   // textAlign: TextAlign.left,
-              //                                                   style:
-              //                                                       TextStyle(
-              //                                                     fontWeight:
-              //                                                         FontWeight
-              //                                                             .bold,
-              //                                                     fontSize: 16,
-              //                                                     fontFamily:
-              //                                                         'Axiforma',
-              //                                                     color: Colors
-              //                                                         .black,
-              //                                                   ),
-              //                                                 ),
-              //                                               ),
-              //                                             ],
-              //                                           ),
-              //                                           Row(
-              //                                             mainAxisSize:
-              //                                                 MainAxisSize.min,
-              //                                             mainAxisAlignment:
-              //                                                 MainAxisAlignment
-              //                                                     .start,
-              //                                             children: <Widget>[
-              //                                               Padding(
-              //                                                 padding:
-              //                                                     const EdgeInsets
-              //                                                             .only(
-              //                                                         left: 8.0,
-              //                                                         bottom:
-              //                                                             8),
-              //                                                 child: Text(
-              //                                                   'Pay when the delivery arrives',
-              //                                                   overflow:
-              //                                                       TextOverflow
-              //                                                           .ellipsis,
-              //                                                   textAlign:
-              //                                                       TextAlign
-              //                                                           .left,
-              //                                                   style:
-              //                                                       TextStyle(
-              //                                                     height: 1.1,
-              //                                                     fontWeight:
-              //                                                         FontWeight
-              //                                                             .normal,
-              //                                                     fontSize:
-              //                                                         14.5,
-              //                                                     fontFamily:
-              //                                                         'Axiforma',
-              //                                                     color: Colors
-              //                                                             .grey[
-              //                                                         500],
-              //                                                   ),
-              //                                                 ),
-              //                                               ),
-              //                                             ],
-              //                                           ),
-              //                                         ],
-              //                                       ),
-              //                                     ))
-              //                               ],
-              //                             ),
-              //                           ),
-              //                         ),
-              //                       ),
-              //                     ],
-              //                   ),
-              //                 ),
-              //                 Visibility(
-              //                   visible: usersignedin ? false : true,
-              //                   child: Padding(
-              //                     padding:
-              //                         const EdgeInsets.fromLTRB(25, 15, 25, 0),
-              //                     child: MaterialButton(
-              //                       shape: RoundedRectangleBorder(
-              //                         borderRadius: BorderRadius.circular(15.0),
-              //                       ),
-              //                       elevation: 0,
-              //                       onPressed: () {
-              //                         print("xlicked");
-              //                         _signInPopUp(context);
-              //                       },
-              //                       color: Colors.redAccent[700],
-              //                       disabledColor: Colors.grey[200],
-              //                       textColor: Colors.white,
-              //                       minWidth: MediaQuery.of(context).size.width,
-              //                       height: 0,
-              //                       // padding: EdgeInsets.zero,
-              //                       padding: EdgeInsets.only(
-              //                           left: 23,
-              //                           top: 10,
-              //                           right: 23,
-              //                           bottom: 10),
-              //                       child: Text(
-              //                         "Sign in to continue",
-              //                         style: TextStyle(
-              //                           fontWeight: FontWeight.bold,
-              //                           fontSize: 15.0,
-              //                           fontFamily: 'Axiforma',
-              //                           // color: Colors.white,
-              //                         ),
-              //                       ),
-              //                     ),
-              //                   ),
-              //                 ),
-              //                 Visibility(
-              //                   visible: usersignedin ? true : false,
-              //                   child: Visibility(
-              //                     visible: notsetup ? true : false,
-              //                     child: Padding(
-              //                       padding: const EdgeInsets.fromLTRB(
-              //                           25, 15, 25, 0),
-              //                       child: MaterialButton(
-              //                         shape: RoundedRectangleBorder(
-              //                           borderRadius:
-              //                               BorderRadius.circular(15.0),
-              //                         ),
-              //                         elevation: 0,
-              //                         onPressed: () {
-              //                           // print("xlicked");
-              //                           Navigator.of(context)
-              //                               .push(MaterialPageRoute(
-              //                                   builder: (context) =>
-              //                                       ProfileScreen()))
-              //                               .then((_) {
-              //                             // refreshcart();
-              //                             setupVerification();
-              //                             setState(() {});
-              //                           });
-              //                         },
-              //                         color: Colors.redAccent[700],
-              //                         disabledColor: Colors.grey[200],
-              //                         textColor: Colors.white,
-              //                         minWidth:
-              //                             MediaQuery.of(context).size.width,
-              //                         height: 0,
-              //                         // padding: EdgeInsets.zero,
-              //                         padding: EdgeInsets.only(
-              //                             left: 23,
-              //                             top: 10,
-              //                             right: 23,
-              //                             bottom: 10),
-              //                         child: Text(
-              //                           "Setup your profile to continue",
-              //                           style: TextStyle(
-              //                             fontWeight: FontWeight.bold,
-              //                             fontSize: 15.0,
-              //                             fontFamily: 'Axiforma',
-              //                             // color: Colors.white,
-              //                           ),
-              //                         ),
-              //                       ),
-              //                     ),
-              //                   ),
-              //                 ),
-              //                 Padding(
-              //                   padding:
-              //                       const EdgeInsets.fromLTRB(25, 10, 25, 12),
-              //                   child: MaterialButton(
-              //                     shape: RoundedRectangleBorder(
-              //                       borderRadius: BorderRadius.circular(15.0),
-              //                     ),
-              //                     elevation: 0,
-              //                     onPressed: notsetup
-              //                         ? null
-              //                         : () {
-              //                             List products;
-              //                             var cartproduct;
-              //                             // define snapshots to use for looping
-              //                             for (var i;
-              //                                 i <= finalcart.length;
-              //                                 i++) {
-              //                               cartproduct = Firestore.instance
-              //                                   .collection("products")
-              //                                   .document(finalcart[i])
-              //                                   .get();
-              //                               Map<String, dynamic> product = {
-              //                                 "name": cartproduct.data['name'],
-              //                                 "shop_price": cartproduct,
-              //                                 "quantity": cartproduct,
-              //                                 "unit": cartproduct
-              //                               };
-              //                               products.add(product);
-              //                             }
-              //                             Firestore.instance
-              //                                 .collection('orders')
-              //                                 .document(uid)
-              //                                 .setData({
-              //                               "address": "address",
-              //                               "total": "total",
-              //                               "count": "4",
-              //                               "payment": "cashondelivery",
-              //                               "date": "today",
-              //                               "shop": "shop username",
-              //                               "products": products,
-              //                               "user": uid,
-              //                               "user name": "user name",
-              //                               "item_list": "list of ids"
-              //                             }).then((result) {
-              //                               print("order added");
-              //                             }).catchError((onError) {
-              //                               print("onError");
-              //                             });
-              //                           },
-              //                     color: Colors.redAccent[700],
-              //                     disabledColor: Colors.grey[200],
-              //                     textColor: Colors.white,
-              //                     minWidth: MediaQuery.of(context).size.width,
-              //                     height: 0,
-              //                     // padding: EdgeInsets.zero,
-              //                     padding: EdgeInsets.only(
-              //                         left: 23, top: 12, right: 23, bottom: 10),
-              //                     child: Text(
-              //                       "Confirm Order",
-              //                       style: TextStyle(
-              //                         fontWeight: FontWeight.bold,
-              //                         fontSize: 15.0,
-              //                         fontFamily: 'Axiforma',
-              //                         // color: Colors.white,
-              //                       ),
-              //                     ),
-              //                   ),
-              //                 ),
-              //               ],
-              //             );
-              //           }
-              //       }
-              //     }),
-              // // Text(usersignedin ? "user is signed in" : "user not signed in"),
-              // Text(notsetup ? "user is not setup" : "user is setup"),
+              FutureBuilder(
+                  future: setupVerification(), // async work
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Visibility(
+                            visible: false, child: Text('Loading....'));
+                      default:
+                        if ((snapshot.hasError)) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return Column(
+                            children: [
+                              Visibility(
+                                visible: notsetup ? false : true,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 30.0, top: 10, bottom: 10),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Delivering to",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13.0,
+                                            fontFamily: 'Axiforma',
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    if (usersignedin)
+                                      for (var index = 0;
+                                          index <
+                                              this_user.data["address"].length;
+                                          index++)
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 30.0,
+                                              bottom: 10,
+                                              left: 30,
+                                              top: 12),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              // print(this_user.data["address"]);
+                                              // chosen_address ==
+                                              //     this_user.data["address"][index]
+                                              //         ["id"];
+                                              // print(isDefault);
+                                              print("______________________");
+                                              selectAddress(
+                                                  this_user.data["address"]
+                                                      [index]["id"],
+                                                  index);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.1),
+                                                      spreadRadius: 2.2,
+                                                      blurRadius: 2.5,
+                                                      offset: Offset(0,
+                                                          4), // changes position of shadow
+                                                    ),
+                                                  ],
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(15))),
+                                              // color: Colors.grey,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: <Widget>[
+                                                  IconButton(
+                                                      icon: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 8.0),
+                                                        child: Icon(
+                                                          Icons.place,
+                                                          color: chosen_address ==
+                                                                  this_user.data[
+                                                                          "address"]
+                                                                      [
+                                                                      index]["id"]
+                                                              ? Colors.black
+                                                              : Colors.grey[400],
+                                                          size: 36,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        // Navigator.of(context).pop();
+                                                        // setState(() {
+                                                        //   showerrortextbool = false;
+                                                        // });
+                                                      }),
+                                                  Container(
+                                                      // color: Colors.green,
+                                                      margin:
+                                                          new EdgeInsets.only(
+                                                              left: 10.0,
+                                                              right: 0),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.5),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: <Widget>[
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              children: <
+                                                                  Widget>[
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      top: 10.0,
+                                                                      left: 0,
+                                                                      bottom:
+                                                                          5),
+                                                                  child: Text(
+                                                                    this_user.data["address"]
+                                                                            [
+                                                                            index]
+                                                                        [
+                                                                        "name"],
+                                                                    // textAlign: TextAlign.left,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontFamily:
+                                                                          'Axiforma',
+                                                                      color: chosen_address ==
+                                                                              this_user.data["address"][index][
+                                                                                  "id"]
+                                                                          ? Colors
+                                                                              .black
+                                                                          : Colors
+                                                                              .grey[500],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 0),
+                                                              child: Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            0.0,
+                                                                        bottom:
+                                                                            8),
+                                                                    child:
+                                                                        SizedBox(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width -
+                                                                          145,
+                                                                      child:
+                                                                          Text(
+                                                                        this_user.data["address"][index]
+                                                                            [
+                                                                            "street_address"],
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        textAlign:
+                                                                            TextAlign.left,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          height:
+                                                                              1.1,
+                                                                          fontWeight:
+                                                                              FontWeight.normal,
+                                                                          fontSize:
+                                                                              14.5,
+                                                                          fontFamily:
+                                                                              'Axiforma',
+                                                                          color:
+                                                                              Colors.grey[500],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ))
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 30.0, top: 10, bottom: 10),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Payment",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13.0,
+                                            fontFamily: 'Axiforma',
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Opacity(
+                                      opacity: 1,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 30.0,
+                                            bottom: 20,
+                                            left: 30,
+                                            top: 12),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.1),
+                                                  spreadRadius: 2.2,
+                                                  blurRadius: 2.5,
+                                                  offset: Offset(0,
+                                                      4), // changes position of shadow
+                                                ),
+                                              ],
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(14))),
+                                          // color: Colors.grey,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 15.0),
+                                                  child: Icon(Icons.payment,
+                                                      size: 30,
+                                                      color: Colors.black)),
+                                              Container(
+                                                  // color: Colors.green,
+                                                  margin: new EdgeInsets.only(
+                                                      left: 10.0,
+                                                      right: 0,
+                                                      bottom: 0),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.5),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: <Widget>[
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10.0,
+                                                                      left: 6,
+                                                                      bottom:
+                                                                          5),
+                                                              child: Text(
+                                                                'Cash On Delivery',
+                                                                // textAlign: TextAlign.left,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 16,
+                                                                  fontFamily:
+                                                                      'Axiforma',
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: <Widget>[
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 8.0,
+                                                                      bottom:
+                                                                          8),
+                                                              child: Text(
+                                                                'Pay when the delivery arrives',
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style:
+                                                                    TextStyle(
+                                                                  height: 1.1,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal,
+                                                                  fontSize:
+                                                                      14.5,
+                                                                  fontFamily:
+                                                                      'Axiforma',
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      500],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ))
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Visibility(
+                                visible: usersignedin ? false : true,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                                  child: MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    elevation: 0,
+                                    onPressed: () {
+                                      print("xlicked");
+                                      _signInPopUp(context);
+                                    },
+                                    color: Colors.redAccent[700],
+                                    disabledColor: Colors.grey[200],
+                                    textColor: Colors.white,
+                                    minWidth: MediaQuery.of(context).size.width,
+                                    height: 0,
+                                    // padding: EdgeInsets.zero,
+                                    padding: EdgeInsets.only(
+                                        left: 23,
+                                        top: 10,
+                                        right: 23,
+                                        bottom: 10),
+                                    child: Text(
+                                      "Sign in to continue",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0,
+                                        fontFamily: 'Axiforma',
+                                        // color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: usersignedin ? true : false,
+                                child: Visibility(
+                                  visible: notsetup ? false : false,
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        25, 15, 25, 0),
+                                    child: MaterialButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      elevation: 0,
+                                      onPressed: () {
+                                        // print("xlicked");
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ProfileScreen()))
+                                            .then((_) {
+                                          // refreshcart();
+                                          setupVerification();
+                                          setState(() {});
+                                        });
+                                      },
+                                      color: Colors.redAccent[700],
+                                      disabledColor: Colors.grey[200],
+                                      textColor: Colors.white,
+                                      minWidth:
+                                          MediaQuery.of(context).size.width,
+                                      height: 0,
+                                      // padding: EdgeInsets.zero,
+                                      padding: EdgeInsets.only(
+                                          left: 23,
+                                          top: 10,
+                                          right: 23,
+                                          bottom: 10),
+                                      child: Text(
+                                        "Setup your profile to continue",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15.0,
+                                          fontFamily: 'Axiforma',
+                                          // color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(25, 10, 25, 12),
+                                child: MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  elevation: 0,
+                                  onPressed: notsetup
+                                      ? null
+                                      : () {
+                                          List products;
+                                          var cartproduct;
+                                          // define snapshots to use for looping
+                                          for (var i;
+                                              i <= finalcart.length;
+                                              i++) {
+                                            cartproduct = Firestore.instance
+                                                .collection("products")
+                                                .document(finalcart[i])
+                                                .get();
+                                            Map<String, dynamic> product = {
+                                              "name": cartproduct.data['name'],
+                                              "shop_price": cartproduct,
+                                              "quantity": cartproduct,
+                                              "unit": cartproduct
+                                            };
+                                            products.add(product);
+                                          }
+                                          Firestore.instance
+                                              .collection('orders')
+                                              .document(uid)
+                                              .setData({
+                                            "address": "address",
+                                            "total": "total",
+                                            "count": "4",
+                                            "payment": "cashondelivery",
+                                            "date": "today",
+                                            "shop": "shop username",
+                                            "products": products,
+                                            "user": uid,
+                                            "user name": "user name",
+                                            "item_list": "list of ids"
+                                          }).then((result) {
+                                            print("order added");
+                                          }).catchError((onError) {
+                                            print("onError");
+                                          });
+                                        },
+                                  color: Colors.redAccent[700],
+                                  disabledColor: Colors.grey[200],
+                                  textColor: Colors.white,
+                                  minWidth: MediaQuery.of(context).size.width,
+                                  height: 0,
+                                  // padding: EdgeInsets.zero,
+                                  padding: EdgeInsets.only(
+                                      left: 23, top: 12, right: 23, bottom: 10),
+                                  child: Text(
+                                    "Confirm Order",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15.0,
+                                      fontFamily: 'Axiforma',
+                                      // color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                    }
+                  }),
+              Text(usersignedin ? "user is signed in" : "user not signed in"),
+              Text(notsetup ? "user is not setup" : "user is setup"),
               Visibility(
                 visible: false,
                 child: Padding(
@@ -1373,17 +1440,17 @@ class _CartState extends State<Cart> {
                               color: Colors.grey[500],
                             ),
                           ),
-                          Expanded(
-                            child: Text(
-                              "All meal baskets come with a detailed cooking instructions!",
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12.0,
-                                fontFamily: 'Axiforma',
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                          ),
+                          // Expanded(
+                          //   child: Text(
+                          //     "All meal baskets come with a detailed cooking instructions!",
+                          //     style: TextStyle(
+                          //       fontWeight: FontWeight.normal,
+                          //       fontSize: 12.0,
+                          //       fontFamily: 'Axiforma',
+                          //       color: Colors.grey[500],
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -1401,6 +1468,21 @@ class _CartState extends State<Cart> {
   bool started = false;
   dynamic cachedshops;
   int rate = 1;
+  getTotal() async {
+    final prefs = await SharedPreferences.getInstance();
+    return total = prefs.getDouble('total');
+  }
+
+  // dynamic shopdetails;
+  getShop(shop) async {
+    print('seraching for: $shop');
+    var document = await Firestore.instance
+        .collection('shops')
+        .where("username", isEqualTo: shop)
+        .getDocuments();
+    return document.documents[0];
+  }
+
   getRate(shopName) async {
     if (started == true) {
       // print('skipedddddddd');
@@ -1532,107 +1614,186 @@ class _CartState extends State<Cart> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(left: 0.0),
-                        child: Text(
-                          (int.parse(cartitem['shop_price'].toString()) *
-                                      int.parse(rate.toString()) *
-                                      count)
-                                  .toString() +
-                              "L.L.",
-                          // overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            height: 1.1,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 13.5,
-                            fontFamily: 'Axiforma',
-                            color: Colors.redAccent[700],
-                          ),
+                        child: Row(
+                          children: [
+                            Visibility(
+                              visible:
+                                  cartitem['type'] == 'salle' ? false : true,
+                              child: Text(
+                                (int.parse(cartitem['shop_price'].toString()) *
+                                            int.parse(rate.toString()))
+                                        .toString() +
+                                    "L.L.",
+                                // overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  height: 1.1,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 13.5,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.redAccent[700],
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible:
+                                  cartitem['type'] == 'salle' ? true : false,
+                              child: Text(
+                                cartitem['serving_prices'] != null
+                                    ? cartitem['serving_prices'][count]
+                                            .toString() +
+                                        "L.L."
+                                    : "",
+                                // overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  height: 1.1,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 13.5,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.redAccent[700],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          cartitem['unit'].toString(),
-                          // overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            height: 1.1,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 13,
-                            fontFamily: 'Axiforma',
-                            color: Colors.grey[500],
+                      Visibility(
+                        visible: cartitem['type'] == 'salle' ? false : true,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            cartitem['unit'].toString(),
+                            // overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              height: 1.1,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 13,
+                              fontFamily: 'Axiforma',
+                              color: Colors.grey[500],
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                Row(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 25,
-                      child: RawMaterialButton(
-                        onPressed: () {
-                          _remove(
-                              cartitem.documentID,
-                              rate,
-                              cartitem['shop'],
-                              cartitem['type'],
-                              (int.parse(cartitem['shop_price'].toString()) *
-                                  int.parse(rate.toString()) *
-                                  count));
-                        },
-                        elevation: 2,
-                        fillColor: Colors.redAccent[700],
-                        child: Icon(
-                          Icons.remove,
-                          size: 13,
+                Visibility(
+                  visible: cartitem['type'] == 'salle' ? true : false,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(1, 0, 0, 0),
+                    child: MaterialButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                                builder: (context) => SalleItem(
+                                    cartitem,
+                                    cartitem['day'],
+                                    cartitem['serving_prices'],
+                                    cartitem['descriptions'])))
+                            .then((_) {
+                          setState(() {});
+                        });
+                      },
+                      color: Colors.redAccent[700],
+                      textColor: Colors.white,
+                      minWidth: 0,
+                      height: 0,
+                      // padding: EdgeInsets.zero,
+                      padding:
+                          EdgeInsets.only(left: 6, top: 2, right: 6, bottom: 1),
+                      child: Text(
+                        count.toString() + ' Servings',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13.0,
+                          fontFamily: 'Axiforma',
                           color: Colors.white,
                         ),
-                        // padding: EdgeInsets.all(0.0),
-                        shape: CircleBorder(),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                      child: new Text(count.toString(),
-                          style: new TextStyle(fontSize: 14.5)),
-                    ),
-                    SizedBox(
-                      width: 25,
-                      child: RawMaterialButton(
-                        onPressed: () {
-                          //   refreshcartnumbers(
-                          //       cartitem.documentID,
-                          //       count,
-                          //       int.parse(cartitem['shop_price'].toString()),
-                          //       true,
-                          //       false);
-                          // },
-                          _save(
-                              cartitem.documentID,
-                              rate,
-                              cartitem['shop'],
-                              cartitem['type'],
-                              (int.parse(cartitem['shop_price'].toString()) *
-                                  int.parse(rate.toString()) *
-                                  count));
-                        },
-                        elevation: !maximum ? 2 : 0,
-                        fillColor:
-                            !maximum ? Colors.redAccent[700] : Colors.grey[200],
-                        child: Icon(
-                          Icons.add,
-                          size: 13,
-                          color: !maximum ? Colors.white : Colors.grey[800],
+                  ),
+                ),
+                // ),
+                //  Visibility(
+                //   visible: cartitem['type'] == 'salle' ? false : true,
+                //   child: Container(
+                //     child: Text()
+                //   )),
+                Visibility(
+                  visible: cartitem['type'] == 'salle' ? false : true,
+                  child: Row(
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        width: 25,
+                        child: RawMaterialButton(
+                          onPressed: () {
+                            _remove(
+                                cartitem.documentID,
+                                rate,
+                                cartitem['shop'],
+                                cartitem['type'],
+                                (int.parse(cartitem['shop_price'].toString()) *
+                                    int.parse(rate.toString())),
+                                cartitem['currency']);
+                          },
+                          elevation: 2,
+                          fillColor: Colors.redAccent[700],
+                          child: Icon(
+                            Icons.remove,
+                            size: 13,
+                            color: Colors.white,
+                          ),
+                          // padding: EdgeInsets.all(0.0),
+                          shape: CircleBorder(),
                         ),
-                        padding: EdgeInsets.all(0.0),
-                        shape: CircleBorder(),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        child: new Text(count.toString(),
+                            style: new TextStyle(fontSize: 14.5)),
+                      ),
+                      SizedBox(
+                        width: 25,
+                        child: RawMaterialButton(
+                          onPressed: () {
+                            //   refreshcartnumbers(
+                            //       cartitem.documentID,
+                            //       count,
+                            //       int.parse(cartitem['shop_price'].toString()),
+                            //       true,
+                            //       false);
+                            // },
+                            _save(
+                                cartitem.documentID,
+                                rate,
+                                cartitem['shop'],
+                                cartitem['type'],
+                                (int.parse(cartitem['shop_price'].toString()) *
+                                    int.parse(rate.toString())),
+                                cartitem['currency']);
+                          },
+                          elevation: !maximum ? 2 : 0,
+                          fillColor: !maximum
+                              ? Colors.redAccent[700]
+                              : Colors.grey[200],
+                          child: Icon(
+                            Icons.add,
+                            size: 13,
+                            color: !maximum ? Colors.white : Colors.grey[800],
+                          ),
+                          padding: EdgeInsets.all(0.0),
+                          shape: CircleBorder(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

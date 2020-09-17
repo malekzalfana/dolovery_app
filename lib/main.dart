@@ -149,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // profilescreen
       // null,
       // ProfileScreen(),
-      ProfileMainScreen(),
+      ProfileMainScreen(notifyParent: gotohome),
     ];
   }
 

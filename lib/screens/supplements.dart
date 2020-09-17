@@ -100,7 +100,7 @@ class FormScreenState extends State<SupplementsScreen> {
             ),
             Padding(
                 padding: const EdgeInsets.only(
-                    left: 5.0, right: 10.0, top: 40.0, bottom: 10.0),
+                    left: 5.0, right: 10.0, top: 15.0, bottom: 10.0),
                 child: Column(children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0),
@@ -139,7 +139,7 @@ class FormScreenState extends State<SupplementsScreen> {
               child: StreamBuilder(
                 stream: Firestore.instance
                     .collection('shops')
-                    .where('type', isEqualTo: 'Supplements')
+                    .where('type', isEqualTo: 'supplements')
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -152,6 +152,7 @@ class FormScreenState extends State<SupplementsScreen> {
                           // print(categories[index]);
                           return GestureDetector(
                             onTap: () {
+                              Navigator.of(context).pop();
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => ShopPage(
                                       snapshot.data.documents[index])));

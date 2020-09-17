@@ -14,9 +14,10 @@ import 'package:dolovery_app/widgets/recentorder.dart';
 import 'package:dolovery_app/widgets/signinpopup.dart' as signin;
 
 class ProfileMainScreen extends StatefulWidget {
+  final Function() notifyParent;
   // dynamic thisUser;
   // ProfileMainScreen(thisUser);
-  ProfileMainScreen({Key key}) : super(key: key);
+  ProfileMainScreen({Key key, @required this.notifyParent}) : super(key: key);
 
   // @override
   // ProfileScreenState createState() => new ProfileScreenState();
@@ -935,7 +936,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                   onPressed: () {
                                     signOut();
                                     setupVerification();
-                                    setState(() {});
+                                    // setState(() {});
+                                    widget.notifyParent();
                                   },
                                   color: Colors.grey[200],
                                   elevation: 0,

@@ -137,7 +137,7 @@ class _TabsDemoState extends State<TabsDemo> {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 5.0, right: 10.0, top: 40.0, bottom: 0.0),
+                    left: 5.0, right: 10.0, top: 15.0, bottom: 0.0),
                 child: Column(
                   children: <Widget>[
                     Padding(

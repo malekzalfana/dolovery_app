@@ -109,7 +109,7 @@ class _ShopListState extends State<ShopList> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
-                              shopTime + " mins",
+                              shopTime,
                               // overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: TextStyle(

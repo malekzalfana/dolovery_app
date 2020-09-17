@@ -162,14 +162,18 @@ class SalleScreenState extends State<SalleScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => SalleItem(
-                                    snapshot.data,
-                                    weeks[index],
-                                    snapshot.data.documents[index]
-                                        ['serving_prices'],
-                                    snapshot.data.documents[index]
-                                        ['descriptions'])));
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (context) => SalleItem(
+                                        snapshot.data.documents[index],
+                                        weeks[index],
+                                        snapshot.data.documents[index]
+                                            ['serving_prices'],
+                                        snapshot.data.documents[index]
+                                            ['descriptions'])))
+                                .then((_) {
+                              setState(() {});
+                            });
                           },
                           child: SalleImage(
                               salleName: snapshot.data.documents[index]['name'],
@@ -186,7 +190,7 @@ class SalleScreenState extends State<SalleScreen> {
                               salleID:
                                   snapshot.data.documents[index].documentID,
                               salleStartingPrice: snapshot
-                                  .data.documents[index]['shop_price']
+                                  .data.documents[index]['serving_prices'][0]
                                   .toString()),
                         )
                       ],
