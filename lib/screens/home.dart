@@ -39,10 +39,11 @@ class HomeScreen extends StatefulWidget {
   }
 }
 
+String c_position;
+
 class HomeScreenState extends State<HomeScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // Position position;
-  String c_position;
 
   @override
   void initState() {

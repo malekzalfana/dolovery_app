@@ -542,37 +542,45 @@ class _CartState extends State<Cart> {
                 FutureBuilder(
                   future: setupVerification(),
                   builder: (context, snapshot) {
-                    return Visibility(
-                      visible: notsetup,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              side: BorderSide(color: Colors.red)),
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ProfileScreen()));
-                          },
-                          color: Colors.redAccent[700],
-                          textColor: Colors.white,
-                          minWidth: 0,
-                          height: 0,
-                          // padding: EdgeInsets.zero,
-                          padding: EdgeInsets.only(
-                              left: 20, top: 10, right: 20, bottom: 10),
-                          child: Text(
-                            "Setup your profile",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.white,
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Text('Loading....');
+                      default:
+                        if (snapshot.hasError)
+                          return Text('Error: ${snapshot.error}');
+                        else
+                          return Visibility(
+                            visible: notsetup,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: MaterialButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    side: BorderSide(color: Colors.red)),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => ProfileScreen()));
+                                },
+                                color: Colors.redAccent[700],
+                                textColor: Colors.white,
+                                minWidth: 0,
+                                height: 0,
+                                // padding: EdgeInsets.zero,
+                                padding: EdgeInsets.only(
+                                    left: 20, top: 10, right: 20, bottom: 10),
+                                child: Text(
+                                  "Setup your profile",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13.0,
+                                    fontFamily: 'Axiforma',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    );
+                          );
+                    }
                   },
                 ),
               ],
@@ -714,345 +722,551 @@ class _CartState extends State<Cart> {
           child: FutureBuilder(
         future: loadcart(),
         builder: (context, AsyncSnapshot snapshot) {
-          // if (snapshot.hasData)
-          return Column(
-            children: <Widget>[
-              AppBar(
-                iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
-                ),
-                backgroundColor: Colors.transparent,
-                elevation: 0.0,
-                // automaticallyImplyLeading: false,
-                //BackButton(color: Colors.black),
-                centerTitle: true,
-                title: Text(
-                  'Cart',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.black,
-                  ),
-                ),
-                actions: [
-                  GestureDetector(
-                    onTap: () {
-                      reset();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: Icon(Icons.delete),
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(
+                  child: Image.asset("assets/images/loading.gif", height: 30));
+            default:
+              if (snapshot.hasError)
+                return Text('Error: ${snapshot.error}');
+              else
+                return Column(
+                  children: <Widget>[
+                    AppBar(
+                      iconTheme: IconThemeData(
+                        color: Colors.black, //change your color here
+                      ),
+                      backgroundColor: Colors.transparent,
+                      elevation: 0.0,
+                      // automaticallyImplyLeading: false,
+                      //BackButton(color: Colors.black),
+                      centerTitle: true,
+                      title: Text(
+                        'Cart',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16.0,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
+                        ),
+                      ),
+                      actions: [
+                        GestureDetector(
+                          onTap: () {
+                            reset();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: Icon(Icons.delete),
+                          ),
+                        ),
+                        // Icon(Icons.add),
+                      ],
                     ),
-                  ),
-                  // Icon(Icons.add),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 22.0, top: 20, bottom: 10),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Your Items",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13.0,
-                      fontFamily: 'Axiforma',
-                      color: Colors.black54,
-                    ),
-                  ),
-                ),
-              ),
-              Column(
-                children: [
-                  for (var shop in usercartmap.keys)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          FutureBuilder(
-                              future: getRate(shop),
-                              builder: (context, snapshot) {
-                                return Column(
-                                  children: [
-                                    FutureBuilder(
-                                      future: getShop(shop),
-                                      builder: (context, snapshot) {
-                                        return Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 22.0),
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              snapshot.data['name'],
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 23.0,
-                                                  fontFamily: 'Axiforma',
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    // StreamBuilder(
-                                    //     stream: Firestore.instance
-                                    //         .collection('shops')
-                                    //         .where('username', isEqualTo: shop)
-                                    //         .snapshots(),
-                                    //     builder: (context, snapshot) {
-                                    //       var shopinfo =
-                                    //           snapshot.data.docuemnts[0];
-
-                                    //       return Text(
-                                    //         shopinfo['name'],
-                                    //         textAlign: TextAlign.left,
-                                    //         style: TextStyle(
-                                    //             fontWeight: FontWeight.w800,
-                                    //             fontSize: 25.0,
-                                    //             fontFamily: 'Axiforma',
-                                    //             color: Colors.black),
-                                    //       );
-                                    //     }),
-                                    for (var product in usercartmap[shop].keys)
-                                      StreamBuilder<Object>(
-                                          stream: Firestore.instance
-                                              .collection("products")
-                                              // .where('id', isEqualTo: product)
-                                              .document(product.toString())
-                                              .snapshots(),
-                                          builder: (context, snapshot) {
-                                            print(snapshot.data);
-                                            return buildCartItem(
-                                                snapshot.data,
-                                                int.parse(usercartmap[shop]
-                                                        [product]
-                                                    .toString()),
-                                                rate);
-                                          })
-                                  ],
-                                );
-                              }),
-                        ],
+                      padding: const EdgeInsets.only(
+                          left: 22.0, top: 20, bottom: 10),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Your Items",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.0,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black54,
+                          ),
+                        ),
                       ),
                     ),
-                ],
-              ),
-              FutureBuilder(
-                future: getTotal(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Column(
+                    Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 30.0, top: 20, bottom: 10),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Total",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13.0,
-                                fontFamily: 'Axiforma',
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 30.0, top: 00, bottom: 10),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              total.toInt().toString() + 'L.L.',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 25.0,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.redAccent[700]),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  return CircularProgressIndicator(); // or some other widget
-                },
-              ),
+                        for (var shop in usercartmap.keys)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                FutureBuilder(
+                                    future: getRate(shop),
+                                    builder: (context, snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.waiting:
+                                          return Text('Loading....');
+                                        default:
+                                          if (snapshot.hasError)
+                                            return Text(
+                                                'Error: ${snapshot.error}');
+                                          else
+                                            return Column(
+                                              children: [
+                                                FutureBuilder(
+                                                  future: getShop(shop),
+                                                  builder: (context, snapshot) {
+                                                    switch (snapshot
+                                                        .connectionState) {
+                                                      case ConnectionState
+                                                          .waiting:
+                                                        return Text(
+                                                            'Loading....');
+                                                      default:
+                                                        if (snapshot.hasError)
+                                                          return Text(
+                                                              'Error: ${snapshot.error}');
+                                                        else
+                                                          return Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 22.0),
+                                                            child: Align(
+                                                              alignment: Alignment
+                                                                  .centerLeft,
+                                                              child: Text(
+                                                                snapshot.data[
+                                                                    'name'],
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                    fontSize:
+                                                                        23.0,
+                                                                    fontFamily:
+                                                                        'Axiforma',
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            ),
+                                                          );
+                                                    }
+                                                  },
+                                                ),
+                                                // StreamBuilder(
+                                                //     stream: Firestore.instance
+                                                //         .collection('shops')
+                                                //         .where('username', isEqualTo: shop)
+                                                //         .snapshots(),
+                                                //     builder: (context, snapshot) {
+                                                //       var shopinfo =
+                                                //           snapshot.data.docuemnts[0];
 
-              // fixxxxxx
-              FutureBuilder(
-                  future: setupVerification(), // async work
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return Visibility(
-                            visible: false, child: Text('Loading....'));
-                      default:
-                        if ((snapshot.hasError)) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
+                                                //       return Text(
+                                                //         shopinfo['name'],
+                                                //         textAlign: TextAlign.left,
+                                                //         style: TextStyle(
+                                                //             fontWeight: FontWeight.w800,
+                                                //             fontSize: 25.0,
+                                                //             fontFamily: 'Axiforma',
+                                                //             color: Colors.black),
+                                                //       );
+                                                //     }),
+                                                for (var product
+                                                    in usercartmap[shop].keys)
+                                                  StreamBuilder<Object>(
+                                                      stream: Firestore.instance
+                                                          .collection(
+                                                              "products")
+                                                          // .where('id', isEqualTo: product)
+                                                          .document(product
+                                                              .toString())
+                                                          .snapshots(),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        if (snapshot.hasData) {
+                                                          return buildCartItem(
+                                                              snapshot.data,
+                                                              int.parse(usercartmap[
+                                                                          shop]
+                                                                      [product]
+                                                                  .toString()),
+                                                              rate);
+                                                        } else {
+                                                          return CircularProgressIndicator();
+                                                        }
+                                                      })
+                                              ],
+                                            );
+                                      }
+                                    }),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                    FutureBuilder(
+                      future: getTotal(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
                           return Column(
                             children: [
-                              Visibility(
-                                visible: notsetup ? false : true,
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 30.0, top: 10, bottom: 10),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Delivering to",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13.0,
-                                            fontFamily: 'Axiforma',
-                                            color: Colors.black54,
-                                          ),
-                                        ),
-                                      ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 30.0, top: 20, bottom: 10),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Total",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13.0,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.black54,
                                     ),
-                                    if (usersignedin)
-                                      for (var index = 0;
-                                          index <
-                                              this_user.data["address"].length;
-                                          index++)
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 30.0,
-                                              bottom: 10,
-                                              left: 30,
-                                              top: 12),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              // print(this_user.data["address"]);
-                                              // chosen_address ==
-                                              //     this_user.data["address"][index]
-                                              //         ["id"];
-                                              // print(isDefault);
-                                              print("______________________");
-                                              selectAddress(
-                                                  this_user.data["address"]
-                                                      [index]["id"],
-                                                  index);
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.1),
-                                                      spreadRadius: 2.2,
-                                                      blurRadius: 2.5,
-                                                      offset: Offset(0,
-                                                          4), // changes position of shadow
-                                                    ),
-                                                  ],
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(15))),
-                                              // color: Colors.grey,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: <Widget>[
-                                                  IconButton(
-                                                      icon: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 8.0),
-                                                        child: Icon(
-                                                          Icons.place,
-                                                          color: chosen_address ==
-                                                                  this_user.data[
-                                                                          "address"]
-                                                                      [
-                                                                      index]["id"]
-                                                              ? Colors.black
-                                                              : Colors.grey[400],
-                                                          size: 36,
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
-                                                        // Navigator.of(context).pop();
-                                                        // setState(() {
-                                                        //   showerrortextbool = false;
-                                                        // });
-                                                      }),
-                                                  Container(
-                                                      // color: Colors.green,
-                                                      margin:
-                                                          new EdgeInsets.only(
-                                                              left: 10.0,
-                                                              right: 0),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.5),
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: <Widget>[
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              children: <
-                                                                  Widget>[
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      top: 10.0,
-                                                                      left: 0,
-                                                                      bottom:
-                                                                          5),
-                                                                  child: Text(
-                                                                    this_user.data["address"]
-                                                                            [
-                                                                            index]
-                                                                        [
-                                                                        "name"],
-                                                                    // textAlign: TextAlign.left,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontFamily:
-                                                                          'Axiforma',
-                                                                      color: chosen_address ==
-                                                                              this_user.data["address"][index][
-                                                                                  "id"]
-                                                                          ? Colors
-                                                                              .black
-                                                                          : Colors
-                                                                              .grey[500],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Padding(
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 30.0, top: 00, bottom: 10),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    total.toInt().toString() + 'L.L.',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 25.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.redAccent[700]),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return CircularProgressIndicator(); // or some other widget
+                      },
+                    ),
+
+                    // fixxxxxx
+                    FutureBuilder(
+                        future: setupVerification(), // async work
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return Visibility(
+                                  visible: false, child: Text('Loading....'));
+                            default:
+                              if ((snapshot.hasError)) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                return Column(
+                                  children: [
+                                    Visibility(
+                                      visible: notsetup ? false : true,
+                                      child: Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 30.0,
+                                                top: 10,
+                                                bottom: 10),
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                "Delivering to",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13.0,
+                                                  fontFamily: 'Axiforma',
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          if (usersignedin)
+                                            for (var index = 0;
+                                                index <
+                                                    this_user
+                                                        .data["address"].length;
+                                                index++)
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 30.0,
+                                                    bottom: 10,
+                                                    left: 30,
+                                                    top: 12),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    // print(this_user.data["address"]);
+                                                    // chosen_address ==
+                                                    //     this_user.data["address"][index]
+                                                    //         ["id"];
+                                                    // print(isDefault);
+                                                    print(
+                                                        "______________________");
+                                                    selectAddress(
+                                                        this_user
+                                                                .data["address"]
+                                                            [index]["id"],
+                                                        index);
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.grey
+                                                                .withOpacity(
+                                                                    0.1),
+                                                            spreadRadius: 2.2,
+                                                            blurRadius: 2.5,
+                                                            offset: Offset(0,
+                                                                4), // changes position of shadow
+                                                          ),
+                                                        ],
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    15))),
+                                                    // color: Colors.grey,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        IconButton(
+                                                            icon: Padding(
                                                               padding:
                                                                   const EdgeInsets
                                                                           .only(
-                                                                      top: 0),
-                                                              child: Row(
+                                                                      left:
+                                                                          8.0),
+                                                              child: Icon(
+                                                                Icons.place,
+                                                                color: chosen_address ==
+                                                                        this_user.data["address"][index]
+                                                                            [
+                                                                            "id"]
+                                                                    ? Colors
+                                                                        .black
+                                                                    : Colors.grey[
+                                                                        400],
+                                                                size: 36,
+                                                              ),
+                                                            ),
+                                                            onPressed: () {
+                                                              // Navigator.of(context).pop();
+                                                              // setState(() {
+                                                              //   showerrortextbool = false;
+                                                              // });
+                                                            }),
+                                                        Container(
+                                                            // color: Colors.green,
+                                                            margin:
+                                                                new EdgeInsets
+                                                                        .only(
+                                                                    left: 10.0,
+                                                                    right: 0),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.5),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.only(
+                                                                            top:
+                                                                                10.0,
+                                                                            left:
+                                                                                0,
+                                                                            bottom:
+                                                                                5),
+                                                                        child:
+                                                                            Text(
+                                                                          this_user.data["address"][index]
+                                                                              [
+                                                                              "name"],
+                                                                          // textAlign: TextAlign.left,
+                                                                          style:
+                                                                              TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            fontSize:
+                                                                                16,
+                                                                            fontFamily:
+                                                                                'Axiforma',
+                                                                            color: chosen_address == this_user.data["address"][index]["id"]
+                                                                                ? Colors.black
+                                                                                : Colors.grey[500],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        top: 0),
+                                                                    child: Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .min,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Padding(
+                                                                          padding: const EdgeInsets.only(
+                                                                              left: 0.0,
+                                                                              bottom: 8),
+                                                                          child:
+                                                                              SizedBox(
+                                                                            width:
+                                                                                MediaQuery.of(context).size.width - 145,
+                                                                            child:
+                                                                                Text(
+                                                                              this_user.data["address"][index]["street_address"],
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              textAlign: TextAlign.left,
+                                                                              style: TextStyle(
+                                                                                height: 1.1,
+                                                                                fontWeight: FontWeight.normal,
+                                                                                fontSize: 14.5,
+                                                                                fontFamily: 'Axiforma',
+                                                                                color: Colors.grey[500],
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 30.0,
+                                                top: 10,
+                                                bottom: 10),
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                "Payment",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13.0,
+                                                  fontFamily: 'Axiforma',
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Opacity(
+                                            opacity: 1,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 30.0,
+                                                  bottom: 20,
+                                                  left: 30,
+                                                  top: 12),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey
+                                                            .withOpacity(0.1),
+                                                        spreadRadius: 2.2,
+                                                        blurRadius: 2.5,
+                                                        offset: Offset(0,
+                                                            4), // changes position of shadow
+                                                      ),
+                                                    ],
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                14))),
+                                                // color: Colors.grey,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 15.0),
+                                                        child: Icon(
+                                                            Icons.payment,
+                                                            size: 30,
+                                                            color:
+                                                                Colors.black)),
+                                                    Container(
+                                                        // color: Colors.green,
+                                                        margin:
+                                                            new EdgeInsets.only(
+                                                                left: 10.0,
+                                                                right: 0,
+                                                                bottom: 0),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.5),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: <Widget>[
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        top:
+                                                                            10.0,
+                                                                        left: 6,
+                                                                        bottom:
+                                                                            5),
+                                                                    child: Text(
+                                                                      'Cash On Delivery',
+                                                                      // textAlign: TextAlign.left,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontFamily:
+                                                                            'Axiforma',
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Row(
                                                                 mainAxisSize:
                                                                     MainAxisSize
                                                                         .min,
@@ -1065,400 +1279,257 @@ class _CartState extends State<Cart> {
                                                                     padding: const EdgeInsets
                                                                             .only(
                                                                         left:
-                                                                            0.0,
+                                                                            8.0,
                                                                         bottom:
                                                                             8),
-                                                                    child:
-                                                                        SizedBox(
-                                                                      width: MediaQuery.of(context)
-                                                                              .size
-                                                                              .width -
-                                                                          145,
-                                                                      child:
-                                                                          Text(
-                                                                        this_user.data["address"][index]
-                                                                            [
-                                                                            "street_address"],
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                        textAlign:
-                                                                            TextAlign.left,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          height:
-                                                                              1.1,
-                                                                          fontWeight:
-                                                                              FontWeight.normal,
-                                                                          fontSize:
-                                                                              14.5,
-                                                                          fontFamily:
-                                                                              'Axiforma',
-                                                                          color:
-                                                                              Colors.grey[500],
-                                                                        ),
+                                                                    child: Text(
+                                                                      'Pay when the delivery arrives',
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .left,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        height:
+                                                                            1.1,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                        fontSize:
+                                                                            14.5,
+                                                                        fontFamily:
+                                                                            'Axiforma',
+                                                                        color: Colors
+                                                                            .grey[500],
                                                                       ),
                                                                     ),
                                                                   ),
                                                                 ],
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ))
-                                                ],
+                                                            ],
+                                                          ),
+                                                        ))
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 30.0, top: 10, bottom: 10),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Payment",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13.0,
-                                            fontFamily: 'Axiforma',
-                                            color: Colors.black54,
+                                        ],
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: usersignedin ? false : true,
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            25, 15, 25, 0),
+                                        child: MaterialButton(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0),
+                                          ),
+                                          elevation: 0,
+                                          onPressed: () {
+                                            print("xlicked");
+                                            _signInPopUp(context);
+                                          },
+                                          color: Colors.redAccent[700],
+                                          disabledColor: Colors.grey[200],
+                                          textColor: Colors.white,
+                                          minWidth:
+                                              MediaQuery.of(context).size.width,
+                                          height: 0,
+                                          // padding: EdgeInsets.zero,
+                                          padding: EdgeInsets.only(
+                                              left: 23,
+                                              top: 10,
+                                              right: 23,
+                                              bottom: 10),
+                                          child: Text(
+                                            "Sign in to continue",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                              fontFamily: 'Axiforma',
+                                              // color: Colors.white,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                    Opacity(
-                                      opacity: 1,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 30.0,
-                                            bottom: 20,
-                                            left: 30,
-                                            top: 12),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey
-                                                      .withOpacity(0.1),
-                                                  spreadRadius: 2.2,
-                                                  blurRadius: 2.5,
-                                                  offset: Offset(0,
-                                                      4), // changes position of shadow
-                                                ),
-                                              ],
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(14))),
-                                          // color: Colors.grey,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 15.0),
-                                                  child: Icon(Icons.payment,
-                                                      size: 30,
-                                                      color: Colors.black)),
-                                              Container(
-                                                  // color: Colors.green,
-                                                  margin: new EdgeInsets.only(
-                                                      left: 10.0,
-                                                      right: 0,
-                                                      bottom: 0),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.5),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: <Widget>[
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      top: 10.0,
-                                                                      left: 6,
-                                                                      bottom:
-                                                                          5),
-                                                              child: Text(
-                                                                'Cash On Delivery',
-                                                                // textAlign: TextAlign.left,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 16,
-                                                                  fontFamily:
-                                                                      'Axiforma',
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: <Widget>[
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 8.0,
-                                                                      bottom:
-                                                                          8),
-                                                              child: Text(
-                                                                'Pay when the delivery arrives',
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .left,
-                                                                style:
-                                                                    TextStyle(
-                                                                  height: 1.1,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                  fontSize:
-                                                                      14.5,
-                                                                  fontFamily:
-                                                                      'Axiforma',
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      500],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ))
-                                            ],
+                                    Visibility(
+                                      visible: usersignedin ? true : false,
+                                      child: Visibility(
+                                        visible: notsetup ? false : false,
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              25, 15, 25, 0),
+                                          child: MaterialButton(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                            ),
+                                            elevation: 0,
+                                            onPressed: () {
+                                              // print("xlicked");
+                                              Navigator.of(context)
+                                                  .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ProfileScreen()))
+                                                  .then((_) {
+                                                // refreshcart();
+                                                setupVerification();
+                                                setState(() {});
+                                              });
+                                            },
+                                            color: Colors.redAccent[700],
+                                            disabledColor: Colors.grey[200],
+                                            textColor: Colors.white,
+                                            minWidth: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: 0,
+                                            // padding: EdgeInsets.zero,
+                                            padding: EdgeInsets.only(
+                                                left: 23,
+                                                top: 10,
+                                                right: 23,
+                                                bottom: 10),
+                                            child: Text(
+                                              "Setup your profile to continue",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15.0,
+                                                fontFamily: 'Axiforma',
+                                                // color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          25, 10, 25, 12),
+                                      child: MaterialButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                        ),
+                                        elevation: 0,
+                                        onPressed: notsetup
+                                            ? null
+                                            : () {
+                                                List products;
+                                                var cartproduct;
+                                                // define snapshots to use for looping
+                                                for (var i;
+                                                    i <= finalcart.length;
+                                                    i++) {
+                                                  cartproduct = Firestore
+                                                      .instance
+                                                      .collection("products")
+                                                      .document(finalcart[i])
+                                                      .get();
+                                                  Map<String, dynamic> product =
+                                                      {
+                                                    "name": cartproduct
+                                                        .data['name'],
+                                                    "shop_price": cartproduct,
+                                                    "quantity": cartproduct,
+                                                    "unit": cartproduct
+                                                  };
+                                                  products.add(product);
+                                                }
+                                                Firestore.instance
+                                                    .collection('orders')
+                                                    .document(uid)
+                                                    .setData({
+                                                  "address": "address",
+                                                  "total": "total",
+                                                  "count": "4",
+                                                  "payment": "cashondelivery",
+                                                  "date": "today",
+                                                  "shop": "shop username",
+                                                  "products": products,
+                                                  "user": uid,
+                                                  "user name": "user name",
+                                                  "item_list": "list of ids"
+                                                }).then((result) {
+                                                  print("order added");
+                                                }).catchError((onError) {
+                                                  print("onError");
+                                                });
+                                              },
+                                        color: Colors.redAccent[700],
+                                        disabledColor: Colors.grey[200],
+                                        textColor: Colors.white,
+                                        minWidth:
+                                            MediaQuery.of(context).size.width,
+                                        height: 0,
+                                        // padding: EdgeInsets.zero,
+                                        padding: EdgeInsets.only(
+                                            left: 23,
+                                            top: 12,
+                                            right: 23,
+                                            bottom: 10),
+                                        child: Text(
+                                          "Confirm Order",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15.0,
+                                            fontFamily: 'Axiforma',
+                                            // color: Colors.white,
                                           ),
                                         ),
                                       ),
                                     ),
                                   ],
-                                ),
-                              ),
-                              Visibility(
-                                visible: usersignedin ? false : true,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(25, 15, 25, 0),
-                                  child: MaterialButton(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15.0),
-                                    ),
-                                    elevation: 0,
-                                    onPressed: () {
-                                      print("xlicked");
-                                      _signInPopUp(context);
-                                    },
-                                    color: Colors.redAccent[700],
-                                    disabledColor: Colors.grey[200],
-                                    textColor: Colors.white,
-                                    minWidth: MediaQuery.of(context).size.width,
-                                    height: 0,
-                                    // padding: EdgeInsets.zero,
-                                    padding: EdgeInsets.only(
-                                        left: 23,
-                                        top: 10,
-                                        right: 23,
-                                        bottom: 10),
-                                    child: Text(
-                                      "Sign in to continue",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15.0,
-                                        fontFamily: 'Axiforma',
-                                        // color: Colors.white,
-                                      ),
-                                    ),
+                                );
+                              }
+                          }
+                        }),
+                    Text(usersignedin
+                        ? "user is signed in"
+                        : "user not signed in"),
+                    Text(notsetup ? "user is not setup" : "user is setup"),
+                    Visibility(
+                      visible: false,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
+                        child: Center(
+                          child: SizedBox(
+                            width: width - 44,
+                            child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 18.0),
+                                  child: Icon(
+                                    Icons.info,
+                                    size: 18,
+                                    color: Colors.grey[500],
                                   ),
                                 ),
-                              ),
-                              Visibility(
-                                visible: usersignedin ? true : false,
-                                child: Visibility(
-                                  visible: notsetup ? false : false,
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        25, 15, 25, 0),
-                                    child: MaterialButton(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                      ),
-                                      elevation: 0,
-                                      onPressed: () {
-                                        // print("xlicked");
-                                        Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProfileScreen()))
-                                            .then((_) {
-                                          // refreshcart();
-                                          setupVerification();
-                                          setState(() {});
-                                        });
-                                      },
-                                      color: Colors.redAccent[700],
-                                      disabledColor: Colors.grey[200],
-                                      textColor: Colors.white,
-                                      minWidth:
-                                          MediaQuery.of(context).size.width,
-                                      height: 0,
-                                      // padding: EdgeInsets.zero,
-                                      padding: EdgeInsets.only(
-                                          left: 23,
-                                          top: 10,
-                                          right: 23,
-                                          bottom: 10),
-                                      child: Text(
-                                        "Setup your profile to continue",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                          fontFamily: 'Axiforma',
-                                          // color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(25, 10, 25, 12),
-                                child: MaterialButton(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  elevation: 0,
-                                  onPressed: notsetup
-                                      ? null
-                                      : () {
-                                          List products;
-                                          var cartproduct;
-                                          // define snapshots to use for looping
-                                          for (var i;
-                                              i <= finalcart.length;
-                                              i++) {
-                                            cartproduct = Firestore.instance
-                                                .collection("products")
-                                                .document(finalcart[i])
-                                                .get();
-                                            Map<String, dynamic> product = {
-                                              "name": cartproduct.data['name'],
-                                              "shop_price": cartproduct,
-                                              "quantity": cartproduct,
-                                              "unit": cartproduct
-                                            };
-                                            products.add(product);
-                                          }
-                                          Firestore.instance
-                                              .collection('orders')
-                                              .document(uid)
-                                              .setData({
-                                            "address": "address",
-                                            "total": "total",
-                                            "count": "4",
-                                            "payment": "cashondelivery",
-                                            "date": "today",
-                                            "shop": "shop username",
-                                            "products": products,
-                                            "user": uid,
-                                            "user name": "user name",
-                                            "item_list": "list of ids"
-                                          }).then((result) {
-                                            print("order added");
-                                          }).catchError((onError) {
-                                            print("onError");
-                                          });
-                                        },
-                                  color: Colors.redAccent[700],
-                                  disabledColor: Colors.grey[200],
-                                  textColor: Colors.white,
-                                  minWidth: MediaQuery.of(context).size.width,
-                                  height: 0,
-                                  // padding: EdgeInsets.zero,
-                                  padding: EdgeInsets.only(
-                                      left: 23, top: 12, right: 23, bottom: 10),
-                                  child: Text(
-                                    "Confirm Order",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15.0,
-                                      fontFamily: 'Axiforma',
-                                      // color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                    }
-                  }),
-              Text(usersignedin ? "user is signed in" : "user not signed in"),
-              Text(notsetup ? "user is not setup" : "user is setup"),
-              Visibility(
-                visible: false,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
-                  child: Center(
-                    child: SizedBox(
-                      width: width - 44,
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 18.0),
-                            child: Icon(
-                              Icons.info,
-                              size: 18,
-                              color: Colors.grey[500],
+                                // Expanded(
+                                //   child: Text(
+                                //     "All meal baskets come with a detailed cooking instructions!",
+                                //     style: TextStyle(
+                                //       fontWeight: FontWeight.normal,
+                                //       fontSize: 12.0,
+                                //       fontFamily: 'Axiforma',
+                                //       color: Colors.grey[500],
+                                //     ),
+                                //   ),
+                                // ),
+                              ],
                             ),
                           ),
-                          // Expanded(
-                          //   child: Text(
-                          //     "All meal baskets come with a detailed cooking instructions!",
-                          //     style: TextStyle(
-                          //       fontWeight: FontWeight.normal,
-                          //       fontSize: 12.0,
-                          //       fontFamily: 'Axiforma',
-                          //       color: Colors.grey[500],
-                          //     ),
-                          //   ),
-                          // ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          );
+                    )
+                  ],
+                );
+          }
         },
       )),
     );
@@ -1707,7 +1778,7 @@ class _CartState extends State<Cart> {
                       padding:
                           EdgeInsets.only(left: 6, top: 2, right: 6, bottom: 1),
                       child: Text(
-                        count.toString() + ' Servings',
+                        (count + 1).toString() + ' Servings',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 13.0,

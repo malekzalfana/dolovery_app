@@ -23,12 +23,11 @@ class SalleItem extends StatefulWidget {
   State<StatefulWidget> createState() => _SalleItemState();
 }
 
-dynamic usercartmap;
-bool alreadyadded = false;
-int inmycart = 0;
-
 class _SalleItemState extends State<SalleItem> {
-  int _n = 1;
+  dynamic usercartmap;
+  bool alreadyadded = false;
+  int inmycart = 0;
+  int _n = 0;
   bool minimum = true;
   bool maximum = false;
   // int serving = 0;
@@ -54,31 +53,47 @@ class _SalleItemState extends State<SalleItem> {
 
   bool loaded = false;
   getSalleStatus() async {
+    Map newusercartmap;
     final prefs = await SharedPreferences.getInstance();
+    var temp = prefs.getString('usercartmap');
+    if (temp == null) {
+      temp = "";
+      newusercartmap = {};
+    } else {
+      newusercartmap = json.decode(temp);
+    }
 
-    var newusercartmap = json.decode(prefs.getString('usercartmap'));
     print('--------------------------');
     print(prefs.getString('usercartmap'));
+    if (newusercartmap == null) {
+      newusercartmap = {};
+    }
     if (newusercartmap.containsKey('dolovery')) {
+      print('it has dolovery in  it');
       print(widget.data.documentID);
       if (newusercartmap['dolovery'].containsKey(widget.data.documentID)) {
+        print('dolovery has documentid in it');
         print(alreadyadded);
-        if (!loaded) {
+        if (loaded == false) {
+          print("it has not loaded");
           setState(() {
-            inmycart = usercartmap['dolovery'][widget.data.documentID];
-            print(inmycart);
             alreadyadded = true;
             loaded = true;
+            inmycart = newusercartmap['dolovery'][widget.data.documentID];
+            print("$inmycart is in my cart");
+
+            print("there is one beforeeeeeeeeeee");
           });
         }
 
-        return alreadyadded;
+        return true;
       }
     }
   }
 
   int oldsalletotal = 0;
   _save(itemid, int count) async {
+    oldsalletotal = 0;
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
     String shop_name = widget.data['shop'];
@@ -94,6 +109,10 @@ class _SalleItemState extends State<SalleItem> {
       print(json.encode(usercartmap));
     }
 
+    if (cart == null) {
+      cart = [];
+    }
+
     if (usercartmap.containsKey(shop_name)) {
       if (usercartmap[shop_name].containsKey(itemid)) {
         oldsalletotal = usercartmap[shop_name][itemid];
@@ -101,10 +120,12 @@ class _SalleItemState extends State<SalleItem> {
         // int.parse(usercartmap[shop_name][itemid].toString()) + (1 * count);
       } else {
         usercartmap[shop_name][itemid] = 1 * count;
+        cart.add(itemid);
       }
     } else {
       usercartmap[shop_name] = {};
       usercartmap[shop_name][itemid] = 1 * count;
+      cart.add(itemid);
     }
 
     // print(prefs.getString('usercartmap'));
@@ -116,17 +137,26 @@ class _SalleItemState extends State<SalleItem> {
     }
     print("the old salle total is: " + oldsalletotal.toString());
     var shop_price = int.parse(widget.data['shop_price'].toString()).toDouble();
+    print(widget.data['serving_prices'][oldsalletotal]);
+    print(widget.data['serving_prices'][count]);
+    var oldprice =
+        double.parse(widget.data['serving_prices'][oldsalletotal].toString());
+    if (count == 0) {
+      oldprice = 0;
+    }
     double total = prefs.getDouble('total') == null
         ? 0
         : prefs.getDouble('total') -
-            widget.data['serving_prices'][oldsalletotal] +
-            widget.data['serving_prices'][count];
+            oldprice +
+            double.parse(widget.data['serving_prices'][count].toString());
+    print('above the erroes');
+    print("the tortal is ${total.toString()}");
     prefs.setDouble('total', total);
     prefs.setString('usercartmap', json.encode(usercartmap));
     if (cart == null) {
       cart = [];
     }
-    cart.add(itemid);
+
     final value = cart;
     final double items = cart.length.toDouble();
     prefs.setDouble('items', items);
@@ -142,6 +172,8 @@ class _SalleItemState extends State<SalleItem> {
       shops.add(shop_name);
       prefs.setStringList("shops", shops);
     }
+    alreadyadded = false;
+    showChangeButton = false;
 
     // setState(() {});
 
@@ -152,11 +184,11 @@ class _SalleItemState extends State<SalleItem> {
   }
 
   void minus() {
-    if (_n == 1) return null;
+    if (_n == 0) return null;
     print(_n);
     setState(() {
-      if (_n != 1) _n--;
-      if (_n == 1)
+      if (_n != 0) _n--;
+      if (_n == 0)
         minimum = true;
       else {
         minimum = false;
@@ -173,7 +205,7 @@ class _SalleItemState extends State<SalleItem> {
   @override
   void initState() {
     super.initState();
-    getSalleStatus();
+    // getSalleStatus();
   }
 
   bool showChangeButton = false;
@@ -391,7 +423,7 @@ class _SalleItemState extends State<SalleItem> {
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: new Text('$_n' + ' Servings',
+                    child: new Text('${_n + 1}' + ' Servings',
                         style: new TextStyle(fontSize: 20.0)),
                   ),
                   RawMaterialButton(
@@ -443,88 +475,98 @@ class _SalleItemState extends State<SalleItem> {
           FutureBuilder(
             future: getSalleStatus(),
             builder: (context, snapshot) {
-              return Visibility(
-                visible: alreadyadded,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(22, 10, 22, 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.green[500],
-                            // border: Border.all(
-                            //   color: Colors.green[500],
-                            // ),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
-                        height: 45,
-                        width: width - 44,
-                        // color: Colors.red,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 15.0),
-                              child: Icon(
-                                Icons.check,
-                                color: Colors.white,
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Text('Loading....');
+                default:
+                  if (snapshot.hasError)
+                    return Text('Error: ${snapshot.error}');
+                  else
+                    return Visibility(
+                      visible: alreadyadded,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(22, 10, 22, 0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.green[500],
+                                  // border: Border.all(
+                                  //   color: Colors.green[500],
+                                  // ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              height: 45,
+                              width: width - 44,
+                              // color: Colors.red,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 15.0),
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      '${inmycart + 1} Servings added to cart',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 16.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            Center(
-                              child: Text(
-                                '$inmycart Servings added to cart',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 16.0,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.white,
+                          ),
+                          Visibility(
+                            visible: showChangeButton,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(22, 12, 22, 12),
+                              child: MaterialButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                elevation: 0,
+                                onPressed: () {
+                                  _save(widget.data.documentID, _n);
+                                  setState(() {
+                                    loaded = false;
+                                    showChangeButton = false;
+                                  });
+                                },
+                                color: Colors.redAccent[700],
+                                // disabledColor: Colors.grey[200],
+                                textColor: Colors.white,
+                                minWidth: MediaQuery.of(context).size.width,
+                                height: 0,
+                                // padding: EdgeInsets.zero,
+                                padding: EdgeInsets.only(
+                                    left: 30, top: 10, right: 30, bottom: 10),
+                                child: Text(
+                                  "Change to ${_n + 1} Servings",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.0,
+                                    fontFamily: 'Axiforma',
+                                    // color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: showChangeButton,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(22, 12, 22, 12),
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
                           ),
-                          elevation: 0,
-                          onPressed: () {
-                            _save(widget.data.documentID, _n);
-                            setState(() {
-                              loaded = false;
-                              showChangeButton = false;
-                            });
-                          },
-                          color: Colors.redAccent[700],
-                          // disabledColor: Colors.grey[200],
-                          textColor: Colors.white,
-                          minWidth: MediaQuery.of(context).size.width,
-                          height: 0,
-                          // padding: EdgeInsets.zero,
-                          padding: EdgeInsets.only(
-                              left: 30, top: 10, right: 30, bottom: 10),
-                          child: Text(
-                            "Change to $_n Servings",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              fontFamily: 'Axiforma',
-                              // color: Colors.white,
-                            ),
-                          ),
-                        ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              );
+                    );
+              }
+              // print('snapshot >> is : ${snapshot.data}');
             },
           ),
           Visibility(

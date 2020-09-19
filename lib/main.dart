@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:core';
+import 'dart:io';
 
 import 'package:dolovery_app/screens/cart.dart';
 import 'package:dolovery_app/widgets/product.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 //import 'package:flutter_svg/svg.dart';
 // ignore: unused_import
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'screens/100lebanese.dart';
@@ -21,7 +24,14 @@ import 'screens/salle.dart';
 import 'screens/profilemain.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(
+    Phoenix(
+      child: MyApp(),
+    ),
+  );
+}
+
 var this_user;
 String name;
 String uid;
@@ -104,15 +114,57 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    _getPrefs();
-    print('Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
     super.initState();
-    @override
-    void initState() {
-      print('Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-      super.initState();
-    }
+    Timer.run(() {
+      try {
+        InternetAddress.lookup('google.com').then((result) {
+          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+            print('connected');
+            // super.initState();
+            _getPrefs();
+          } else {
+            _showDialog(); // show dialog
+          }
+        }).catchError((error) {
+          _showDialog(); // show dialog
+        });
+      } on SocketException catch (_) {
+        _showDialog();
+        print('not connected'); // show dialog
+      }
+    });
   }
+
+  void _showDialog() {
+    // dialog implementation
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Internet needed!"),
+        content: Text("You need internet connection to use the app"),
+        actions: <Widget>[
+          FlatButton(
+              child: Text("Try Again"),
+              onPressed: () {
+                Phoenix.rebirth(context);
+              })
+        ],
+      ),
+    );
+  }
+
+  // @override
+  // void initState() {
+  //   _getPrefs();
+  //   print('Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+  //   super.initState();
+  //   @override
+  //   void initState() {
+  //     print('Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+  //     super.initState();
+  //   }
+  // }
 
   Future<void> reset() async {
     final prefs = await SharedPreferences.getInstance();
@@ -145,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
     pages = [
       HomeScreen(notifyParent: gotosalle, notifyParent2: refreshcart),
       // null,
-      SalleScreen(notifyParent: gotohome),
+      SalleScreen(notifyParent: gotohome, notifyParent2: refreshcart),
       // profilescreen
       // null,
       // ProfileScreen(),
@@ -305,16 +357,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                           ),
                                         ),
                                       ),
-
-                                      // IconButton(
-                                      //     icon: Icon(
-                                      //       Icons.shopping_basket,
-                                      //       color: Colors.white,
-                                      //       size: 30,
-                                      //     ),
-                                      //     onPressed: () {
-                                      //       // Navigator.of(context).pop();
-                                      //     }),
                                     ),
                                   ),
                                 ],
@@ -342,7 +384,8 @@ class _MyHomePageState extends State<MyHomePage> {
               } else {
                 // Text("else");
               }
-              return Center(child: Text("what"));
+              return Center(
+                  child: Image.asset("assets/images/loading.gif", height: 30));
               // return CircularProgressIndicator();
             }),
 

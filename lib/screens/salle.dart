@@ -10,9 +10,12 @@ import 'package:dolovery_app/screens/salleitem.dart';
 
 class SalleScreen extends StatefulWidget {
   final Function() notifyParent;
+  final Function() notifyParent2;
   // final Function() notifyParent2;
   // ProfileMainScreen(thisUser);
-  SalleScreen({Key key, @required this.notifyParent}) : super(key: key);
+  SalleScreen(
+      {Key key, @required this.notifyParent, @required this.notifyParent2})
+      : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return SalleScreenState();
@@ -172,6 +175,7 @@ class SalleScreenState extends State<SalleScreen> {
                                         snapshot.data.documents[index]
                                             ['descriptions'])))
                                 .then((_) {
+                              widget.notifyParent2();
                               setState(() {});
                             });
                           },
