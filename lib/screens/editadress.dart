@@ -369,6 +369,7 @@ class EditAddressState extends State<EditAddress> {
     _address_name = widget.addressArray[widget.addressCount]["name"];
     _city = widget.addressArray[widget.addressCount]["city"];
     addressID = widget.addressArray[widget.addressCount]["id"];
+    print("the address is $addressID");
     _apartment = widget.addressArray[widget.addressCount]["apartment"];
     if (!addressEdited) {
       newIsDefault = widget.isDefault;

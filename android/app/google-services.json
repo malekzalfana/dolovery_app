@@ -8,49 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:420692199803:android:91d2348245eaa8e92c15de",
-        "android_client_info": {
-          "package_name": "com.example.dolovery"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "420692199803-j8sns4rrq3kccoac2p90rbtlg8kceedo.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.dolovery",
-            "certificate_hash": "d81555983ca59f7d15ac9d26934feb1866865f36"
-          }
-        },
-        {
-          "client_id": "420692199803-k8fk5jaq00ap5gmu64n5ums9ru6e69s4.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC04MdK4d1DgKNkBWMhQLcdrxUk5scCILQ"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "420692199803-k8fk5jaq00ap5gmu64n5ums9ru6e69s4.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:420692199803:android:fbcafa570490546d2c15de",
         "android_client_info": {
           "package_name": "com.example.dolovery_app"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "420692199803-ue0p5eplgsm5lmuidcj06o7aonds3bdv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dolovery_app",
+            "certificate_hash": "5417ade0e8562bf2a0837e69aa9cc797293a831d"
+          }
+        },
         {
           "client_id": "420692199803-or2pr5g2vd8ohnuf2u9tr46dlepkecs2.apps.googleusercontent.com",
           "client_type": 1,
@@ -75,6 +46,13 @@
             {
               "client_id": "420692199803-k8fk5jaq00ap5gmu64n5ums9ru6e69s4.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "420692199803-p9ui1sr9ircr92fe4d06kou6r6p3bh2p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.doloveryApp"
+              }
             }
           ]
         }

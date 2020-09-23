@@ -687,7 +687,7 @@ class FormScreenState extends State<ProfileScreen> {
                             "street_address": _streetaddress,
                             "landmark": _landmark,
                             "apartment": _apartment,
-                            "chosen_address": chosen_address,
+                            "id": chosen_address,
                             // "order": "1"
                           };
                           List addresses = [thisAddress];
@@ -725,7 +725,7 @@ class FormScreenState extends State<ProfileScreen> {
 
                         inputData();
                         Navigator.of(context).pop();
-                        Navigator.of(context).pop();
+                        // Navigator.of(context).pop();
 
                         //Send to API
                       },

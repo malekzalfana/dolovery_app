@@ -42,13 +42,13 @@ getCurrentDate() {
 }
 
 var this_user;
+bool notsetup = true;
 
 class ProfileScreenState extends State<ProfileMainScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String name;
   String uid;
   String uemail;
-  bool newuser = true;
   void _onLoading() {
     showDialog(
       context: context,
@@ -73,23 +73,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       // _login();
     });
   }
-
-  // bool newuser = true;
-  // Future setupVerification() async {
-  //   print("USER BEING WATCHED");
-  //   final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-  //   final uid = user.uid;
-  //   final name = user.displayName;
-  //   final uemail = user.email;
-  //   // print("USERNAME")
-  //   var usercollection =
-  //       await Firestore.instance.collection("users").document(uid).get();
-
-  //   if (usercollection.exists) {
-  //     newuser = false;
-  //   }
-  //   // return newuser = false;
-  // }
 
   void runsetupVerification() {
     setupVerification().then((value) => null);
@@ -125,7 +108,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       print("signed in " + user.uid);
 
       // used before user.uid
-      bool notsetup;
+
       double welcomeheight;
       final newUser =
           await Firestore.instance.collection("users").document(user.uid).get();
@@ -185,7 +168,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
         final FirebaseUser user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
         print('signed in ' + user.displayName);
-        bool notsetup;
+        // bool notsetup;
         double welcomeheight;
         final newUser = await Firestore.instance
             .collection("users")
@@ -459,6 +442,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   }
 
   String chosen_address;
+  bool user_is_signed_in = false;
+  bool user_is_setup = false;
 
   Future setupVerification() async {
     print("USER BEING WATCHED");
@@ -470,15 +455,21 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       // print("USERNAME")
       this_user =
           await Firestore.instance.collection("users").document(uid).get();
-      chosen_address = this_user.data["chosen_address"];
+
       // print(this_user.data['number']);
       print('ss');
       // print(widget.thisUser);
       print('ss');
 
       if (this_user.exists) {
-        newuser = false;
+        user_is_setup = true;
+        chosen_address = this_user.data["chosen_address"];
+      } else {
+        user_is_setup = false;
       }
+      user_is_signed_in = true;
+    } else {
+      user_is_signed_in = false;
     }
 
     // return this_user;
@@ -504,7 +495,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
               return Text('Error: ${snapshot.error}');
             } else {
               // return Text('dddd');
-              if (newuser == true) {
+              if (user_is_signed_in == false) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -569,6 +560,88 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               left: 33, top: 10, right: 33, bottom: 10),
                           child: Text(
                             "Get Started",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              fontFamily: 'Axiforma',
+                              // color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (!user_is_setup && user_is_signed_in) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 28.0),
+                        child: Image.asset(
+                            "assets/images/profile_illustration.png",
+                            width: 330),
+                      ),
+                      Text(
+                        "Let's Get Started",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 23.0,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: SizedBox(
+                          width: 320,
+                          // height:200,
+                          child: Text(
+                            "Create an account and get everything you need delivered to your doorstep!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 14.0,
+                              fontFamily: 'Axiforma',
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(38, 32, 38, 12),
+                        child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          elevation: 0,
+                          onPressed: () {
+                            // signin.testfunction(ProfileScreenState());
+                            setState(() {
+                              _readtosignin = true;
+                            });
+
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (context) => ProfileScreen()))
+                                .then((_) {
+                              setState(() {});
+                            });
+                            // signin.SignInFunctions.welcomePopUp(context, name);
+                          },
+                          color: Colors.redAccent[700],
+                          // disabledColor: Colors.grey[200],
+                          textColor: Colors.white,
+                          minWidth: MediaQuery.of(context).size.width,
+                          height: 0,
+                          // padding: EdgeInsets.zero,
+                          padding: EdgeInsets.only(
+                              left: 33, top: 10, right: 33, bottom: 10),
+                          child: Text(
+                            "Setup your profile",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15.0,
