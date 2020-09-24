@@ -63,26 +63,26 @@ class _SalleItemState extends State<SalleItem> {
       newusercartmap = json.decode(temp);
     }
 
-    print('--------------------------');
-    print(prefs.getString('usercartmap'));
+    // print('--------------------------');
+    // print(prefs.getString('usercartmap'));
     if (newusercartmap == null) {
       newusercartmap = {};
     }
     if (newusercartmap.containsKey('dolovery')) {
-      print('it has dolovery in  it');
-      print(widget.data.documentID);
+      // print('it has dolovery in  it');
+      // print(widget.data.documentID);
       if (newusercartmap['dolovery'].containsKey(widget.data.documentID)) {
-        print('dolovery has documentid in it');
-        print(alreadyadded);
+        // print('dolovery has documentid in it');
+        // print(alreadyadded);
         if (loaded == false) {
-          print("it has not loaded");
+          // print("it has not loaded");
           setState(() {
             alreadyadded = true;
             loaded = true;
             inmycart = newusercartmap['dolovery'][widget.data.documentID];
-            print("$inmycart is in my cart");
+            // print("$inmycart is in my cart");
 
-            print("there is one beforeeeeeeeeeee");
+            // print("there is one beforeeeeeeeeeee");
           });
         }
 
@@ -93,12 +93,14 @@ class _SalleItemState extends State<SalleItem> {
 
   int oldsalletotal = 0;
   _save(itemid, int count) async {
-    oldsalletotal = 0;
+    oldsalletotal = null;
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
     String shop_name = widget.data['shop'];
     // START
     usercartmap = prefs.getString("usercartmap");
+    print('user cartmap');
+    print(usercartmap);
     // prefs.remove('usercartmap');
     if (usercartmap == null) {
       usercartmap = {};
@@ -136,21 +138,29 @@ class _SalleItemState extends State<SalleItem> {
       prefs.setDouble('total', 0);
     }
     print("the old salle total is: " + oldsalletotal.toString());
-    var shop_price = int.parse(widget.data['shop_price'].toString()).toDouble();
-    print(widget.data['serving_prices'][oldsalletotal]);
-    print(widget.data['serving_prices'][count]);
-    var oldprice =
-        double.parse(widget.data['serving_prices'][oldsalletotal].toString());
-    if (count == 0) {
+    // var shop_price = int.parse(widget.data['shop_price'].toString()).toDouble();
+    // print(widget.data['serving_prices'][oldsalletotal]);
+    // print(widget.data['serving_prices'][count]);
+    var oldprice;
+    if (oldsalletotal == null) {
       oldprice = 0;
+    } else {
+      oldprice =
+          double.parse(widget.data['serving_prices'][oldsalletotal].toString());
     }
+
+    print("old price is $oldprice");
+    // if (count == 0) {
+    //   oldprice = 0;
+    //   print("count is ZERO");
+    // }
     double total = prefs.getDouble('total') == null
         ? 0
         : prefs.getDouble('total') -
             oldprice +
             double.parse(widget.data['serving_prices'][count].toString());
-    print('above the erroes');
-    print("the tortal is ${total.toString()}");
+    // print('above the erroes');
+    // print("the tortal is ${total.toString()}");
     prefs.setDouble('total', total);
     prefs.setString('usercartmap', json.encode(usercartmap));
     if (cart == null) {
@@ -166,8 +176,8 @@ class _SalleItemState extends State<SalleItem> {
       shops = [];
     }
 
-    print(shop_name);
-    print('shopaboive______________');
+    // print(shop_name);
+    // print('shopaboive______________');
     if (!shops.contains(shop_name)) {
       shops.add(shop_name);
       prefs.setStringList("shops", shops);

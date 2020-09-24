@@ -522,6 +522,11 @@ class HomeScreenState extends State<HomeScreen> {
 /************************************************************************************************** */
   @override
   Widget build(BuildContext context) {
+    /*24 is for notification bar on Android*/
+    var size = MediaQuery.of(context).size;
+
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
+    final double itemWidth = size.width / 2;
     return Scaffold(
         // appBar: AppBar(
         //   backgroundColor: Colors.transparent,
@@ -1255,7 +1260,7 @@ class HomeScreenState extends State<HomeScreen> {
                   if (snapshot.hasData) {
                     return GridView.count(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.635,
+                      childAspectRatio: (itemWidth / itemHeight) - 0.02,
                       controller: new ScrollController(keepScrollOffset: false),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
