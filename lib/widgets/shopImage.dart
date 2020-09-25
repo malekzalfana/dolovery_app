@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_svg/svg.dart';
 // ignore: unused_import
@@ -57,10 +58,10 @@ class _ShopImageState extends State<ShopImage> {
                         height: 180,
                         width: 180,
                         decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(shopImage),
-                            fit: BoxFit.cover,
-                          ),
+                          // image: DecorationImage(
+                          //   image: NetworkImage(shopImage),
+                          //   fit: BoxFit.cover,
+                          // ),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.07),
@@ -77,7 +78,14 @@ class _ShopImageState extends State<ShopImage> {
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10)),
                         ),
-                        child: null),
+                        child: Center(
+                          child: CachedNetworkImage(
+                            placeholder: (context, url) => Image.asset(
+                                "assets/images/loading.gif",
+                                height: 30),
+                            imageUrl: shopImage,
+                          ),
+                        )),
                   ]),
             ),
             Align(

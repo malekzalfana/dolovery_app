@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_svg/svg.dart';
 // ignore: unused_import
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ShopList extends StatefulWidget {
   // final Widget child;
@@ -47,10 +48,10 @@ class _ShopListState extends State<ShopList> {
                 height: 90,
                 width: 90,
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(shopImage),
-                    fit: BoxFit.cover,
-                  ),
+                  //   image: DecorationImage(
+                  //     image: NetworkImage(shopImage),
+                  //     fit: BoxFit.cover,
+                  //   ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.07),
@@ -66,7 +67,13 @@ class _ShopListState extends State<ShopList> {
                       bottomLeft: Radius.circular(10),
                       bottomRight: Radius.circular(10)),
                 ),
-                child: null),
+                child: Center(
+                  child: CachedNetworkImage(
+                    placeholder: (context, url) =>
+                        Image.asset("assets/images/loading.gif", height: 30),
+                    imageUrl: shopImage,
+                  ),
+                )),
           ),
           Expanded(
             child: Padding(

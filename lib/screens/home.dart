@@ -103,6 +103,11 @@ class HomeScreenState extends State<HomeScreen> {
     LocationData myLocation;
     String error;
     Location location = new Location();
+    if (c_position.length > 0) {
+      print("locaiton exists");
+      return true;
+    }
+
     try {
       myLocation = await location.getLocation();
     } on PlatformException catch (e) {
@@ -1019,7 +1024,7 @@ class HomeScreenState extends State<HomeScreen> {
                   if (snapshot.hasData) {
                     return GridView.count(
                       crossAxisCount: 2,
-                      childAspectRatio: .635,
+                      childAspectRatio: (itemWidth / itemHeight),
                       controller: new ScrollController(keepScrollOffset: false),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
@@ -1260,7 +1265,7 @@ class HomeScreenState extends State<HomeScreen> {
                   if (snapshot.hasData) {
                     return GridView.count(
                       crossAxisCount: 2,
-                      childAspectRatio: (itemWidth / itemHeight) - 0.02,
+                      childAspectRatio: (itemWidth / itemHeight),
                       controller: new ScrollController(keepScrollOffset: false),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,

@@ -104,6 +104,8 @@ class _ProductImageState extends State<ProductImage> {
                 child: Text(
                   productName,
                   textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 12.5,
@@ -124,6 +126,8 @@ class _ProductImageState extends State<ProductImage> {
                         padding: const EdgeInsets.only(left: 5.0),
                         child: Text(
                           productUnit,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
@@ -244,7 +248,7 @@ class _ProductImageState extends State<ProductImage> {
       return Padding(
           padding: const EdgeInsets.only(top: 0.0),
           child: Text(
-            productPrice + "L.Ld.",
+            productPrice + "L.L.",
             textAlign: TextAlign.left,
             style: TextStyle(
               fontWeight: FontWeight.normal,

@@ -83,6 +83,7 @@ class _CartState extends State<Cart> {
     prefs.remove('shops');
     prefs.remove('usercartmap');
     prefs.remove('cached_shops');
+    prefs.remove('address');
     Navigator.of(context).pop();
     print(prefs.getKeys());
     return true;
@@ -590,6 +591,15 @@ class _CartState extends State<Cart> {
     setState(() {});
   }
 
+  addAddressToCart(cartaddress) async {
+    final prefs = await SharedPreferences.getInstance();
+    var newcartaddress;
+
+    prefs.setString('address', json.encode(cartaddress));
+    print('thi is the new address');
+    print(prefs.getString('address'));
+  }
+
   Future<void> _googleSignUp() async {
     try {
       final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -664,6 +674,8 @@ class _CartState extends State<Cart> {
   Future setupVerification() async {
     // print("USER BEING WATCHED");
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final prefs = await SharedPreferences.getInstance();
+
     if (user != null) {
       uid = user.uid;
       name = user.displayName;
@@ -673,6 +685,20 @@ class _CartState extends State<Cart> {
           await Firestore.instance.collection("users").document(uid).get();
       if (!alreadyChosenAddress) {
         chosen_address = this_user.data["chosen_address"];
+      }
+      print("checking addresssss");
+      if (!prefs.containsKey('address')) {
+        print("no addressssss");
+        var counter = 0;
+        for (var useraddress in this_user.data['address']) {
+          print(this_user.data['address'][counter]);
+          if (useraddress['id'] == chosen_address) {
+            print('added');
+            prefs.setString(
+                'address', this_user.data['address'][counter].toString());
+          }
+          counter++;
+        }
       }
 
       // print(this_user.data['number']);
@@ -998,11 +1024,19 @@ class _CartState extends State<Cart> {
                                                     // print(isDefault);
                                                     print(
                                                         "______________________");
-                                                    selectAddress(
-                                                        this_user
-                                                                .data["address"]
-                                                            [index]["id"],
-                                                        index);
+                                                    if (this_user
+                                                            .data["address"]
+                                                            .length >
+                                                        1) {
+                                                      selectAddress(
+                                                          this_user.data[
+                                                                  "address"]
+                                                              [index]["id"],
+                                                          index);
+                                                      addAddressToCart(this_user
+                                                              .data["address"]
+                                                          [index]);
+                                                    }
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
@@ -1420,46 +1454,108 @@ class _CartState extends State<Cart> {
                                         onPressed: notsetup
                                             ? null
                                             : () {
-                                                List products;
-                                                var cartproduct;
-                                                // define snapshots to use for looping
-                                                for (var i;
-                                                    i <= finalcart.length;
-                                                    i++) {
-                                                  cartproduct = Firestore
-                                                      .instance
-                                                      .collection("products")
-                                                      .document(finalcart[i])
-                                                      .get();
-                                                  Map<String, dynamic> product =
-                                                      {
-                                                    "name": cartproduct
-                                                        .data['name'],
-                                                    "shop_price": cartproduct,
-                                                    "quantity": cartproduct,
-                                                    "unit": cartproduct
-                                                  };
-                                                  products.add(product);
+                                                // List products;
+                                                // var cartproduct;
+                                                // // define snapshots to use for looping
+                                                // for (var i;
+                                                //     i <= finalcart.length;
+                                                //     i++) {
+                                                //   cartproduct = Firestore
+                                                //       .instance
+                                                //       .collection("products")
+                                                //       .document(finalcart[i])
+                                                //       .get();
+                                                //   Map<String, dynamic> product =
+                                                //       {
+                                                //     "name": cartproduct
+                                                //         .data['name'],
+                                                //     "shop_price": cartproduct,
+                                                //     "quantity": cartproduct,
+                                                //     "unit": cartproduct
+                                                //   };
+                                                //   products.add(product);
+                                                // }
+                                                // Firestore.instance
+                                                //     .collection('orders')
+                                                //     .document("zxxxxxxxxx")
+                                                //     .setData({
+                                                //   "address": "address",
+                                                //   "total": "total",
+                                                //   "count": "4",
+                                                //   "payment": "cashondelivery",
+                                                //   "date": "today",
+                                                //   "shop": "shop username",
+                                                //   "products": products,
+                                                //   "user": uid,
+                                                //   "user name": "user name",
+                                                //   "item_list": "list of ids"
+                                                // }).then((result) {
+                                                //   print("order added");
+                                                // }).catchError((onError) {
+                                                //   print("onError");
+                                                // });
+                                                // var thecartaddress;
+                                                getCartAddress() async {
+                                                  final prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  var thecartaddress = json
+                                                      .encode(prefs.getString(
+                                                          'address'));
+                                                  print(thecartaddress);
+                                                  List<String> fullorder = [];
+                                                  List<String> fullorder_shops =
+                                                      [];
+                                                  for (var shop
+                                                      in usercartmap.keys) {
+                                                    print(
+                                                        'starting orderinggggggggggggggggggggggg');
+                                                    var order_id = UniqueKey()
+                                                        .hashCode
+                                                        .toString();
+                                                    Firestore.instance
+                                                        .collection(
+                                                            'shop_orders')
+                                                        .document(order_id)
+                                                        .setData({
+                                                      "address": thecartaddress,
+                                                      "total": total.toInt(),
+                                                      "count": usercartmap[shop]
+                                                          .length,
+                                                      "payment":
+                                                          "cashondelivery",
+                                                      "date": DateTime.now(),
+                                                      "shop": shop,
+                                                      "products":
+                                                          usercartmap[shop],
+                                                      "user": uid,
+                                                    });
+                                                    fullorder.add(order_id);
+                                                    fullorder_shops.add(shop);
+                                                  }
+                                                  Firestore.instance
+                                                      .collection('orders')
+                                                      .document(UniqueKey()
+                                                          .hashCode
+                                                          .toString())
+                                                      .setData({
+                                                    "address": thecartaddress,
+                                                    "total": total.toInt(),
+                                                    "count": items,
+                                                    "payment": "cashondelivery",
+                                                    "date": DateTime.now(),
+                                                    "products": usercartmap,
+                                                    "user": uid,
+                                                    "shop_list":
+                                                        fullorder_shops,
+                                                    "order_list": fullorder
+                                                  });
                                                 }
-                                                Firestore.instance
-                                                    .collection('orders')
-                                                    .document(uid)
-                                                    .setData({
-                                                  "address": "address",
-                                                  "total": "total",
-                                                  "count": "4",
-                                                  "payment": "cashondelivery",
-                                                  "date": "today",
-                                                  "shop": "shop username",
-                                                  "products": products,
-                                                  "user": uid,
-                                                  "user name": "user name",
-                                                  "item_list": "list of ids"
-                                                }).then((result) {
-                                                  print("order added");
-                                                }).catchError((onError) {
-                                                  print("onError");
-                                                });
+
+                                                getCartAddress();
+
+                                                // final thecartaddress =
+                                                //     getCartAddress();
                                               },
                                         color: Colors.redAccent[700],
                                         disabledColor: Colors.grey[200],
