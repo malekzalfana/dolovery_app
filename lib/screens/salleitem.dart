@@ -176,12 +176,19 @@ class _SalleItemState extends State<SalleItem> {
       shops = [];
     }
 
+    // checkIfCart() async {
+    //   if (_n == ) {
+    //   showChangeButton = true;
+    // }
+    // }
+
     // print(shop_name);
     // print('shopaboive______________');
     if (!shops.contains(shop_name)) {
       shops.add(shop_name);
       prefs.setStringList("shops", shops);
     }
+    oldsalletotal = count;
     alreadyadded = false;
     showChangeButton = false;
 
@@ -191,6 +198,67 @@ class _SalleItemState extends State<SalleItem> {
     // print('saved $total');
     // print('saved $type');
     // print('saved $items');
+  }
+
+  cancelCartItem(itemid) async {
+    // oldsalletotal = null;
+    final prefs = await SharedPreferences.getInstance();
+    List<String> cart = prefs.getStringList('cart');
+    String shop_name = widget.data['shop'];
+    // START
+    usercartmap = prefs.getString("usercartmap");
+    print('user cartmap');
+    print(usercartmap);
+    // prefs.remove('usercartmap');
+    usercartmap = json.decode(usercartmap);
+
+    if (cart == null) {
+      cart = [];
+    }
+
+    String type = widget.data['type'];
+    prefs.setString('type', type);
+    if (prefs.getDouble('total') == null) {
+      prefs.setDouble('total', 0);
+    }
+    print("the current salle total is: " + inmycart.toString());
+    var oldprice;
+    if (oldsalletotal == null) {
+      oldprice = 0;
+    } else {
+      oldprice =
+          double.parse(widget.data['serving_prices'][inmycart].toString());
+    }
+
+    print("THE old price is $oldprice");
+    double total = prefs.getDouble('total') == null
+        ? 0
+        : prefs.getDouble('total') - double.parse(oldprice.toString()); // +
+    // double.parse(widget.data['serving_prices'][count].toString());
+
+    if (cart == null) {
+      cart = [];
+    }
+    cart.remove(itemid);
+    usercartmap[shop_name].remove(itemid);
+    prefs.setDouble('total', total);
+    prefs.setString('usercartmap', json.encode(usercartmap));
+    final value = cart;
+    final double items = cart.length.toDouble();
+    prefs.setDouble('items', items);
+    prefs.setStringList('cart', value);
+    List<String> shops = prefs.getStringList('shops');
+    if (shops == null) {
+      shops = [];
+    }
+
+    // if (!shops.contains(shop_name)) {
+    //   shops.add(shop_name);
+    //   prefs.setStringList("shops", shops);
+    // }
+    alreadyadded = false;
+    showChangeButton = false;
+    setState(() {});
   }
 
   void minus() {
@@ -228,6 +296,10 @@ class _SalleItemState extends State<SalleItem> {
     // var date = DateTime.fromMicrosecondsSinceEpoch(
     // widget.data['salle_date']);
     double width = MediaQuery.of(context).size.width;
+
+    if (inmycart != _n) {
+      showChangeButton = true;
+    }
 
     var timestamp = (widget.data['salle_date'] as Timestamp).toDate();
     num _defaultValue = 0;
@@ -510,24 +582,49 @@ class _SalleItemState extends State<SalleItem> {
                               width: width - 44,
                               // color: Colors.red,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(right: 15.0),
-                                    child: Icon(
-                                      Icons.check,
-                                      color: Colors.white,
+                                    padding: const EdgeInsets.only(left: 15.0),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 15.0),
+                                          child: Icon(
+                                            Icons.check,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            '${inmycart + 1} Servings added to cart',
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 16.0,
+                                              fontFamily: 'Axiforma',
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Center(
-                                    child: Text(
-                                      '${inmycart + 1} Servings added to cart',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 16.0,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.white,
+                                  GestureDetector(
+                                    onTap: () {
+                                      cancelCartItem(widget.data.documentID);
+                                    },
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 12.0),
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Icon(
+                                          Icons.clear,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),

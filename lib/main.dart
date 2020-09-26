@@ -123,15 +123,16 @@ class _MyHomePageState extends State<MyHomePage> {
             // super.initState();
             _getPrefs();
           } else {
-            _showDialog(); // show dialog
+            // _showDialog(); // show dialog
           }
         }).catchError((error) {
-          _showDialog(); // show dialog
+          // _showDialog(); // show dialog
         });
       } on SocketException catch (_) {
-        _showDialog();
+        // _showDialog();
         print('not connected'); // show dialog
       }
+      // XXXXXXXXX commented out the showdialog all of them
     });
   }
 
