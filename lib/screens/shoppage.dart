@@ -35,9 +35,7 @@ class _ShopPageState extends State<ShopPage> {
   String chosen_subcategory = '';
   setSubCategory(subcat) {
     // print("asdasd");
-    setState(() {
-      chosen_subcategory = '';
-    });
+
     if (chosen_subcategory == subcat) {
       setState(() {
         chosen_subcategory = '';
@@ -426,83 +424,85 @@ class _ShopPageState extends State<ShopPage> {
                               // var w = Text("ssss");
                               // type['categories'](entry.key);
                               // return w;
-
-                              return Visibility(
-                                visible:
-                                    widget.data['categories'].contains(entry),
-                                child: Padding(
-                                  padding: first == 1
-                                      ? const EdgeInsets.only(left: 10)
-                                      : const EdgeInsets.only(left: 0),
+                              if (widget.data['categories'] != null)
+                                return Visibility(
+                                  visible:
+                                      widget.data['categories'].contains(entry),
                                   child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 10.0, bottom: 15, top: 26),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setCategory(entry);
-                                        setState(() {});
-                                      },
-                                      child: Container(
-                                          height: 80,
-                                          // 180
-                                          width: 120,
-                                          decoration: BoxDecoration(
-                                            // image: DecorationImage(
-                                            //   image: AssetImage(
-                                            //       'assets/images/meat.png'),
-                                            //   fit: BoxFit.cover,
-                                            // ),
-                                            color: entry == chosen_category
-                                                ? Colors.redAccent[700]
-                                                : Colors.white,
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(15),
-                                                topRight: Radius.circular(15),
-                                                bottomLeft: Radius.circular(15),
-                                                bottomRight:
-                                                    Radius.circular(15)),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.07),
-                                                spreadRadius: 5,
-                                                blurRadius: 7,
-                                                offset: Offset(0,
-                                                    8), // changes position of shadow
-                                              ),
-                                            ],
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: <Widget>[
-                                              // Image.asset(
-                                              //     "assets/images/meaticon.png",
-                                              //     height: 30),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Text(
-                                                  entry,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
-                                                    fontSize: 12.5,
-                                                    height: 1.3,
-                                                    fontFamily: 'Axiforma',
-                                                    color:
-                                                        entry == chosen_category
-                                                            ? Colors.white
-                                                            : Colors.black,
+                                    padding: first == 1
+                                        ? const EdgeInsets.only(left: 10)
+                                        : const EdgeInsets.only(left: 0),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 10.0, bottom: 15, top: 26),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setCategory(entry);
+                                          setState(() {});
+                                        },
+                                        child: Container(
+                                            height: 80,
+                                            // 180
+                                            width: 120,
+                                            decoration: BoxDecoration(
+                                              // image: DecorationImage(
+                                              //   image: AssetImage(
+                                              //       'assets/images/meat.png'),
+                                              //   fit: BoxFit.cover,
+                                              // ),
+                                              color: entry == chosen_category
+                                                  ? Colors.redAccent[700]
+                                                  : Colors.white,
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(15),
+                                                  topRight: Radius.circular(15),
+                                                  bottomLeft:
+                                                      Radius.circular(15),
+                                                  bottomRight:
+                                                      Radius.circular(15)),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.07),
+                                                  spreadRadius: 5,
+                                                  blurRadius: 7,
+                                                  offset: Offset(0,
+                                                      8), // changes position of shadow
+                                                ),
+                                              ],
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: <Widget>[
+                                                // Image.asset(
+                                                //     "assets/images/meaticon.png",
+                                                //     height: 30),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    entry,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      fontSize: 12.5,
+                                                      height: 1.3,
+                                                      fontFamily: 'Axiforma',
+                                                      color: entry ==
+                                                              chosen_category
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          )),
+                                              ],
+                                            )),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
+                                );
                             }).toList()));
                       },
                     ),
