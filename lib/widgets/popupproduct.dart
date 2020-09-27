@@ -174,7 +174,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
       return Padding(
           padding: const EdgeInsets.only(top: 0.0),
           child: Text(
-            productPrice + "L.L.",
+            productPrice.toString() + "L.L.",
             textAlign: TextAlign.left,
             style: TextStyle(
               fontWeight: FontWeight.normal,
