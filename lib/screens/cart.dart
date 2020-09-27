@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'orderpage.dart';
+
 class Cart extends StatefulWidget {
   final dynamic user; //if you have multiple values add here
   // final String day;
@@ -740,6 +742,7 @@ class _CartState extends State<Cart> {
     });
   }
 
+  bool loadingorder = false;
   String chosen_address;
   @override
   Widget build(BuildContext context) {
@@ -753,6 +756,7 @@ class _CartState extends State<Cart> {
     //     (widget.data.documents[0]['salle_date'] as Timestamp).toDate();
     num _defaultValue = 0;
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     // print(cart);
     List<Widget> list = new List<Widget>();
     // setupVerification();
@@ -770,6 +774,13 @@ class _CartState extends State<Cart> {
             default:
               if (snapshot.hasError)
                 return Text('Error: ${snapshot.error}');
+              else if (loadingorder)
+                return SizedBox(
+                  height: height,
+                  child: Center(
+                      child:
+                          Image.asset("assets/images/loading.gif", height: 30)),
+                );
               else
                 return Column(
                   children: <Widget>[
@@ -1477,9 +1488,12 @@ class _CartState extends State<Cart> {
                                               BorderRadius.circular(15.0),
                                         ),
                                         elevation: 0,
-                                        onPressed: notsetup
+                                        onPressed: notsetup || loadingorder
                                             ? null
                                             : () {
+                                                // setState(() {
+                                                //   loadingorder = true;
+                                                // });
                                                 // List products;
                                                 // var cartproduct;
                                                 // // define snapshots to use for looping
@@ -1521,6 +1535,21 @@ class _CartState extends State<Cart> {
                                                 //   print("onError");
                                                 // });
                                                 // var thecartaddress;
+                                                // var
+
+                                                // XXXXXXX
+                                                // Firestore.instance
+                                                //     .collection('shop_orders')
+                                                //     .getDocuments()
+                                                //     .then((snapshot) {
+                                                //   for (DocumentSnapshot ds
+                                                //       in snapshot.documents) {
+                                                //     ds.reference.delete();
+                                                //   }
+                                                //   ;
+                                                // });
+                                                // Navigator.pop(context);
+
                                                 getCartAddress() async {
                                                   final prefs =
                                                       await SharedPreferences
@@ -1532,13 +1561,87 @@ class _CartState extends State<Cart> {
                                                   List<String> fullorder = [];
                                                   List<String> fullorder_shops =
                                                       [];
-                                                  for (var shop
+                                                  var completeproducts = {};
+                                                  for (var cartshop
                                                       in usercartmap.keys) {
+                                                    completeproducts[cartshop] =
+                                                        {};
+                                                    var datashop =
+                                                        await Firestore.instance
+                                                            .collection("shops")
+                                                            .where('username',
+                                                                isEqualTo:
+                                                                    cartshop)
+                                                            .getDocuments();
+                                                    var rate = datashop
+                                                        .documents[0]
+                                                        .data['rate'];
+                                                    if (rate == null) {
+                                                      rate = 1;
+                                                    }
+                                                    for (var product
+                                                        in usercartmap[cartshop]
+                                                            .keys) {
+                                                      print(
+                                                          'looping through $product');
+                                                      var dataproduct =
+                                                          await Firestore
+                                                              .instance
+                                                              .collection(
+                                                                  "products")
+                                                              .document(product)
+                                                              .get();
+                                                      var newrate = rate;
+                                                      if (dataproduct.data[
+                                                              'currency'] !=
+                                                          'dollar') {
+                                                        newrate = 1;
+                                                      }
+                                                      print(dataproduct
+                                                          .documentID);
+                                                      completeproducts[cartshop]
+                                                          [product] = {
+                                                        'name': dataproduct
+                                                            .data['name'],
+                                                        'count': usercartmap[
+                                                            cartshop][product],
+                                                        'shop_price': dataproduct
+                                                                        .data[
+                                                                    'type'] !=
+                                                                'salle'
+                                                            ? int.parse(dataproduct
+                                                                    .data[
+                                                                        'shop_price']
+                                                                    .toString()) *
+                                                                newrate
+                                                            : dataproduct.data[
+                                                                    'serving_prices']
+                                                                [usercartmap[
+                                                                        cartshop]
+                                                                    [product]],
+                                                        'shop_discounted':
+                                                            dataproduct.data[
+                                                                'shop_discounted'],
+                                                        'unit': dataproduct
+                                                            .data['unit'],
+                                                        'image': dataproduct
+                                                            .data['image'],
+                                                        'type': dataproduct
+                                                            .data['type'],
+                                                        'arabic_name':
+                                                            dataproduct.data[
+                                                                'arabic_name']
+                                                      };
+                                                    }
+                                                    print(completeproducts);
+                                                    print(completeproducts[
+                                                        cartshop]);
                                                     print(
                                                         'starting orderinggggggggggggggggggggggg');
-                                                    var order_id = UniqueKey()
-                                                        .hashCode
-                                                        .toString();
+                                                    var order_id = ">>" +
+                                                        UniqueKey()
+                                                            .hashCode
+                                                            .toString();
                                                     Firestore.instance
                                                         .collection(
                                                             'shop_orders')
@@ -1546,35 +1649,79 @@ class _CartState extends State<Cart> {
                                                         .setData({
                                                       "address": thecartaddress,
                                                       "total": total.toInt(),
-                                                      "count": usercartmap[shop]
-                                                          .length,
+                                                      "count":
+                                                          usercartmap[cartshop]
+                                                              .length,
                                                       "payment":
                                                           "cashondelivery",
                                                       "date": DateTime.now(),
-                                                      "shop": shop,
+                                                      "shop": cartshop,
                                                       "products":
-                                                          usercartmap[shop],
+                                                          completeproducts[
+                                                              cartshop],
                                                       "user": uid,
                                                     });
                                                     fullorder.add(order_id);
-                                                    fullorder_shops.add(shop);
+                                                    fullorder_shops
+                                                        .add(cartshop);
                                                   }
+                                                  // for (var shop
+                                                  //     in usercartmap.keys) {
+                                                  //   print(
+                                                  //       'starting orderinggggggggggggggggggggggg');
+                                                  //   var order_id = UniqueKey()
+                                                  //       .hashCode
+                                                  //       .toString();
+                                                  //   Firestore.instance
+                                                  //       .collection(
+                                                  //           'shop_orders')
+                                                  //       .document(order_id)
+                                                  //       .setData({
+                                                  //     "address": thecartaddress,
+                                                  //     "total": total.toInt(),
+                                                  //     "count": usercartmap[shop]
+                                                  //         .length,
+                                                  //     "payment":
+                                                  //         "cashondelivery",
+                                                  //     "date": DateTime.now(),
+                                                  //     "shop": shop,
+                                                  //     "products":
+                                                  //         usercartmap[shop],
+                                                  //     "user": uid,
+                                                  //   });
+                                                  //   fullorder.add(order_id);
+                                                  //   fullorder_shops.add(shop);
+                                                  // }
+                                                  var fullorder_id = UniqueKey()
+                                                      .hashCode
+                                                      .toString();
                                                   Firestore.instance
                                                       .collection('orders')
-                                                      .document(UniqueKey()
-                                                          .hashCode
-                                                          .toString())
+                                                      .document(fullorder_id)
                                                       .setData({
                                                     "address": thecartaddress,
                                                     "total": total.toInt(),
                                                     "count": items,
                                                     "payment": "cashondelivery",
                                                     "date": DateTime.now(),
-                                                    "products": usercartmap,
+                                                    "products":
+                                                        completeproducts,
                                                     "user": uid,
                                                     "shop_list":
                                                         fullorder_shops,
                                                     "order_list": fullorder
+                                                  }).then((doc) {
+                                                    print(fullorder_id);
+                                                    Navigator.pop(context);
+
+                                                    // loadingorder = true;
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                OrderPage(
+                                                                    fullorder_id)));
+                                                  }).catchError((error) {
+                                                    print(error);
                                                   });
                                                 }
 
@@ -1746,6 +1893,9 @@ class _CartState extends State<Cart> {
   // }
 
   Padding buildCartItem(DocumentSnapshot cartitem, int count, int rate) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     if (cartitem['currency'] != "dollar") {
       rate = 1;
     }
@@ -1790,20 +1940,48 @@ class _CartState extends State<Cart> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      cartitem['name'],
-                      // textAlign: TextAlign.left,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        height: 1.1,
-                        fontFamily: 'Axiforma',
-                        color: Colors.black,
+                    SizedBox(
+                      width: width - 150,
+                      child: Text(
+                        cartitem['name'],
+                        // textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.5,
+                          height: 1.16,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ],
+                ),
+                Visibility(
+                  visible: cartitem['type'] == 'salle' &&
+                      cartitem['arabic_name'] != null,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 3.0),
+                    child: SizedBox(
+                      width: width - 150,
+                      child: Text(
+                        cartitem['arabic_name'] != null
+                            ? cartitem['arabic_name']
+                            : '',
+                        // textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 13,
+                          height: 1.1,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -1826,6 +2004,8 @@ class _CartState extends State<Cart> {
                                     "L.L.",
                                 // overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
+
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
@@ -1846,6 +2026,7 @@ class _CartState extends State<Cart> {
                                     : "",
                                 // overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
