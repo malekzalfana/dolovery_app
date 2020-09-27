@@ -155,8 +155,8 @@ class _ProductImageState extends State<ProductImage> {
   }
 
   getRate() async {
-    print(
-        "started prefrererererererere_______________________________________________________________");
+    // print(
+    //     "started prefrererererererere_______________________________________________________________");
     final prefs = await SharedPreferences.getInstance();
     // prefs.remove("cached_shops");
     // var newcachedshops = {"pro_nutrition": 2000};
@@ -197,7 +197,7 @@ class _ProductImageState extends State<ProductImage> {
     } else {
       // cachedshops[shopName] = value.documents[0].data['rate'];
       rate = json.decode(prefs.getString("cached_shops"))[shopName];
-      print("just got: " + rate.toString());
+      // print("just got: " + rate.toString());
     }
     // prefs.remove("cached_shops");
     // rate = 1;
@@ -220,31 +220,34 @@ class _ProductImageState extends State<ProductImage> {
                   if (snapshot.hasError)
                     return new Text('Error: ${snapshot.error}');
                   else
-                    return Text(
-                      (int.parse(productPrice.toString()) *
-                                  int.parse(rate.toString()))
-                              .toString() +
-                          "L.L.",
-                      // rate.toString(),
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 11.7,
-                        fontFamily: 'Axiforma',
-                        color: Colors.black54,
+                    return SizedBox(
+                      height: 20,
+                      child: Text(
+                        (int.parse(productPrice.toString()) *
+                                    int.parse(rate.toString()))
+                                .toString() +
+                            "L.L.",
+                        // rate.toString(),
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 11.7,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black54,
+                        ),
                       ),
                     );
                   break;
 
                 default:
-                  debugPrint("Snapshot " + snapshot.toString());
+                  // debugPrint("Snapshot " + snapshot.toString());
                   return Text(
                       's'); // also check your listWidget(snapshot) as it may return null.
               }
             }),
       );
     } else {
-      print('product is not dollar');
+      // print('product is not dollar');
       return Padding(
           padding: const EdgeInsets.only(top: 0.0),
           child: Text(

@@ -104,7 +104,7 @@ class HomeScreenState extends State<HomeScreen> {
     String error;
     Location location = new Location();
     if (c_position.length > 0) {
-      print("locaiton exists");
+      // print("locaiton exists");
       return true;
     }
 
@@ -130,12 +130,12 @@ class HomeScreenState extends State<HomeScreen> {
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     c_position = first.featureName;
-    print(
-        ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+    // print(
+    //     ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
     if (acquiredlocation == false) {
       setState(() {
         acquiredlocation = true;
-        print('added the correct location_________');
+        // print('added the correct location_________');
       });
     }
 
@@ -167,7 +167,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   bool newuser = true;
   Future setupVerification() async {
-    print("USER BEING WATCHED");
+    // print("USER BEING WATCHED");
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final uid = user.uid;
     final name = user.displayName;
@@ -1377,7 +1377,7 @@ class HomeScreenState extends State<HomeScreen> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  print(snapshot);
+                  // print(snapshot);
                   return SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(

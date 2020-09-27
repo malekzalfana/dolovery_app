@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'orderpage.dart';
+
 class Cart extends StatefulWidget {
   final dynamic user; //if you have multiple values add here
   // final String day;
@@ -43,12 +45,12 @@ class _CartState extends State<Cart> {
         minimum = false;
         maximum = false;
       }
-      print(_n);
+      // print(_n);
     });
   }
 
   void minus() {
-    print(_n);
+    // print(_n);
     setState(() {
       if (_n != 1) _n--;
       if (_n == 1)
@@ -85,7 +87,7 @@ class _CartState extends State<Cart> {
     prefs.remove('cached_shops');
     prefs.remove('address');
     Navigator.of(context).pop();
-    print(prefs.getKeys());
+    // print(prefs.getKeys());
     return true;
   }
 
@@ -149,11 +151,11 @@ class _CartState extends State<Cart> {
     // prefs.remove('usercartmap');
     if (usercartmap == null) {
       usercartmap = {};
-      print('made an empty map');
+      // print('made an empty map');
     } else {
       usercartmap = json.decode(usercartmap);
-      print('found the map');
-      print(json.encode(usercartmap));
+      // print('found the map');
+      // print(json.encode(usercartmap));
     }
     if (usercartmap.containsKey(shop_name)) {
       if (usercartmap[shop_name].containsKey(itemid)) {
@@ -196,8 +198,8 @@ class _CartState extends State<Cart> {
       shops = [];
     }
 
-    print(shop_name);
-    print('shopaboive______________');
+    // print(shop_name);
+    // print('shopaboive______________');
     if (!shops.contains(shop_name)) {
       shops.add(shop_name);
       prefs.setStringList("shops", shops);
@@ -219,11 +221,11 @@ class _CartState extends State<Cart> {
     // prefs.remove('usercartmap');
     if (usercartmap == null) {
       usercartmap = {};
-      print('made an empty map');
+      // print('made an empty map');
     } else {
       usercartmap = json.decode(usercartmap);
-      print('found the map');
-      print(json.encode(usercartmap));
+      // print('found the map');
+      // print(json.encode(usercartmap));
     }
     if (usercartmap.containsKey(shop_name)) {
       if (usercartmap[shop_name].containsKey(itemid)) {
@@ -265,16 +267,16 @@ class _CartState extends State<Cart> {
       shops = [];
     }
 
-    print(shop_name);
-    print('shopaboive______________');
+    // print(shop_name);
+    // print('shopaboive______________');
     if (!shops.contains(shop_name)) {
       shops.remove(shop_name);
       prefs.setStringList("shops", shops);
     }
-    print('saved $value');
-    print('saved $total');
-    print('saved $type');
-    print('saved $items');
+    // print('saved $value');
+    // print('saved $total');
+    // print('saved $type');
+    // print('saved $items');
     if (cart.length == 0) {
       reset();
 
@@ -295,31 +297,31 @@ class _CartState extends State<Cart> {
   Map cartshopsmap = {};
   getcartmap() async {
     for (var cartshop in shops) {
-      print("started" + cartshop.toString());
+      // print("started" + cartshop.toString());
 
       for (var cartitem in finalcart) {
-        print("started item: " + cartitem.toString());
+        // print("started item: " + cartitem.toString());
         Firestore.instance
             .collection("products")
             .document(cartitem)
             .get()
             .then((value) {
-          print("shop 1 =" + value.data['shop'].toString());
-          print("shop §1 =" + cartshop.toString());
+          // print("shop 1 =" + value.data['shop'].toString());
+          // print("shop §1 =" + cartshop.toString());
           if (value.data['shop'] == cartshop.toString()) {
             if (!cartshopsproductsmap.containsKey(cartitem)) {
               cartshopsproductsmap[cartitem] = 1;
-              print("counting********* " +
-                  cartshopsproductsmap[cartitem].toInt());
+              // print("counting********* " +
+              cartshopsproductsmap[cartitem].toInt();
               // finalcart.add(cart[i]);
             } else {
               cartshopsproductsmap[cartitem] =
                   cartshopsproductsmap[cartitem].toInt() + 1;
-              print("counting:::::::::: " +
-                  cartshopsproductsmap[cartitem].toInt());
+              // print("counting:::::::::: " +
+              //     cartshopsproductsmap[cartitem].toInt());
             }
             // cartshopsproductsmap.add(cartitem.toString());
-            print(cartshopsproductsmap);
+            // print(cartshopsproductsmap);
             cartshopsmap[cartshop.toString()] = cartshopsproductsmap;
           }
         });
@@ -352,31 +354,31 @@ class _CartState extends State<Cart> {
         }
 
         for (var cartshop in shops) {
-          print("started" + cartshop.toString());
+          // print("started" + cartshop.toString());
           Map cartshopsproductsmap = {};
           for (var cartitem in cart) {
-            print("started item: " + cartitem.toString());
+            // print("started item: " + cartitem.toString());
             Firestore.instance
                 .collection("products")
                 .document(cartitem)
                 .get()
                 .then((value) {
-              print("shop 1 =" + value.data['shop'].toString());
-              print("shop §1 =" + cartshop.toString());
+              // print("shop 1 =" + value.data['shop'].toString());
+              // print("shop §1 =" + cartshop.toString());
               if (value.data['shop'] == cartshop.toString()) {
                 if (!cartshopsproductsmap.containsKey(cartitem)) {
                   cartshopsproductsmap[cartitem] = 1;
-                  print("added product to map_____________");
-                  print(cartshopsproductsmap[cartitem].toString());
+                  // print("added product to map_____________");
+                  // print(cartshopsproductsmap[cartitem].toString());
                   finalcart.add(cartshopsproductsmap[cartitem].toString());
                 } else {
-                  print("counting:::::::::: ");
+                  // print("counting:::::::::: ");
                   //     cartshopsproductsmap[cartitem].toInt().toString());
                   cartshopsproductsmap[cartitem] =
                       cartshopsproductsmap[cartitem].toInt() + 1;
                 }
                 // cartshopsproductsmap.add(cartitem.toString());
-                print(cartshopsproductsmap);
+                // print(cartshopsproductsmap);
                 cartshopsmap[cartshop.toString()] = cartshopsproductsmap;
               }
             });
@@ -396,6 +398,8 @@ class _CartState extends State<Cart> {
     final prefs = await SharedPreferences.getInstance();
     usercartmap = prefs.getString("usercartmap");
     usercartmap = json.decode(usercartmap);
+    print(usercartmap);
+    print('this is the cart ');
 
     if (torestart)
       setState(() {
@@ -596,8 +600,8 @@ class _CartState extends State<Cart> {
     var newcartaddress;
 
     prefs.setString('address', json.encode(cartaddress));
-    print('thi is the new address');
-    print(prefs.getString('address'));
+    // print('thi is the new address');
+    // print(prefs.getString('address'));
   }
 
   Future<void> _googleSignUp() async {
@@ -628,14 +632,14 @@ class _CartState extends State<Cart> {
         ),
       );
       // var docRef = db.collection("cities").doc("SF");
-      print("signed in " + user.uid);
+      // print("signed in " + user.uid);
       Navigator.of(context).pop();
       _welcomePopUp(context, user.displayName);
       // used before user.uid
       final notsetup =
           await Firestore.instance.collection("users").document(user.uid).get();
       if (!notsetup.exists) {
-        print("user exists");
+        // print("user exists");
         hasprofile = true;
       }
 
@@ -671,6 +675,19 @@ class _CartState extends State<Cart> {
 
   bool alreadyChosenAddress = false;
 
+  removeShopFromCart(shop) async {
+    final prefs = await SharedPreferences.getInstance();
+    usercartmap = prefs.getString("usercartmap");
+    // prefs.remove('usercartmap');
+    if (usercartmap == null) {
+      usercartmap = {};
+    } else {
+      usercartmap = json.decode(usercartmap);
+    }
+    usercartmap.remove(shop);
+    prefs.setString('usercartmap', json.encode(usercartmap));
+  }
+
   Future setupVerification() async {
     // print("USER BEING WATCHED");
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
@@ -686,14 +703,14 @@ class _CartState extends State<Cart> {
       if (!alreadyChosenAddress) {
         chosen_address = this_user.data["chosen_address"];
       }
-      print("checking addresssss");
+      // print("checking addresssss");
       if (!prefs.containsKey('address')) {
-        print("no addressssss");
+        // print("no addressssss");
         var counter = 0;
         for (var useraddress in this_user.data['address']) {
-          print(this_user.data['address'][counter]);
+          // print(this_user.data['address'][counter]);
           if (useraddress['id'] == chosen_address) {
-            print('added');
+            // print('added');
             prefs.setString(
                 'address', this_user.data['address'][counter].toString());
           }
@@ -706,29 +723,30 @@ class _CartState extends State<Cart> {
 
       if (this_user.exists) {
         notsetup = false;
-        print("user is setup");
+        // print("user is setup");
       }
     } else {
       usersignedin = false;
-      print("usre is not signed in");
+      // print("usre is not signed in");
     }
 
     // return this_user;
   }
 
   selectAddress(String chosenAddress, int addressIndex) {
-    print(chosenAddress);
-    print(addressIndex);
+    // print(chosenAddress);
+    // print(addressIndex);
     setState(() {
       chosen_address = chosenAddress;
       alreadyChosenAddress = true;
     });
   }
 
+  bool loadingorder = false;
   String chosen_address;
   @override
   Widget build(BuildContext context) {
-    // final double itemHeight = (size.height) / 2;
+    // final double itemHeight = (size.height) /x 2;
     // final double itemWidth = size.width / 2;
     // new Date(widget.data.documents[0]['salle_date'].seconds * 1000 + widget.data.documents[0]['salle_date'].nanoseconds/1000000)
     // var date = DateTime.fromMicrosecondsSinceEpoch(
@@ -738,6 +756,7 @@ class _CartState extends State<Cart> {
     //     (widget.data.documents[0]['salle_date'] as Timestamp).toDate();
     num _defaultValue = 0;
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     // print(cart);
     List<Widget> list = new List<Widget>();
     // setupVerification();
@@ -755,6 +774,13 @@ class _CartState extends State<Cart> {
             default:
               if (snapshot.hasError)
                 return Text('Error: ${snapshot.error}');
+              else if (loadingorder)
+                return SizedBox(
+                  height: height,
+                  child: Center(
+                      child:
+                          Image.asset("assets/images/loading.gif", height: 30)),
+                );
               else
                 return Column(
                   children: <Widget>[
@@ -824,98 +850,109 @@ class _CartState extends State<Cart> {
                                           if (snapshot.hasError)
                                             return Text(
                                                 'Error: ${snapshot.error}');
-                                          else
-                                            return Column(
-                                              children: [
-                                                FutureBuilder(
-                                                  future: getShop(shop),
-                                                  builder: (context, snapshot) {
-                                                    switch (snapshot
-                                                        .connectionState) {
-                                                      case ConnectionState
-                                                          .waiting:
+                                          if (usercartmap[shop].keys.length ==
+                                              0) {
+                                            removeShopFromCart(shop);
+                                            return Container();
+                                          }
+                                          return Column(
+                                            children: [
+                                              FutureBuilder(
+                                                future: getShop(shop),
+                                                builder: (context, snapshot) {
+                                                  switch (snapshot
+                                                      .connectionState) {
+                                                    case ConnectionState
+                                                        .waiting:
+                                                      return Text(
+                                                          'Loading....');
+                                                    default:
+                                                      if (snapshot.hasError)
                                                         return Text(
-                                                            'Loading....');
-                                                      default:
-                                                        if (snapshot.hasError)
-                                                          return Text(
-                                                              'Error: ${snapshot.error}');
-                                                        else
-                                                          return Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 22.0),
-                                                            child: Align(
-                                                              alignment: Alignment
-                                                                  .centerLeft,
-                                                              child: Text(
-                                                                snapshot.data[
-                                                                    'name'],
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .left,
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                    fontSize:
-                                                                        23.0,
-                                                                    fontFamily:
-                                                                        'Axiforma',
-                                                                    color: Colors
-                                                                        .black),
-                                                              ),
+                                                            'Error: ${snapshot.error}');
+                                                      else
+                                                        return Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 22.0),
+                                                          child: Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Text(
+                                                              snapshot
+                                                                  .data['name'],
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                  fontSize:
+                                                                      23.0,
+                                                                  fontFamily:
+                                                                      'Axiforma',
+                                                                  color: Colors
+                                                                      .black),
                                                             ),
-                                                          );
-                                                    }
-                                                  },
-                                                ),
-                                                // StreamBuilder(
-                                                //     stream: Firestore.instance
-                                                //         .collection('shops')
-                                                //         .where('username', isEqualTo: shop)
-                                                //         .snapshots(),
-                                                //     builder: (context, snapshot) {
-                                                //       var shopinfo =
-                                                //           snapshot.data.docuemnts[0];
+                                                          ),
+                                                        );
+                                                  }
+                                                },
+                                              ),
+                                              // StreamBuilder(
+                                              //     stream: Firestore.instance
+                                              //         .collection('shops')
+                                              //         .where('username', isEqualTo: shop)
+                                              //         .snapshots(),
+                                              //     builder: (context, snapshot) {
+                                              //       var shopinfo =
+                                              //           snapshot.data.docuemnts[0];
 
-                                                //       return Text(
-                                                //         shopinfo['name'],
-                                                //         textAlign: TextAlign.left,
-                                                //         style: TextStyle(
-                                                //             fontWeight: FontWeight.w800,
-                                                //             fontSize: 25.0,
-                                                //             fontFamily: 'Axiforma',
-                                                //             color: Colors.black),
-                                                //       );
-                                                //     }),
-                                                for (var product
-                                                    in usercartmap[shop].keys)
-                                                  StreamBuilder<Object>(
-                                                      stream: Firestore.instance
-                                                          .collection(
-                                                              "products")
-                                                          // .where('id', isEqualTo: product)
-                                                          .document(product
-                                                              .toString())
-                                                          .snapshots(),
-                                                      builder:
-                                                          (context, snapshot) {
-                                                        if (snapshot.hasData) {
-                                                          return buildCartItem(
-                                                              snapshot.data,
-                                                              int.parse(usercartmap[
-                                                                          shop]
-                                                                      [product]
-                                                                  .toString()),
-                                                              rate);
-                                                        } else {
-                                                          return CircularProgressIndicator();
-                                                        }
-                                                      })
-                                              ],
-                                            );
+                                              //       return Text(
+                                              //         shopinfo['name'],
+                                              //         textAlign: TextAlign.left,
+                                              //         style: TextStyle(
+                                              //             fontWeight: FontWeight.w800,
+                                              //             fontSize: 25.0,
+                                              //             fontFamily: 'Axiforma',
+                                              //             color: Colors.black),
+                                              //       );
+                                              //     }),
+                                              for (var product
+                                                  in usercartmap[shop].keys)
+                                                StreamBuilder<Object>(
+                                                    stream: Firestore.instance
+                                                        .collection("products")
+                                                        // .where('id', isEqualTo: product)
+                                                        .document(
+                                                            product.toString())
+                                                        .snapshots(),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      print(
+                                                          'we are past streaming');
+                                                      print(snapshot.data);
+                                                      print(product);
+                                                      print(int.parse(
+                                                          usercartmap[shop]
+                                                                  [product]
+                                                              .toString()));
+                                                      if (snapshot.hasData) {
+                                                        return buildCartItem(
+                                                            snapshot.data,
+                                                            int.parse(usercartmap[
+                                                                        shop]
+                                                                    [product]
+                                                                .toString()),
+                                                            rate);
+                                                      } else {
+                                                        return CircularProgressIndicator();
+                                                      }
+                                                    })
+                                            ],
+                                          );
                                       }
                                     }),
                               ],
@@ -1451,9 +1488,12 @@ class _CartState extends State<Cart> {
                                               BorderRadius.circular(15.0),
                                         ),
                                         elevation: 0,
-                                        onPressed: notsetup
+                                        onPressed: notsetup || loadingorder
                                             ? null
                                             : () {
+                                                // setState(() {
+                                                //   loadingorder = true;
+                                                // });
                                                 // List products;
                                                 // var cartproduct;
                                                 // // define snapshots to use for looping
@@ -1495,6 +1535,21 @@ class _CartState extends State<Cart> {
                                                 //   print("onError");
                                                 // });
                                                 // var thecartaddress;
+                                                // var
+
+                                                // XXXXXXX
+                                                // Firestore.instance
+                                                //     .collection('shop_orders')
+                                                //     .getDocuments()
+                                                //     .then((snapshot) {
+                                                //   for (DocumentSnapshot ds
+                                                //       in snapshot.documents) {
+                                                //     ds.reference.delete();
+                                                //   }
+                                                //   ;
+                                                // });
+                                                // Navigator.pop(context);
+
                                                 getCartAddress() async {
                                                   final prefs =
                                                       await SharedPreferences
@@ -1506,13 +1561,87 @@ class _CartState extends State<Cart> {
                                                   List<String> fullorder = [];
                                                   List<String> fullorder_shops =
                                                       [];
-                                                  for (var shop
+                                                  var completeproducts = {};
+                                                  for (var cartshop
                                                       in usercartmap.keys) {
+                                                    completeproducts[cartshop] =
+                                                        {};
+                                                    var datashop =
+                                                        await Firestore.instance
+                                                            .collection("shops")
+                                                            .where('username',
+                                                                isEqualTo:
+                                                                    cartshop)
+                                                            .getDocuments();
+                                                    var rate = datashop
+                                                        .documents[0]
+                                                        .data['rate'];
+                                                    if (rate == null) {
+                                                      rate = 1;
+                                                    }
+                                                    for (var product
+                                                        in usercartmap[cartshop]
+                                                            .keys) {
+                                                      print(
+                                                          'looping through $product');
+                                                      var dataproduct =
+                                                          await Firestore
+                                                              .instance
+                                                              .collection(
+                                                                  "products")
+                                                              .document(product)
+                                                              .get();
+                                                      var newrate = rate;
+                                                      if (dataproduct.data[
+                                                              'currency'] !=
+                                                          'dollar') {
+                                                        newrate = 1;
+                                                      }
+                                                      print(dataproduct
+                                                          .documentID);
+                                                      completeproducts[cartshop]
+                                                          [product] = {
+                                                        'name': dataproduct
+                                                            .data['name'],
+                                                        'count': usercartmap[
+                                                            cartshop][product],
+                                                        'shop_price': dataproduct
+                                                                        .data[
+                                                                    'type'] !=
+                                                                'salle'
+                                                            ? int.parse(dataproduct
+                                                                    .data[
+                                                                        'shop_price']
+                                                                    .toString()) *
+                                                                newrate
+                                                            : dataproduct.data[
+                                                                    'serving_prices']
+                                                                [usercartmap[
+                                                                        cartshop]
+                                                                    [product]],
+                                                        'shop_discounted':
+                                                            dataproduct.data[
+                                                                'shop_discounted'],
+                                                        'unit': dataproduct
+                                                            .data['unit'],
+                                                        'image': dataproduct
+                                                            .data['image'],
+                                                        'type': dataproduct
+                                                            .data['type'],
+                                                        'arabic_name':
+                                                            dataproduct.data[
+                                                                'arabic_name']
+                                                      };
+                                                    }
+                                                    print(completeproducts);
+                                                    print(completeproducts[
+                                                        cartshop]);
                                                     print(
                                                         'starting orderinggggggggggggggggggggggg');
-                                                    var order_id = UniqueKey()
-                                                        .hashCode
-                                                        .toString();
+                                                    var order_id = ">>" +
+                                                        UniqueKey()
+                                                            .hashCode
+                                                            .toString();
                                                     Firestore.instance
                                                         .collection(
                                                             'shop_orders')
@@ -1520,35 +1649,79 @@ class _CartState extends State<Cart> {
                                                         .setData({
                                                       "address": thecartaddress,
                                                       "total": total.toInt(),
-                                                      "count": usercartmap[shop]
-                                                          .length,
+                                                      "count":
+                                                          usercartmap[cartshop]
+                                                              .length,
                                                       "payment":
                                                           "cashondelivery",
                                                       "date": DateTime.now(),
-                                                      "shop": shop,
+                                                      "shop": cartshop,
                                                       "products":
-                                                          usercartmap[shop],
+                                                          completeproducts[
+                                                              cartshop],
                                                       "user": uid,
                                                     });
                                                     fullorder.add(order_id);
-                                                    fullorder_shops.add(shop);
+                                                    fullorder_shops
+                                                        .add(cartshop);
                                                   }
+                                                  // for (var shop
+                                                  //     in usercartmap.keys) {
+                                                  //   print(
+                                                  //       'starting orderinggggggggggggggggggggggg');
+                                                  //   var order_id = UniqueKey()
+                                                  //       .hashCode
+                                                  //       .toString();
+                                                  //   Firestore.instance
+                                                  //       .collection(
+                                                  //           'shop_orders')
+                                                  //       .document(order_id)
+                                                  //       .setData({
+                                                  //     "address": thecartaddress,
+                                                  //     "total": total.toInt(),
+                                                  //     "count": usercartmap[shop]
+                                                  //         .length,
+                                                  //     "payment":
+                                                  //         "cashondelivery",
+                                                  //     "date": DateTime.now(),
+                                                  //     "shop": shop,
+                                                  //     "products":
+                                                  //         usercartmap[shop],
+                                                  //     "user": uid,
+                                                  //   });
+                                                  //   fullorder.add(order_id);
+                                                  //   fullorder_shops.add(shop);
+                                                  // }
+                                                  var fullorder_id = UniqueKey()
+                                                      .hashCode
+                                                      .toString();
                                                   Firestore.instance
                                                       .collection('orders')
-                                                      .document(UniqueKey()
-                                                          .hashCode
-                                                          .toString())
+                                                      .document(fullorder_id)
                                                       .setData({
                                                     "address": thecartaddress,
                                                     "total": total.toInt(),
                                                     "count": items,
                                                     "payment": "cashondelivery",
                                                     "date": DateTime.now(),
-                                                    "products": usercartmap,
+                                                    "products":
+                                                        completeproducts,
                                                     "user": uid,
                                                     "shop_list":
                                                         fullorder_shops,
                                                     "order_list": fullorder
+                                                  }).then((doc) {
+                                                    print(fullorder_id);
+                                                    Navigator.pop(context);
+
+                                                    // loadingorder = true;
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                OrderPage(
+                                                                    fullorder_id)));
+                                                  }).catchError((error) {
+                                                    print(error);
                                                   });
                                                 }
 
@@ -1637,12 +1810,17 @@ class _CartState extends State<Cart> {
   int rate = 1;
   getTotal() async {
     final prefs = await SharedPreferences.getInstance();
-    return total = prefs.getDouble('total');
+    total = prefs.getDouble('total');
+    if (total < 1) {
+      reset();
+      Navigator.pop(context);
+    }
+    return total;
   }
 
   // dynamic shopdetails;
   getShop(shop) async {
-    print('seraching for: $shop');
+    // print('seraching for: $shop');
     var document = await Firestore.instance
         .collection('shops')
         .where("username", isEqualTo: shop)
@@ -1687,13 +1865,13 @@ class _CartState extends State<Cart> {
       );
     } else {
       // cachedshops[shopName] = value.documents[0].data['rate'];
-      print("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+      // print("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
       rate = json.decode(prefs.getString("cached_shops"))[shopName];
-      print(prefs.getString("cached_shops"));
+      // print(prefs.getString("cached_shops"));
       started = true;
       // print("just got: " + rate.toString());
     }
-    debugPrint("rate is:::::" + rate.toString());
+    // debugPrint("rate is:::::" + rate.toString());
     started = true;
     // return rate = 1;
   }
@@ -1715,6 +1893,9 @@ class _CartState extends State<Cart> {
   // }
 
   Padding buildCartItem(DocumentSnapshot cartitem, int count, int rate) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     if (cartitem['currency'] != "dollar") {
       rate = 1;
     }
@@ -1759,18 +1940,48 @@ class _CartState extends State<Cart> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      cartitem['name'],
-                      // textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        height: 1.1,
-                        fontFamily: 'Axiforma',
-                        color: Colors.black,
+                    SizedBox(
+                      width: width - 150,
+                      child: Text(
+                        cartitem['name'],
+                        // textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.5,
+                          height: 1.16,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ],
+                ),
+                Visibility(
+                  visible: cartitem['type'] == 'salle' &&
+                      cartitem['arabic_name'] != null,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 3.0),
+                    child: SizedBox(
+                      width: width - 150,
+                      child: Text(
+                        cartitem['arabic_name'] != null
+                            ? cartitem['arabic_name']
+                            : '',
+                        // textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 13,
+                          height: 1.1,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -1793,6 +2004,8 @@ class _CartState extends State<Cart> {
                                     "L.L.",
                                 // overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
+
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
@@ -1813,6 +2026,7 @@ class _CartState extends State<Cart> {
                                     : "",
                                 // overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,

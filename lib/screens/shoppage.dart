@@ -1,4 +1,5 @@
 import 'package:dolovery_app/widgets/popupproduct.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:flutter_svg/svg.dart';
@@ -30,23 +31,74 @@ class _ShopPageState extends State<ShopPage> {
     super.initState();
   }
 
-  String chosen_category = "Protein";
-  String chosen_subcategory = "Protein Bar";
+  String chosen_category = '';
+  String chosen_subcategory = '';
   setSubCategory(subcat) {
     // print("asdasd");
     setState(() {
-      chosen_subcategory = subcat;
-      // print(chosen_subcategory);
+      chosen_subcategory = '';
     });
+    if (chosen_subcategory == subcat) {
+      setState(() {
+        chosen_subcategory = '';
+      });
+    } else {
+      cancelSubCategory();
+      Future.delayed(Duration(milliseconds: 100), () {
+        setState(() {
+          chosen_subcategory = subcat;
+          hideeverything = false;
+        });
+      });
+    }
+    return chosen_subcategory;
+
     // print(subcat);
+  }
+
+  bool hideeverything = false;
+  cancelCategory() {
+    setState(() {
+      chosen_category = '';
+      chosen_subcategory = '';
+      hideeverything = true;
+    });
+  }
+
+  cancelSubCategory() {
+    setState(() {
+      chosen_subcategory = '';
+      hideeverything = true;
+    });
   }
 
   setCategory(cat) {
     // print("asdasd");
-    setState(() {
-      chosen_category = cat;
-      // print(chosen_category);
-    });
+
+    print('$chosen_category is the chosen shub and new one is $cat');
+    // setState(() {
+    //   chosen_subcategory = '';
+    // });
+    if (chosen_category == cat) {
+      print('not change');
+      setState(() {
+        chosen_category = '';
+        chosen_subcategory = '';
+      });
+    } else {
+      print('changed');
+      cancelCategory();
+      Future.delayed(Duration(milliseconds: 100), () {
+        setState(() {
+          chosen_category = cat;
+          chosen_subcategory = '';
+          hideeverything = false;
+        });
+      });
+    }
+
+    return chosen_category;
+    // print("$chosen_category and ubb is $chosen_subcategory");
     // print(subcat);
   }
 
@@ -66,11 +118,14 @@ class _ShopPageState extends State<ShopPage> {
         }
       });
     }
+    print(
+        "loaded and chosen cat is $chosen_category and sub $chosen_subcategory");
+    return chosen_category;
   }
 
   @override
   Widget build(BuildContext ctxt) {
-    getcategories();
+    // getcategories();
     // GeoPoint shoplocation;
     // GeoPoint geoPoint = widget.data['location'].getGeoPoint("position");
     // print (widget.data['location']);
@@ -174,6 +229,7 @@ class _ShopPageState extends State<ShopPage> {
                   ),
                 ],
               ),
+              // Text('$chosen_category is cat and sub is $chosen_subcategory'),
               Padding(
                 padding: const EdgeInsets.only(
                     left: 0.0, right: 0.0, top: 0.0, bottom: 10.0),
@@ -372,8 +428,8 @@ class _ShopPageState extends State<ShopPage> {
                               // return w;
 
                               return Visibility(
-                                visible: widget.data['categories']
-                                    .contains(entry),
+                                visible:
+                                    widget.data['categories'].contains(entry),
                                 child: Padding(
                                   padding: first == 1
                                       ? const EdgeInsets.only(left: 10)
@@ -384,6 +440,7 @@ class _ShopPageState extends State<ShopPage> {
                                     child: GestureDetector(
                                       onTap: () {
                                         setCategory(entry);
+                                        setState(() {});
                                       },
                                       child: Container(
                                           height: 80,
@@ -460,161 +517,335 @@ class _ShopPageState extends State<ShopPage> {
                         // }
 
                         return Column(
-                            children:
-                                type['categories'].keys.map<Widget>((entry) {
-                          // print("key");
-                          // var w = Text("ssss");
-                          // type['categories'](entry.key);
-                          // return w;
-                          // return Text(entry);
-                          // return Row(children: [
-                          //   type['categories'][entry].map<Widget>((entry) {
-                          //     return Text("text");
-                          //   })
-                          // ]);
-                          if (!widget.data['categories'].contains(entry))
-                            return Container(
-                              child: null,
-                            );
-                          else
-                            return SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: Row(
-                                    children: List<Widget>.generate(
-                                        type['categories'][entry].length,
-                                        (int index) {
-                                  // print(categories[index]);
-                                  return Visibility(
-                                    visible: entry == chosen_category &&
-                                            widget.data['subcategories']
-                                                .contains(type['categories'][entry]
-                                                        [index])
-                                        ? true
-                                        : false,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 0.0,
-                                          bottom: 0,
-                                          top: 0,
-                                          left: 0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          // print("something");
-                                          setSubCategory(
-                                              type['categories'][entry][index]);
-                                          // setState(() {
-                                          //   chosen_subcategory =
-                                          //       type['categories'][entry][index];
-                                          //   print(chosen_subcategory);
-                                          // });
-                                        },
-                                        child: Container(
-                                            height: 50,
-                                            // 180
-                                            width: 110,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: <Widget>[
-                                                // Image.asset(
-                                                //     "assets/images/meaticon.png",
-                                                //     height: 30),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    type['categories'][entry]
-                                                        [index],
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      fontSize: 12.0,
-                                                      height: 1.3,
-                                                      fontFamily: 'Axiforma',
-                                                      color: type['categories']
-                                                                      [entry]
-                                                                  [index] ==
-                                                              chosen_subcategory
-                                                          ? Colors.red
-                                                          : Colors.grey,
+                          children: [
+                            Column(
+                                children: type['categories']
+                                    .keys
+                                    .map<Widget>((entry) {
+                              // print("key");
+                              // var w = Text("ssss");
+                              // type['categories'](entry.key);
+                              // return w;
+                              // return Text(entry);
+                              // return Row(children: [
+                              //   type['categories'][entry].map<Widget>((entry) {
+                              //     return Text("text");
+                              //   })
+                              // ]);
+                              if (!widget.data['categories'].contains(entry))
+                                return Container(
+                                  child: null,
+                                );
+                              else
+                                return SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Row(
+                                        children: List<Widget>.generate(
+                                            type['categories'][entry].length,
+                                            (int index) {
+                                      // print(categories[index]);
+                                      return Visibility(
+                                        visible: entry == chosen_category &&
+                                                widget.data['subcategories']
+                                                    .contains(type['categories']
+                                                        [entry][index])
+                                            ? true
+                                            : false,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 0.0,
+                                              bottom: 0,
+                                              top: 0,
+                                              left: 0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              // print("something");
+                                              setSubCategory(type['categories']
+                                                  [entry][index]);
+                                              // setState(() {});
+                                              // setState(() {
+                                              //   chosen_subcategory =
+                                              //       type['categories'][entry][index];
+                                              //   print(chosen_subcategory);
+                                              // });
+                                            },
+                                            child: Container(
+                                                height: 50,
+                                                // 180
+                                                width: 110,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: <Widget>[
+                                                    // Image.asset(
+                                                    //     "assets/images/meaticon.png",
+                                                    //     height: 30),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Text(
+                                                        type['categories']
+                                                            [entry][index],
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          fontSize: 12.0,
+                                                          height: 1.3,
+                                                          fontFamily:
+                                                              'Axiforma',
+                                                          color: type['categories']
+                                                                          [
+                                                                          entry]
+                                                                      [index] ==
+                                                                  chosen_subcategory
+                                                              ? Colors.red
+                                                              : Colors.grey,
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )),
-                                      ),
-                                    ),
-                                  );
-                                })),
+                                                  ],
+                                                )),
+                                          ),
+                                        ),
+                                      );
+                                    })),
+                                  ),
+                                );
+                            }).toList()),
+                            // Text('$hideeverything is the hideeverything'),
+                            Visibility(
+                              visible: hideeverything,
+                              child: SizedBox(
+                                height: 200,
+                                child: Center(
+                                    child: Image.asset(
+                                        "assets/images/loading.gif",
+                                        height: 30)),
                               ),
-                            );
-                        }).toList());
+                            ),
+
+                            Visibility(
+                              visible: !hideeverything &&
+                                      chosen_category != '' &&
+                                      chosen_subcategory != ''
+                                  ? true
+                                  : false,
+                              // visible: false,
+                              child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 5.0, right: 5, top: 0, bottom: 0),
+                                  child: StreamBuilder(
+                                    stream: Firestore.instance
+                                        .collection('products')
+                                        .where('shop',
+                                            isEqualTo: widget.data['username'])
+                                        .where('category',
+                                            isEqualTo: chosen_category)
+                                        .where('subcategory',
+                                            isEqualTo: chosen_subcategory)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return GridView.count(
+                                          crossAxisCount: 2,
+                                          childAspectRatio:
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  1150,
+                                          controller: new ScrollController(
+                                              keepScrollOffset: false),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          children: List.generate(
+                                              snapshot.data.documents.length,
+                                              (index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                openProductPopUp(context,
+                                                    snapshot.data, index);
+                                              },
+                                              child: ProductImage(
+                                                  productName: snapshot.data
+                                                      .documents[index]['name'],
+                                                  productImage: snapshot.data.documents[index]
+                                                      ['image'],
+                                                  productPrice: snapshot
+                                                      .data
+                                                      .documents[index]
+                                                          ['shop_price']
+                                                      .toString(),
+                                                  shopName: snapshot.data.documents[index]
+                                                      ['shop'],
+                                                  productUnit: snapshot.data.documents[index]['unit'] != null
+                                                      ? snapshot.data.documents[index]
+                                                          ['unit']
+                                                      : '',
+                                                  productCurrency: snapshot.data.documents[index]['currency'] != null
+                                                      ? snapshot.data.documents[index]['currency']
+                                                      : "lebanese"),
+                                            );
+                                          }).toList(),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return Text(snapshot.error.toString());
+                                      }
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    },
+                                  )),
+                            ),
+                            Visibility(
+                              visible: !hideeverything &&
+                                      chosen_category != '' &&
+                                      chosen_subcategory == ''
+                                  ? true
+                                  : false,
+                              // visible: !hideeverything,
+                              child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 5.0, right: 5, top: 0, bottom: 0),
+                                  child: StreamBuilder(
+                                    stream: Firestore.instance
+                                        .collection('products')
+                                        .where('shop',
+                                            isEqualTo: widget.data['username'])
+                                        .where('category',
+                                            isEqualTo: chosen_category)
+                                        // .where('subcategory',
+                                        //     isEqualTo: chosen_subcategory)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return GridView.count(
+                                          crossAxisCount: 2,
+                                          childAspectRatio:
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  1150,
+                                          controller: new ScrollController(
+                                              keepScrollOffset: false),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          children: List.generate(
+                                              snapshot.data.documents.length,
+                                              (index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                openProductPopUp(context,
+                                                    snapshot.data, index);
+                                              },
+                                              child: ProductImage(
+                                                  productName: snapshot.data
+                                                      .documents[index]['name'],
+                                                  productImage: snapshot.data.documents[index]
+                                                      ['image'],
+                                                  productPrice: snapshot
+                                                      .data
+                                                      .documents[index]
+                                                          ['shop_price']
+                                                      .toString(),
+                                                  shopName: snapshot.data.documents[index]
+                                                      ['shop'],
+                                                  productUnit: snapshot.data.documents[index]['unit'] != null
+                                                      ? snapshot.data.documents[index]
+                                                          ['unit']
+                                                      : '',
+                                                  productCurrency: snapshot.data.documents[index]['currency'] != null
+                                                      ? snapshot.data.documents[index]['currency']
+                                                      : "lebanese"),
+                                            );
+                                          }).toList(),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return Text(snapshot.error.toString());
+                                      }
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    },
+                                  )),
+                            ),
+                            Visibility(
+                              visible: !hideeverything &&
+                                      chosen_category == '' &&
+                                      chosen_subcategory == ''
+                                  ? true
+                                  : false,
+                              // visible: false,
+                              child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 5.0, right: 5, top: 0, bottom: 0),
+                                  child: StreamBuilder(
+                                    stream: Firestore.instance
+                                        .collection('products')
+                                        .where('shop',
+                                            isEqualTo: widget.data['username'])
+                                        // .where('category', isEqualTo: chosen_category)
+                                        // .where('subcategory',
+                                        //     isEqualTo: chosen_subcategory)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return GridView.count(
+                                          crossAxisCount: 2,
+                                          childAspectRatio:
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  1150,
+                                          controller: new ScrollController(
+                                              keepScrollOffset: false),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          children: List.generate(
+                                              snapshot.data.documents.length,
+                                              (index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                openProductPopUp(context,
+                                                    snapshot.data, index);
+                                              },
+                                              child: ProductImage(
+                                                  productName: snapshot.data
+                                                      .documents[index]['name'],
+                                                  productImage: snapshot.data.documents[index]
+                                                      ['image'],
+                                                  productPrice: snapshot
+                                                      .data
+                                                      .documents[index]
+                                                          ['shop_price']
+                                                      .toString(),
+                                                  shopName: snapshot.data.documents[index]
+                                                      ['shop'],
+                                                  productUnit: snapshot.data.documents[index]['unit'] != null
+                                                      ? snapshot.data.documents[index]
+                                                          ['unit']
+                                                      : '',
+                                                  productCurrency: snapshot.data.documents[index]['currency'] != null
+                                                      ? snapshot.data.documents[index]['currency']
+                                                      : "lebanese"),
+                                            );
+                                          }).toList(),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return Text(snapshot.error.toString());
+                                      }
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    },
+                                  )),
+                            ),
+                          ],
+                        );
                       },
                     ),
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            left: 5.0, right: 5, top: 0, bottom: 0),
-                        child: StreamBuilder(
-                          stream: Firestore.instance
-                              .collection('products')
-                              .where('shop', isEqualTo: widget.data['username'])
-                              .where('category', isEqualTo: chosen_category)
-                              .where('subcategory',
-                                  isEqualTo: chosen_subcategory)
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return GridView.count(
-                                crossAxisCount: 2,
-                                childAspectRatio:
-                                    MediaQuery.of(context).size.height / 1150,
-                                controller: new ScrollController(
-                                    keepScrollOffset: false),
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                children: List.generate(20, (index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      openProductPopUp(
-                                          context, snapshot.data, index);
-                                    },
-                                    child: ProductImage(
-                                        productName: snapshot.data.documents[index]
-                                            ['name'],
-                                        productImage: snapshot
-                                            .data.documents[index]['image'],
-                                        productPrice: snapshot
-                                            .data.documents[index]['shop_price']
-                                            .toString(),
-                                        shopName: snapshot.data.documents[index]
-                                            ['shop'],
-                                        productUnit:
-                                            snapshot.data.documents[index]['unit'] != null
-                                                ? snapshot.data.documents[index]
-                                                    ['unit']
-                                                : '',
-                                        productCurrency:
-                                            snapshot.data.documents[index]['currency'] != null
-                                                ? snapshot.data.documents[index]
-                                                    ['currency']
-                                                : "lebanese"),
-                                  );
-                                }).toList(),
-                              );
-                            } else if (snapshot.hasError) {
-                              return Text(snapshot.error.toString());
-                            }
-                            return Center(child: CircularProgressIndicator());
-                          },
-                        )),
-                    // List<Widget>.generate(categories.length, (int index) {
-                    //   Container(child: Text("ssss"));
-                    //   print(categories[index]);
-                    //   // return ProduceAction(int, index);
-                    // }),
                   ],
                 ),
               ),

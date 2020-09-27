@@ -1,5 +1,6 @@
 import 'package:dolovery_app/screens/addadress.dart';
 import 'package:dolovery_app/screens/editadress.dart';
+import 'package:dolovery_app/screens/orderpage.dart';
 import 'package:dolovery_app/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:dolovery_app/widgets/recentorder.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:dolovery_app/widgets/signinpopup.dart' as signin;
 
 class ProfileMainScreen extends StatefulWidget {
@@ -721,7 +723,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 30.0, top: 30, bottom: 10),
+                                  left: 30.0, top: 30, bottom: 15),
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
@@ -737,26 +739,56 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             ),
                             StreamBuilder(
                               stream: Firestore.instance
-                                  .collection('shops')
+                                  .collection('orders')
+                                  .where('user', isEqualTo: uid)
+                                  .limit(3)
                                   .snapshots(),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   print(snapshot);
                                   return SingleChildScrollView(
                                       scrollDirection: Axis.vertical,
-                                      child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: List<Widget>.generate(3,
-                                              (int index) {
-                                            // print(categories[index]);
-                                            return RecentOrder(
-                                                orderDate: "12 May, 2020",
-                                                orderCount: '3',
-                                                orderImage:
-                                                    'https://cdn.cnn.com/cnnnext/dam/assets/180316113418-travel-with-a-dog-3-full-169.jpeg',
-                                                orderPrice: 7500.toString());
-                                          })));
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8.0),
+                                        child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: List<Widget>.generate(
+                                                snapshot.data.documents.length,
+                                                (int index) {
+                                              // print(categories[index]);
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              OrderPage(snapshot
+                                                                  .data
+                                                                  .documents[
+                                                                      index]
+                                                                  .documentID)));
+                                                },
+                                                child: RecentOrder(
+                                                    orderDate: snapshot.data
+                                                            .documents[index]
+                                                        ['date'],
+                                                    orderCount: snapshot
+                                                        .data
+                                                        .documents[index]
+                                                            ['count']
+                                                        .toInt(),
+                                                    orderImage: snapshot.data
+                                                            .documents[index]
+                                                        ['image'],
+                                                    orderPrice: snapshot
+                                                        .data
+                                                        .documents[index]
+                                                            ['total']
+                                                        .toString()),
+                                              );
+                                            })),
+                                      ));
                                 } else if (snapshot.hasError) {
                                   return Text(snapshot.error.toString());
                                 }
