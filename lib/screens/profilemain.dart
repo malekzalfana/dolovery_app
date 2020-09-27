@@ -686,8 +686,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                       child: Text(
                                         this_user.data['fullname'],
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 38.0,
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 32.0,
                                           height: 1.1,
                                           fontFamily: 'Axiforma',
                                           color: Colors.black,
@@ -802,7 +802,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 30.0, top: 30, bottom: 10),
+                                  left: 30.0, top: 10, bottom: 10),
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(

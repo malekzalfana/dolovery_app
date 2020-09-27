@@ -113,7 +113,7 @@ class _OrderPageState extends State<OrderPage> {
                 }
                 var order = snapshot.data;
                 return SizedBox(
-                  width: width - 44,
+                  width: width - 20,
                   child: Container(
                     // color: Colors.grey[200],
                     child: Padding(
@@ -178,13 +178,13 @@ class _OrderPageState extends State<OrderPage> {
                           SizedBox(height: 0),
                           Padding(
                             padding:
-                                const EdgeInsets.only(top: 10.0, bottom: 10),
+                                const EdgeInsets.only(top: 10.0, bottom: 0),
                             child: Text(
                               'Total Price:',
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 19.0,
+                                  fontSize: 17.0,
                                   fontFamily: 'Axiforma',
                                   color: Colors.black),
                             ),
@@ -197,7 +197,7 @@ class _OrderPageState extends State<OrderPage> {
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 23.0,
+                                  fontSize: 25.0,
                                   fontFamily: 'Axiforma',
                                   color: Colors.redAccent[700]),
                             ),
@@ -308,7 +308,7 @@ class _OrderPageState extends State<OrderPage> {
                 )),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(1.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -317,7 +317,7 @@ class _OrderPageState extends State<OrderPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      width: width - 200,
+                      width: width - 160,
                       child: Text(
                         product_name,
                         // textAlign: TextAlign.left,
@@ -325,7 +325,7 @@ class _OrderPageState extends State<OrderPage> {
                         maxLines: 2,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 13.5,
+                          fontSize: 13,
                           height: 1.16,
                           fontFamily: 'Axiforma',
                           color: Colors.black,
@@ -364,7 +364,7 @@ class _OrderPageState extends State<OrderPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(top: 0.0),
+                        padding: const EdgeInsets.only(top: 4.0),
                         child: Row(
                           children: [
                             Visibility(
@@ -380,7 +380,7 @@ class _OrderPageState extends State<OrderPage> {
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 13.5,
+                                  fontSize: 13,
                                   fontFamily: 'Axiforma',
                                   color: Colors.redAccent[700],
                                 ),
@@ -396,7 +396,7 @@ class _OrderPageState extends State<OrderPage> {
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 13.5,
+                                  fontSize: 13,
                                   fontFamily: 'Axiforma',
                                   color: Colors.redAccent[700],
                                 ),

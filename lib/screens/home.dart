@@ -1,5 +1,6 @@
 import 'package:dolovery_app/screens/addadress.dart';
 import 'package:dolovery_app/screens/search.dart';
+import 'package:dolovery_app/screens/shoplisting.dart';
 import 'package:dolovery_app/widgets/product.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -103,7 +104,7 @@ class HomeScreenState extends State<HomeScreen> {
     LocationData myLocation;
     String error;
     Location location = new Location();
-    if (c_position.length > 0) {
+    if (c_position != null && c_position.length > 0) {
       // print("locaiton exists");
       return true;
     }
@@ -778,7 +779,10 @@ class HomeScreenState extends State<HomeScreen> {
           GestureDetector(
             onTap: () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => TabsDemo()))
+                  .push(MaterialPageRoute(
+                      builder: (context) => ShopListing(
+                            type: 'lebanese',
+                          )))
                   .then((_) {
                 refreshcart();
               });
@@ -847,7 +851,9 @@ class HomeScreenState extends State<HomeScreen> {
             onTap: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(
-                      builder: (context) => SupplementsScreen()))
+                      builder: (context) => ShopListing(
+                            type: 'supplements',
+                          )))
                   .then((_) {
                 refreshcart();
               });
@@ -915,7 +921,10 @@ class HomeScreenState extends State<HomeScreen> {
           GestureDetector(
             onTap: () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => PetsScreen()))
+                  .push(MaterialPageRoute(
+                      builder: (context) => ShopListing(
+                            type: 'pets',
+                          )))
                   .then((_) {
                 refreshcart();
               });
@@ -1310,7 +1319,9 @@ class HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(
-                        builder: (context) => SupplementsScreen()))
+                        builder: (context) => ShopListing(
+                              type: 'supplements',
+                            )))
                     .then((_) {
                   refreshcart();
                 });
@@ -1326,7 +1337,7 @@ class HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "View All Suppliments Products".toUpperCase(),
+                    "View All Supplements Products".toUpperCase(),
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 14.0,
