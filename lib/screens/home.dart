@@ -551,772 +551,305 @@ class HomeScreenState extends State<HomeScreen> {
         //   ),
         // ),
         body: SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 10.0, right: 10.0, top: 30.0, bottom: 10.0),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 5.0),
-                  child: Icon(
-                    Icons.near_me,
-                    color: Colors.redAccent[700],
-                    size: 20.0,
-                  ),
-                ),
-                Text(
-                  "Delivering to",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.redAccent[700],
-                  ),
-                ),
-                Visibility(
-                  visible: c_position == null ? true : false,
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0),
-                      ),
-                      onPressed: () {
-                        getLocation();
-                      },
+      child: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 10.0, right: 10.0, top: 0.0, bottom: 10.0),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5.0),
+                    child: Icon(
+                      Icons.near_me,
                       color: Colors.redAccent[700],
-                      textColor: Colors.white,
-                      minWidth: 0,
-                      height: 0,
-                      // padding: EdgeInsets.zero,
-                      padding:
-                          EdgeInsets.only(left: 6, top: 0, right: 6, bottom: 1),
-                      child: FutureBuilder(
-                        future: getLocation(),
-                        builder: (context, snapshot) {
-                          return Text(
-                            'Enable Location',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.white,
-                            ),
-                          );
-                        },
-                      ),
+                      size: 20.0,
                     ),
                   ),
-                ),
-                Visibility(
-                  visible: c_position == null ? false : true,
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0),
-                      ),
-                      onPressed: () {
-                        // _signInPopUp(context);
-                      },
-                      color: Colors.redAccent[700],
-                      textColor: Colors.white,
-                      minWidth: 0,
-                      height: 0,
-                      // padding: EdgeInsets.zero,
-                      padding:
-                          EdgeInsets.only(left: 6, top: 0, right: 6, bottom: 1),
-                      child: FutureBuilder(
-                        future: getLocation(),
-                        builder: (context, snapshot) {
-                          return Text(
-                            c_position.toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.white,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 20.0, right: 10.0, top: 0.0, bottom: 10.0),
-            child: Row(
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    _signInOut();
-                  },
-                  child: Text(
-                    "What are you looking for?",
+                  Text(
+                    "Delivering to",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
+                      fontSize: 16.0,
                       fontFamily: 'Axiforma',
-                      color: Colors.black,
+                      color: Colors.redAccent[700],
                     ),
                   ),
-                )
-              ],
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => Search()))
-                  .then((_) {
-                refreshcart();
-              });
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(left: 0, right: 10),
-              child: Container(
-                margin: EdgeInsets.symmetric(vertical: 0),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                height: 55,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  // color: Color(0xFFF5F5F7),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Image.asset("assets/icons/searchicon.png", height: 16),
-                    SizedBox(width: 16),
-                    Container(
-                      child: Text(
-                        "Search for anything",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontFamily: "Axiforma",
-                          color: Colors.black26,
+                  Visibility(
+                    visible: c_position == null ? true : false,
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.0),
+                        ),
+                        onPressed: () {
+                          getLocation();
+                        },
+                        color: Colors.redAccent[700],
+                        textColor: Colors.white,
+                        minWidth: 0,
+                        height: 0,
+                        // padding: EdgeInsets.zero,
+                        padding: EdgeInsets.only(
+                            left: 6, top: 0, right: 6, bottom: 1),
+                        child: FutureBuilder(
+                          future: getLocation(),
+                          builder: (context, snapshot) {
+                            return Text(
+                              'Enable Location',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.white,
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              // Navigator.of(context)
-              //     .push(MaterialPageRoute(builder: (context) => SalleScreen() ));
-              // setState(
-              //   () {
-              //     widget._selectedItemIndex = 2;
-              //   },
-              // );
-              print('clicked');
-              widget.notifyParent();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                height: 135,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 2.2,
-                      blurRadius: 2.5,
-                      offset: Offset(0, 4), // changes position of shadow
                     ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40.0, left: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Meal Basket",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 20.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text(
-                            "Everyday a new recipe!",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.redAccent[700],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Image.asset(
-                      'assets/images/salle.png',
-                      width: 120,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(
-                      builder: (context) => ShopListing(
-                            type: 'lebanese',
-                          )))
-                  .then((_) {
-                refreshcart();
-              });
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                height: 135,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 2.2,
-                      blurRadius: 2.5,
-                      offset: Offset(0, 4), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40.0, left: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "100% Lebanese",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 20.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text(
-                            "20+ Shops ready to deliver",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.redAccent[700],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Image.asset(
-                      'assets/images/lebsec.jpg',
-                      width: 120,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(
-                      builder: (context) => ShopListing(
-                            type: 'supplements',
-                          )))
-                  .then((_) {
-                refreshcart();
-              });
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                height: 135,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 2.2,
-                      blurRadius: 2.5,
-                      offset: Offset(0, 4), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40.0, left: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Supplements",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 20.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text(
-                            "20+ Shops ready to deliver",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.redAccent[700],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Image.asset(
-                      'assets/images/supsec.png',
-                      width: 120,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(
-                      builder: (context) => ShopListing(
-                            type: 'pets',
-                          )))
-                  .then((_) {
-                refreshcart();
-              });
-              ;
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                height: 135,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 2.2,
-                      blurRadius: 2.5,
-                      offset: Offset(0, 4), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40.0, left: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Pet Shops",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 20.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text(
-                            "20+ Shops ready to deliver",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.redAccent[700],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Image.asset(
-                      'assets/images/petsec.png',
-                      width: 120,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(14.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  "100% Lebanese",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.black,
                   ),
-                ),
-                GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProfileScreen()));
-                    },
-                    child: GestureDetector(
-                      onTap: () {
-                        FirebaseAuth.instance.signOut().then((onValue) {
-                          print("JUST LOGGED OUT");
-                        });
-                      },
-                      child: Image.asset("assets/images/fullfilldolovery.png",
-                          height: 23),
-                    ))
-              ],
-            ),
-          ),
-          Padding(
-              padding:
-                  const EdgeInsets.only(left: 5.0, right: 5, top: 0, bottom: 0),
-              child: StreamBuilder(
-                stream: Firestore.instance
-                    .collection('products')
-                    .where('type', isEqualTo: 'lebanese')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return GridView.count(
-                      crossAxisCount: 2,
-                      childAspectRatio: (itemWidth / itemHeight),
-                      controller: new ScrollController(keepScrollOffset: false),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      children: List.generate(8, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            openProductPopUp(
-                                context, snapshot.data, index, refreshcart);
+                  Visibility(
+                    visible: c_position == null ? false : true,
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.0),
+                        ),
+                        onPressed: () {
+                          // _signInPopUp(context);
+                        },
+                        color: Colors.redAccent[700],
+                        textColor: Colors.white,
+                        minWidth: 0,
+                        height: 0,
+                        // padding: EdgeInsets.zero,
+                        padding: EdgeInsets.only(
+                            left: 6, top: 0, right: 6, bottom: 1),
+                        child: FutureBuilder(
+                          future: getLocation(),
+                          builder: (context, snapshot) {
+                            return Text(
+                              c_position.toString(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.white,
+                              ),
+                            );
                           },
-                          child: ProductImage(
-                            productName: snapshot.data.documents[0]['name'],
-                            productImage: snapshot.data.documents[0]['image'],
-                            productPrice: snapshot
-                                .data.documents[0]['shop_price']
-                                .toString(),
-                            shopName: snapshot.data.documents[0]['shop'],
-                            productUnit:
-                                snapshot.data.documents[0]['unit'] != null
-                                    ? snapshot.data.documents[0]['unit']
-                                    : '',
-                            productCurrency:
-                                snapshot.data.documents[0]['currency'] != null
-                                    ? snapshot.data.documents[0]['currency']
-                                    : "lebanese",
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
-              )),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20),
-            child: MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(8)),
-              onPressed: () {
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20.0, right: 10.0, top: 0.0, bottom: 10.0),
+              child: Row(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      _signInOut();
+                    },
+                    child: Text(
+                      "What are you looking for?",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
                 Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => TabsDemo()))
+                    .push(MaterialPageRoute(builder: (context) => Search()))
                     .then((_) {
                   refreshcart();
                 });
               },
-              elevation: 0,
-              color: Colors.grey[100],
-              // textColor: Colors.black45,
-              minWidth: MediaQuery.of(context).size.width - 20,
-              height: 0,
-              // padding: EdgeInsets.zero,
-              padding: EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "View All Lebanese Products".toUpperCase(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 14.0,
-                      fontFamily: 'Axiforma',
-                      color: Colors.black38,
-                    ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 0, right: 10),
+                child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 0),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  height: 55,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    // color: Color(0xFFF5F5F7),
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  Icon(
-                    Icons.keyboard_arrow_right,
-                    color: Colors.black38,
-                    size: 20.0,
+                  child: Row(
+                    children: <Widget>[
+                      Image.asset("assets/icons/searchicon.png", height: 16),
+                      SizedBox(width: 16),
+                      Container(
+                        child: Text(
+                          "Search for anything",
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontFamily: "Axiforma",
+                            color: Colors.black26,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(14.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  "Monthly Bundle",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.black,
-                  ),
-                ),
-                GestureDetector(
-                    onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) => AddAddress()));
-                    },
-                    child: Image.asset("assets/images/fullfilldolovery.png",
-                        height: 23))
-              ],
-            ),
-          ),
-          Padding(
-              padding: const EdgeInsets.only(
-                  left: 10.0, right: 10, top: 0, bottom: 20),
-              child: StreamBuilder(
-                stream: Firestore.instance.collection('bundles').snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: Hexcolor(snapshot.data.documents[0]['bcolor']),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 2.2,
-                            blurRadius: 2.5,
-                            offset: Offset(0, 4), // changes position of shadow
-                          ),
-                        ],
+            GestureDetector(
+              onTap: () {
+                // Navigator.of(context)
+                //     .push(MaterialPageRoute(builder: (context) => SalleScreen() ));
+                // setState(
+                //   () {
+                //     widget._selectedItemIndex = 2;
+                //   },
+                // );
+                print('clicked');
+                widget.notifyParent();
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  height: 135,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 2.2,
+                        blurRadius: 2.5,
+                        offset: Offset(0, 4), // changes position of shadow
                       ),
-                      child: Row(
-                        children: <Widget>[
-                          Flexible(
-                            flex: 2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 15, left: 15),
-                                  child: Text(
-                                    snapshot.data.documents[0]['title'],
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 18.0,
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Align(
-                                    alignment: Alignment.bottomLeft,
-                                    child: Text(
-                                      snapshot.data.documents[0]['price'] +
-                                          "L.L.",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 17.0,
-                                        fontFamily: 'Axiforma',
-                                        color: Hexcolor(snapshot
-                                            .data.documents[0]['buttoncolor']),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 10, left: 15),
-                                  child: Text(
-                                    snapshot.data.documents[0]['details'],
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 13.0,
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                      snapshot.data.documents[0]['image']),
-                                  fit: BoxFit.cover,
-                                ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40.0, left: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Meal Basket",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 20.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black,
                               ),
-                              child: null /* add child content here */,
                             ),
-                          )
-                        ],
+                            Text(
+                              "Everyday a new recipe!",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.redAccent[700],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
-              )),
-          Padding(
-            padding: const EdgeInsets.all(14.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  "Supplements",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.black,
+                      Image.asset(
+                        'assets/images/salle.png',
+                        width: 120,
+                      )
+                    ],
                   ),
                 ),
-                GestureDetector(
-                    onTap: () {
-                      () {};
-                    },
-                    child: Image.asset("assets/images/fullfilldolovery.png",
-                        height: 23))
-              ],
+              ),
             ),
-          ),
-          Padding(
-              padding:
-                  const EdgeInsets.only(left: 5.0, right: 5, top: 0, bottom: 0),
-              child: StreamBuilder(
-                stream: Firestore.instance
-                    .collection('products')
-                    .where('type', isEqualTo: 'Supplements')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return GridView.count(
-                      crossAxisCount: 2,
-                      childAspectRatio: (itemWidth / itemHeight),
-                      controller: new ScrollController(keepScrollOffset: false),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      children: List.generate(8, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            openProductPopUp(
-                                context, snapshot.data, index, refreshcart);
-                          },
-                          child: ProductImage(
-                            productName: snapshot.data.documents[index]['name'],
-                            productImage: snapshot.data.documents[index]
-                                ['image'],
-                            productPrice: snapshot
-                                .data.documents[index]['shop_price']
-                                .toString(),
-                            shopName: snapshot.data.documents[index]['shop'],
-                            productUnit:
-                                snapshot.data.documents[index]['unit'] != null
-                                    ? snapshot.data.documents[index]['unit']
-                                    : '',
-                            productCurrency: snapshot.data.documents[index]
-                                        ['currency'] !=
-                                    null
-                                ? snapshot.data.documents[index]['currency']
-                                : "lebanese",
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
-              )),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20),
-            child: MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(8)),
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => ShopListing(
+                              type: 'lebanese',
+                            )))
+                    .then((_) {
+                  refreshcart();
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  height: 135,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 2.2,
+                        blurRadius: 2.5,
+                        offset: Offset(0, 4), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40.0, left: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "100% Lebanese",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 20.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              "20+ Shops ready to deliver",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.redAccent[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Image.asset(
+                        'assets/images/lebsec.jpg',
+                        width: 120,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(
                         builder: (context) => ShopListing(
@@ -1326,96 +859,573 @@ class HomeScreenState extends State<HomeScreen> {
                   refreshcart();
                 });
               },
-              elevation: 0,
-              color: Colors.grey[100],
-              // textColor: Colors.black45,
-              minWidth: MediaQuery.of(context).size.width - 20,
-              height: 0,
-              // padding: EdgeInsets.zero,
-              padding: EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  height: 135,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 2.2,
+                        blurRadius: 2.5,
+                        offset: Offset(0, 4), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40.0, left: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Supplements",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 20.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              "20+ Shops ready to deliver",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.redAccent[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Image.asset(
+                        'assets/images/supsec.png',
+                        width: 120,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => ShopListing(
+                              type: 'pets',
+                            )))
+                    .then((_) {
+                  refreshcart();
+                });
+                ;
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  height: 135,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 2.2,
+                        blurRadius: 2.5,
+                        offset: Offset(0, 4), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40.0, left: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Pet Shops",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 20.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              "20+ Shops ready to deliver",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.redAccent[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Image.asset(
+                        'assets/images/petsec.png',
+                        width: 120,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(14.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    "View All Supplements Products".toUpperCase(),
+                    "100% Lebanese",
                     style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26.0,
                       fontFamily: 'Axiforma',
-                      color: Colors.black38,
+                      color: Colors.black,
                     ),
                   ),
-                  Icon(
-                    Icons.keyboard_arrow_right,
-                    color: Colors.black38,
-                    size: 20.0,
-                  ),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ProfileScreen()));
+                      },
+                      child: GestureDetector(
+                        onTap: () {
+                          FirebaseAuth.instance.signOut().then((onValue) {
+                            print("JUST LOGGED OUT");
+                          });
+                        },
+                        child: Image.asset("assets/images/fullfilldolovery.png",
+                            height: 23),
+                      ))
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(14.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  "Pet Shops",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.black,
-                  ),
+            Padding(
+                padding: const EdgeInsets.only(
+                    left: 5.0, right: 5, top: 0, bottom: 0),
+                child: StreamBuilder(
+                  stream: Firestore.instance
+                      .collection('products')
+                      .where('type', isEqualTo: 'lebanese')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GridView.count(
+                        crossAxisCount: 2,
+                        childAspectRatio: (itemWidth / itemHeight),
+                        controller:
+                            new ScrollController(keepScrollOffset: false),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        children: List.generate(8, (index) {
+                          return GestureDetector(
+                            onTap: () {
+                              openProductPopUp(
+                                  context, snapshot.data, index, refreshcart);
+                            },
+                            child: ProductImage(
+                              productName: snapshot.data.documents[0]['name'],
+                              productImage: snapshot.data.documents[0]['image'],
+                              productPrice: snapshot
+                                  .data.documents[0]['shop_price']
+                                  .toString(),
+                              shopName: snapshot.data.documents[0]['shop'],
+                              productUnit:
+                                  snapshot.data.documents[0]['unit'] != null
+                                      ? snapshot.data.documents[0]['unit']
+                                      : '',
+                              productCurrency:
+                                  snapshot.data.documents[0]['currency'] != null
+                                      ? snapshot.data.documents[0]['currency']
+                                      : "lebanese",
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  },
+                )),
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20),
+              child: MaterialButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(8)),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => TabsDemo()))
+                      .then((_) {
+                    refreshcart();
+                  });
+                },
+                elevation: 0,
+                color: Colors.grey[100],
+                // textColor: Colors.black45,
+                minWidth: MediaQuery.of(context).size.width - 20,
+                height: 0,
+                // padding: EdgeInsets.zero,
+                padding:
+                    EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "View All Lebanese Products".toUpperCase(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 14.0,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black38,
+                      ),
+                    ),
+                    Icon(
+                      Icons.keyboard_arrow_right,
+                      color: Colors.black38,
+                      size: 20.0,
+                    ),
+                  ],
                 ),
-                GestureDetector(
-                    onTap: () {
-                      // reset();
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) => ProfileScreen()));
-                    },
-                    child: Image.asset("assets/images/fullfilldolovery.png",
-                        height: 23))
-              ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: StreamBuilder(
-              stream: Firestore.instance
-                  .collection('shops')
-                  .where('type', isEqualTo: 'pets')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  // print(snapshot);
-                  return SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                          children: List<Widget>.generate(10, (int index) {
-                        // print(categories[index]);
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    ShopPage(snapshot.data.documents[1])));
-                          },
-                          child: ShopImage(
-                              shopName: snapshot.data.documents[0]['name'],
-                              shopIndex: index,
-                              shopImage: snapshot.data.documents[0]['image'],
-                              shopTime: snapshot.data.documents[0]['time']
-                                  .toString()),
-                        );
-                      })));
-                } else if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
-                }
-                return Center(child: CircularProgressIndicator());
-              },
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "Monthly Bundle",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26.0,
+                      fontFamily: 'Axiforma',
+                      color: Colors.black,
+                    ),
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) => AddAddress()));
+                      },
+                      child: Image.asset("assets/images/fullfilldolovery.png",
+                          height: 23))
+                ],
+              ),
             ),
-          ),
-        ],
+            Padding(
+                padding: const EdgeInsets.only(
+                    left: 10.0, right: 10, top: 0, bottom: 20),
+                child: StreamBuilder(
+                  stream: Firestore.instance.collection('bundles').snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Hexcolor(snapshot.data.documents[0]['bcolor']),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 2.2,
+                              blurRadius: 2.5,
+                              offset:
+                                  Offset(0, 4), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Flexible(
+                              flex: 2,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 15, left: 15),
+                                    child: Text(
+                                      snapshot.data.documents[0]['title'],
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 18.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 15.0),
+                                    child: Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: Text(
+                                        snapshot.data.documents[0]['price'] +
+                                            "L.L.",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 17.0,
+                                          fontFamily: 'Axiforma',
+                                          color: Hexcolor(snapshot.data
+                                              .documents[0]['buttoncolor']),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10, left: 15),
+                                    child: Text(
+                                      snapshot.data.documents[0]['details'],
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 13.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)),
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                        snapshot.data.documents[0]['image']),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                child: null /* add child content here */,
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  },
+                )),
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "Supplements",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26.0,
+                      fontFamily: 'Axiforma',
+                      color: Colors.black,
+                    ),
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        () {};
+                      },
+                      child: Image.asset("assets/images/fullfilldolovery.png",
+                          height: 23))
+                ],
+              ),
+            ),
+            Padding(
+                padding: const EdgeInsets.only(
+                    left: 5.0, right: 5, top: 0, bottom: 0),
+                child: StreamBuilder(
+                  stream: Firestore.instance
+                      .collection('products')
+                      .where('type', isEqualTo: 'Supplements')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GridView.count(
+                        crossAxisCount: 2,
+                        childAspectRatio: (itemWidth / itemHeight),
+                        controller:
+                            new ScrollController(keepScrollOffset: false),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        children: List.generate(8, (index) {
+                          return GestureDetector(
+                            onTap: () {
+                              openProductPopUp(
+                                  context, snapshot.data, index, refreshcart);
+                            },
+                            child: ProductImage(
+                              productName: snapshot.data.documents[index]
+                                  ['name'],
+                              productImage: snapshot.data.documents[index]
+                                  ['image'],
+                              productPrice: snapshot
+                                  .data.documents[index]['shop_price']
+                                  .toString(),
+                              shopName: snapshot.data.documents[index]['shop'],
+                              productUnit:
+                                  snapshot.data.documents[index]['unit'] != null
+                                      ? snapshot.data.documents[index]['unit']
+                                      : '',
+                              productCurrency: snapshot.data.documents[index]
+                                          ['currency'] !=
+                                      null
+                                  ? snapshot.data.documents[index]['currency']
+                                  : "lebanese",
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  },
+                )),
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20),
+              child: MaterialButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(8)),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => ShopListing(
+                                type: 'supplements',
+                              )))
+                      .then((_) {
+                    refreshcart();
+                  });
+                },
+                elevation: 0,
+                color: Colors.grey[100],
+                // textColor: Colors.black45,
+                minWidth: MediaQuery.of(context).size.width - 20,
+                height: 0,
+                // padding: EdgeInsets.zero,
+                padding:
+                    EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "View All Supplements Products".toUpperCase(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 14.0,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black38,
+                      ),
+                    ),
+                    Icon(
+                      Icons.keyboard_arrow_right,
+                      color: Colors.black38,
+                      size: 20.0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "Pet Shops",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26.0,
+                      fontFamily: 'Axiforma',
+                      color: Colors.black,
+                    ),
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        // reset();
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) => ProfileScreen()));
+                      },
+                      child: Image.asset("assets/images/fullfilldolovery.png",
+                          height: 23))
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: StreamBuilder(
+                stream: Firestore.instance
+                    .collection('shops')
+                    .where('type', isEqualTo: 'pets')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    // print(snapshot);
+                    return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                            children: List<Widget>.generate(10, (int index) {
+                          // print(categories[index]);
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      ShopPage(snapshot.data.documents[1])));
+                            },
+                            child: ShopImage(
+                                shopName: snapshot.data.documents[0]['name'],
+                                shopIndex: index,
+                                shopImage: snapshot.data.documents[0]['image'],
+                                shopTime: snapshot.data.documents[0]['time']
+                                    .toString()),
+                          );
+                        })));
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     ));
   }

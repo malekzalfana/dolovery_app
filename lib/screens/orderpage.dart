@@ -37,6 +37,7 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
     // var timestamp = (widget.data['salle_date'] as Timestamp).toDate();
     // String formatted_date = DateFormat.yMMMMd().format(timestamp);
@@ -50,6 +51,7 @@ class _OrderPageState extends State<OrderPage> {
             ),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
+
             // automaticallyImplyLeading: false,
             //BackButton(color: Colors.black),
             centerTitle: true,
@@ -66,7 +68,7 @@ class _OrderPageState extends State<OrderPage> {
           ),
           // Text('${widget.order}'),
           Padding(
-            padding: const EdgeInsets.only(top: 15.0, bottom: 20),
+            padding: const EdgeInsets.only(top: 10.0, bottom: 20),
             child: Image.asset(
               'assets/images/check-mark.png',
               // height: 120.0,

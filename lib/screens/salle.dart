@@ -46,84 +46,86 @@ class SalleScreenState extends State<SalleScreen> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    return ListView(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(
-              width: 7,
-            ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: GestureDetector(
-                  onTap: () {
-                    widget.notifyParent();
-                    // Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.keyboard_arrow_left,
-                    color: Colors.black,
-                    size: 30.0,
+    return SafeArea(
+      child: ListView(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                width: 7,
+              ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.notifyParent();
+                      // Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.keyboard_arrow_left,
+                      color: Colors.black,
+                      size: 30.0,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(13.0),
-              child: Text(
-                getCurrentDate(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16.0,
-                  fontFamily: 'Axiforma',
-                  color: Colors.black,
+              Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: Text(
+                  getCurrentDate(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16.0,
+                    fontFamily: 'Axiforma',
+                    color: Colors.black,
+                  ),
                 ),
               ),
-            ),
-            Spacer()
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-          child: Container(
-            // color: Colors.orangeAccent,
-            height: 150,
-            child: Image.asset(
-              'assets/images/salle.png',
-              width: 400,
+              Spacer()
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+            child: Container(
+              // color: Colors.orangeAccent,
               height: 150,
+              child: Image.asset(
+                'assets/images/salle.png',
+                width: 400,
+                height: 150,
+              ),
             ),
           ),
-        ),
-        DefaultTabController(
-            length: 4,
-            initialIndex: 0,
-            child: Column(
-              children: <Widget>[
-                TabBar(
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.grey[500],
-                    tabs: [
-                      Tab(text: 'Week 1'),
-                      Tab(text: 'Week 2'),
-                      Tab(text: 'Week 3'),
-                      Tab(text: 'Week 4')
+          DefaultTabController(
+              length: 4,
+              initialIndex: 0,
+              child: Column(
+                children: <Widget>[
+                  TabBar(
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.grey[500],
+                      tabs: [
+                        Tab(text: 'Week 1'),
+                        Tab(text: 'Week 2'),
+                        Tab(text: 'Week 3'),
+                        Tab(text: 'Week 4')
+                      ]),
+                  Container(
+                    height: height - 345,
+                    child: TabBarView(children: [
+                      buildSalleList(),
+                      buildSalleList(),
+                      buildSalleList(),
+                      buildSalleList(),
                     ]),
-                Container(
-                  height: height - 345,
-                  child: TabBarView(children: [
-                    buildSalleList(),
-                    buildSalleList(),
-                    buildSalleList(),
-                    buildSalleList(),
-                  ]),
-                )
-              ],
-            ))
-      ],
+                  )
+                ],
+              ))
+        ],
+      ),
     );
   }
 
