@@ -669,10 +669,7 @@ class _ShopPageState extends State<ShopPage> {
                                           return GridView.count(
                                             crossAxisCount: 2,
                                             childAspectRatio:
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    1150,
+                                                0.65,
                                             controller: new ScrollController(
                                                 keepScrollOffset: false),
                                             shrinkWrap: true,
@@ -742,10 +739,7 @@ class _ShopPageState extends State<ShopPage> {
                                           return GridView.count(
                                             crossAxisCount: 2,
                                             childAspectRatio:
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    1150,
+                                                0.65,
                                             controller: new ScrollController(
                                                 keepScrollOffset: false),
                                             shrinkWrap: true,
@@ -814,10 +808,7 @@ class _ShopPageState extends State<ShopPage> {
                                           return GridView.count(
                                             crossAxisCount: 2,
                                             childAspectRatio:
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    1150,
+                                                0.65,
                                             controller: new ScrollController(
                                                 keepScrollOffset: false),
                                             shrinkWrap: true,

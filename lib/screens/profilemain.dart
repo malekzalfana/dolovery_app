@@ -1,7 +1,9 @@
 import 'package:dolovery_app/screens/addadress.dart';
 import 'package:dolovery_app/screens/editadress.dart';
 import 'package:dolovery_app/screens/orderpage.dart';
+import 'package:dolovery_app/screens/privacy.dart';
 import 'package:dolovery_app/screens/profile.dart';
+import 'package:dolovery_app/screens/terms.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -1080,7 +1082,49 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 ),
                               ],
                             ),
-                          )
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(25, 15, 22, 30),
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => Privacy()));
+                                  },
+                                  child: Text(
+                                    "Privacy Policy",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13.0,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.black38,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => Terms()));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 15.0),
+                                    child: Text(
+                                      "Terms & Conditions",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.black38,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),

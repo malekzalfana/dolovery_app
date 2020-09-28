@@ -1012,9 +1012,9 @@ class HomeScreenState extends State<HomeScreen> {
                       },
                       child: GestureDetector(
                         onTap: () {
-                          FirebaseAuth.instance.signOut().then((onValue) {
-                            print("JUST LOGGED OUT");
-                          });
+                          // FirebaseAuth.instance.signOut().then((onValue) {
+                          //   print("JUST LOGGED OUT");
+                          // });
                         },
                         child: Image.asset("assets/images/fullfilldolovery.png",
                             height: 23),
@@ -1034,7 +1034,7 @@ class HomeScreenState extends State<HomeScreen> {
                     if (snapshot.hasData) {
                       return GridView.count(
                         crossAxisCount: 2,
-                        childAspectRatio: (itemWidth / itemHeight),
+                        childAspectRatio: 0.65,
                         controller:
                             new ScrollController(keepScrollOffset: false),
                         shrinkWrap: true,
@@ -1279,7 +1279,7 @@ class HomeScreenState extends State<HomeScreen> {
                     if (snapshot.hasData) {
                       return GridView.count(
                         crossAxisCount: 2,
-                        childAspectRatio: (itemWidth / itemHeight),
+                        childAspectRatio: 0.65,
                         controller:
                             new ScrollController(keepScrollOffset: false),
                         shrinkWrap: true,
