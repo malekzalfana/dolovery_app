@@ -22,6 +22,8 @@ class ProductImage extends StatefulWidget {
 
   final String shopName;
 
+  final String oldPrice;
+
   ProductImage(
       {Key key,
       this.productName,
@@ -29,17 +31,20 @@ class ProductImage extends StatefulWidget {
       this.productUnit,
       this.productPrice,
       this.productCurrency,
-      this.shopName})
+      this.shopName,
+      this.oldPrice})
       : super(key: key);
 
   @override
   _ProductImageState createState() => _ProductImageState(
-      this.productImage,
-      this.productName,
-      this.productPrice,
-      this.productUnit,
-      this.productCurrency,
-      this.shopName);
+        this.productImage,
+        this.productName,
+        this.productPrice,
+        this.productUnit,
+        this.productCurrency,
+        this.shopName,
+        this.oldPrice,
+      );
 }
 
 class _ProductImageState extends State<ProductImage> {
@@ -49,8 +54,9 @@ class _ProductImageState extends State<ProductImage> {
   String productPrice;
   String productUnit;
   String productCurrency;
+  String oldPrice;
   _ProductImageState(this.productImage, this.productName, this.productPrice,
-      this.productUnit, this.productCurrency, this.shopName);
+      this.productUnit, this.productCurrency, this.shopName, this.oldPrice);
   // _ProductImageState(this.productImage);
   @override
   void initState() {
@@ -126,7 +132,7 @@ class _ProductImageState extends State<ProductImage> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: Text(
-                          productUnit,
+                          productUnit.toString(),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
@@ -221,22 +227,28 @@ class _ProductImageState extends State<ProductImage> {
                   if (snapshot.hasError)
                     return new Text('Error: ${snapshot.error}');
                   else
-                    return SizedBox(
-                      height: 20,
-                      child: Text(
-                        (int.parse(productPrice.toString()) *
-                                    int.parse(rate.toString()))
-                                .toString() +
-                            "L.L.",
-                        // rate.toString(),
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 11.7,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black54,
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: 20,
+                          child: Text(
+                            (int.parse(productPrice.toString()) *
+                                        (rate != null
+                                            ? int.parse(rate.toString())
+                                            : 1))
+                                    .toString() +
+                                "L.L.",
+                            // rate.toString(),
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 11.7,
+                              fontFamily: 'Axiforma',
+                              color: Colors.black54,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     );
                   break;
 

@@ -1,6 +1,7 @@
 import 'package:dolovery_app/screens/addadress.dart';
 import 'package:dolovery_app/screens/search.dart';
 import 'package:dolovery_app/screens/shoplisting.dart';
+import 'package:dolovery_app/widgets/bundle.dart';
 import 'package:dolovery_app/widgets/product.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,6 +42,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 String c_position;
+String c2_position;
 
 class HomeScreenState extends State<HomeScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -143,6 +145,10 @@ class HomeScreenState extends State<HomeScreen> {
     return c_position;
   }
 
+  // getCurrentAddress() async {
+  //   this_user.data["address"][index]["id"]
+  // }
+
 /************************************************************************************************** */
   void _onLoading() {
     showDialog(
@@ -180,7 +186,7 @@ class HomeScreenState extends State<HomeScreen> {
     if (usercollection.exists) {
       newuser = false;
     }
-    // return newuser = false;
+    return newuser;
   }
 
   void runsetupVerification() {
@@ -192,6 +198,9 @@ class HomeScreenState extends State<HomeScreen> {
       print("JUST LOGGED OUT");
     });
   }
+
+  bool notsetup;
+  double welcomeheight;
 
   Future<void> _googleSignUp() async {
     try {
@@ -217,8 +226,7 @@ class HomeScreenState extends State<HomeScreen> {
       print("signed in " + user.uid);
 
       // used before user.uid
-      bool notsetup;
-      double welcomeheight;
+
       final newUser =
           await Firestore.instance.collection("users").document(user.uid).get();
       if (newUser.exists) {
@@ -576,76 +584,147 @@ class HomeScreenState extends State<HomeScreen> {
                       color: Colors.redAccent[700],
                     ),
                   ),
-                  Visibility(
-                    visible: c_position == null ? true : false,
-                    child: Container(
-                      margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.0),
-                        ),
-                        onPressed: () {
-                          getLocation();
-                        },
-                        color: Colors.redAccent[700],
-                        textColor: Colors.white,
-                        minWidth: 0,
-                        height: 0,
-                        // padding: EdgeInsets.zero,
-                        padding: EdgeInsets.only(
-                            left: 6, top: 0, right: 6, bottom: 1),
-                        child: FutureBuilder(
-                          future: getLocation(),
-                          builder: (context, snapshot) {
-                            return Text(
-                              'Enable Location',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                                fontFamily: 'Axiforma',
-                                color: Colors.white,
+                  // Text('$newuser'),
+                  FutureBuilder(
+                    future: setupVerification(),
+                    builder: (context, snapshot) {
+                      return Column(
+                        children: [
+                          Visibility(
+                            // visible: newuser,
+                            visible: true,
+                            child: Column(
+                              children: [
+                                Visibility(
+                                  visible: c_position == null ? true : false,
+                                  child: Container(
+                                    margin:
+                                        const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                                    child: MaterialButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(7.0),
+                                      ),
+                                      onPressed: () {
+                                        getLocation();
+                                      },
+                                      color: Colors.redAccent[700],
+                                      textColor: Colors.white,
+                                      minWidth: 0,
+                                      height: 0,
+                                      // padding: EdgeInsets.zero,
+                                      padding: EdgeInsets.only(
+                                          left: 6, top: 0, right: 6, bottom: 1),
+                                      child: FutureBuilder(
+                                        future: getLocation(),
+                                        builder: (context, snapshot) {
+                                          return Text(
+                                            'Enable Location',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0,
+                                              fontFamily: 'Axiforma',
+                                              color: Colors.white,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: c_position == null ? false : true,
+                                  child: SizedBox(
+                                    //width: 200,
+                                    child: Container(
+                                      // width: 200,
+                                      margin:
+                                          const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                                      child: MaterialButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(7.0),
+                                        ),
+                                        onPressed: () {
+                                          // _signInPopUp(context);
+                                        },
+                                        color: Colors.redAccent[700],
+                                        textColor: Colors.white,
+                                        minWidth: 0,
+                                        height: 0,
+                                        // padding: EdgeInsets.zero,
+                                        padding: EdgeInsets.only(
+                                            left: 6,
+                                            top: 0,
+                                            right: 6,
+                                            bottom: 1),
+                                        child: FutureBuilder(
+                                          future: getLocation(),
+                                          builder: (context, snapshot) {
+                                            return Text(
+                                              c_position.toString(),
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16.0,
+                                                fontFamily: 'Axiforma',
+                                                color: Colors.white,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Visibility(
+                            // visible: !newuser,
+                            visible: false,
+                            child: SizedBox(
+                              //width: 200,
+                              child: Container(
+                                width: 200,
+                                margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                                child: MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(7.0),
+                                  ),
+                                  onPressed: () {
+                                    // _signInPopUp(context);
+                                  },
+                                  color: Colors.redAccent[700],
+                                  textColor: Colors.white,
+                                  minWidth: 0,
+                                  height: 0,
+                                  // padding: EdgeInsets.zero,
+                                  padding: EdgeInsets.only(
+                                      left: 6, top: 0, right: 6, bottom: 1),
+                                  child: FutureBuilder(
+                                    future: setupVerification(),
+                                    builder: (context, snapshot) {
+                                      return Text(
+                                        c2_position.toString(),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
+                                          fontFamily: 'Axiforma',
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
+                            ),
+                          )
+                        ],
+                      );
+                    },
                   ),
-                  Visibility(
-                    visible: c_position == null ? false : true,
-                    child: Container(
-                      margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.0),
-                        ),
-                        onPressed: () {
-                          // _signInPopUp(context);
-                        },
-                        color: Colors.redAccent[700],
-                        textColor: Colors.white,
-                        minWidth: 0,
-                        height: 0,
-                        // padding: EdgeInsets.zero,
-                        padding: EdgeInsets.only(
-                            left: 6, top: 0, right: 6, bottom: 1),
-                        child: FutureBuilder(
-                          future: getLocation(),
-                          builder: (context, snapshot) {
-                            return Text(
-                              c_position.toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                                fontFamily: 'Axiforma',
-                                color: Colors.white,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
@@ -1022,54 +1101,66 @@ class HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            Padding(
-                padding: const EdgeInsets.only(
-                    left: 5.0, right: 5, top: 0, bottom: 0),
-                child: StreamBuilder(
-                  stream: Firestore.instance
-                      .collection('products')
-                      .where('type', isEqualTo: 'lebanese')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return GridView.count(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.65,
-                        controller:
-                            new ScrollController(keepScrollOffset: false),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        children: List.generate(8, (index) {
-                          return GestureDetector(
-                            onTap: () {
-                              openProductPopUp(
-                                  context, snapshot.data, index, refreshcart);
-                            },
-                            child: ProductImage(
-                              productName: snapshot.data.documents[0]['name'],
-                              productImage: snapshot.data.documents[0]['image'],
-                              productPrice: snapshot
-                                  .data.documents[0]['shop_price']
-                                  .toString(),
-                              shopName: snapshot.data.documents[0]['shop'],
-                              productUnit:
-                                  snapshot.data.documents[0]['unit'] != null
-                                      ? snapshot.data.documents[0]['unit']
-                                      : '',
-                              productCurrency:
-                                  snapshot.data.documents[0]['currency'] != null
-                                      ? snapshot.data.documents[0]['currency']
-                                      : "lebanese",
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  },
-                )),
+            Visibility(
+              visible: false,
+              child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 5.0, right: 5, top: 0, bottom: 0),
+                  child: StreamBuilder(
+                    stream: Firestore.instance
+                        .collection('products')
+                        .where('type', isEqualTo: 'lebanese')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return GridView.count(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.65,
+                          controller:
+                              new ScrollController(keepScrollOffset: false),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          children: List.generate(8, (index) {
+                            return GestureDetector(
+                              onTap: () {
+                                openProductPopUp(
+                                    context, snapshot.data, index, refreshcart);
+                              },
+                              child: ProductImage(
+                                oldPrice: snapshot.data.documents[index]
+                                            ['old_price'] ==
+                                        null
+                                    ? "0"
+                                    : snapshot
+                                        .data.documents[index]['old_price']
+                                        .toString(),
+                                productName: snapshot.data.documents[0]['name'],
+                                productImage: snapshot.data.documents[0]
+                                    ['image'],
+                                productPrice: snapshot
+                                    .data.documents[0]['shop_price']
+                                    .toString(),
+                                shopName: snapshot.data.documents[0]['shop'],
+                                productUnit:
+                                    snapshot.data.documents[0]['unit'] != null
+                                        ? snapshot.data.documents[0]['unit']
+                                        : '',
+                                productCurrency: snapshot.data.documents[0]
+                                            ['currency'] !=
+                                        null
+                                    ? snapshot.data.documents[0]['currency']
+                                    : "lebanese",
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    },
+                  )),
+            ),
             Padding(
               padding:
                   const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20),
@@ -1078,7 +1169,10 @@ class HomeScreenState extends State<HomeScreen> {
                     borderRadius: new BorderRadius.circular(8)),
                 onPressed: () {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => TabsDemo()))
+                      .push(MaterialPageRoute(
+                          builder: (context) => ShopListing(
+                                type: 'lebanese',
+                              )))
                       .then((_) {
                     refreshcart();
                   });
@@ -1137,113 +1231,168 @@ class HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Padding(
-                padding: const EdgeInsets.only(
-                    left: 10.0, right: 10, top: 0, bottom: 20),
-                child: StreamBuilder(
-                  stream: Firestore.instance.collection('bundles').snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: Hexcolor(snapshot.data.documents[0]['bcolor']),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              spreadRadius: 2.2,
-                              blurRadius: 2.5,
-                              offset:
-                                  Offset(0, 4), // changes position of shadow
-                            ),
-                          ],
-                        ),
+              padding: const EdgeInsets.only(top: 10.0),
+              child: StreamBuilder(
+                stream: Firestore.instance
+                    .collection('products')
+                    .where('type', isEqualTo: 'bundle')
+                    // .where('type', isEqualTo: 'pets')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    // print(snapshot);
+                    return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: <Widget>[
-                            Flexible(
-                              flex: 2,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 15, left: 15),
-                                    child: Text(
-                                      snapshot.data.documents[0]['title'],
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 18.0,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15.0),
-                                    child: Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Text(
-                                        snapshot.data.documents[0]['price'] +
-                                            "L.L.",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 17.0,
-                                          fontFamily: 'Axiforma',
-                                          color: Hexcolor(snapshot.data
-                                              .documents[0]['buttoncolor']),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 10, left: 15),
-                                    child: Text(
-                                      snapshot.data.documents[0]['details'],
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 13.0,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.white70,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            //snapshot.data.documents.length
+                            children: List<Widget>.generate(
+                                snapshot.data.documents.length, (int index) {
+                          // const double padding = index == 0 ? 12 : 0;
+                          // print(categories[index]);
+                          return GestureDetector(
+                            onTap: () {
+                              openProductPopUp(
+                                  context, snapshot.data, index, refreshcart);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 12),
+                              child: Bundle(
+                                bundleName: snapshot.data.documents[index]
+                                    ['name'],
+                                bundleDescription: snapshot
+                                    .data.documents[index]['description'],
+                                bundleIndex: 0,
+                                bundlePrice: int.parse(snapshot
+                                    .data.documents[index]['shop_price']),
+                                bundleImage: snapshot.data.documents[index]
+                                    ['image'],
                               ),
                             ),
-                            Flexible(
-                              flex: 1,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(10)),
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                        snapshot.data.documents[0]['image']),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                child: null /* add child content here */,
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  },
-                )),
+                          );
+                        })));
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ),
+            // Padding(
+            //     padding: const EdgeInsets.only(
+            //         left: 10.0, right: 10, top: 0, bottom: 20),
+            //     child: StreamBuilder(
+            //       stream: Firestore.instance.collection('bundles').snapshots(),
+            //       builder: (context, snapshot) {
+            //         if (snapshot.hasData) {
+            //           return GestureDetector(
+            //             onTap: () {
+            //               openProductPopUp(
+            //                   context, snapshot.data, index, refreshcart);
+            //             },
+            //             child: Container(
+            //               height: 200,
+            //               decoration: BoxDecoration(
+            //                 color:
+            //                     Hexcolor(snapshot.data.documents[0]['bcolor']),
+            //                 borderRadius: BorderRadius.only(
+            //                     topLeft: Radius.circular(10),
+            //                     topRight: Radius.circular(10),
+            //                     bottomLeft: Radius.circular(10),
+            //                     bottomRight: Radius.circular(10)),
+            //                 boxShadow: [
+            //                   BoxShadow(
+            //                     color: Colors.grey.withOpacity(0.1),
+            //                     spreadRadius: 2.2,
+            //                     blurRadius: 2.5,
+            //                     offset:
+            //                         Offset(0, 4), // changes position of shadow
+            //                   ),
+            //                 ],
+            //               ),
+            //               child: Row(
+            //                 children: <Widget>[
+            //                   Flexible(
+            //                     flex: 2,
+            //                     child: Column(
+            //                       mainAxisAlignment: MainAxisAlignment.start,
+            //                       children: <Widget>[
+            //                         Padding(
+            //                           padding: const EdgeInsets.only(
+            //                               top: 15, left: 15),
+            //                           child: Text(
+            //                             snapshot.data.documents[0]['title'],
+            //                             textAlign: TextAlign.left,
+            //                             style: TextStyle(
+            //                               fontWeight: FontWeight.w800,
+            //                               fontSize: 18.0,
+            //                               fontFamily: 'Axiforma',
+            //                               color: Colors.white,
+            //                             ),
+            //                           ),
+            //                         ),
+            //                         Padding(
+            //                           padding:
+            //                               const EdgeInsets.only(left: 15.0),
+            //                           child: Align(
+            //                             alignment: Alignment.bottomLeft,
+            //                             child: Text(
+            //                               snapshot.data.documents[0]['price'] +
+            //                                   "L.L.",
+            //                               style: TextStyle(
+            //                                 fontWeight: FontWeight.w500,
+            //                                 fontSize: 17.0,
+            //                                 fontFamily: 'Axiforma',
+            //                                 color: Hexcolor(snapshot.data
+            //                                     .documents[0]['buttoncolor']),
+            //                               ),
+            //                             ),
+            //                           ),
+            //                         ),
+            //                         Padding(
+            //                           padding: const EdgeInsets.only(
+            //                               top: 10, left: 15),
+            //                           child: Text(
+            //                             snapshot.data.documents[0]['details'],
+            //                             textAlign: TextAlign.left,
+            //                             style: TextStyle(
+            //                               fontWeight: FontWeight.normal,
+            //                               fontSize: 13.0,
+            //                               fontFamily: 'Axiforma',
+            //                               color: Colors.white70,
+            //                             ),
+            //                           ),
+            //                         ),
+            //                       ],
+            //                     ),
+            //                   ),
+            //                   Flexible(
+            //                     flex: 1,
+            //                     child: Container(
+            //                       decoration: BoxDecoration(
+            //                         borderRadius: BorderRadius.only(
+            //                             topLeft: Radius.circular(10),
+            //                             topRight: Radius.circular(10),
+            //                             bottomLeft: Radius.circular(10),
+            //                             bottomRight: Radius.circular(10)),
+            //                         image: DecorationImage(
+            //                           image: NetworkImage(
+            //                               snapshot.data.documents[0]['image']),
+            //                           fit: BoxFit.cover,
+            //                         ),
+            //                       ),
+            //                       child: null /* add child content here */,
+            //                     ),
+            //                   )
+            //                 ],
+            //               ),
+            //             ),
+            //           );
+            //         } else if (snapshot.hasError) {
+            //           return Text(snapshot.error.toString());
+            //         }
+            //         return Center(child: CircularProgressIndicator());
+            //       },
+            //     )),
             Padding(
               padding: const EdgeInsets.all(14.0),
               child: Row(
@@ -1308,6 +1457,12 @@ class HomeScreenState extends State<HomeScreen> {
                                       null
                                   ? snapshot.data.documents[index]['currency']
                                   : "lebanese",
+                              oldPrice: snapshot.data.documents[index]
+                                          ['old_price'] ==
+                                      null
+                                  ? "0"
+                                  : snapshot.data.documents[index]['old_price']
+                                      .toString(),
                             ),
                           );
                         }).toList(),

@@ -397,7 +397,12 @@ class _CartState extends State<Cart> {
   Future<bool> loadcart() async {
     final prefs = await SharedPreferences.getInstance();
     usercartmap = prefs.getString("usercartmap");
-    usercartmap = json.decode(usercartmap);
+    if (usercartmap == null) {
+      usercartmap = json.decode("{}");
+    } else {
+      usercartmap = json.decode(usercartmap);
+    }
+
     print(usercartmap);
     print('this is the cart ');
 
@@ -871,32 +876,37 @@ class _CartState extends State<Cart> {
                                                         return Text(
                                                             'Error: ${snapshot.error}');
                                                       else
-                                                        return Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 22.0),
-                                                          child: Align(
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            child: Text(
-                                                              snapshot
-                                                                  .data['name'],
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  fontSize:
-                                                                      23.0,
-                                                                  fontFamily:
-                                                                      'Axiforma',
-                                                                  color: Colors
-                                                                      .black),
+                                                        return Column(
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          22.0),
+                                                              child: Align(
+                                                                alignment: Alignment
+                                                                    .centerLeft,
+                                                                child: Text(
+                                                                  snapshot.data[
+                                                                      'name'],
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                      fontSize:
+                                                                          23.0,
+                                                                      fontFamily:
+                                                                          'Axiforma',
+                                                                      color: Colors
+                                                                          .black),
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
+                                                          ],
                                                         );
                                                   }
                                                 },
@@ -931,14 +941,16 @@ class _CartState extends State<Cart> {
                                                         .snapshots(),
                                                     builder:
                                                         (context, snapshot) {
-                                                      print(
-                                                          'we are past streaming');
-                                                      print(snapshot.data);
-                                                      print(product);
-                                                      print(int.parse(
-                                                          usercartmap[shop]
-                                                                  [product]
-                                                              .toString()));
+                                                      // print(
+                                                      //     'we are past streaming');
+                                                      // print("rate is:::" +
+                                                      //     rate.toString());
+                                                      // print(snapshot.data);
+                                                      // print(product);
+                                                      // print(int.parse(
+                                                      //     usercartmap[shop]
+                                                      //             [product]
+                                                      //         .toString()));
                                                       if (snapshot.hasData) {
                                                         return buildCartItem(
                                                             snapshot.data,
@@ -946,7 +958,7 @@ class _CartState extends State<Cart> {
                                                                         shop]
                                                                     [product]
                                                                 .toString()),
-                                                            rate);
+                                                            cachedshops[shop]);
                                                       } else {
                                                         return CircularProgressIndicator();
                                                       }
@@ -1576,8 +1588,12 @@ class _CartState extends State<Cart> {
                                                     var rate = datashop
                                                         .documents[0]
                                                         .data['rate'];
+                                                    print(
+                                                        'the shop is $datashop');
                                                     if (rate == null) {
                                                       rate = 1;
+                                                      print(
+                                                          'changed rate to ZERO');
                                                     }
                                                     for (var product
                                                         in usercartmap[cartshop]
@@ -1595,6 +1611,7 @@ class _CartState extends State<Cart> {
                                                       if (dataproduct.data[
                                                               'currency'] !=
                                                           'dollar') {
+                                                        print('rate ks ');
                                                         newrate = 1;
                                                       }
                                                       print(dataproduct
@@ -1828,13 +1845,15 @@ class _CartState extends State<Cart> {
     return document.documents[0];
   }
 
+  var rateArray = [];
+
   getRate(shopName) async {
-    if (started == true) {
-      // print('skipedddddddd');
-      return rate;
-    }
-    print(
-        "started prefrererererererere_______________________________________________________________");
+    // if (started == true) {
+    //   // print('skipedddddddd');
+    //   return rate;
+    // }
+    // print(
+    //     "started prefrererererererere_______________________________________________________________");
     final prefs = await SharedPreferences.getInstance();
     bool skip = false;
     cachedshops = prefs.getString("cached_shops");
@@ -1844,6 +1863,9 @@ class _CartState extends State<Cart> {
       cachedshops = {};
       skip = true;
     }
+    print('___________________________________________________________');
+    print('$shopName');
+    print(prefs.getString("cached_shops"));
     if (!cachedshops.containsKey(shopName)) {
       shopinfo = Firestore.instance
           .collection('shops')
@@ -1851,25 +1873,30 @@ class _CartState extends State<Cart> {
           .getDocuments()
           .then(
         (value) {
+          print('thid id the value');
+          print(value);
           if (value.documents.length > 0) {
             cachedshops[shopName] = value.documents[0].data['rate'];
             prefs.setString('cached_shops', json.encode(cachedshops));
             // print(prefs.getString("cached_shops").toString() +
             //     "this is the cached");
             started = true;
-            return rate = value.documents[0].data['rate'];
+            rate = value.documents[0].data['rate'];
+            print('returned $rate');
+            // return rate;
           } else {
-            return null;
+            print('returbned none');
+            // return null;
           }
         },
       );
     } else {
       // cachedshops[shopName] = value.documents[0].data['rate'];
-      // print("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
       rate = json.decode(prefs.getString("cached_shops"))[shopName];
-      // print(prefs.getString("cached_shops"));
+      print("$rate");
+
       started = true;
-      // print("just got: " + rate.toString());
+      rateArray.add(rate);
     }
     // debugPrint("rate is:::::" + rate.toString());
     started = true;
@@ -1999,7 +2026,7 @@ class _CartState extends State<Cart> {
                                   cartitem['type'] == 'salle' ? false : true,
                               child: Text(
                                 (int.parse(cartitem['shop_price'].toString()) *
-                                            int.parse(rate.toString()))
+                                            (rate != null ? rate.toInt() : 1))
                                         .toString() +
                                     "L.L.",
                                 // overflow: TextOverflow.ellipsis,

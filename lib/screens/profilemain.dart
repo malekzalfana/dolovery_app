@@ -1,4 +1,5 @@
 import 'package:dolovery_app/screens/addadress.dart';
+import 'package:dolovery_app/screens/allorders.dart';
 import 'package:dolovery_app/screens/editadress.dart';
 import 'package:dolovery_app/screens/orderpage.dart';
 import 'package:dolovery_app/screens/privacy.dart';
@@ -722,36 +723,45 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               ),
                             ],
                           ),
-                          Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 30.0, top: 30, bottom: 15),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Recent Orders",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13.0,
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              StreamBuilder(
-                                stream: Firestore.instance
-                                    .collection('orders')
-                                    .where('user', isEqualTo: uid)
-                                    .limit(3)
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    print(snapshot);
-                                    return SingleChildScrollView(
-                                        scrollDirection: Axis.vertical,
-                                        child: Padding(
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection('orders')
+                                .where('user', isEqualTo: uid)
+                                .limit(4)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                print(snapshot);
+                                return SingleChildScrollView(
+                                    scrollDirection: Axis.vertical,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Visibility(
+                                          visible:
+                                              snapshot.data.documents.length >
+                                                  0,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 30.0,
+                                                top: 30,
+                                                bottom: 15),
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                "Recent Orders",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13.0,
+                                                  fontFamily: 'Axiforma',
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
                                           padding: const EdgeInsets.only(
                                               bottom: 8.0),
                                           child: Column(
@@ -761,45 +771,74 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                   snapshot.data.documents
                                                       .length, (int index) {
                                                 // print(categories[index]);
-                                                return GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                OrderPage(snapshot
-                                                                    .data
-                                                                    .documents[
-                                                                        index]
-                                                                    .documentID)));
-                                                  },
-                                                  child: RecentOrder(
-                                                      orderDate: snapshot.data
-                                                              .documents[index]
-                                                          ['date'],
-                                                      orderCount: snapshot
-                                                          .data
-                                                          .documents[index]
-                                                              ['count']
-                                                          .toInt(),
-                                                      orderImage: snapshot.data
-                                                              .documents[index]
-                                                          ['image'],
-                                                      orderPrice: snapshot
-                                                          .data
-                                                          .documents[index]
-                                                              ['total']
-                                                          .toString()),
+                                                return Visibility(
+                                                  visible: index != 3,
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  OrderPage(snapshot
+                                                                      .data
+                                                                      .documents[
+                                                                          index]
+                                                                      .documentID)));
+                                                    },
+                                                    child: RecentOrder(
+                                                        orderDate: snapshot.data
+                                                                .documents[index]
+                                                            ['date'],
+                                                        orderCount: snapshot
+                                                            .data
+                                                            .documents[index]
+                                                                ['count']
+                                                            .toInt(),
+                                                        orderImage: snapshot
+                                                                .data
+                                                                .documents[index]
+                                                            ['image'],
+                                                        orderPrice: snapshot
+                                                            .data
+                                                            .documents[index]
+                                                                ['total']
+                                                            .toString()),
+                                                  ),
                                                 );
                                               })),
-                                        ));
-                                  } else if (snapshot.hasError) {
-                                    return Text(snapshot.error.toString());
-                                  }
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                },
-                              )
-                            ],
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Orders(uid: uid)));
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 35.0,
+                                                  bottom: 25,
+                                                  top: 3),
+                                              child: Text(
+                                                "View all orders".toUpperCase(),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 13.0,
+                                                  fontFamily: 'Axiforma',
+                                                  color: Colors.black38,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ));
+                              } else if (snapshot.hasError) {
+                                return Text(snapshot.error.toString());
+                              }
+                              return Center(child: CircularProgressIndicator());
+                            },
                           ),
                           Column(
                             children: <Widget>[

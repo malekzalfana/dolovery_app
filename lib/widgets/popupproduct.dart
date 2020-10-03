@@ -460,7 +460,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                           child: CachedNetworkImage(
                         width: 170,
                         placeholder: (context, url) => Image.asset(
-                            "assets/images/loading.png",
+                            "assets/images/loading.gif",
                             height: 30),
                         imageUrl: data.documents[index]['image'],
                       ))),
