@@ -125,26 +125,9 @@ class _ProductImageState extends State<ProductImage> {
               Padding(
                 padding: const EdgeInsets.only(top: 2.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     buildProductPrice(),
-                    GestureDetector(
-                      onTap: () => removeRate(),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: Text(
-                          productUnit.toString(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 11.7,
-                            fontFamily: 'Axiforma',
-                            color: Colors.black26,
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               )
@@ -214,7 +197,7 @@ class _ProductImageState extends State<ProductImage> {
     started = true;
   }
 
-  Padding buildProductPrice() {
+  Widget buildProductPrice() {
     if (productCurrency == "dollar") {
       return Padding(
         padding: const EdgeInsets.only(top: 0.0),
@@ -228,23 +211,74 @@ class _ProductImageState extends State<ProductImage> {
                     return new Text('Error: ${snapshot.error}');
                   else
                     return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 20,
-                          child: Text(
-                            (int.parse(productPrice.toString()) *
-                                        (rate != null
-                                            ? int.parse(rate.toString())
-                                            : 1))
-                                    .toString() +
-                                "L.L.",
-                            // rate.toString(),
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 11.7,
-                              fontFamily: 'Axiforma',
-                              color: Colors.black54,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Visibility(
+                              visible: int.parse(oldPrice) > 0,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 7.0),
+                                child: SizedBox(
+                                  height: 20,
+                                  child: Text(
+                                    (int.parse(oldPrice.toString()) *
+                                                (rate != null
+                                                    ? int.parse(rate.toString())
+                                                    : 1))
+                                            .toString() +
+                                        "L.L.",
+                                    // rate.toString(),
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationThickness: 2,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11.7,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                              child: Text(
+                                (int.parse(productPrice.toString()) *
+                                            (rate != null
+                                                ? int.parse(rate.toString())
+                                                : 1))
+                                        .toString() +
+                                    "L.L.",
+                                // rate.toString(),
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 11.7,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 0.0),
+                          child: SizedBox(
+                            height: 20,
+                            child: Text(
+                              productUnit.toString(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 11.7,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black26,
+                              ),
                             ),
                           ),
                         ),
@@ -255,24 +289,76 @@ class _ProductImageState extends State<ProductImage> {
                 default:
                   // debugPrint("Snapshot " + snapshot.toString());
                   return Text(
-                      's'); // also check your listWidget(snapshot) as it may return null.
+                      '...'); // also check your listWidget(snapshot) as it may return null.
               }
             }),
       );
     } else {
       // print('product is not dollar');
-      return Padding(
-          padding: const EdgeInsets.only(top: 0.0),
-          child: Text(
-            productPrice + "L.L.",
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 11.7,
-              fontFamily: 'Axiforma',
-              color: Colors.black54,
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Visibility(
+                visible: int.parse(oldPrice) > 0,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 7.0),
+                  child: SizedBox(
+                    height: 20,
+                    child: Text(
+                      oldPrice.toString() + "L.L.",
+                      // rate.toString(),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        decoration: TextDecoration.lineThrough,
+                        decorationThickness: 2,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11.7,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.only(top: 0.0),
+                  child: Text(
+                    productPrice + "L.L.",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 11.7,
+                      fontFamily: 'Axiforma',
+                      color: Colors.black54,
+                    ),
+                  )),
+            ],
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 1.0),
+              child: SizedBox(
+                height: 20,
+                child: Text(
+                  productUnit.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 11.7,
+                    fontFamily: 'Axiforma',
+                    color: Colors.black26,
+                  ),
+                ),
+              ),
             ),
-          ));
+          ),
+        ],
+      );
     }
   }
 }
