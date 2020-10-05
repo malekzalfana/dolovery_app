@@ -84,6 +84,8 @@ class _ShopImageState extends State<ShopImage> {
                                 "assets/images/loading.gif",
                                 height: 30),
                             imageUrl: shopImage,
+                            errorWidget: (context, url, error) =>
+                                Center(child: new Icon(Icons.error)),
                           ),
                         )),
                   ]),

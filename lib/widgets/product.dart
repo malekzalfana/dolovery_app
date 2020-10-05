@@ -97,6 +97,8 @@ class _ProductImageState extends State<ProductImage> {
                     placeholder: (context, url) =>
                         Image.asset("assets/images/loading.gif", height: 30),
                     imageUrl: productImage,
+                    errorWidget: (context, url, error) =>
+                        Center(child: new Icon(Icons.error)),
                   )
 
                       // FadeInImage.assetNetwork(

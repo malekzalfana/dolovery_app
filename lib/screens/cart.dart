@@ -941,6 +941,9 @@ class _CartState extends State<Cart> {
                                                         .snapshots(),
                                                     builder:
                                                         (context, snapshot) {
+                                                      // print('the item is' +
+                                                      //     snapshot
+                                                      //         .data['image']);
                                                       // print(
                                                       //     'we are past streaming');
                                                       // print("rate is:::" +
@@ -1922,6 +1925,7 @@ class _CartState extends State<Cart> {
   Padding buildCartItem(DocumentSnapshot cartitem, int count, int rate) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    var shopPrice = cartitem['shop_price'] != null ? cartitem['shop_price'] : 1;
 
     if (cartitem['currency'] != "dollar") {
       rate = 1;
@@ -2025,7 +2029,7 @@ class _CartState extends State<Cart> {
                               visible:
                                   cartitem['type'] == 'salle' ? false : true,
                               child: Text(
-                                (int.parse(cartitem['shop_price'].toString()) *
+                                (int.parse(shopPrice.toString()) *
                                             (rate != null ? rate.toInt() : 1))
                                         .toString() +
                                     "L.L.",
@@ -2071,7 +2075,9 @@ class _CartState extends State<Cart> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10.0),
                           child: Text(
-                            cartitem['unit'].toString(),
+                            cartitem['unit'] != null
+                                ? cartitem['unit'].toString()
+                                : '',
                             // overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.left,
                             style: TextStyle(
@@ -2102,7 +2108,8 @@ class _CartState extends State<Cart> {
                                     cartitem,
                                     cartitem['day'],
                                     cartitem['serving_prices'],
-                                    cartitem['descriptions'])))
+                                    cartitem['descriptions'],
+                                    cartitem['description'])))
                             .then((_) {
                           setState(() {});
                         });

@@ -72,6 +72,8 @@ class _ShopListState extends State<ShopList> {
                     placeholder: (context, url) =>
                         Image.asset("assets/images/loading.gif", height: 30),
                     imageUrl: shopImage,
+                    errorWidget: (context, url, error) =>
+                        Center(child: new Icon(Icons.error)),
                   ),
                 )),
           ),

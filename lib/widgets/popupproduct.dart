@@ -514,6 +514,8 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                             "assets/images/loading.gif",
                             height: 30),
                         imageUrl: data.documents[index]['image'],
+                        errorWidget: (context, url, error) =>
+                            Center(child: new Icon(Icons.error)),
                       ))),
                   Padding(
                     padding: const EdgeInsets.only(left: 0, right: 00),

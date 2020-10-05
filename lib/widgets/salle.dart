@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_svg/svg.dart';
 // ignore: unused_import
 import 'package:country_code_picker/country_code_picker.dart';
+// import 'package:flutter_advanced_networkimage/provider.dart';
 
 class SalleImage extends StatefulWidget {
   // final Widget child;
@@ -51,13 +53,16 @@ class _SalleImageState extends State<SalleImage> {
   // _SalleImageState(this.salleImage);
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Container(
         // color: Colors.green,
         margin: new EdgeInsets.only(left: 4.0, right: 4, bottom: 7),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Container(
-            height: 135,
+            height: 130,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -75,85 +80,121 @@ class _SalleImageState extends State<SalleImage> {
               ],
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                CachedNetworkImage(
+                  imageUrl: sallePhoto,
+                  height: 100,
+                  width: 100,
+                  placeholder: (context, url) =>
+                      Image.asset("assets/images/loading.gif", height: 30),
+                  errorWidget: (context, url, error) => new Icon(Icons.error),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0, left: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            salleTime + " mins",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 13.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.grey,
+                  child: SizedBox(
+                    width: width - 180,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              salleTime + " mins",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 13.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.grey,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 7.0, left: 5, right: 5),
-                            child: Container(
-                              height: 3,
-                              width: 3,
-                              margin: EdgeInsets.all(3.0),
-                              decoration: BoxDecoration(
-                                  color: Colors.grey, shape: BoxShape.circle),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 7.0, left: 5, right: 5),
+                              child: Container(
+                                height: 3,
+                                width: 3,
+                                margin: EdgeInsets.all(3.0),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey, shape: BoxShape.circle),
+                              ),
                             ),
-                          ),
-                          Text(
-                            salleItems.toString() + " items",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 13.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.grey,
+                            Text(
+                              salleItems.toString() + " items",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 13.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.grey,
+                              ),
                             ),
+                          ],
+                        ),
+                        Text(
+                          salleName,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16.0,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black,
                           ),
-                        ],
-                      ),
-                      Text(
-                        salleName,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 18.0,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black,
                         ),
-                      ),
-                      Text(
-                        salleArabicName,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                          height: 0.9,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black,
+                        Text(
+                          salleArabicName,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.0,
+                            height: 0.9,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "Starting from " + salleStartingPrice + " L.L.",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13.0,
-                          height: 1.9,
-                          fontFamily: 'Axiforma',
-                          color: Colors.redAccent[700],
+                        Text(
+                          "Starting from " + salleStartingPrice + " L.L.",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.0,
+                            height: 1.9,
+                            fontFamily: 'Axiforma',
+                            color: Colors.redAccent[700],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-                Image.network(sallePhoto, height: 120, width: 120),
+
+                // CachedNetworkImage(
+                //   imageUrl: sallePhoto,
+                //   height: 120,
+                //   width: 120,
+                //   placeholder: (context, url) =>
+                //       new CircularProgressIndicator(),
+                //   errorWidget: (context, url, error) => new Icon(Icons.error),
+                // ),
+                // Image(
+                //   image: AdvancedNetworkImage(
+                //     sallePhoto,
+                //     // header: ,
+                //     useDiskCache: true,
+                //     cacheRule: CacheRule(maxAge: const Duration(days: 7)),
+                //   ),
+                //   fit: BoxFit.cover,
+                // )
+                // Image
+                // AdvancedNetworkImage(
+                //     sallePhoto,
+                //     fallbackAssetImage: "YOUR DEAULT ASSERT IMAGE eg:assets/default.png"
+                //   )
+                // Image.network(sallePhoto, height: 120, width: 120),
                 // Hero(
                 //   tag: 'salle' + salleID,
                 //   child: Image.network(sallePhoto, height: 120, width: 120),

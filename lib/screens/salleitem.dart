@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:flutter_svg/svg.dart';
@@ -15,8 +16,11 @@ class SalleItem extends StatefulWidget {
   final dynamic data; //if you have multiple values add here
   final String day;
   final List descriptions;
+  final String description;
   final List prices;
-  SalleItem(this.data, this.day, this.prices, this.descriptions, {Key key})
+  SalleItem(
+      this.data, this.day, this.prices, this.descriptions, this.description,
+      {Key key})
       : super(key: key); //add also..example this.abc,this...
 
   @override
@@ -35,8 +39,8 @@ class _SalleItemState extends State<SalleItem> {
   void add() {
     // print ( _n );
     setState(() {
-      if (_n < 10) _n++;
-      if (_n == 10) {
+      if (_n < 9) _n++;
+      if (_n == 9) {
         maximum = true;
       } else {
         minimum = false;
@@ -301,9 +305,9 @@ class _SalleItemState extends State<SalleItem> {
       showChangeButton = true;
     }
 
-    var timestamp = (widget.data['salle_date'] as Timestamp).toDate();
+    // var timestamp = (widget.data['salle_date'] as Timestamp).toDate();
     num _defaultValue = 0;
-    String formatted_date = DateFormat.yMMMMd().format(timestamp);
+    // String formatted_date = DateFormat.yMMMMd().format(timestamp);
     return new Scaffold(
       body: SingleChildScrollView(
           child: Column(
@@ -335,21 +339,21 @@ class _SalleItemState extends State<SalleItem> {
                 fontSize: 32.0,
                 color: Colors.black),
           ),
-          Text(
-            formatted_date,
-            style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 14.0,
-                fontFamily: 'Axiforma',
-                color: Colors.black45),
-          ),
-          Container(
-            child: Image.network(widget.data['image'], width: 330),
-            // Hero(
-            //   tag: 'salle' + widget.data.documentID,
-            //   child:
-            //       Image.network(widget.data['image'], width: 330),
-            // ),
+          // Text(
+          //   formatted_date,
+          //   style: TextStyle(
+          //       fontWeight: FontWeight.normal,
+          //       fontSize: 14.0,
+          //       fontFamily: 'Axiforma',
+          //       color: Colors.black45),
+          // ),
+
+          CachedNetworkImage(
+            imageUrl: widget.data['image'] == null ? 's' : widget.data['image'],
+            width: 330,
+            placeholder: (context, url) =>
+                Image.asset("assets/images/loading.gif", height: 30),
+            errorWidget: (context, url, error) => new Icon(Icons.error),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 30.0, top: 30, bottom: 10),
@@ -367,7 +371,7 @@ class _SalleItemState extends State<SalleItem> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 00, bottom: 10),
+            padding: const EdgeInsets.only(left: 30.0, top: 00, bottom: 0),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -377,6 +381,20 @@ class _SalleItemState extends State<SalleItem> {
                     fontSize: 25.0,
                     fontFamily: 'Axiforma',
                     color: Colors.black),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 30.0, top: 00, bottom: 10),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                widget.data['arabic_name'],
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                    fontFamily: 'Axiforma',
+                    color: Colors.black87),
               ),
             ),
           ),
@@ -400,7 +418,7 @@ class _SalleItemState extends State<SalleItem> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                widget.data['salle_time'].toString() + "mins",
+                widget.data['time'].toString() + "mins",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0,
@@ -459,7 +477,9 @@ class _SalleItemState extends State<SalleItem> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                widget.descriptions[_n == 0 ? 0 : _n - 1].toString(),
+                // ENABLE TO USE ARRAYS
+                // widget.descriptions[_n == 0 ? 0 : _n - 1].toString(),
+                widget.description,
                 style: TextStyle(
                   fontWeight: FontWeight.normal,
                   fontSize: 13.0,
