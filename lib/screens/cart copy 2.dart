@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dolovery_app/screens/editadress.dart';
 import 'package:dolovery_app/screens/salleitem.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,7 +13,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:delayed_display/delayed_display.dart';
 
 import 'orderpage.dart';
 
@@ -86,7 +84,6 @@ class _CartState extends State<Cart> {
     prefs.remove('cart');
     prefs.remove('shops');
     prefs.remove('usercartmap');
-    prefs.remove('usercartmap_v2');
     prefs.remove('cached_shops');
     prefs.remove('address');
     Navigator.of(context).pop();
@@ -144,47 +141,10 @@ class _CartState extends State<Cart> {
   // }
   dynamic usercartmap;
 
-  _save(itemid, rate, shop_name, type, shop_price, currency, item) async {
+  _save(itemid, rate, shop_name, type, shop_price, currency) async {
     add();
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
-    usercartmap_v2 = prefs.getString("usercartmap_v2");
-    // prefs.remove('usercartmap');
-    if (usercartmap_v2 == null) {
-      usercartmap_v2 = {};
-      print('made an empty map');
-    } else {
-      usercartmap_v2 = json.decode(usercartmap_v2);
-      print('found the map');
-      print(json.encode(usercartmap_v2));
-    }
-    // if ( item.data['type'] ==  'salle') {
-    //   add
-    // }
-    if (usercartmap_v2.containsKey(shop_name)) {
-      if (usercartmap_v2[shop_name].containsKey(itemid)) {
-        usercartmap_v2[shop_name][itemid]['count'] =
-            int.parse(usercartmap_v2[shop_name][itemid]['count'].toString()) +
-                1;
-        usercartmap_v2[shop_name][itemid]['rate'] = rate;
-        usercartmap_v2[shop_name][itemid]['data'] = item;
-        usercartmap_v2[shop_name][itemid]['date'] = item['date'];
-      } else {
-        usercartmap_v2[shop_name][itemid] = {};
-        usercartmap_v2[shop_name][itemid]['rate'] = rate;
-        usercartmap_v2[shop_name][itemid]['count'] = 1;
-        usercartmap_v2[shop_name][itemid]['data'] = item;
-        usercartmap_v2[shop_name][itemid]['date'] = item['date'];
-      }
-    } else {
-      usercartmap_v2[shop_name] = {};
-      usercartmap_v2[shop_name][itemid] = {};
-      usercartmap_v2[shop_name][itemid]['rate'] = rate;
-      usercartmap_v2[shop_name][itemid]['count'] = 1;
-      usercartmap_v2[shop_name][itemid]['data'] = item;
-      usercartmap_v2[shop_name][itemid]['date'] = item['date'];
-    }
-    prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
     // String shop_name = data.documents[index]['shop'];
     // START
     usercartmap = prefs.getString("usercartmap");
@@ -251,57 +211,10 @@ class _CartState extends State<Cart> {
     // print('saved $items');
   }
 
-  _remove(itemid, rate, shop_name, type, shop_price, currency, item) async {
+  _remove(itemid, rate, shop_name, type, shop_price, currency) async {
     minus();
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
-    usercartmap_v2 = prefs.getString("usercartmap_v2");
-    // prefs.remove('usercartmap');
-    if (usercartmap_v2 == null) {
-      usercartmap_v2 = {};
-      print('made an empty map');
-    } else {
-      usercartmap_v2 = json.decode(usercartmap_v2);
-      print('found the map');
-      print(json.encode(usercartmap_v2));
-    }
-    // if ( item.data['type'] ==  'salle') {
-    //   add
-    // }
-    if (usercartmap_v2.containsKey(shop_name)) {
-      if (usercartmap_v2[shop_name].containsKey(itemid)) {
-        usercartmap_v2[shop_name][itemid]['count'] =
-            int.parse(usercartmap_v2[shop_name][itemid]['count'].toString()) -
-                1;
-        if (usercartmap_v2[shop_name][itemid]['count'] == 0) {
-          usercartmap_v2[shop_name].remove(itemid);
-        }
-      }
-    }
-    // if (usercartmap_v2.containsKey(shop_name)) {
-    //   if (usercartmap_v2[shop_name].containsKey(itemid)) {
-    //     usercartmap_v2[shop_name][itemid]['count'] =
-    //         int.parse(usercartmap_v2[shop_name][itemid]['count'].toString()) -
-    //             1;
-    //     usercartmap_v2[shop_name][itemid]['rate'] = rate;
-    //     usercartmap_v2[shop_name][itemid]['data'] = item.data;
-    //     usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
-    //   } else {
-    //     usercartmap_v2[shop_name][itemid] = {};
-    //     usercartmap_v2[shop_name][itemid]['rate'] = rate;
-    //     usercartmap_v2[shop_name][itemid]['count'] = 1;
-    //     usercartmap_v2[shop_name][itemid]['data'] = item.data;
-    //     usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
-    //   }
-    // } else {
-    //   usercartmap_v2[shop_name] = {};
-    //   usercartmap_v2[shop_name][itemid] = {};
-    //   usercartmap_v2[shop_name][itemid]['rate'] = rate;
-    //   usercartmap_v2[shop_name][itemid]['count'] = 1;
-    //   usercartmap_v2[shop_name][itemid]['data'] = item.data;
-    //   usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
-    // }
-    prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
     // String shop_name = data.documents[index]['shop'];
     // START
     usercartmap = prefs.getString("usercartmap");
@@ -935,214 +848,145 @@ class _CartState extends State<Cart> {
                         ),
                       ),
                     ),
-                    // Text(usercartmap_v2.toString()),
-                    if (usercartmap_v2.keys.length > 0)
-                      Column(
-                        children: [
-                          for (var shop in usercartmap_v2.keys)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  FutureBuilder(
-                                      future: getRate(shop),
-                                      builder: (context, snapshot) {
-                                        switch (snapshot.connectionState) {
-                                          case ConnectionState.waiting:
-                                            return Text('Loading....');
-                                          default:
-                                            if (snapshot.hasError)
-                                              return Text(
-                                                  'Error: ${snapshot.error}');
-                                            if (usercartmap_v2[shop]
-                                                    .keys
-                                                    .length ==
-                                                0) {
-                                              removeShopFromCart(shop);
-                                              return Container();
-                                            }
-                                            return Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                StreamBuilder(
+                    Text(usercartmap_v2.toString()),
+                    Column(
+                      children: [
+                        for (var shop in usercartmap.keys)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                FutureBuilder(
+                                    future: getRate(shop),
+                                    builder: (context, snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.waiting:
+                                          return Text('Loading....');
+                                        default:
+                                          if (snapshot.hasError)
+                                            return Text(
+                                                'Error: ${snapshot.error}');
+                                          if (usercartmap[shop].keys.length ==
+                                              0) {
+                                            removeShopFromCart(shop);
+                                            return Container();
+                                          }
+                                          return Column(
+                                            children: [
+                                              FutureBuilder(
+                                                future: getShop(shop),
+                                                builder: (context, snapshot) {
+                                                  switch (snapshot
+                                                      .connectionState) {
+                                                    case ConnectionState
+                                                        .waiting:
+                                                      return Text(
+                                                          'Loading....');
+                                                    default:
+                                                      if (snapshot.hasError)
+                                                        return Text(
+                                                            'Error: ${snapshot.error}');
+                                                      else
+                                                        return Column(
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          22.0),
+                                                              child: Align(
+                                                                alignment: Alignment
+                                                                    .centerLeft,
+                                                                child: Text(
+                                                                  snapshot.data[
+                                                                      'name'],
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                      fontSize:
+                                                                          23.0,
+                                                                      fontFamily:
+                                                                          'Axiforma',
+                                                                      color: Colors
+                                                                          .black),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        );
+                                                  }
+                                                },
+                                              ),
+                                              // StreamBuilder(
+                                              //     stream: Firestore.instance
+                                              //         .collection('shops')
+                                              //         .where('username', isEqualTo: shop)
+                                              //         .snapshots(),
+                                              //     builder: (context, snapshot) {
+                                              //       var shopinfo =
+                                              //           snapshot.data.docuemnts[0];
+
+                                              //       return Text(
+                                              //         shopinfo['name'],
+                                              //         textAlign: TextAlign.left,
+                                              //         style: TextStyle(
+                                              //             fontWeight: FontWeight.w800,
+                                              //             fontSize: 25.0,
+                                              //             fontFamily: 'Axiforma',
+                                              //             color: Colors.black),
+                                              //       );
+                                              //     }),
+                                              for (var product
+                                                  in usercartmap[shop].keys)
+                                                StreamBuilder<Object>(
                                                     stream: Firestore.instance
-                                                        .collection('shops')
-                                                        .where('username',
-                                                            isEqualTo: shop)
+                                                        .collection("products")
+                                                        // .where('id', isEqualTo: product)
+                                                        .document(
+                                                            product.toString())
                                                         .snapshots(),
                                                     builder:
                                                         (context, snapshot) {
-                                                      var shopinfo = snapshot
-                                                          .data.documents[0];
-
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 22.0),
-                                                        child: Align(
-                                                          alignment: Alignment
-                                                              .centerLeft,
-                                                          child: Text(
-                                                            snapshot.data
-                                                                    .documents[
-                                                                0]['name'],
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                fontSize: 23.0,
-                                                                fontFamily:
-                                                                    'Axiforma',
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }),
-                                                Column(
-                                                  children: [
-                                                    for (var product
-                                                        in usercartmap_v2[shop]
-                                                            .keys)
-                                                      buildCartItem_v2(
-                                                          usercartmap_v2[shop]
-                                                              [product],
-                                                          int.parse(usercartmap_v2[
-                                                                          shop]
-                                                                      [product]
-                                                                  ['count']
-                                                              .toString()),
-                                                          cachedshops[shop],
-                                                          product)
-                                                  ],
-                                                )
-                                              ],
-                                            );
-                                        }
-                                      }),
-                                ],
-                              ),
+                                                      // print('the item is' +
+                                                      //     snapshot
+                                                      //         .data['image']);
+                                                      // print(
+                                                      //     'we are past streaming');
+                                                      // print("rate is:::" +
+                                                      //     rate.toString());
+                                                      // print(snapshot.data);
+                                                      // print(product);
+                                                      // print(int.parse(
+                                                      //     usercartmap[shop]
+                                                      //             [product]
+                                                      //         .toString()));
+                                                      if (snapshot.hasData) {
+                                                        return buildCartItem(
+                                                            snapshot.data,
+                                                            int.parse(usercartmap[
+                                                                        shop]
+                                                                    [product]
+                                                                .toString()),
+                                                            cachedshops[shop]);
+                                                      } else {
+                                                        return CircularProgressIndicator();
+                                                      }
+                                                    })
+                                            ],
+                                          );
+                                      }
+                                    }),
+                              ],
                             ),
-                        ],
-                      ),
-
-                    // Column(
-                    //   children: [
-                    //     for (var shop in usercartmap.keys)
-                    //       Padding(
-                    //         padding: const EdgeInsets.only(bottom: 8.0),
-                    //         child: Column(
-                    //           mainAxisAlignment: MainAxisAlignment.start,
-                    //           children: [
-                    //             FutureBuilder(
-                    //                 future: getRate(shop),
-                    //                 builder: (context, snapshot) {
-                    //                   switch (snapshot.connectionState) {
-                    //                     case ConnectionState.waiting:
-                    //                       return Text('Loading....');
-                    //                     default:
-                    //                       if (snapshot.hasError)
-                    //                         return Text(
-                    //                             'Error: ${snapshot.error}');
-                    //                       if (usercartmap[shop].keys.length ==
-                    //                           0) {
-                    //                         removeShopFromCart(shop);
-                    //                         return Container();
-                    //                       }
-                    //                       return Column(
-                    //                         children: [
-                    //                           Padding(
-                    //                             padding: const EdgeInsets.only(
-                    //                                 left: 22.0),
-                    //                             child: Align(
-                    //                               alignment:
-                    //                                   Alignment.centerLeft,
-                    //                               child: Text(
-                    //                                 snapshot.data['name'],
-                    //                                 textAlign: TextAlign.left,
-                    //                                 style: TextStyle(
-                    //                                     fontWeight:
-                    //                                         FontWeight.w800,
-                    //                                     fontSize: 23.0,
-                    //                                     fontFamily: 'Axiforma',
-                    //                                     color: Colors.black),
-                    //                               ),
-                    //                             ),
-                    //                           ),
-                    //                           // StreamBuilder(
-                    //                           //     stream: Firestore.instance
-                    //                           //         .collection('shops')
-                    //                           //         .where('username', isEqualTo: shop)
-                    //                           //         .snapshots(),
-                    //                           //     builder: (context, snapshot) {
-                    //                           //       var shopinfo =
-                    //                           //           snapshot.data.docuemnts[0];
-
-                    //                           //       return Text(
-                    //                           //         shopinfo['name'],
-                    //                           //         textAlign: TextAlign.left,
-                    //                           //         style: TextStyle(
-                    //                           //             fontWeight: FontWeight.w800,
-                    //                           //             fontSize: 25.0,
-                    //                           //             fontFamily: 'Axiforma',
-                    //                           //             color: Colors.black),
-                    //                           //       );
-                    //                           //     }),
-                    //                           for (var product
-                    //                               in usercartmap[shop].keys)
-                    //                             StreamBuilder<Object>(
-                    //                                 stream: Firestore.instance
-                    //                                     .collection("products")
-                    //                                     // .where('id', isEqualTo: product)
-                    //                                     .document(
-                    //                                         product.toString())
-                    //                                     .snapshots(),
-                    //                                 builder:
-                    //                                     (context, snapshot) {
-                    //                                   // print('the item is' +
-                    //                                   //     snapshot
-                    //                                   //         .data['image']);
-                    //                                   // print(
-                    //                                   //     'we are past streaming');
-                    //                                   // print("rate is:::" +
-                    //                                   //     rate.toString());
-                    //                                   // print(snapshot.data);
-                    //                                   // print(product);
-                    //                                   // print(int.parse(
-                    //                                   //     usercartmap[shop]
-                    //                                   //             [product]
-                    //                                   //         .toString()));
-                    //                                   if (snapshot.hasData) {
-                    //                                     return Visibility(
-                    //                                       visible: false,
-                    //                                       child: buildCartItem(
-                    //                                           snapshot.data,
-                    //                                           int.parse(usercartmap[
-                    //                                                       shop]
-                    //                                                   [product]
-                    //                                               .toString()),
-                    //                                           cachedshops[
-                    //                                               shop]),
-                    //                                     );
-                    //                                   } else {
-                    //                                     return CircularProgressIndicator();
-                    //                                   }
-                    //                                 })
-                    //                         ],
-                    //                       );
-                    //                   }
-                    //                 }),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //   ],
-                    // ),
-
+                          ),
+                      ],
+                    ),
                     FutureBuilder(
                       future: getTotal(),
                       builder: (context, snapshot) {
@@ -2090,323 +1934,6 @@ class _CartState extends State<Cart> {
   //       });
   // }
 
-  Padding buildCartItem_v2(
-      dynamic cartitem, int count, int rate, String cartitemID) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    var shopPrice = cartitem['data']['shop_price'] != null
-        ? cartitem['data']['shop_price']
-        : 1;
-
-    if (cartitem['data']['currency'] != "dollar") {
-      rate = 1;
-    }
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            // color: Colors.green,
-            margin: new EdgeInsets.only(left: 12.0, right: 10),
-            child: Container(
-                height: 90,
-                width: 90,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.07),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 8), // changes position of shadow
-                    ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
-                ),
-                child: Center(
-                  child: CachedNetworkImage(
-                    height: 60,
-                    width: 60,
-                    placeholder: (context, url) =>
-                        Image.asset("assets/images/loading.gif", height: 30),
-                    imageUrl: cartitem['data']['image'] == null
-                        ? "s"
-                        : cartitem['data']['image'],
-                    errorWidget: (context, url, error) =>
-                        Center(child: new Icon(Icons.error)),
-                  ),
-                )),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      width: width - 150,
-                      child: Text(
-                        cartitem['data']['name'],
-                        // textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14.5,
-                          height: 1.16,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Visibility(
-                  visible: cartitem['data']['type'] == 'salle' &&
-                      cartitem['data']['arabic_name'] != null,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 3.0),
-                    child: SizedBox(
-                      width: width - 150,
-                      child: Text(
-                        cartitem['date-words'] != null
-                            ? cartitem['date-words']
-                            : '',
-                        // textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 13,
-                          height: 1.1,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
-                    // mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 0.0),
-                        child: Row(
-                          children: [
-                            Visibility(
-                              visible: cartitem['data']['type'] == 'salle'
-                                  ? false
-                                  : true,
-                              child: Text(
-                                (int.parse(shopPrice.toString()) *
-                                            (rate != null ? rate.toInt() : 1))
-                                        .toString() +
-                                    "L.L.",
-                                // overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-
-                                style: TextStyle(
-                                  height: 1.1,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 13.5,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.redAccent[700],
-                                ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: cartitem['data']['type'] == 'salle'
-                                  ? true
-                                  : false,
-                              child: Text(
-                                cartitem['data']['serving_prices'] != null
-                                    ? cartitem['data']['serving_prices'][count]
-                                            .toString() +
-                                        "L.L."
-                                    : "",
-                                // overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  height: 1.1,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 13.5,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.redAccent[700],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible:
-                            cartitem['data']['type'] == 'salle' ? false : true,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Text(
-                            cartitem['data']['unit'] != null
-                                ? cartitem['data']['unit'].toString()
-                                : '',
-                            // overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              height: 1.1,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 13,
-                              fontFamily: 'Axiforma',
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: cartitem['data']['type'] == 'salle' ? true : false,
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(1, 0, 0, 0),
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(
-                                builder: (context) => SalleItem(
-                                    cartitem,
-                                    cartitem['data']['day'],
-                                    cartitem['data']['serving_prices'],
-                                    cartitem['data']['descriptions'],
-                                    cartitem['data']['description'],
-                                    cartitem['date'],
-                                    cartitem['date-words'])))
-                            .then((_) {
-                          setState(() {});
-                        });
-                      },
-                      color: Colors.redAccent[700],
-                      textColor: Colors.white,
-                      minWidth: 0,
-                      height: 0,
-                      // padding: EdgeInsets.zero,
-                      padding:
-                          EdgeInsets.only(left: 6, top: 2, right: 6, bottom: 1),
-                      child: Text(
-                        (count + 1).toString() + ' Servings',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13.0,
-                          fontFamily: 'Axiforma',
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                // ),
-                //  Visibility(
-                //   visible: cartitem['data']['type'] == 'salle' ? false : true,
-                //   child: Container(
-                //     child: Text()
-                //   )),
-                Visibility(
-                  visible: cartitem['data']['type'] == 'salle' ? false : true,
-                  child: Row(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        width: 25,
-                        child: RawMaterialButton(
-                          onPressed: () {
-                            _remove(
-                                cartitemID,
-                                rate,
-                                cartitem['data']['shop'],
-                                cartitem['data']['type'],
-                                (int.parse(cartitem['data']['shop_price']
-                                        .toString()) *
-                                    int.parse(rate.toString())),
-                                cartitem['data']['currency'],
-                                cartitem['data']);
-                          },
-                          elevation: 2,
-                          fillColor: Colors.redAccent[700],
-                          child: Icon(
-                            Icons.remove,
-                            size: 13,
-                            color: Colors.white,
-                          ),
-                          // padding: EdgeInsets.all(0.0),
-                          shape: CircleBorder(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                        child: new Text(count.toString(),
-                            style: new TextStyle(fontSize: 14.5)),
-                      ),
-                      SizedBox(
-                        width: 25,
-                        child: RawMaterialButton(
-                          onPressed: () {
-                            //   refreshcartnumbers(
-                            //       cartitem.documentID,
-                            //       count,
-                            //       int.parse(cartitem['shop_price'].toString()),
-                            //       true,
-                            //       false);
-                            // },
-                            _save(
-                                cartitemID,
-                                rate,
-                                cartitem['data']['shop'],
-                                cartitem['data']['type'],
-                                (int.parse(cartitem['data']['shop_price']
-                                        .toString()) *
-                                    int.parse(rate.toString())),
-                                cartitem['data']['currency'],
-                                cartitem['data']);
-                          },
-                          elevation: !maximum ? 2 : 0,
-                          fillColor: !maximum
-                              ? Colors.redAccent[700]
-                              : Colors.grey[200],
-                          child: Icon(
-                            Icons.add,
-                            size: 13,
-                            color: !maximum ? Colors.white : Colors.grey[800],
-                          ),
-                          padding: EdgeInsets.all(0.0),
-                          shape: CircleBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   Padding buildCartItem(DocumentSnapshot cartitem, int count, int rate) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -2594,9 +2121,7 @@ class _CartState extends State<Cart> {
                                     cartitem['day'],
                                     cartitem['serving_prices'],
                                     cartitem['descriptions'],
-                                    cartitem['description'],
-                                    cartitem['date'],
-                                    cartitem['date-words'])))
+                                    cartitem['description'])))
                             .then((_) {
                           setState(() {});
                         });
@@ -2643,8 +2168,7 @@ class _CartState extends State<Cart> {
                                 cartitem['type'],
                                 (int.parse(cartitem['shop_price'].toString()) *
                                     int.parse(rate.toString())),
-                                cartitem['currency'],
-                                cartitem['data']);
+                                cartitem['currency']);
                           },
                           elevation: 2,
                           fillColor: Colors.redAccent[700],
@@ -2680,8 +2204,7 @@ class _CartState extends State<Cart> {
                                 cartitem['type'],
                                 (int.parse(cartitem['shop_price'].toString()) *
                                     int.parse(rate.toString())),
-                                cartitem['currency'],
-                                cartitem['data']);
+                                cartitem['currency']);
                           },
                           elevation: !maximum ? 2 : 0,
                           fillColor: !maximum

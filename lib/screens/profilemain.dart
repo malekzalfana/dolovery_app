@@ -494,7 +494,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
-                child: Image.asset("assets/images/loading.gif"),
+                child: Image.asset("assets/images/loading.gif", width: 30),
               );
             default:
               if ((snapshot.hasError)) {

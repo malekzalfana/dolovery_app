@@ -52,13 +52,6 @@ getMonth() {
 }
 
 // var dato;
-getDateDay(String daynumber) {
-  var date = new DateTime.now();
-  var numdate = new DateTime(date.year, date.month, int.parse(daynumber));
-
-  var dato = DateFormat('EEEE, d MMM, yyyy').format(numdate).toString();
-  return dato;
-}
 
 setSalle() async {
   Map<String, dynamic> week = {
@@ -112,6 +105,8 @@ setSalle() async {
   Firestore.instance.collection('salle').document('10-2020').setData(week);
 }
 
+var dato;
+
 class SalleScreenState extends State<SalleScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final weeks = [
@@ -130,6 +125,14 @@ class SalleScreenState extends State<SalleScreen> {
     super.initState();
     print("initState");
     getMonth();
+  }
+
+  Future<String> getDateDay(String daynumber) {
+    var date = new DateTime.now();
+    var numdate = new DateTime(date.year, date.month, int.parse(daynumber));
+
+    dato = DateFormat('EEEE, d MMM, yyyy').format(numdate).toString();
+    // return dato;
   }
 
   @override
@@ -166,7 +169,7 @@ class SalleScreenState extends State<SalleScreen> {
                   ),
                 ),
               ),
-              Text(formattedThisMonth.toString()),
+              // Text(formattedThisMonth.toString()),
               Padding(
                 padding: const EdgeInsets.all(13.0),
                 child: Text(
@@ -219,7 +222,13 @@ class SalleScreenState extends State<SalleScreen> {
                             .snapshots(),
                         builder: (context, sallesnapshot) {
                           if (!sallesnapshot.hasData)
-                            return Text('loading...');
+                            return SizedBox(
+                              height: 300,
+                              child: Center(
+                                  child: Image.asset(
+                                      "assets/images/loading.gif",
+                                      height: 30)),
+                            );
                           else
                             return Container(
                               height: height - 345,
@@ -230,136 +239,35 @@ class SalleScreenState extends State<SalleScreen> {
                                   //       new ScrollController(keepScrollOffset: true),
                                   //   children: List.generate(7, (dayindex) {
                                   // if (dayindex == 0)
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.vertical,
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 45.0),
-                                      child: Column(
-                                        children: [
-                                          for (var dayindex =
-                                                  1 + ((numb - 1) * today);
-                                              dayindex <
-                                                  today +
-                                                      1 +
-                                                      ((numb - 1) *
-                                                          (31 - today));
-                                              dayindex++)
-                                            Column(
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: FutureBuilder(
-                                                    future: getDateDay(
-                                                        dayindex.toString()),
-                                                    builder:
-                                                        (context, snapshot) {
-                                                      // if (snapshot.hasData)
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 20.0,
-                                                                top: 13),
-                                                        child: Text(
-                                                          // weeks[dayindex - 1],
-                                                          // dayindex.toString(),
-                                                          snapshot.data,
-                                                          //  + dateParse.month.toString(),
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w800,
-                                                            fontSize: 16.0,
-                                                            fontFamily:
-                                                                'Axiforma',
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                                StreamBuilder(
-                                                  stream: Firestore.instance
-                                                      .collection('products')
-                                                      .document(
-                                                          sallesnapshot.data[
-                                                              (dayindex)
-                                                                  .toString()])
-                                                      .snapshots(),
-                                                  builder: (context, snapshot) {
-                                                    print(sallesnapshot.data[
-                                                        (dayindex).toString()]);
-                                                    print('index above');
-
-                                                    if (sallesnapshot.data[
-                                                            (dayindex)
-                                                                .toString()] ==
-                                                        null)
-                                                      return Container();
-                                                    else
-                                                      // var salleid = dayindex > 9
-                                                      //     ? '01'
-                                                      //     : sallesnapshot
-                                                      //         .data[dayindex.toString()];
-                                                      return GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.of(context)
-                                                              .push(MaterialPageRoute(
-                                                                  builder: (context) => SalleItem(
-                                                                      snapshot
-                                                                          .data,
-                                                                      weeks[0],
-                                                                      snapshot.data[
-                                                                          'serving_prices'],
-                                                                      snapshot.data[
-                                                                          'descriptions'],
-                                                                      snapshot.data[
-                                                                          'description'])))
-                                                              .then((_) {
-                                                            // widgenotifyParent2();
-                                                            setState(() {});
-                                                          });
-                                                        },
-                                                        child:
-                                                            // Text(snapshot
-                                                            //         .data['name']
-                                                            //         .toString()
-                                                            SalleImage(
-                                                                salleName: snapshot.data[
-                                                                    'name'],
-                                                                sallePhoto: snapshot.data['image'] ==
-                                                                        null
-                                                                    ? 's'
-                                                                    : snapshot.data[
-                                                                        'image'],
-                                                                salleArabicName:
-                                                                    snapshot.data[
-                                                                        'arabic_name'],
-                                                                salleItems: snapshot.data[
-                                                                        'items']
-                                                                    .toString(),
-                                                                salleTime: snapshot
-                                                                    .data[
-                                                                        'time']
-                                                                    .toString(),
-                                                                salleID: snapshot
-                                                                    .data
-                                                                    .documentID,
-                                                                salleStartingPrice:
-                                                                    snapshot
-                                                                        .data['serving_prices']
-                                                                            [0]
-                                                                        .toString()),
-                                                      );
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                        ],
+                                  Opacity(
+                                    opacity: 1,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.vertical,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 45.0),
+                                        child: Column(
+                                          children: [
+                                            for (var dayindex =
+                                                    1 + ((numb - 1) * today);
+                                                dayindex <
+                                                    today +
+                                                        1 +
+                                                        ((numb - 1) *
+                                                            (31 - today));
+                                                dayindex++)
+                                              Column(
+                                                children: [
+                                                  buildDateOfSalle(
+                                                      dayindex.toString(),
+                                                      sallesnapshot,
+                                                      dayindex,
+                                                      numb),
+                                                  // buildSalleItemList(),
+                                                ],
+                                              ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -391,6 +299,175 @@ class SalleScreenState extends State<SalleScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  // StreamBuilder<DocumentSnapshot> buildSalleItemList(AsyncSnapshot sallesnapshot, num dayindex) {
+  //   return StreamBuilder(
+  //                                               stream: Firestore.instance
+  //                                                   .collection('products')
+  //                                                   .document(
+  //                                                       sallesnapshot.data[
+  //                                                           (dayindex)
+  //                                                               .toString()])
+  //                                                   .snapshots(),
+  //                                               builder: (context, snapshot) {
+  //                                                 print(sallesnapshot.data[
+  //                                                     (dayindex).toString()]);
+  //                                                 print('index above');
+
+  //                                                 if (sallesnapshot.data[
+  //                                                         (dayindex)
+  //                                                             .toString()] ==
+  //                                                     null)
+  //                                                   return Container();
+  //                                                 else
+  //                                                   // var salleid = dayindex > 9
+  //                                                   //     ? '01'
+  //                                                   //     : sallesnapshot
+  //                                                   //         .data[dayindex.toString()];
+  //                                                   return GestureDetector(
+  //                                                     onTap: () {
+  //                                                       Navigator.of(context)
+  //                                                           .push(MaterialPageRoute(
+  //                                                               builder: (context) => SalleItem(
+  //                                                                   snapshot
+  //                                                                       .data,
+  //                                                                   weeks[0],
+  //                                                                   snapshot.data[
+  //                                                                       'serving_prices'],
+  //                                                                   snapshot.data[
+  //                                                                       'descriptions'],
+  //                                                                   snapshot.data[
+  //                                                                       'description'])))
+  //                                                           .then((_) {
+  //                                                         // widgenotifyParent2();
+  //                                                         setState(() {});
+  //                                                       });
+  //                                                     },
+  //                                                     child:
+  //                                                         // Text(snapshot
+  //                                                         //         .data['name']
+  //                                                         //         .toString()
+  //                                                         SalleImage(
+  //                                                             salleName: snapshot.data[
+  //                                                                 'name'],
+  //                                                             sallePhoto: snapshot.data['image'] ==
+  //                                                                     null
+  //                                                                 ? 's'
+  //                                                                 : snapshot.data[
+  //                                                                     'image'],
+  //                                                             salleArabicName:
+  //                                                                 snapshot.data[
+  //                                                                     'arabic_name'],
+  //                                                             salleItems: snapshot.data[
+  //                                                                     'items']
+  //                                                                 .toString(),
+  //                                                             salleTime: snapshot
+  //                                                                 .data[
+  //                                                                     'time']
+  //                                                                 .toString(),
+  //                                                             salleID: snapshot
+  //                                                                 .data
+  //                                                                 .documentID,
+  //                                                             salleStartingPrice:
+  //                                                                 snapshot
+  //                                                                     .data['serving_prices']
+  //                                                                         [0]
+  //                                                                     .toString()),
+  //                                                   );
+  //                                               },
+  //                                             );
+  // }
+
+  Column buildDateOfSalle(String daynumber, sallesnapshot, dayindex, numb) {
+    var date = new DateTime.now();
+    var numdate = new DateTime(date.year, date.month, int.parse(daynumber));
+
+    var dato = DateFormat('EEEE, d MMM, yyyy').format(numdate).toString();
+    var datenumbers = numdate.year.toString() +
+        "-" +
+        numdate.month.toString() +
+        "-" +
+        numdate.day.toString();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 15, bottom: 5, top: 20),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              dato,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 16.0,
+                fontFamily: 'Axiforma',
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ),
+        Opacity(
+          opacity: numb == 1 ? 0.5 : 1,
+          child: StreamBuilder(
+            stream: Firestore.instance
+                .collection('products')
+                .document(sallesnapshot.data[(dayindex).toString()])
+                .snapshots(),
+            builder: (context, snapshot) {
+              print(sallesnapshot.data[(dayindex).toString()]);
+              print('index above');
+
+              if (sallesnapshot.data[(dayindex).toString()] == null)
+                return Container();
+              else
+                // var salleid = dayindex > 9
+                //     ? '01'
+                //     : sallesnapshot
+                //         .data[dayindex.toString()];
+                return GestureDetector(
+                  onTap: () {
+                    if (numb == 1) {
+                      null;
+                    } else {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) => SalleItem(
+                                  snapshot.data,
+                                  weeks[0],
+                                  snapshot.data['serving_prices'],
+                                  snapshot.data['descriptions'],
+                                  snapshot.data['description'],
+                                  dato,
+                                  datenumbers)))
+                          .then((_) {
+                        // widgenotifyParent2();
+                        setState(() {});
+                      });
+                    }
+                  },
+                  child:
+                      // Text(snapshot
+                      //         .data['name']
+                      //         .toString()
+                      SalleImage(
+                          salleName: snapshot.data['name'],
+                          sallePhoto: snapshot.data['image'] == null
+                              ? 's'
+                              : snapshot.data['image'],
+                          salleArabicName: snapshot.data['arabic_name'],
+                          salleItems: snapshot.data['items'].toString(),
+                          salleTime: snapshot.data['time'].toString(),
+                          salleID: snapshot.data.documentID,
+                          salleStartingPrice:
+                              snapshot.data['serving_prices'][0].toString()),
+                );
+            },
+          ),
+        ),
+      ],
     );
   }
 

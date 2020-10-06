@@ -96,7 +96,7 @@ class _ProductImageState extends State<ProductImage> {
                     width: 120,
                     placeholder: (context, url) =>
                         Image.asset("assets/images/loading.gif", height: 30),
-                    imageUrl: productImage,
+                    imageUrl: productImage == null ? "s" : productImage,
                     errorWidget: (context, url, error) =>
                         Center(child: new Icon(Icons.error)),
                   )

@@ -878,21 +878,23 @@ class _ShopPageState extends State<ShopPage> {
                                                               ? "0"
                                                               : snapshot.data.documents[index]['old_price']
                                                                   .toString(),
-                                                          productName: snapshot
+                                                          productName: snapshot.data.documents[index]['name'] != null
+                                                              ? snapshot.data
+                                                                      .documents[index]
+                                                                  ['name']
+                                                              : '[NO NAME]',
+                                                          productImage: snapshot
                                                                   .data
                                                                   .documents[index]
-                                                              ['name'],
-                                                          productImage:
-                                                              snapshot.data.documents[index]
-                                                                  ['image'],
-                                                          productPrice: snapshot
-                                                              .data
-                                                              .documents[index]
-                                                                  ['shop_price']
-                                                              .toString(),
-                                                          shopName: snapshot
-                                                              .data
-                                                              .documents[index]['shop'],
+                                                              ['image'],
+                                                          productPrice: snapshot.data.documents[index]['shop_price'].toString() != null
+                                                              ? snapshot
+                                                                  .data
+                                                                  .documents[index]
+                                                                      ['shop_price']
+                                                                  .toString()
+                                                              : '[NO PRICE]',
+                                                          shopName: snapshot.data.documents[index]['shop'],
                                                           productUnit: snapshot.data.documents[index]['unit'] != null ? snapshot.data.documents[index]['unit'] : '',
                                                           productCurrency: snapshot.data.documents[index]['currency'] != null ? snapshot.data.documents[index]['currency'] : "lebanese"),
                                                     );

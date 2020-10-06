@@ -266,8 +266,9 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
           }
 
           dynamic usercartmap;
+          dynamic usercartmap_v2;
 
-          _save(itemid, rate) async {
+          _save(item, itemid, rate) async {
             // {
             //   "shop1": {
             //     "12123":1123,
@@ -278,6 +279,43 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
             String shop_name = data.documents[index]['shop'];
+            usercartmap_v2 = prefs.getString("usercartmap_v2");
+            // prefs.remove('usercartmap');
+            if (usercartmap_v2 == null) {
+              usercartmap_v2 = {};
+              print('made an empty map');
+            } else {
+              usercartmap_v2 = json.decode(usercartmap_v2);
+              print('found the map');
+              print(json.encode(usercartmap_v2));
+            }
+            // if ( item.data['type'] ==  'salle') {
+            //   add
+            // }
+            if (usercartmap_v2.containsKey(shop_name)) {
+              if (usercartmap_v2[shop_name].containsKey(itemid)) {
+                usercartmap_v2[shop_name][itemid]['count'] = int.parse(
+                        usercartmap_v2[shop_name][itemid]['count'].toString()) +
+                    1;
+                usercartmap_v2[shop_name][itemid]['rate'] = rate;
+                usercartmap_v2[shop_name][itemid]['data'] = item.data;
+                usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+              } else {
+                usercartmap_v2[shop_name][itemid] = {};
+                usercartmap_v2[shop_name][itemid]['rate'] = rate;
+                usercartmap_v2[shop_name][itemid]['count'] = 1;
+                usercartmap_v2[shop_name][itemid]['data'] = item.data;
+                usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+              }
+            } else {
+              usercartmap_v2[shop_name] = {};
+              usercartmap_v2[shop_name][itemid] = {};
+              usercartmap_v2[shop_name][itemid]['rate'] = rate;
+              usercartmap_v2[shop_name][itemid]['count'] = 1;
+              usercartmap_v2[shop_name][itemid]['data'] = item.data;
+              usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+            }
+            prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
             // START
             usercartmap = prefs.getString("usercartmap");
             // prefs.remove('usercartmap');
@@ -356,11 +394,59 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             });
           }
 
-          _remove(itemid, rate) async {
+          _remove(item, itemid, rate) async {
             minus();
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
             String shop_name = data.documents[index]['shop'];
+            usercartmap_v2 = prefs.getString("usercartmap_v2");
+            // prefs.remove('usercartmap');
+            if (usercartmap_v2 == null) {
+              usercartmap_v2 = {};
+              print('made an empty map');
+            } else {
+              usercartmap_v2 = json.decode(usercartmap_v2);
+              print('found the map');
+              print(json.encode(usercartmap_v2));
+            }
+            // if ( item.data['type'] ==  'salle') {
+            //   add
+            // }
+            if (usercartmap_v2.containsKey(shop_name)) {
+              if (usercartmap_v2[shop_name].containsKey(itemid)) {
+                usercartmap_v2[shop_name][itemid]['count'] =
+                    int.parse(usercartmap_v2[shop_name][itemid].toString()) - 1;
+                if (usercartmap_v2[shop_name][itemid]['count'] == 0) {
+                  usercartmap_v2[shop_name].remove(itemid);
+                }
+              }
+            }
+            if (usercartmap_v2.containsKey(shop_name)) {
+              if (usercartmap_v2[shop_name].containsKey(itemid)) {
+                usercartmap_v2[shop_name][itemid]['count'] = int.parse(
+                        usercartmap_v2[shop_name][itemid]['count'].toString()) -
+                    1;
+                usercartmap_v2[shop_name][itemid]['rate'] = rate;
+                usercartmap_v2[shop_name][itemid]['data'] = item.data;
+                usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+              } else {
+                usercartmap_v2[shop_name][itemid] = {};
+                usercartmap_v2[shop_name][itemid]['rate'] = rate;
+                usercartmap_v2[shop_name][itemid]['count'] = 1;
+                usercartmap_v2[shop_name][itemid]['data'] = item.data;
+                usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+              }
+            } else {
+              usercartmap_v2[shop_name] = {};
+              usercartmap_v2[shop_name][itemid] = {};
+              usercartmap_v2[shop_name][itemid]['rate'] = rate;
+              usercartmap_v2[shop_name][itemid]['count'] = 1;
+              usercartmap_v2[shop_name][itemid]['data'] = item.data;
+              usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+            }
+            prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
+            // START
+            usercartmap = prefs.getString("usercartmap");
             // START
             usercartmap = prefs.getString("usercartmap");
             // prefs.remove('usercartmap');
@@ -563,7 +649,8 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                           children: <Widget>[
                             RawMaterialButton(
                               onPressed: () {
-                                _remove(data.documents[index].documentID, rate);
+                                _remove(data.documents[index],
+                                    data.documents[index].documentID, rate);
                               },
                               elevation: !minimum ? 2 : 0,
                               fillColor: !minimum
@@ -586,7 +673,9 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                             RawMaterialButton(
                               onPressed: () {
                                 // add;
-                                _save(data.documents[index].documentID, rate);
+                                _save(data.documents[index],
+                                    data.documents[index].documentID, rate);
+                                // _save2(data.documents[index], rate);
                               },
                               elevation: !maximum ? 2 : 0,
                               fillColor: !maximum

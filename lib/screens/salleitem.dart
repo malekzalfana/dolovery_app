@@ -18,8 +18,10 @@ class SalleItem extends StatefulWidget {
   final List descriptions;
   final String description;
   final List prices;
-  SalleItem(
-      this.data, this.day, this.prices, this.descriptions, this.description,
+  final String datenumbers;
+  final String datewords;
+  SalleItem(this.data, this.day, this.prices, this.descriptions,
+      this.description, this.datewords, this.datenumbers,
       {Key key})
       : super(key: key); //add also..example this.abc,this...
 
@@ -59,7 +61,7 @@ class _SalleItemState extends State<SalleItem> {
   getSalleStatus() async {
     Map newusercartmap;
     final prefs = await SharedPreferences.getInstance();
-    var temp = prefs.getString('usercartmap');
+    var temp = prefs.getString('usercartmap_v2');
     if (temp == null) {
       temp = "";
       newusercartmap = {};
@@ -75,7 +77,8 @@ class _SalleItemState extends State<SalleItem> {
     if (newusercartmap.containsKey('dolovery')) {
       // print('it has dolovery in  it');
       // print(widget.data.documentID);
-      if (newusercartmap['dolovery'].containsKey(widget.data.documentID)) {
+      if (newusercartmap['dolovery']
+          .containsKey(widget.data.documentID + '_${widget.datenumbers}')) {
         // print('dolovery has documentid in it');
         // print(alreadyadded);
         if (loaded == false) {
@@ -83,7 +86,8 @@ class _SalleItemState extends State<SalleItem> {
           setState(() {
             alreadyadded = true;
             loaded = true;
-            inmycart = newusercartmap['dolovery'][widget.data.documentID];
+            inmycart = newusercartmap['dolovery']
+                [widget.data.documentID + '_${widget.datenumbers}']['count'];
             // print("$inmycart is in my cart");
 
             // print("there is one beforeeeeeeeeeee");
@@ -96,11 +100,51 @@ class _SalleItemState extends State<SalleItem> {
   }
 
   int oldsalletotal = 0;
-  _save(itemid, int count) async {
+  dynamic usercartmap_v2;
+  _save(itemid, int count, item) async {
     oldsalletotal = null;
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
     String shop_name = widget.data['shop'];
+    usercartmap_v2 = prefs.getString("usercartmap_v2");
+    // prefs.remove('usercartmap');
+    if (usercartmap_v2 == null) {
+      usercartmap_v2 = {};
+      print('made an empty map');
+    } else {
+      usercartmap_v2 = json.decode(usercartmap_v2);
+      print('found the map');
+      print(json.encode(usercartmap_v2));
+    }
+    // if ( item.data['type'] ==  'salle') {
+    //   add
+    // }
+    var new_itemid = itemid + '_${widget.datenumbers}';
+    if (usercartmap_v2.containsKey(shop_name)) {
+      if (usercartmap_v2[shop_name].containsKey(new_itemid)) {
+        usercartmap_v2[shop_name][new_itemid]['count'] = count;
+        // usercartmap_v2[shop_name][new_itemid]['rate'] = rate;
+        usercartmap_v2[shop_name][new_itemid]['data'] = item;
+        usercartmap_v2[shop_name][new_itemid]['date'] = widget.datenumbers;
+        usercartmap_v2[shop_name][new_itemid]['date-words'] = widget.datewords;
+      } else {
+        usercartmap_v2[shop_name][new_itemid] = {};
+        // usercartmap_v2[shop_name][new_itemid]['rate'] = rate;
+        usercartmap_v2[shop_name][new_itemid]['count'] = 0;
+        usercartmap_v2[shop_name][new_itemid]['data'] = item;
+        usercartmap_v2[shop_name][new_itemid]['date'] = widget.datenumbers;
+        usercartmap_v2[shop_name][new_itemid]['date-words'] = widget.datewords;
+      }
+    } else {
+      usercartmap_v2[shop_name] = {};
+      usercartmap_v2[shop_name][new_itemid] = {};
+      // usercartmap_v2[shop_name][new_itemid]['rate'] = rate;
+      usercartmap_v2[shop_name][new_itemid]['count'] = 0;
+      usercartmap_v2[shop_name][new_itemid]['data'] = item;
+      usercartmap_v2[shop_name][new_itemid]['date'] = widget.datenumbers;
+      usercartmap_v2[shop_name][new_itemid]['date-words'] = widget.datewords;
+    }
+    prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
     // START
     usercartmap = prefs.getString("usercartmap");
     print('user cartmap');
@@ -120,18 +164,18 @@ class _SalleItemState extends State<SalleItem> {
     }
 
     if (usercartmap.containsKey(shop_name)) {
-      if (usercartmap[shop_name].containsKey(itemid)) {
-        oldsalletotal = usercartmap[shop_name][itemid];
-        usercartmap[shop_name][itemid] = _n;
-        // int.parse(usercartmap[shop_name][itemid].toString()) + (1 * count);
+      if (usercartmap[shop_name].containsKey(new_itemid)) {
+        oldsalletotal = usercartmap[shop_name][new_itemid];
+        usercartmap[shop_name][new_itemid] = _n;
+        // int.parse(usercartmap[shop_name][new_itemid].toString()) + (1 * count);
       } else {
-        usercartmap[shop_name][itemid] = 1 * count;
-        cart.add(itemid);
+        usercartmap[shop_name][new_itemid] = 1 * count;
+        cart.add(new_itemid);
       }
     } else {
       usercartmap[shop_name] = {};
-      usercartmap[shop_name][itemid] = 1 * count;
-      cart.add(itemid);
+      usercartmap[shop_name][new_itemid] = 1 * count;
+      cart.add(new_itemid);
     }
 
     // print(prefs.getString('usercartmap'));
@@ -204,7 +248,7 @@ class _SalleItemState extends State<SalleItem> {
     // print('saved $items');
   }
 
-  cancelCartItem(itemid) async {
+  cancelCartItem(new_itemid) async {
     // oldsalletotal = null;
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
@@ -215,6 +259,13 @@ class _SalleItemState extends State<SalleItem> {
     print(usercartmap);
     // prefs.remove('usercartmap');
     usercartmap = json.decode(usercartmap);
+
+    usercartmap = prefs.getString("usercartmap_v2");
+    print('user cartmap');
+    print(usercartmap);
+    // prefs.remove('usercartmap');
+    usercartmap = json.decode(usercartmap_v2);
+    usercartmap_v2[shop_name].remove(new_itemid);
 
     if (cart == null) {
       cart = [];
@@ -243,8 +294,8 @@ class _SalleItemState extends State<SalleItem> {
     if (cart == null) {
       cart = [];
     }
-    cart.remove(itemid);
-    usercartmap[shop_name].remove(itemid);
+    cart.remove(new_itemid);
+    usercartmap[shop_name].remove(new_itemid);
     prefs.setDouble('total', total);
     prefs.setString('usercartmap', json.encode(usercartmap));
     final value = cart;
@@ -333,21 +384,12 @@ class _SalleItemState extends State<SalleItem> {
             ),
           ),
           Text(
-            widget.day,
+            widget.datewords,
             style: TextStyle(
                 fontWeight: FontWeight.w800,
-                fontSize: 32.0,
+                fontSize: 22.0,
                 color: Colors.black),
           ),
-          // Text(
-          //   formatted_date,
-          //   style: TextStyle(
-          //       fontWeight: FontWeight.normal,
-          //       fontSize: 14.0,
-          //       fontFamily: 'Axiforma',
-          //       color: Colors.black45),
-          // ),
-
           CachedNetworkImage(
             imageUrl: widget.data['image'] == null ? 's' : widget.data['image'],
             width: 330,
@@ -663,7 +705,8 @@ class _SalleItemState extends State<SalleItem> {
                                 ),
                                 elevation: 0,
                                 onPressed: () {
-                                  _save(widget.data.documentID, _n);
+                                  _save(widget.data.documentID, _n,
+                                      widget.data.data);
                                   setState(() {
                                     loaded = false;
                                     showChangeButton = false;
@@ -706,7 +749,7 @@ class _SalleItemState extends State<SalleItem> {
                 ),
                 elevation: 0,
                 onPressed: () {
-                  _save(widget.data.documentID, _n);
+                  _save(widget.data.documentID, _n, widget.data.data);
                   setState(() {});
                 },
                 color: Colors.redAccent[700],

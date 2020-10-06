@@ -82,14 +82,14 @@ class _SalleImageState extends State<SalleImage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                CachedNetworkImage(
-                  imageUrl: sallePhoto,
-                  height: 100,
-                  width: 100,
-                  placeholder: (context, url) =>
-                      Image.asset("assets/images/loading.gif", height: 30),
-                  errorWidget: (context, url, error) => new Icon(Icons.error),
-                ),
+                // CachedNetworkImage(
+                //   imageUrl: sallePhoto,
+                //   height: 100,
+                //   width: 100,
+                //   placeholder: (context, url) =>
+                //       Image.asset("assets/images/loading.gif", height: 30),
+                //   errorWidget: (context, url, error) => new Icon(Icons.error),
+                // ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0, left: 15),
                   child: SizedBox(
