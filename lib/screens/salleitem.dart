@@ -20,8 +20,9 @@ class SalleItem extends StatefulWidget {
   final List prices;
   final String datenumbers;
   final String datewords;
+  final String id;
   SalleItem(this.data, this.day, this.prices, this.descriptions,
-      this.description, this.datewords, this.datenumbers,
+      this.description, this.datewords, this.datenumbers, this.id,
       {Key key})
       : super(key: key); //add also..example this.abc,this...
 
@@ -76,9 +77,9 @@ class _SalleItemState extends State<SalleItem> {
     }
     if (newusercartmap.containsKey('dolovery')) {
       // print('it has dolovery in  it');
-      // print(widget.data.documentID);
+      // print(widget.id);
       if (newusercartmap['dolovery']
-          .containsKey(widget.data.documentID + '_${widget.datenumbers}')) {
+          .containsKey(widget.id + '_${widget.datenumbers}')) {
         // print('dolovery has documentid in it');
         // print(alreadyadded);
         if (loaded == false) {
@@ -87,7 +88,7 @@ class _SalleItemState extends State<SalleItem> {
             alreadyadded = true;
             loaded = true;
             inmycart = newusercartmap['dolovery']
-                [widget.data.documentID + '_${widget.datenumbers}']['count'];
+                [widget.id + '_${widget.datenumbers}']['count'];
             // print("$inmycart is in my cart");
 
             // print("there is one beforeeeeeeeeeee");
@@ -102,6 +103,8 @@ class _SalleItemState extends State<SalleItem> {
   int oldsalletotal = 0;
   dynamic usercartmap_v2;
   _save(itemid, int count, item) async {
+    print(item);
+    print('hayda l item');
     oldsalletotal = null;
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
@@ -130,7 +133,7 @@ class _SalleItemState extends State<SalleItem> {
       } else {
         usercartmap_v2[shop_name][new_itemid] = {};
         // usercartmap_v2[shop_name][new_itemid]['rate'] = rate;
-        usercartmap_v2[shop_name][new_itemid]['count'] = 0;
+        usercartmap_v2[shop_name][new_itemid]['count'] = count;
         usercartmap_v2[shop_name][new_itemid]['data'] = item;
         usercartmap_v2[shop_name][new_itemid]['date'] = widget.datenumbers;
         usercartmap_v2[shop_name][new_itemid]['date-words'] = widget.datewords;
@@ -139,7 +142,7 @@ class _SalleItemState extends State<SalleItem> {
       usercartmap_v2[shop_name] = {};
       usercartmap_v2[shop_name][new_itemid] = {};
       // usercartmap_v2[shop_name][new_itemid]['rate'] = rate;
-      usercartmap_v2[shop_name][new_itemid]['count'] = 0;
+      usercartmap_v2[shop_name][new_itemid]['count'] = count;
       usercartmap_v2[shop_name][new_itemid]['data'] = item;
       usercartmap_v2[shop_name][new_itemid]['date'] = widget.datenumbers;
       usercartmap_v2[shop_name][new_itemid]['date-words'] = widget.datewords;
@@ -236,9 +239,12 @@ class _SalleItemState extends State<SalleItem> {
       shops.add(shop_name);
       prefs.setStringList("shops", shops);
     }
-    oldsalletotal = count;
-    alreadyadded = false;
-    showChangeButton = false;
+
+    setState(() {
+      oldsalletotal = count;
+      alreadyadded = false;
+      showChangeButton = false;
+    });
 
     // setState(() {});
 
@@ -248,7 +254,7 @@ class _SalleItemState extends State<SalleItem> {
     // print('saved $items');
   }
 
-  cancelCartItem(new_itemid) async {
+  cancelCartItem(itemid) async {
     // oldsalletotal = null;
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
@@ -260,11 +266,12 @@ class _SalleItemState extends State<SalleItem> {
     // prefs.remove('usercartmap');
     usercartmap = json.decode(usercartmap);
 
-    usercartmap = prefs.getString("usercartmap_v2");
+    usercartmap_v2 = prefs.getString("usercartmap_v2");
     print('user cartmap');
-    print(usercartmap);
+    print(usercartmap_v2);
     // prefs.remove('usercartmap');
-    usercartmap = json.decode(usercartmap_v2);
+    var new_itemid = itemid + '_${widget.datenumbers}';
+    usercartmap_v2 = json.decode(usercartmap_v2);
     usercartmap_v2[shop_name].remove(new_itemid);
 
     if (cart == null) {
@@ -298,6 +305,7 @@ class _SalleItemState extends State<SalleItem> {
     usercartmap[shop_name].remove(new_itemid);
     prefs.setDouble('total', total);
     prefs.setString('usercartmap', json.encode(usercartmap));
+    prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
     final value = cart;
     final double items = cart.length.toDouble();
     prefs.setDouble('items', items);
@@ -352,7 +360,7 @@ class _SalleItemState extends State<SalleItem> {
     // widget.data['salle_date']);
     double width = MediaQuery.of(context).size.width;
 
-    if (inmycart != _n) {
+    if (inmycart != _n && loaded) {
       showChangeButton = true;
     }
 
@@ -412,6 +420,7 @@ class _SalleItemState extends State<SalleItem> {
               ),
             ),
           ),
+          Text(widget.datenumbers),
           Padding(
             padding: const EdgeInsets.only(left: 30.0, top: 00, bottom: 0),
             child: Align(
@@ -676,7 +685,7 @@ class _SalleItemState extends State<SalleItem> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      cancelCartItem(widget.data.documentID);
+                                      cancelCartItem(widget.id);
                                     },
                                     child: Padding(
                                       padding:
@@ -705,11 +714,12 @@ class _SalleItemState extends State<SalleItem> {
                                 ),
                                 elevation: 0,
                                 onPressed: () {
-                                  _save(widget.data.documentID, _n,
-                                      widget.data.data);
+                                  // correct
+                                  _save(widget.id, _n, widget.data);
                                   setState(() {
                                     loaded = false;
                                     showChangeButton = false;
+                                    alreadyadded = true;
                                   });
                                 },
                                 color: Colors.redAccent[700],
@@ -749,8 +759,10 @@ class _SalleItemState extends State<SalleItem> {
                 ),
                 elevation: 0,
                 onPressed: () {
-                  _save(widget.data.documentID, _n, widget.data.data);
-                  setState(() {});
+                  _save(widget.id, _n, widget.data);
+                  setState(() {
+                    alreadyadded = true;
+                  });
                 },
                 color: Colors.redAccent[700],
                 // disabledColor: Colors.grey[200],
@@ -786,7 +798,7 @@ class _SalleItemState extends State<SalleItem> {
                 ),
                 Expanded(
                   child: Text(
-                    "All meal baskets come with a detailed cooking instructions!",
+                    "All meal baskets come with detailed cooking instructions.",
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 12.0,

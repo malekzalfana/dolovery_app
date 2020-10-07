@@ -435,13 +435,14 @@ class SalleScreenState extends State<SalleScreen> {
                       Navigator.of(context)
                           .push(MaterialPageRoute(
                               builder: (context) => SalleItem(
-                                  snapshot.data,
+                                  snapshot.data.data,
                                   weeks[0],
                                   snapshot.data['serving_prices'],
                                   snapshot.data['descriptions'],
                                   snapshot.data['description'],
                                   dato,
-                                  datenumbers)))
+                                  datenumbers,
+                                  snapshot.data.documentID)))
                           .then((_) {
                         // widgenotifyParent2();
                         setState(() {});
