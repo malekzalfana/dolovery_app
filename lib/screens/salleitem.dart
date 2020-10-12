@@ -59,27 +59,29 @@ class _SalleItemState extends State<SalleItem> {
   }
 
   bool loaded = false;
+  dynamic usercartmap_v2;
   getSalleStatus() async {
-    Map newusercartmap;
+    Map newusercartmap_v2;
     final prefs = await SharedPreferences.getInstance();
     var temp = prefs.getString('usercartmap_v2');
     if (temp == null) {
       temp = "";
-      newusercartmap = {};
+      newusercartmap_v2 = {};
     } else {
-      newusercartmap = json.decode(temp);
+      newusercartmap_v2 = json.decode(temp);
     }
 
     // print('--------------------------');
     // print(prefs.getString('usercartmap'));
-    if (newusercartmap == null) {
-      newusercartmap = {};
+    if (newusercartmap_v2 == null) {
+      newusercartmap_v2 = {};
     }
-    if (newusercartmap.containsKey('dolovery')) {
+    print(widget.datenumbers);
+    print(widget.id + '_${widget.datenumbers}');
+    if (newusercartmap_v2.containsKey('dolovery')) {
       // print('it has dolovery in  it');
       // print(widget.id);
-      if (newusercartmap['dolovery']
-          .containsKey(widget.id + '_${widget.datenumbers}')) {
+      if (newusercartmap_v2['dolovery'].containsKey(widget.id)) {
         // print('dolovery has documentid in it');
         // print(alreadyadded);
         if (loaded == false) {
@@ -87,8 +89,7 @@ class _SalleItemState extends State<SalleItem> {
           setState(() {
             alreadyadded = true;
             loaded = true;
-            inmycart = newusercartmap['dolovery']
-                [widget.id + '_${widget.datenumbers}']['count'];
+            inmycart = newusercartmap_v2['dolovery'][widget.id]['count'];
             // print("$inmycart is in my cart");
 
             // print("there is one beforeeeeeeeeeee");
@@ -101,7 +102,7 @@ class _SalleItemState extends State<SalleItem> {
   }
 
   int oldsalletotal = 0;
-  dynamic usercartmap_v2;
+
   _save(itemid, int count, item) async {
     print(item);
     print('hayda l item');
@@ -556,10 +557,11 @@ class _SalleItemState extends State<SalleItem> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 22, top: 20.0),
+            padding: const EdgeInsets.only(left: 0, top: 20.0),
             child: Container(
+              // width: width,
               child: new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   RawMaterialButton(
                     onPressed: minus,
@@ -643,7 +645,7 @@ class _SalleItemState extends State<SalleItem> {
                             padding: const EdgeInsets.fromLTRB(22, 10, 22, 0),
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: Colors.green[500],
+                                  color: Colors.green[700],
                                   // border: Border.all(
                                   //   color: Colors.green[500],
                                   // ),
@@ -686,6 +688,16 @@ class _SalleItemState extends State<SalleItem> {
                                   GestureDetector(
                                     onTap: () {
                                       cancelCartItem(widget.id);
+                                      final snackBar = SnackBar(
+                                          content: Text('Removed from cart!'),
+                                          action: SnackBarAction(
+                                            label: 'OK',
+                                            onPressed: () {
+                                              // Some code to undo the change.
+                                            },
+                                          ));
+                                      Scaffold.of(context)
+                                          .showSnackBar(snackBar);
                                     },
                                     child: Padding(
                                       padding:
@@ -764,7 +776,7 @@ class _SalleItemState extends State<SalleItem> {
                     alreadyadded = true;
                   });
                 },
-                color: Colors.redAccent[700],
+                color: Colors.green,
                 // disabledColor: Colors.grey[200],
                 textColor: Colors.white,
                 minWidth: MediaQuery.of(context).size.width,

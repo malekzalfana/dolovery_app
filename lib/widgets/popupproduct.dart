@@ -68,9 +68,9 @@ class _ProductPopUpState extends State<ProductPopUp> {
   }
 }
 
-void sendrefreshtohome() {
-  print('zooooooooom');
-}
+// void sendrefreshtohome() {
+//   print('zooooooooom');
+// }
 
 dynamic shopinfo;
 bool started = false;
@@ -409,41 +409,49 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
               print('found the map');
               print(json.encode(usercartmap_v2));
             }
-            // if ( item.data['type'] ==  'salle') {
-            //   add
+            // if (usercartmap_v2.containsKey(shop_name)) {
+            //   if (usercartmap_v2[shop_name].containsKey(itemid)) {
+            //     usercartmap_v2[shop_name][itemid]['count'] =
+            //         int.parse(usercartmap_v2[shop_name][itemid].toString()) - 1;
+            //     if (usercartmap_v2[shop_name][itemid]['count'] == 0) {
+            //       usercartmap_v2[shop_name].remove(itemid);
+            //     }
+            //   }
             // }
-            if (usercartmap_v2.containsKey(shop_name)) {
-              if (usercartmap_v2[shop_name].containsKey(itemid)) {
-                usercartmap_v2[shop_name][itemid]['count'] =
-                    int.parse(usercartmap_v2[shop_name][itemid].toString()) - 1;
-                if (usercartmap_v2[shop_name][itemid]['count'] == 0) {
-                  usercartmap_v2[shop_name].remove(itemid);
-                }
-              }
-            }
             if (usercartmap_v2.containsKey(shop_name)) {
               if (usercartmap_v2[shop_name].containsKey(itemid)) {
                 usercartmap_v2[shop_name][itemid]['count'] = int.parse(
                         usercartmap_v2[shop_name][itemid]['count'].toString()) -
                     1;
-                usercartmap_v2[shop_name][itemid]['rate'] = rate;
-                usercartmap_v2[shop_name][itemid]['data'] = item.data;
-                usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
-              } else {
-                usercartmap_v2[shop_name][itemid] = {};
-                usercartmap_v2[shop_name][itemid]['rate'] = rate;
-                usercartmap_v2[shop_name][itemid]['count'] = 1;
-                usercartmap_v2[shop_name][itemid]['data'] = item.data;
-                usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+                if (usercartmap_v2[shop_name][itemid]['count'] == 0) {
+                  usercartmap_v2[shop_name].remove(itemid);
+                }
               }
-            } else {
-              usercartmap_v2[shop_name] = {};
-              usercartmap_v2[shop_name][itemid] = {};
-              usercartmap_v2[shop_name][itemid]['rate'] = rate;
-              usercartmap_v2[shop_name][itemid]['count'] = 1;
-              usercartmap_v2[shop_name][itemid]['data'] = item.data;
-              usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
             }
+
+            // if (usercartmap_v2.containsKey(shop_name)) {
+            //   if (usercartmap_v2[shop_name].containsKey(itemid)) {
+            //     usercartmap_v2[shop_name][itemid]['count'] = int.parse(
+            //             usercartmap_v2[shop_name][itemid]['count'].toString()) -
+            //         1;
+            //     usercartmap_v2[shop_name][itemid]['rate'] = rate;
+            //     usercartmap_v2[shop_name][itemid]['data'] = item.data;
+            //     usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+            //   } else {
+            //     usercartmap_v2[shop_name][itemid] = {};
+            //     usercartmap_v2[shop_name][itemid]['rate'] = rate;
+            //     usercartmap_v2[shop_name][itemid]['count'] = 1;
+            //     usercartmap_v2[shop_name][itemid]['data'] = item.data;
+            //     usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+            //   }
+            // } else {
+            //   usercartmap_v2[shop_name] = {};
+            //   usercartmap_v2[shop_name][itemid] = {};
+            //   usercartmap_v2[shop_name][itemid]['rate'] = rate;
+            //   usercartmap_v2[shop_name][itemid]['count'] = 1;
+            //   usercartmap_v2[shop_name][itemid]['data'] = item.data;
+            //   usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+            // }
             prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
             // START
             usercartmap = prefs.getString("usercartmap");

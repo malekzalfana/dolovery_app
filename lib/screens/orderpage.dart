@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:flutter_svg/svg.dart';
@@ -158,23 +159,38 @@ class _OrderPageState extends State<OrderPage> {
                                   // Text(order.data['products'][shop][product]['name']),
                                   // ]
                                   buildCartItem(
-                                      product,
-                                      order.data['products'][shop][product]
-                                          ['count'],
-                                      order.data['products'][shop][product]
-                                          ['name'],
-                                      order.data['products'][shop][product]
-                                          ['image'],
-                                      order.data['products'][shop][product]
-                                          ['shop_discounted'],
-                                      order.data['products'][shop][product]
-                                          ['shop_price'],
-                                      order.data['products'][shop][product]
-                                          ['type'],
-                                      order.data['products'][shop][product]
-                                          ['arabic_name'],
-                                      order.data['products'][shop][product]
-                                          ['unit'])
+                                    product,
+                                    order.data['products'][shop][product]
+                                        ['count'],
+                                    order.data['products'][shop][product]
+                                        ['data']['name'],
+                                    order.data['products'][shop][product]
+                                        ['data']['image'],
+                                    order.data['products'][shop][product]
+                                        ['data']['shop_discounted'],
+                                    order.data['products'][shop][product]
+                                                ['data']['type'] !=
+                                            'salle'
+                                        ? (int.parse(order.data['products'][shop][product]['data']['shop_price'].toString()) *
+                                                (order.data['products'][shop]
+                                                            [product]['rate'] !=
+                                                        null
+                                                    ? order.data['products']
+                                                        [shop][product]['rate']
+                                                    : 1))
+                                            .toString()
+                                        : order.data['products'][shop][product]
+                                                ['data']['serving_prices']
+                                                [order.data['products'][shop][product]['count']]
+                                            .toString(),
+                                    order.data['products'][shop][product]
+                                        ['data']['type'],
+                                    order.data['products'][shop][product]
+                                        ['data']['arabic_name'],
+                                    order.data['products'][shop][product]
+                                            ['data']['unit']
+                                        .toString(),
+                                  )
                               ],
                             ),
                           SizedBox(height: 0),
@@ -261,20 +277,22 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Padding buildCartItem(
-      String productid,
-      int count,
-      String product_name,
-      String product_image,
-      int product_discount,
-      int product_price,
-      String product_type,
-      String arabic_name,
-      String product_unit) {
+    String productid,
+    int count,
+    String product_name,
+    String product_image,
+    String product_discount,
+    String product_price,
+    String product_type,
+    String arabic_name,
+    String product_unit,
+    // String salle_price
+  ) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     print(
         "$arabic_name and $count $product_discount $product_image $product_name $product_price $product_type $product_unit $productid ");
-
+    // if ()
     // if (cartitem['currency'] != "dollar") {
     //   rate = 1;
     // }
@@ -306,8 +324,18 @@ class _OrderPageState extends State<OrderPage> {
                       bottomRight: Radius.circular(10)),
                 ),
                 child: Center(
-                  child: Image.network(product_image, height: 50, width: 50),
-                )),
+                    child: CachedNetworkImage(
+                  width: 120,
+                  placeholder: (context, url) => Image.asset(
+                      "assets/images/loading.gif",
+                      height: 50,
+                      width: 50),
+                  imageUrl: product_image == null ? "s" : product_image,
+                  errorWidget: (context, url, error) =>
+                      Center(child: new Icon(Icons.error)),
+                )
+                    // Image.network(product_image, height: 50, width: 50),
+                    )),
           ),
           Padding(
             padding: const EdgeInsets.all(1.0),
@@ -366,15 +394,13 @@ class _OrderPageState extends State<OrderPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
+                        padding: const EdgeInsets.only(top: 1.0),
                         child: Row(
                           children: [
                             Visibility(
-                              visible: product_type == 'salle' ? false : true,
+                              visible: true,
                               child: Text(
-                                (int.parse(product_price.toString()))
-                                        .toString() +
-                                    "L.L.",
+                                product_price + "L.L.",
                                 // overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
@@ -391,7 +417,9 @@ class _OrderPageState extends State<OrderPage> {
                             Visibility(
                               visible: product_type == 'salle' ? true : false,
                               child: Text(
-                                product_price.toString() + 'L.L.',
+                                product_type == 'salle'
+                                    ? ''
+                                    : product_price + "L.L.",
                                 // overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
@@ -423,7 +451,7 @@ class _OrderPageState extends State<OrderPage> {
                                   child: Text(
                                     (count + 1).toString() + ' Servings',
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       fontSize: 12.0,
                                       fontFamily: 'Axiforma',
                                       color: Colors.white,

@@ -78,7 +78,7 @@ class _CartState extends State<Cart> {
   };
   String imagetype = 'assets/images/supsec.png';
 
-  Future<void> reset() async {
+  Future<void> reset([bool pop]) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('type');
     prefs.remove('total');
@@ -89,7 +89,10 @@ class _CartState extends State<Cart> {
     prefs.remove('usercartmap_v2');
     prefs.remove('cached_shops');
     prefs.remove('address');
-    Navigator.of(context).pop();
+    if (pop != false) {
+      Navigator.of(context).pop();
+    }
+
     // print(prefs.getKeys());
     return true;
   }
@@ -548,6 +551,9 @@ class _CartState extends State<Cart> {
         ),
         context: context,
         builder: (BuildContext bc) {
+          if (!notsetup) {
+            Navigator.pop(context);
+          }
           return Container(
             height: 450,
             child: Column(
@@ -600,7 +606,7 @@ class _CartState extends State<Cart> {
         context: context,
         builder: (BuildContext bc) {
           return Container(
-            height: 400,
+            height: 800,
             child: Column(
               children: <Widget>[
                 Align(
@@ -663,8 +669,13 @@ class _CartState extends State<Cart> {
                                     borderRadius: BorderRadius.circular(20.0),
                                     side: BorderSide(color: Colors.red)),
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ProfileScreen()));
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProfileScreen()))
+                                      .then((_) {
+                                    setState(() {});
+                                  });
                                 },
                                 color: Colors.redAccent[700],
                                 textColor: Colors.white,
@@ -773,6 +784,24 @@ class _CartState extends State<Cart> {
     }
   }
 
+  _showMaterialDialog() {
+    showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              title: new Text("Delete all cart items?"),
+              // content: new Text("Hey! I'm Coflutter!"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Confirm'),
+                  onPressed: () {
+                    reset();
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
+  }
+
   bool alreadyChosenAddress = false;
 
   removeShopFromCart(shop) async {
@@ -788,40 +817,42 @@ class _CartState extends State<Cart> {
     prefs.setString('usercartmap', json.encode(usercartmap));
   }
 
+  bool loadedthepage = false;
+
   Future setupVerification() async {
     // print("USER BEING WATCHED");
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final prefs = await SharedPreferences.getInstance();
+    this_user =
+        await Firestore.instance.collection("users").document(uid).get();
 
     if (user != null) {
       uid = user.uid;
       name = user.displayName;
       uemail = user.email;
       // print("USERNAME")
-      this_user =
-          await Firestore.instance.collection("users").document(uid).get();
-      if (!alreadyChosenAddress) {
-        chosen_address = this_user.data["chosen_address"];
-      }
-      // print("checking addresssss");
-      if (!prefs.containsKey('address')) {
-        // print("no addressssss");
-        var counter = 0;
-        for (var useraddress in this_user.data['address']) {
-          // print(this_user.data['address'][counter]);
-          if (useraddress['id'] == chosen_address) {
-            // print('added');
-            prefs.setString(
-                'address', this_user.data['address'][counter].toString());
-          }
-          counter++;
-        }
-      }
 
       // print(this_user.data['number']);
       // print(widget.thisUser);
 
       if (this_user.exists) {
+        if (!alreadyChosenAddress) {
+          chosen_address = this_user.data["chosen_address"];
+        }
+        // print("checking addresssss");
+        if (!prefs.containsKey('address')) {
+          // print("no addressssss");
+          var counter = 0;
+          for (var useraddress in this_user.data['address']) {
+            // print(this_user.data['address'][counter]);
+            if (useraddress['id'] == chosen_address) {
+              // print('added');
+              prefs.setString(
+                  'address', this_user.data['address'][counter].toString());
+            }
+            counter++;
+          }
+        }
         notsetup = false;
         // print("user is setup");
       }
@@ -829,8 +860,12 @@ class _CartState extends State<Cart> {
       usersignedin = false;
       // print("usre is not signed in");
     }
+    if (!loadedthepage) {
+      setState(() {});
+    }
+    loadedthepage = true;
 
-    // return this_user;
+    // return notsetup;
   }
 
   selectAddress(String chosenAddress, int addressIndex) {
@@ -848,6 +883,7 @@ class _CartState extends State<Cart> {
   String chosen_address;
   @override
   Widget build(BuildContext context) {
+    // setState(() {});
     // final double itemHeight = (size.height) /x 2;
     // final double itemWidth = size.width / 2;
     // new Date(widget.data.documents[0]['salle_date'].seconds * 1000 + widget.data.documents[0]['salle_date'].nanoseconds/1000000)
@@ -867,343 +903,355 @@ class _CartState extends State<Cart> {
     return new Scaffold(
       key: _scaffoldKey,
       body: SingleChildScrollView(
+          child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 18.0),
           child: FutureBuilder(
-        future: loadcart(),
-        builder: (context, AsyncSnapshot snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(
-                  child: Image.asset("assets/images/loading.gif", height: 30));
-            default:
-              if (snapshot.hasError)
-                return Text('Error: ${snapshot.error}');
-              else if (loadingorder)
-                return SizedBox(
-                  height: height,
-                  child: Center(
+            future: loadcart(),
+            builder: (context, AsyncSnapshot snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(
                       child:
-                          Image.asset("assets/images/loading.gif", height: 30)),
-                );
-              else
-                return Column(
-                  children: <Widget>[
-                    AppBar(
-                      iconTheme: IconThemeData(
-                        color: Colors.black, //change your color here
-                      ),
-                      backgroundColor: Colors.transparent,
-                      elevation: 0.0,
-                      // automaticallyImplyLeading: false,
-                      //BackButton(color: Colors.black),
-                      centerTitle: true,
-                      title: Text(
-                        'Cart',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16.0,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black,
-                        ),
-                      ),
-                      actions: [
-                        GestureDetector(
-                          onTap: () {
-                            reset();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 20.0),
-                            child: Icon(Icons.delete),
+                          Image.asset("assets/images/loading.gif", height: 30));
+                default:
+                  if (snapshot.hasError)
+                    return Text('Error: ${snapshot.error}');
+                  else if (loadingorder)
+                    return SizedBox(
+                      height: height,
+                      child: Center(
+                          child: Image.asset("assets/images/loading.gif",
+                              height: 30)),
+                    );
+                  else
+                    return Column(
+                      children: <Widget>[
+                        AppBar(
+                          iconTheme: IconThemeData(
+                            color: Colors.black, //change your color here
                           ),
-                        ),
-                        // Icon(Icons.add),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 22.0, top: 20, bottom: 10),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Your Items",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13.0,
-                            fontFamily: 'Axiforma',
-                            color: Colors.black54,
+                          backgroundColor: Colors.transparent,
+                          elevation: 0.0,
+                          // automaticallyImplyLeading: false,
+                          //BackButton(color: Colors.black),
+                          centerTitle: true,
+                          title: Text(
+                            'Cart',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16.0,
+                              fontFamily: 'Axiforma',
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                    // Text(usercartmap_v2.toString()),
-                    if (usercartmap_v2.keys.length > 0)
-                      Column(
-                        children: [
-                          for (var shop in usercartmap_v2.keys)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  FutureBuilder(
-                                      future: getRate(shop),
-                                      builder: (context, snapshot) {
-                                        switch (snapshot.connectionState) {
-                                          case ConnectionState.waiting:
-                                            return Text('Loading....');
-                                          default:
-                                            if (snapshot.hasError)
-                                              return Text(
-                                                  'Error: ${snapshot.error}');
-                                            if (usercartmap_v2[shop]
-                                                    .keys
-                                                    .length ==
-                                                0) {
-                                              removeShopFromCart(shop);
-                                              return Container();
-                                            }
-                                            return Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                StreamBuilder(
-                                                    stream: Firestore.instance
-                                                        .collection('shops')
-                                                        .where('username',
-                                                            isEqualTo: shop)
-                                                        .snapshots(),
-                                                    builder:
-                                                        (context, snapshot) {
-                                                      var shopinfo = snapshot
-                                                          .data.documents[0];
-
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 22.0),
-                                                        child: Align(
-                                                          alignment: Alignment
-                                                              .centerLeft,
-                                                          child: Text(
-                                                            snapshot.data
-                                                                    .documents[
-                                                                0]['name'],
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                fontSize: 23.0,
-                                                                fontFamily:
-                                                                    'Axiforma',
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }),
-                                                Column(
-                                                  children: [
-                                                    for (var product
-                                                        in usercartmap_v2[shop]
-                                                            .keys)
-                                                      buildCartItem_v2(
-                                                          usercartmap_v2[shop]
-                                                              [product],
-                                                          int.parse(usercartmap_v2[
-                                                                          shop]
-                                                                      [product]
-                                                                  ['count']
-                                                              .toString()),
-                                                          cachedshops[shop],
-                                                          product)
-                                                  ],
-                                                )
-                                              ],
-                                            );
-                                        }
-                                      }),
-                                ],
+                          actions: [
+                            GestureDetector(
+                              onTap: () {
+                                // reset();
+                                _showMaterialDialog();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 20.0),
+                                child: Icon(Icons.delete),
                               ),
                             ),
-                        ],
-                      ),
-
-                    // Column(
-                    //   children: [
-                    //     for (var shop in usercartmap.keys)
-                    //       Padding(
-                    //         padding: const EdgeInsets.only(bottom: 8.0),
-                    //         child: Column(
-                    //           mainAxisAlignment: MainAxisAlignment.start,
-                    //           children: [
-                    //             FutureBuilder(
-                    //                 future: getRate(shop),
-                    //                 builder: (context, snapshot) {
-                    //                   switch (snapshot.connectionState) {
-                    //                     case ConnectionState.waiting:
-                    //                       return Text('Loading....');
-                    //                     default:
-                    //                       if (snapshot.hasError)
-                    //                         return Text(
-                    //                             'Error: ${snapshot.error}');
-                    //                       if (usercartmap[shop].keys.length ==
-                    //                           0) {
-                    //                         removeShopFromCart(shop);
-                    //                         return Container();
-                    //                       }
-                    //                       return Column(
-                    //                         children: [
-                    //                           Padding(
-                    //                             padding: const EdgeInsets.only(
-                    //                                 left: 22.0),
-                    //                             child: Align(
-                    //                               alignment:
-                    //                                   Alignment.centerLeft,
-                    //                               child: Text(
-                    //                                 snapshot.data['name'],
-                    //                                 textAlign: TextAlign.left,
-                    //                                 style: TextStyle(
-                    //                                     fontWeight:
-                    //                                         FontWeight.w800,
-                    //                                     fontSize: 23.0,
-                    //                                     fontFamily: 'Axiforma',
-                    //                                     color: Colors.black),
-                    //                               ),
-                    //                             ),
-                    //                           ),
-                    //                           // StreamBuilder(
-                    //                           //     stream: Firestore.instance
-                    //                           //         .collection('shops')
-                    //                           //         .where('username', isEqualTo: shop)
-                    //                           //         .snapshots(),
-                    //                           //     builder: (context, snapshot) {
-                    //                           //       var shopinfo =
-                    //                           //           snapshot.data.docuemnts[0];
-
-                    //                           //       return Text(
-                    //                           //         shopinfo['name'],
-                    //                           //         textAlign: TextAlign.left,
-                    //                           //         style: TextStyle(
-                    //                           //             fontWeight: FontWeight.w800,
-                    //                           //             fontSize: 25.0,
-                    //                           //             fontFamily: 'Axiforma',
-                    //                           //             color: Colors.black),
-                    //                           //       );
-                    //                           //     }),
-                    //                           for (var product
-                    //                               in usercartmap[shop].keys)
-                    //                             StreamBuilder<Object>(
-                    //                                 stream: Firestore.instance
-                    //                                     .collection("products")
-                    //                                     // .where('id', isEqualTo: product)
-                    //                                     .document(
-                    //                                         product.toString())
-                    //                                     .snapshots(),
-                    //                                 builder:
-                    //                                     (context, snapshot) {
-                    //                                   // print('the item is' +
-                    //                                   //     snapshot
-                    //                                   //         .data['image']);
-                    //                                   // print(
-                    //                                   //     'we are past streaming');
-                    //                                   // print("rate is:::" +
-                    //                                   //     rate.toString());
-                    //                                   // print(snapshot.data);
-                    //                                   // print(product);
-                    //                                   // print(int.parse(
-                    //                                   //     usercartmap[shop]
-                    //                                   //             [product]
-                    //                                   //         .toString()));
-                    //                                   if (snapshot.hasData) {
-                    //                                     return Visibility(
-                    //                                       visible: false,
-                    //                                       child: buildCartItem(
-                    //                                           snapshot.data,
-                    //                                           int.parse(usercartmap[
-                    //                                                       shop]
-                    //                                                   [product]
-                    //                                               .toString()),
-                    //                                           cachedshops[
-                    //                                               shop]),
-                    //                                     );
-                    //                                   } else {
-                    //                                     return CircularProgressIndicator();
-                    //                                   }
-                    //                                 })
-                    //                         ],
-                    //                       );
-                    //                   }
-                    //                 }),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //   ],
-                    // ),
-
-                    FutureBuilder(
-                      future: getTotal(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
+                            // Icon(Icons.add),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 22.0, top: 20, bottom: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Your Items",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Text(usercartmap_v2.toString()),
+                        if (usercartmap_v2.keys.length > 0)
+                          Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 30.0, top: 20, bottom: 10),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Total",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13.0,
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.black54,
+                              for (var shop in usercartmap_v2.keys)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      FutureBuilder(
+                                          future: getRate(shop),
+                                          builder: (context, snapshot) {
+                                            switch (snapshot.connectionState) {
+                                              case ConnectionState.waiting:
+                                                return Text('Loading....');
+                                              default:
+                                                if (snapshot.hasError)
+                                                  return Text(
+                                                      'Error: ${snapshot.error}');
+                                                if (usercartmap_v2[shop]
+                                                        .keys
+                                                        .length ==
+                                                    0) {
+                                                  removeShopFromCart(shop);
+                                                  return Container();
+                                                }
+                                                return Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    StreamBuilder(
+                                                        stream: Firestore
+                                                            .instance
+                                                            .collection('shops')
+                                                            .where('username',
+                                                                isEqualTo: shop)
+                                                            .snapshots(),
+                                                        builder: (context,
+                                                            snapshot) {
+                                                          var shopinfo =
+                                                              snapshot.data
+                                                                  .documents[0];
+
+                                                          return Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 22.0),
+                                                            child: Align(
+                                                              alignment: Alignment
+                                                                  .centerLeft,
+                                                              child: Text(
+                                                                snapshot.data
+                                                                        .documents[
+                                                                    0]['name'],
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                    fontSize:
+                                                                        23.0,
+                                                                    fontFamily:
+                                                                        'Axiforma',
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        }),
+                                                    Column(
+                                                      children: [
+                                                        for (var product
+                                                            in usercartmap_v2[
+                                                                    shop]
+                                                                .keys)
+                                                          buildCartItem_v2(
+                                                              usercartmap_v2[
+                                                                      shop]
+                                                                  [product],
+                                                              int.parse(usercartmap_v2[
+                                                                              shop]
+                                                                          [
+                                                                          product]
+                                                                      ['count']
+                                                                  .toString()),
+                                                              cachedshops[shop],
+                                                              product)
+                                                      ],
+                                                    )
+                                                  ],
+                                                );
+                                            }
+                                          }),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+
+                        // Column(
+                        //   children: [
+                        //     for (var shop in usercartmap.keys)
+                        //       Padding(
+                        //         padding: const EdgeInsets.only(bottom: 8.0),
+                        //         child: Column(
+                        //           mainAxisAlignment: MainAxisAlignment.start,
+                        //           children: [
+                        //             FutureBuilder(
+                        //                 future: getRate(shop),
+                        //                 builder: (context, snapshot) {
+                        //                   switch (snapshot.connectionState) {
+                        //                     case ConnectionState.waiting:
+                        //                       return Text('Loading....');
+                        //                     default:
+                        //                       if (snapshot.hasError)
+                        //                         return Text(
+                        //                             'Error: ${snapshot.error}');
+                        //                       if (usercartmap[shop].keys.length ==
+                        //                           0) {
+                        //                         removeShopFromCart(shop);
+                        //                         return Container();
+                        //                       }
+                        //                       return Column(
+                        //                         children: [
+                        //                           Padding(
+                        //                             padding: const EdgeInsets.only(
+                        //                                 left: 22.0),
+                        //                             child: Align(
+                        //                               alignment:
+                        //                                   Alignment.centerLeft,
+                        //                               child: Text(
+                        //                                 snapshot.data['name'],
+                        //                                 textAlign: TextAlign.left,
+                        //                                 style: TextStyle(
+                        //                                     fontWeight:
+                        //                                         FontWeight.w800,
+                        //                                     fontSize: 23.0,
+                        //                                     fontFamily: 'Axiforma',
+                        //                                     color: Colors.black),
+                        //                               ),
+                        //                             ),
+                        //                           ),
+                        //                           // StreamBuilder(
+                        //                           //     stream: Firestore.instance
+                        //                           //         .collection('shops')
+                        //                           //         .where('username', isEqualTo: shop)
+                        //                           //         .snapshots(),
+                        //                           //     builder: (context, snapshot) {
+                        //                           //       var shopinfo =
+                        //                           //           snapshot.data.docuemnts[0];
+
+                        //                           //       return Text(
+                        //                           //         shopinfo['name'],
+                        //                           //         textAlign: TextAlign.left,
+                        //                           //         style: TextStyle(
+                        //                           //             fontWeight: FontWeight.w800,
+                        //                           //             fontSize: 25.0,
+                        //                           //             fontFamily: 'Axiforma',
+                        //                           //             color: Colors.black),
+                        //                           //       );
+                        //                           //     }),
+                        //                           for (var product
+                        //                               in usercartmap[shop].keys)
+                        //                             StreamBuilder<Object>(
+                        //                                 stream: Firestore.instance
+                        //                                     .collection("products")
+                        //                                     // .where('id', isEqualTo: product)
+                        //                                     .document(
+                        //                                         product.toString())
+                        //                                     .snapshots(),
+                        //                                 builder:
+                        //                                     (context, snapshot) {
+                        //                                   // print('the item is' +
+                        //                                   //     snapshot
+                        //                                   //         .data['image']);
+                        //                                   // print(
+                        //                                   //     'we are past streaming');
+                        //                                   // print("rate is:::" +
+                        //                                   //     rate.toString());
+                        //                                   // print(snapshot.data);
+                        //                                   // print(product);
+                        //                                   // print(int.parse(
+                        //                                   //     usercartmap[shop]
+                        //                                   //             [product]
+                        //                                   //         .toString()));
+                        //                                   if (snapshot.hasData) {
+                        //                                     return Visibility(
+                        //                                       visible: false,
+                        //                                       child: buildCartItem(
+                        //                                           snapshot.data,
+                        //                                           int.parse(usercartmap[
+                        //                                                       shop]
+                        //                                                   [product]
+                        //                                               .toString()),
+                        //                                           cachedshops[
+                        //                                               shop]),
+                        //                                     );
+                        //                                   } else {
+                        //                                     return CircularProgressIndicator();
+                        //                                   }
+                        //                                 })
+                        //                         ],
+                        //                       );
+                        //                   }
+                        //                 }),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //   ],
+                        // ),
+
+                        FutureBuilder(
+                          future: getTotal(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 30.0, top: 20, bottom: 10),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Total",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13.0,
+                                          fontFamily: 'Axiforma',
+                                          color: Colors.black54,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 30.0, top: 00, bottom: 10),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    total.toInt().toString() + 'L.L.',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 25.0,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.redAccent[700]),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 30.0, top: 00, bottom: 10),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        total.toInt().toString() + 'L.L.',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 25.0,
+                                            fontFamily: 'Axiforma',
+                                            color: Colors.redAccent[700]),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return CircularProgressIndicator(); // or some other widget
-                      },
-                    ),
+                                ],
+                              );
+                            }
+                            return CircularProgressIndicator(); // or some other widget
+                          },
+                        ),
 
-                    // fixxxxxx
-                    FutureBuilder(
-                        future: setupVerification(), // async work
-                        builder: (context, snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return Visibility(
-                                  visible: false, child: Text('Loading....'));
-                            default:
-                              if ((snapshot.hasError)) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                return Column(
-                                  children: [
-                                    Visibility(
-                                      visible: notsetup ? false : true,
-                                      child: Column(
+                        // fixxxxxx
+                        FutureBuilder(
+                            future: setupVerification(), // async work
+                            builder: (context, snapshot) {
+                              print(notsetup);
+                              print('not setup is the floowing:::::::::::::::');
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.waiting:
+                                  return Visibility(
+                                      visible: false,
+                                      child: Text('Loading....'));
+                                default:
+                                  if ((snapshot.hasError)) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    if (!notsetup) {
+                                      return Column(
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -1563,18 +1611,268 @@ class _CartState extends State<Cart> {
                                                               ),
                                                             ],
                                                           ),
-                                                        ))
+                                                        )),
                                                   ],
                                                 ),
                                               ),
                                             ),
                                           ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                25, 10, 25, 12),
+                                            child: MaterialButton(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15.0),
+                                              ),
+                                              elevation: 0,
+                                              onPressed: notsetup ||
+                                                      loadingorder
+                                                  ? null
+                                                  : () {
+                                                      getCartAddress() async {
+                                                        final prefs =
+                                                            await SharedPreferences
+                                                                .getInstance();
+                                                        var thecartaddress =
+                                                            json.encode(
+                                                                prefs.getString(
+                                                                    'address'));
+                                                        print(thecartaddress);
+                                                        List<String> fullorder =
+                                                            [];
+                                                        List<String>
+                                                            fullorder_shops =
+                                                            [];
+                                                        var completeproducts =
+                                                            {};
+                                                        for (var cartshop
+                                                            in usercartmap_v2
+                                                                .keys) {
+                                                          completeproducts[
+                                                              cartshop] = {};
+                                                          var datashop =
+                                                              await Firestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      "shops")
+                                                                  .where(
+                                                                      'username',
+                                                                      isEqualTo:
+                                                                          cartshop)
+                                                                  .getDocuments();
+                                                          var rate = datashop
+                                                              .documents[0]
+                                                              .data['rate'];
+                                                          print(
+                                                              'the shop is $datashop');
+                                                          if (rate == null) {
+                                                            rate = 1;
+                                                            print(
+                                                                'changed rate to ZERO');
+                                                          }
+                                                          // for (var product
+                                                          //     in usercartmap_v2[cartshop].keys) {
+                                                          //   print('looping through $product');
+                                                          //   var dataproduct = await Firestore
+                                                          //       .instance
+                                                          //       .collection("products")
+                                                          //       .document(product)
+                                                          //       .get();
+                                                          //   var newrate = rate;
+                                                          //   if (dataproduct.data['currency'] !=
+                                                          //       'dollar') {
+                                                          //     print('rate ks ');
+                                                          //     newrate = 1;
+                                                          //   }
+                                                          //   print(dataproduct.documentID);
+                                                          //   completeproducts[cartshop]
+                                                          //       [product] = {
+                                                          //     'name': dataproduct.data['name'],
+                                                          //     'count': usercartmap_v2[cartshop]
+                                                          //         [product],
+                                                          //     'shop_price': dataproduct
+                                                          //                 .data['type'] !=
+                                                          //             'salle'
+                                                          //         ? int.parse(dataproduct
+                                                          //                 .data['shop_price']
+                                                          //                 .toString()) *
+                                                          //             newrate
+                                                          //         : dataproduct
+                                                          //                 .data['serving_prices'][
+                                                          //             usercartmap_v2[cartshop]
+                                                          //                 [product]],
+                                                          //     'shop_discounted': dataproduct
+                                                          //         .data['shop_discounted'],
+                                                          //     'unit': dataproduct.data['unit'],
+                                                          //     'image': dataproduct.data['image'],
+                                                          //     'type': dataproduct.data['type'],
+                                                          //     'arabic_name':
+                                                          //         dataproduct.data['arabic_name']
+                                                          //   };
+                                                          // }
+                                                          print(
+                                                              completeproducts);
+                                                          print(
+                                                              completeproducts[
+                                                                  cartshop]);
+                                                          print(
+                                                              'starting orderinggggggggggggggggggggggg');
+                                                          var order_id = ">>" +
+                                                              UniqueKey()
+                                                                  .hashCode
+                                                                  .toString();
+                                                          Firestore.instance
+                                                              .collection(
+                                                                  'shop_orders')
+                                                              .document(
+                                                                  order_id)
+                                                              .setData({
+                                                            "address":
+                                                                thecartaddress,
+                                                            "total":
+                                                                total.toInt(),
+                                                            "count":
+                                                                usercartmap_v2[
+                                                                        cartshop]
+                                                                    .length,
+                                                            "payment":
+                                                                "cashondelivery",
+                                                            "date":
+                                                                DateTime.now(),
+                                                            "shop": cartshop,
+                                                            "products":
+                                                                usercartmap_v2[
+                                                                    cartshop],
+                                                            "user": uid,
+                                                          });
+                                                          fullorder
+                                                              .add(order_id);
+                                                          fullorder_shops
+                                                              .add(cartshop);
+                                                        }
+
+                                                        var fullorder_id =
+                                                            UniqueKey()
+                                                                .hashCode
+                                                                .toString();
+                                                        Firestore.instance
+                                                            .collection(
+                                                                'orders')
+                                                            .document(
+                                                                fullorder_id)
+                                                            .setData({
+                                                          "address":
+                                                              thecartaddress,
+                                                          "total":
+                                                              total.toInt(),
+                                                          "count": items,
+                                                          "payment":
+                                                              "cashondelivery",
+                                                          "date":
+                                                              DateTime.now(),
+                                                          "products":
+                                                              usercartmap_v2,
+                                                          "user": uid,
+                                                          "shop_list":
+                                                              fullorder_shops,
+                                                          "order_list":
+                                                              fullorder
+                                                        }).then((doc) {
+                                                          print(fullorder_id);
+                                                          reset(false);
+                                                          Navigator.pop(
+                                                              context);
+
+                                                          // loadingorder = true;
+                                                          Navigator.of(context).push(
+                                                              MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      OrderPage(
+                                                                          fullorder_id)));
+                                                        }).catchError((error) {
+                                                          print(error);
+                                                        });
+                                                      }
+
+                                                      getCartAddress();
+
+                                                      // final thecartaddress =
+                                                      //     getCartAddress();
+                                                    },
+                                              color: Colors.redAccent[700],
+                                              disabledColor: Colors.grey[200],
+                                              textColor: Colors.white,
+                                              minWidth: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: 0,
+                                              // padding: EdgeInsets.zero,
+                                              padding: EdgeInsets.only(
+                                                  left: 23,
+                                                  top: 12,
+                                                  right: 23,
+                                                  bottom: 10),
+                                              child: Text(
+                                                "Confirm Order",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                  fontFamily: 'Axiforma',
+                                                  // color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ],
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: usersignedin ? false : true,
-                                      child: Padding(
+                                      );
+                                    } else if (notsetup && usersignedin) {
+                                      return Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            25, 15, 25, 0),
+                                        child: MaterialButton(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0),
+                                          ),
+                                          elevation: 0,
+                                          onPressed: () {
+                                            // print("xlicked");
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ProfileScreen()))
+                                                .then((_) {
+                                              // refreshcart();
+                                              setupVerification();
+                                              setState(() {});
+                                            });
+                                          },
+                                          color: Colors.redAccent[700],
+                                          disabledColor: Colors.grey[200],
+                                          textColor: Colors.white,
+                                          minWidth:
+                                              MediaQuery.of(context).size.width,
+                                          height: 0,
+                                          // padding: EdgeInsets.zero,
+                                          padding: EdgeInsets.only(
+                                              left: 23,
+                                              top: 10,
+                                              right: 23,
+                                              bottom: 10),
+                                          child: Text(
+                                            "Setup your profile to continue",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                              fontFamily: 'Axiforma',
+                                              // color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             25, 15, 25, 0),
                                         child: MaterialButton(
@@ -1609,385 +1907,57 @@ class _CartState extends State<Cart> {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: usersignedin ? true : false,
-                                      child: Visibility(
-                                        visible: notsetup ? false : false,
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              25, 15, 25, 0),
-                                          child: MaterialButton(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            elevation: 0,
-                                            onPressed: () {
-                                              // print("xlicked");
-                                              Navigator.of(context)
-                                                  .push(MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ProfileScreen()))
-                                                  .then((_) {
-                                                // refreshcart();
-                                                setupVerification();
-                                                setState(() {});
-                                              });
-                                            },
-                                            color: Colors.redAccent[700],
-                                            disabledColor: Colors.grey[200],
-                                            textColor: Colors.white,
-                                            minWidth: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            height: 0,
-                                            // padding: EdgeInsets.zero,
-                                            padding: EdgeInsets.only(
-                                                left: 23,
-                                                top: 10,
-                                                right: 23,
-                                                bottom: 10),
-                                            child: Text(
-                                              "Setup your profile to continue",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15.0,
-                                                fontFamily: 'Axiforma',
-                                                // color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          25, 10, 25, 12),
-                                      child: MaterialButton(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15.0),
-                                        ),
-                                        elevation: 0,
-                                        onPressed: notsetup || loadingorder
-                                            ? null
-                                            : () {
-                                                // setState(() {
-                                                //   loadingorder = true;
-                                                // });
-                                                // List products;
-                                                // var cartproduct;
-                                                // // define snapshots to use for looping
-                                                // for (var i;
-                                                //     i <= finalcart.length;
-                                                //     i++) {
-                                                //   cartproduct = Firestore
-                                                //       .instance
-                                                //       .collection("products")
-                                                //       .document(finalcart[i])
-                                                //       .get();
-                                                //   Map<String, dynamic> product =
-                                                //       {
-                                                //     "name": cartproduct
-                                                //         .data['name'],
-                                                //     "shop_price": cartproduct,
-                                                //     "quantity": cartproduct,
-                                                //     "unit": cartproduct
-                                                //   };
-                                                //   products.add(product);
-                                                // }
-                                                // Firestore.instance
-                                                //     .collection('orders')
-                                                //     .document("zxxxxxxxxx")
-                                                //     .setData({
-                                                //   "address": "address",
-                                                //   "total": "total",
-                                                //   "count": "4",
-                                                //   "payment": "cashondelivery",
-                                                //   "date": "today",
-                                                //   "shop": "shop username",
-                                                //   "products": products,
-                                                //   "user": uid,
-                                                //   "user name": "user name",
-                                                //   "item_list": "list of ids"
-                                                // }).then((result) {
-                                                //   print("order added");
-                                                // }).catchError((onError) {
-                                                //   print("onError");
-                                                // });
-                                                // var thecartaddress;
-                                                // var
-
-                                                // XXXXXXX
-                                                // Firestore.instance
-                                                //     .collection('shop_orders')
-                                                //     .getDocuments()
-                                                //     .then((snapshot) {
-                                                //   for (DocumentSnapshot ds
-                                                //       in snapshot.documents) {
-                                                //     ds.reference.delete();
-                                                //   }
-                                                //   ;
-                                                // });
-                                                // Navigator.pop(context);
-
-                                                getCartAddress() async {
-                                                  final prefs =
-                                                      await SharedPreferences
-                                                          .getInstance();
-                                                  var thecartaddress = json
-                                                      .encode(prefs.getString(
-                                                          'address'));
-                                                  print(thecartaddress);
-                                                  List<String> fullorder = [];
-                                                  List<String> fullorder_shops =
-                                                      [];
-                                                  var completeproducts = {};
-                                                  for (var cartshop
-                                                      in usercartmap.keys) {
-                                                    completeproducts[cartshop] =
-                                                        {};
-                                                    var datashop =
-                                                        await Firestore.instance
-                                                            .collection("shops")
-                                                            .where('username',
-                                                                isEqualTo:
-                                                                    cartshop)
-                                                            .getDocuments();
-                                                    var rate = datashop
-                                                        .documents[0]
-                                                        .data['rate'];
-                                                    print(
-                                                        'the shop is $datashop');
-                                                    if (rate == null) {
-                                                      rate = 1;
-                                                      print(
-                                                          'changed rate to ZERO');
-                                                    }
-                                                    for (var product
-                                                        in usercartmap[cartshop]
-                                                            .keys) {
-                                                      print(
-                                                          'looping through $product');
-                                                      var dataproduct =
-                                                          await Firestore
-                                                              .instance
-                                                              .collection(
-                                                                  "products")
-                                                              .document(product)
-                                                              .get();
-                                                      var newrate = rate;
-                                                      if (dataproduct.data[
-                                                              'currency'] !=
-                                                          'dollar') {
-                                                        print('rate ks ');
-                                                        newrate = 1;
-                                                      }
-                                                      print(dataproduct
-                                                          .documentID);
-                                                      completeproducts[cartshop]
-                                                          [product] = {
-                                                        'name': dataproduct
-                                                            .data['name'],
-                                                        'count': usercartmap[
-                                                            cartshop][product],
-                                                        'shop_price': dataproduct
-                                                                        .data[
-                                                                    'type'] !=
-                                                                'salle'
-                                                            ? int.parse(dataproduct
-                                                                    .data[
-                                                                        'shop_price']
-                                                                    .toString()) *
-                                                                newrate
-                                                            : dataproduct.data[
-                                                                    'serving_prices']
-                                                                [usercartmap[
-                                                                        cartshop]
-                                                                    [product]],
-                                                        'shop_discounted':
-                                                            dataproduct.data[
-                                                                'shop_discounted'],
-                                                        'unit': dataproduct
-                                                            .data['unit'],
-                                                        'image': dataproduct
-                                                            .data['image'],
-                                                        'type': dataproduct
-                                                            .data['type'],
-                                                        'arabic_name':
-                                                            dataproduct.data[
-                                                                'arabic_name']
-                                                      };
-                                                    }
-                                                    print(completeproducts);
-                                                    print(completeproducts[
-                                                        cartshop]);
-                                                    print(
-                                                        'starting orderinggggggggggggggggggggggg');
-                                                    var order_id = ">>" +
-                                                        UniqueKey()
-                                                            .hashCode
-                                                            .toString();
-                                                    Firestore.instance
-                                                        .collection(
-                                                            'shop_orders')
-                                                        .document(order_id)
-                                                        .setData({
-                                                      "address": thecartaddress,
-                                                      "total": total.toInt(),
-                                                      "count":
-                                                          usercartmap[cartshop]
-                                                              .length,
-                                                      "payment":
-                                                          "cashondelivery",
-                                                      "date": DateTime.now(),
-                                                      "shop": cartshop,
-                                                      "products":
-                                                          completeproducts[
-                                                              cartshop],
-                                                      "user": uid,
-                                                    });
-                                                    fullorder.add(order_id);
-                                                    fullorder_shops
-                                                        .add(cartshop);
-                                                  }
-                                                  // for (var shop
-                                                  //     in usercartmap.keys) {
-                                                  //   print(
-                                                  //       'starting orderinggggggggggggggggggggggg');
-                                                  //   var order_id = UniqueKey()
-                                                  //       .hashCode
-                                                  //       .toString();
-                                                  //   Firestore.instance
-                                                  //       .collection(
-                                                  //           'shop_orders')
-                                                  //       .document(order_id)
-                                                  //       .setData({
-                                                  //     "address": thecartaddress,
-                                                  //     "total": total.toInt(),
-                                                  //     "count": usercartmap[shop]
-                                                  //         .length,
-                                                  //     "payment":
-                                                  //         "cashondelivery",
-                                                  //     "date": DateTime.now(),
-                                                  //     "shop": shop,
-                                                  //     "products":
-                                                  //         usercartmap[shop],
-                                                  //     "user": uid,
-                                                  //   });
-                                                  //   fullorder.add(order_id);
-                                                  //   fullorder_shops.add(shop);
-                                                  // }
-                                                  var fullorder_id = UniqueKey()
-                                                      .hashCode
-                                                      .toString();
-                                                  Firestore.instance
-                                                      .collection('orders')
-                                                      .document(fullorder_id)
-                                                      .setData({
-                                                    "address": thecartaddress,
-                                                    "total": total.toInt(),
-                                                    "count": items,
-                                                    "payment": "cashondelivery",
-                                                    "date": DateTime.now(),
-                                                    "products":
-                                                        completeproducts,
-                                                    "user": uid,
-                                                    "shop_list":
-                                                        fullorder_shops,
-                                                    "order_list": fullorder
-                                                  }).then((doc) {
-                                                    print(fullorder_id);
-                                                    Navigator.pop(context);
-
-                                                    // loadingorder = true;
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                OrderPage(
-                                                                    fullorder_id)));
-                                                  }).catchError((error) {
-                                                    print(error);
-                                                  });
-                                                }
-
-                                                getCartAddress();
-
-                                                // final thecartaddress =
-                                                //     getCartAddress();
-                                              },
-                                        color: Colors.redAccent[700],
-                                        disabledColor: Colors.grey[200],
-                                        textColor: Colors.white,
-                                        minWidth:
-                                            MediaQuery.of(context).size.width,
-                                        height: 0,
-                                        // padding: EdgeInsets.zero,
-                                        padding: EdgeInsets.only(
-                                            left: 23,
-                                            top: 12,
-                                            right: 23,
-                                            bottom: 10),
-                                        child: Text(
-                                          "Confirm Order",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15.0,
-                                            fontFamily: 'Axiforma',
-                                            // color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
+                                      );
+                                    }
+                                  }
                               }
-                          }
-                        }),
-                    Text(usersignedin
-                        ? "user is signed in"
-                        : "user not signed in"),
-                    Text(notsetup ? "user is not setup" : "user is setup"),
-                    Visibility(
-                      visible: false,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
-                        child: Center(
-                          child: SizedBox(
-                            width: width - 44,
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 18.0),
-                                  child: Icon(
-                                    Icons.info,
-                                    size: 18,
-                                    color: Colors.grey[500],
-                                  ),
+                            }),
+
+                        // Text(usersignedin
+                        //     ? "user is signed in"
+                        //     : "user not signed in"),
+                        // Text(notsetup ? "user is not setup" : "user is setup"),
+                        Visibility(
+                          visible: false,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
+                            child: Center(
+                              child: SizedBox(
+                                width: width - 44,
+                                child: Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 18.0),
+                                      child: Icon(
+                                        Icons.info,
+                                        size: 18,
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
+                                    // Expanded(
+                                    //   child: Text(
+                                    //     "All meal baskets come with a detailed cooking instructions!",
+                                    //     style: TextStyle(
+                                    //       fontWeight: FontWeight.normal,
+                                    //       fontSize: 12.0,
+                                    //       fontFamily: 'Axiforma',
+                                    //       color: Colors.grey[500],
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                  ],
                                 ),
-                                // Expanded(
-                                //   child: Text(
-                                //     "All meal baskets come with a detailed cooking instructions!",
-                                //     style: TextStyle(
-                                //       fontWeight: FontWeight.normal,
-                                //       fontSize: 12.0,
-                                //       fontFamily: 'Axiforma',
-                                //       color: Colors.grey[500],
-                                //     ),
-                                //   ),
-                                // ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    )
-                  ],
-                );
-          }
-        },
+                        )
+                      ],
+                    );
+              }
+            },
+          ),
+        ),
       )),
     );
   }
@@ -2133,7 +2103,7 @@ class _CartState extends State<Cart> {
                     height: 60,
                     width: 60,
                     placeholder: (context, url) =>
-                        Image.asset("assets/images/loading.gif", height: 30),
+                        Image.asset("assets/images/loading.gif", height: 20),
                     imageUrl: cartitem['data']['image'] == null
                         ? "s"
                         : cartitem['data']['image'],
@@ -2297,6 +2267,7 @@ class _CartState extends State<Cart> {
                                     cartitem['date'],
                                     cartitemID)))
                             .then((_) {
+                          setupVerification();
                           setState(() {});
                         });
                       },

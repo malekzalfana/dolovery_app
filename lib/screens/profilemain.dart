@@ -1,6 +1,7 @@
 import 'package:dolovery_app/screens/addadress.dart';
 import 'package:dolovery_app/screens/allorders.dart';
 import 'package:dolovery_app/screens/editadress.dart';
+import 'package:dolovery_app/screens/editprofile.dart';
 import 'package:dolovery_app/screens/orderpage.dart';
 import 'package:dolovery_app/screens/privacy.dart';
 import 'package:dolovery_app/screens/profile.dart';
@@ -274,8 +275,12 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           borderRadius: BorderRadius.circular(20.0),
                           side: BorderSide(color: Colors.red)),
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ProfileScreen()));
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                                builder: (context) => ProfileScreen()))
+                            .then((value) => () {
+                                  Navigator.pop(context);
+                                });
                       },
                       color: Colors.redAccent[700],
                       textColor: Colors.white,
@@ -301,6 +306,28 @@ class ProfileScreenState extends State<ProfileMainScreen> {
           );
         });
     future.then((void value) => setState(() {}));
+  }
+
+  _showLogoutDialog() {
+    showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              title: new Text("Are your sure you want to sign out?"),
+              // content: new Text("Hey! I'm Coflutter!"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Confirm'),
+                  onPressed: () {
+                    // reset();
+                    signOut();
+                    setupVerification();
+                    // setState(() {});
+                    widget.notifyParent();
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
   }
 
   bool _readtosignin = true;
@@ -634,6 +661,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                   .push(MaterialPageRoute(
                                       builder: (context) => ProfileScreen()))
                                   .then((_) {
+                                // Navigator.pop(context);
                                 setState(() {});
                               });
                               // signin.SignInFunctions.welcomePopUp(context, name);
@@ -719,6 +747,25 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                   letterSpacing: 1.1,
                                   fontFamily: 'Axiforma',
                                   color: Colors.black45,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditProfileScreen()));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 18.0),
+                                  child: Text(
+                                    "EDIT PROFILE",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 13.0,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.black38,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
@@ -1092,10 +1139,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                         side: BorderSide(
                                             color: Colors.grey[200])),
                                     onPressed: () {
-                                      signOut();
-                                      setupVerification();
-                                      // setState(() {});
-                                      widget.notifyParent();
+                                      _showLogoutDialog();
                                     },
                                     color: Colors.grey[200],
                                     elevation: 0,

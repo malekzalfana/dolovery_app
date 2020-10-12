@@ -12,8 +12,10 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 //import 'package:flutter_svg/svg.dart';
 // ignore: unused_import
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
+// import 'package:location_permissions/location_permissions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/100lebanese.dart';
 import '../screens/supplements.dart';
@@ -27,7 +29,7 @@ import 'package:dolovery_app/widgets/popupproduct.dart';
 import 'dart:async';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart' as pm;
 
 class HomeScreen extends StatefulWidget {
   final Function() notifyParent;
@@ -114,10 +116,35 @@ class HomeScreenState extends State<HomeScreen> {
 
     try {
       myLocation = await location.getLocation();
+      currentLocation = myLocation;
+
+      final coordinates =
+          new Coordinates(myLocation.latitude, myLocation.longitude);
+      var addresses =
+          await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = addresses.first;
+      c_position = first.featureName;
+      // print(
+      //     ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+      if (acquiredlocation == false) {
+        setState(() {
+          acquiredlocation = true;
+          // print('added the correct location_________');
+        });
+      }
+
+      return c_position;
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
+        // LocationPermissions().requestPermissions();
+        Map<pm.Permission, pm.PermissionStatus> statuses = await [
+          pm.Permission.location,
+          pm.Permission.storage,
+        ].request();
+        LocationPermission permission = await requestPermission();
         print(error);
+        print(statuses);
         gotLocation = false;
       }
       if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
@@ -127,23 +154,6 @@ class HomeScreenState extends State<HomeScreen> {
       }
       myLocation = null;
     }
-    currentLocation = myLocation;
-    final coordinates =
-        new Coordinates(myLocation.latitude, myLocation.longitude);
-    var addresses =
-        await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    var first = addresses.first;
-    c_position = first.featureName;
-    // print(
-    //     ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
-    if (acquiredlocation == false) {
-      setState(() {
-        acquiredlocation = true;
-        // print('added the correct location_________');
-      });
-    }
-
-    return c_position;
   }
 
   // getCurrentAddress() async {
@@ -1028,7 +1038,6 @@ class HomeScreenState extends State<HomeScreen> {
                       .then((_) {
                     refreshcart();
                   });
-                  ;
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),

@@ -46,7 +46,7 @@ class _BundleState extends State<Bundle> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width - 16,
+      width: MediaQuery.of(context).size.width - 50, //16,
       child: Padding(
         padding: const EdgeInsets.only(right: 10.0, bottom: 20),
         child: Container(

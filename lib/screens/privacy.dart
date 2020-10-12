@@ -48,7 +48,7 @@ class _PrivacyState extends State<Privacy> {
 INFORMATION WE COLLECT
 * Information you provide to us or allow others to provide to us
 At various points in the Dolovery experience, you may provide us with information about yourself. For example, when you create an account with Dolovery, you provide us with personal information like your name, email address, phone number and your address.
-* Technical information about usage of InstaShop
+* Technical information about usage of Dolovery
 When you use the Dolovery services, either through a browser or mobile app, we automatically receive some technical information about the hardware and software that is being used.
 COOKIES AND OTHER TRACKING TECHNOLOGIES:
 We and our partners use various technologies to collect information, including cookies and device identifiers. Cookies are small text files that are sent by your computer when you access our services through a browser. We may use session cookies (which expire when you close your browser), persistent cookies (which expire when you choose to clear them from your browser), and other identifiers to collect information from your browser or device that helps us personalize your experience.

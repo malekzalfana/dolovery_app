@@ -161,10 +161,13 @@ class SalleScreenState extends State<SalleScreen> {
                       widget.notifyParent();
                       // Navigator.pop(context);
                     },
-                    child: Icon(
-                      Icons.keyboard_arrow_left,
-                      color: Colors.black,
-                      size: 30.0,
+                    child: Visibility(
+                      visible: false,
+                      child: Icon(
+                        Icons.keyboard_arrow_left,
+                        color: Colors.black,
+                        size: 30.0,
+                      ),
                     ),
                   ),
                 ),

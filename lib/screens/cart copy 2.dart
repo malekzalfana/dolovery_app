@@ -2114,17 +2114,17 @@ class _CartState extends State<Cart> {
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                       onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(
-                                builder: (context) => SalleItem(
-                                    cartitem,
-                                    cartitem['day'],
-                                    cartitem['serving_prices'],
-                                    cartitem['descriptions'],
-                                    cartitem['description'])))
-                            .then((_) {
-                          setState(() {});
-                        });
+                        // Navigator.of(context)
+                        //     .push(MaterialPageRoute(
+                        //         builder: (context) => SalleItem(
+                        //             cartitem,
+                        //             cartitem['day'],
+                        //             cartitem['serving_prices'],
+                        //             cartitem['descriptions'],
+                        //             cartitem['description'])))
+                        //     .then((_) {
+                        //   setState(() {});
+                        // });
                       },
                       color: Colors.redAccent[700],
                       textColor: Colors.white,

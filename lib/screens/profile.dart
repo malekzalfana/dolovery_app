@@ -22,6 +22,7 @@ class FormScreenState extends State<ProfileScreen> {
   // String _city;
   String _apartment = "";
   String _phone = "";
+  String _code = "";
   String _fullname = "";
   String _city = "";
 
@@ -289,7 +290,7 @@ class FormScreenState extends State<ProfileScreen> {
     "AX",
   ];
 
-  void onTextChange(String fieldname, String value) {
+  void onTextChange(String fieldname, String value, [code]) {
     print("started phone");
     if (fieldname == "Address") {
       _streetaddress = value;
@@ -299,6 +300,7 @@ class FormScreenState extends State<ProfileScreen> {
       _apartment = value;
     } else if (fieldname == "Phone") {
       _phone = value;
+      _code = code;
     } else if (fieldname == "Full Name") {
       _fullname = value;
       print(_phone);
@@ -375,8 +377,15 @@ class FormScreenState extends State<ProfileScreen> {
       padding: const EdgeInsets.only(top: 12, bottom: 12),
       child: InternationalPhoneNumberInput(
         onInputChanged: (PhoneNumber number) {
-          print(number.phoneNumber);
-          onTextChange("Phone", number.phoneNumber);
+          print(number.phoneNumber
+              .toString()
+              .replaceAll(number.dialCode.toString(), ''));
+          onTextChange(
+              "Phone",
+              number.phoneNumber
+                  .toString()
+                  .replaceAll(number.dialCode.toString(), ''),
+              number.dialCode);
           onFieldChange();
         },
         onInputValidated: (bool value) {
@@ -694,6 +703,7 @@ class FormScreenState extends State<ProfileScreen> {
                           Map<String, dynamic> thisuser = {
                             "fullname": _fullname,
                             "number": _phone,
+                            "code": _code,
                             "email": uemail,
                             "address": addresses,
                             "chosen_address": chosen_address
