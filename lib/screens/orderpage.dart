@@ -127,68 +127,54 @@ class _OrderPageState extends State<OrderPage> {
                           for (var shop in order.data['products'].keys)
                             Column(
                               children: [
-                                FutureBuilder(
-                                  future: getShop(shop),
-                                  builder: (context, snapshot) {
-                                    switch (snapshot.connectionState) {
-                                      case ConnectionState.waiting:
-                                        return Text('Loading....');
-                                      default:
-                                        if (snapshot.hasError)
-                                          return Text(
-                                              'Error: ${snapshot.error}');
-                                        else
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 10.0, bottom: 10),
-                                            child: Text(
-                                              snapshot.data['name'],
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 19.0,
-                                                  fontFamily: 'Axiforma',
-                                                  color: Colors.black),
-                                            ),
-                                          );
-                                    }
-                                  },
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 10.0, bottom: 10),
+                                  child: Text(
+                                    order.data['products'][shop]['data']
+                                        ['name'],
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 19.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.black),
+                                  ),
                                 ),
-                                for (var product
-                                    in order.data['products'][shop].keys)
+                                for (var product in order
+                                    .data['products'][shop]['products'].keys)
                                   // Text(order.data['products'][shop][product]['name']),
                                   // ]
                                   buildCartItem(
                                     product,
-                                    order.data['products'][shop][product]
-                                        ['count'],
-                                    order.data['products'][shop][product]
-                                        ['data']['name'],
-                                    order.data['products'][shop][product]
-                                        ['data']['image'],
-                                    order.data['products'][shop][product]
-                                        ['data']['shop_discounted'],
-                                    order.data['products'][shop][product]
-                                                ['data']['type'] !=
+                                    order.data['products'][shop]['products']
+                                        [product]['count'],
+                                    order.data['products'][shop]['products']
+                                        [product]['data']['name'],
+                                    order.data['products'][shop]['products']
+                                        [product]['data']['image'],
+                                    order.data['products'][shop]['products']
+                                        [product]['data']['shop_discounted'],
+                                    order.data['products'][shop]['products']
+                                                [product]['data']['type'] !=
                                             'salle'
-                                        ? (int.parse(order.data['products'][shop][product]['data']['shop_price'].toString()) *
-                                                (order.data['products'][shop]
-                                                            [product]['rate'] !=
-                                                        null
+                                        ? (int.parse(order.data['products'][shop]['products'][product]['data']['shop_price'].toString()) *
+                                                (order.data['products'][shop]['products'][product]['rate'] != null
                                                     ? order.data['products']
-                                                        [shop][product]['rate']
+                                                            [shop]['products']
+                                                        [product]['rate']
                                                     : 1))
                                             .toString()
-                                        : order.data['products'][shop][product]
-                                                ['data']['serving_prices']
-                                                [order.data['products'][shop][product]['count']]
+                                        : order.data['products'][shop]['products']
+                                                [product]['data']['serving_prices']
+                                                [order.data['products'][shop]['products'][product]['count']]
                                             .toString(),
-                                    order.data['products'][shop][product]
-                                        ['data']['type'],
-                                    order.data['products'][shop][product]
-                                        ['data']['arabic_name'],
-                                    order.data['products'][shop][product]
-                                            ['data']['unit']
+                                    order.data['products'][shop]['products']
+                                        [product]['data']['type'],
+                                    order.data['products'][shop]['products']
+                                        [product]['data']['arabic_name'],
+                                    order.data['products'][shop]['products']
+                                            [product]['data']['unit']
                                         .toString(),
                                   )
                               ],

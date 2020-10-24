@@ -55,12 +55,14 @@ class _SalleItemState extends State<SalleItem> {
       } else {
         showChangeButton = false;
       }
+      // alreadyadded = true;
     });
   }
 
   bool loaded = false;
   dynamic usercartmap_v2;
   getSalleStatus() async {
+    print('RAN THE FUTURE');
     Map newusercartmap_v2;
     final prefs = await SharedPreferences.getInstance();
     var temp = prefs.getString('usercartmap_v2');
@@ -76,21 +78,24 @@ class _SalleItemState extends State<SalleItem> {
     if (newusercartmap_v2 == null) {
       newusercartmap_v2 = {};
     }
-    print(widget.datenumbers);
-    print(widget.id + '_${widget.datenumbers}');
+    // print(widget.datenumbers);
+    // print(widget.id + '_${widget.datenumbers}');
     if (newusercartmap_v2.containsKey('dolovery')) {
-      // print('it has dolovery in  it');
-      // print(widget.id);
-      if (newusercartmap_v2['dolovery'].containsKey(widget.id)) {
-        // print('dolovery has documentid in it');
+      print('it has dolovery in  it');
+      print(widget.id);
+      print(newusercartmap_v2['dolovery']['products']);
+      print(newusercartmap_v2['dolovery']['products'][widget.id].toString());
+      if (newusercartmap_v2['dolovery']['products'].containsKey(widget.id)) {
+        print('dolovery has documentid in it');
         // print(alreadyadded);
         if (loaded == false) {
           // print("it has not loaded");
           setState(() {
             alreadyadded = true;
             loaded = true;
-            inmycart = newusercartmap_v2['dolovery'][widget.id]['count'];
-            // print("$inmycart is in my cart");
+            inmycart =
+                newusercartmap_v2['dolovery']['products'][widget.id]['count'];
+            print("$inmycart is in my cart");
 
             // print("there is one beforeeeeeeeeeee");
           });
@@ -104,63 +109,80 @@ class _SalleItemState extends State<SalleItem> {
   int oldsalletotal = 0;
 
   _save(itemid, int count, item) async {
-    print(item);
-    print('hayda l item');
+    print(count.toString());
+    print('this is the count');
+    // print(item);
+    // print('hayda l item');
     oldsalletotal = null;
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
-    String shop_name = widget.data['shop'];
+    String shop_name = 'dolovery';
     usercartmap_v2 = prefs.getString("usercartmap_v2");
     // prefs.remove('usercartmap');
     if (usercartmap_v2 == null) {
       usercartmap_v2 = {};
-      print('made an empty map');
+      // print('made an empty map');
     } else {
       usercartmap_v2 = json.decode(usercartmap_v2);
-      print('found the map');
-      print(json.encode(usercartmap_v2));
+      // print('found the map');
+      // print(json.encode(usercartmap_v2));
     }
     // if ( item.data['type'] ==  'salle') {
     //   add
     // }
-    var new_itemid = itemid + '_${widget.datenumbers}';
+    var new_itemid = itemid; // + '_${widget.datenumbers}';
+    print(new_itemid);
     if (usercartmap_v2.containsKey(shop_name)) {
-      if (usercartmap_v2[shop_name].containsKey(new_itemid)) {
-        usercartmap_v2[shop_name][new_itemid]['count'] = count;
-        // usercartmap_v2[shop_name][new_itemid]['rate'] = rate;
-        usercartmap_v2[shop_name][new_itemid]['data'] = item;
-        usercartmap_v2[shop_name][new_itemid]['date'] = widget.datenumbers;
-        usercartmap_v2[shop_name][new_itemid]['date-words'] = widget.datewords;
+      if (usercartmap_v2[shop_name]['products'].containsKey(new_itemid)) {
+        usercartmap_v2[shop_name]['products'][new_itemid]['count'] = count;
+        // usercartmap_v2[shop_name]['products'][new_itemid]['rate'] = rate;
+        usercartmap_v2[shop_name]['products'][new_itemid]['data'] = item;
+        usercartmap_v2[shop_name]['products'][new_itemid]['date'] =
+            widget.datenumbers;
+        usercartmap_v2[shop_name]['products'][new_itemid]['rate'] = 1;
+        usercartmap_v2[shop_name]['products'][new_itemid]['date-words'] =
+            widget.datewords;
       } else {
-        usercartmap_v2[shop_name][new_itemid] = {};
-        // usercartmap_v2[shop_name][new_itemid]['rate'] = rate;
-        usercartmap_v2[shop_name][new_itemid]['count'] = count;
-        usercartmap_v2[shop_name][new_itemid]['data'] = item;
-        usercartmap_v2[shop_name][new_itemid]['date'] = widget.datenumbers;
-        usercartmap_v2[shop_name][new_itemid]['date-words'] = widget.datewords;
+        // usercartmap_v2[shop_name]['products'] = {};
+        usercartmap_v2[shop_name]['products'][new_itemid] = {};
+        // usercartmap_v2[shop_name]['products'][new_itemid]['rate'] = rate;
+        usercartmap_v2[shop_name]['products'][new_itemid]['count'] = count;
+        usercartmap_v2[shop_name]['products'][new_itemid]['data'] = item;
+        usercartmap_v2[shop_name]['products'][new_itemid]['rate'] = 1;
+        usercartmap_v2[shop_name]['products'][new_itemid]['date'] =
+            widget.datenumbers;
+        usercartmap_v2[shop_name]['products'][new_itemid]['date-words'] =
+            widget.datewords;
       }
     } else {
-      usercartmap_v2[shop_name] = {};
-      usercartmap_v2[shop_name][new_itemid] = {};
-      // usercartmap_v2[shop_name][new_itemid]['rate'] = rate;
-      usercartmap_v2[shop_name][new_itemid]['count'] = count;
-      usercartmap_v2[shop_name][new_itemid]['data'] = item;
-      usercartmap_v2[shop_name][new_itemid]['date'] = widget.datenumbers;
-      usercartmap_v2[shop_name][new_itemid]['date-words'] = widget.datewords;
+      usercartmap_v2[shop_name] = {
+        'data': {'name': 'Dolovery'},
+        'products': {}
+      };
+      // usercartmap_v2[shop_name]['products'] = {};
+      usercartmap_v2[shop_name]['products'][new_itemid] = {};
+      // usercartmap_v2[shop_name]['products'][new_itemid]['rate'] = rate;
+      usercartmap_v2[shop_name]['products'][new_itemid]['count'] = count;
+      usercartmap_v2[shop_name]['products'][new_itemid]['data'] = item;
+      usercartmap_v2[shop_name]['products'][new_itemid]['rate'] = 1;
+      usercartmap_v2[shop_name]['products'][new_itemid]['date'] =
+          widget.datenumbers;
+      usercartmap_v2[shop_name]['products'][new_itemid]['date-words'] =
+          widget.datewords;
     }
     prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
     // START
     usercartmap = prefs.getString("usercartmap");
-    print('user cartmap');
-    print(usercartmap);
+    // print('user cartmap');
+    print(usercartmap_v2);
     // prefs.remove('usercartmap');
     if (usercartmap == null) {
       usercartmap = {};
-      print('made an empty map');
+      // print('made an empty map');
     } else {
       usercartmap = json.decode(usercartmap);
-      print('found the map');
-      print(json.encode(usercartmap));
+      // print('found the map');
+      // print(json.encode(usercartmap));
     }
 
     if (cart == null) {
@@ -168,17 +190,18 @@ class _SalleItemState extends State<SalleItem> {
     }
 
     if (usercartmap.containsKey(shop_name)) {
-      if (usercartmap[shop_name].containsKey(new_itemid)) {
-        oldsalletotal = usercartmap[shop_name][new_itemid];
-        usercartmap[shop_name][new_itemid] = _n;
-        // int.parse(usercartmap[shop_name][new_itemid].toString()) + (1 * count);
+      if (usercartmap[shop_name]['products'].containsKey(new_itemid)) {
+        oldsalletotal = usercartmap[shop_name]['products'][new_itemid];
+        usercartmap[shop_name]['products'][new_itemid] = _n;
+        // int.parse(usercartmap[shop_name]['products'][new_itemid].toString()) + (1 * count);
       } else {
-        usercartmap[shop_name][new_itemid] = 1 * count;
+        usercartmap[shop_name]['products'][new_itemid] = 1 * count;
         cart.add(new_itemid);
       }
     } else {
       usercartmap[shop_name] = {};
-      usercartmap[shop_name][new_itemid] = 1 * count;
+      usercartmap[shop_name]['products'] = {};
+      usercartmap[shop_name]['products'][new_itemid] = 1 * count;
       cart.add(new_itemid);
     }
 
@@ -189,7 +212,7 @@ class _SalleItemState extends State<SalleItem> {
     if (prefs.getDouble('total') == null) {
       prefs.setDouble('total', 0);
     }
-    print("the old salle total is: " + oldsalletotal.toString());
+    // print("the old salle total is: " + oldsalletotal.toString());
     // var shop_price = int.parse(widget.data['shop_price'].toString()).toDouble();
     // print(widget.data['serving_prices'][oldsalletotal]);
     // print(widget.data['serving_prices'][count]);
@@ -201,7 +224,7 @@ class _SalleItemState extends State<SalleItem> {
           double.parse(widget.data['serving_prices'][oldsalletotal].toString());
     }
 
-    print("old price is $oldprice");
+    // print("old price is $oldprice");
     // if (count == 0) {
     //   oldprice = 0;
     //   print("count is ZERO");
@@ -215,6 +238,7 @@ class _SalleItemState extends State<SalleItem> {
     // print("the tortal is ${total.toString()}");
     prefs.setDouble('total', total);
     prefs.setString('usercartmap', json.encode(usercartmap));
+    prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
     if (cart == null) {
       cart = [];
     }
@@ -243,7 +267,8 @@ class _SalleItemState extends State<SalleItem> {
 
     setState(() {
       oldsalletotal = count;
-      alreadyadded = false;
+      loaded = false;
+      alreadyadded = true;
       showChangeButton = false;
     });
 
@@ -271,9 +296,9 @@ class _SalleItemState extends State<SalleItem> {
     print('user cartmap');
     print(usercartmap_v2);
     // prefs.remove('usercartmap');
-    var new_itemid = itemid + '_${widget.datenumbers}';
+    var new_itemid = itemid; //+ '_${widget.datenumbers}';
     usercartmap_v2 = json.decode(usercartmap_v2);
-    usercartmap_v2[shop_name].remove(new_itemid);
+    usercartmap_v2[shop_name]['products'].remove(new_itemid);
 
     if (cart == null) {
       cart = [];
@@ -303,7 +328,7 @@ class _SalleItemState extends State<SalleItem> {
       cart = [];
     }
     cart.remove(new_itemid);
-    usercartmap[shop_name].remove(new_itemid);
+    usercartmap[shop_name]['products'].remove(new_itemid);
     prefs.setDouble('total', total);
     prefs.setString('usercartmap', json.encode(usercartmap));
     prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
@@ -314,6 +339,12 @@ class _SalleItemState extends State<SalleItem> {
     List<String> shops = prefs.getStringList('shops');
     if (shops == null) {
       shops = [];
+    }
+    print('testing');
+    print(usercartmap_v2[shop_name]['products'].keys);
+    if (usercartmap_v2[shop_name]['products'].length == 0) {
+      print('its the only prodyuct left');
+      usercartmap_v2[shop_name].remove(itemid);
     }
 
     // if (!shops.contains(shop_name)) {
@@ -404,7 +435,20 @@ class _SalleItemState extends State<SalleItem> {
             width: 330,
             placeholder: (context, url) =>
                 Image.asset("assets/images/loading.gif", height: 30),
-            errorWidget: (context, url, error) => new Icon(Icons.error),
+            errorWidget: (context, url, error) => Container(
+                margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                width: 300,
+                height: 300,
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15)),
+                ),
+                // color: Colors.red,
+                child: Icon(Icons.error)),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 30.0, top: 30, bottom: 10),
@@ -421,7 +465,7 @@ class _SalleItemState extends State<SalleItem> {
               ),
             ),
           ),
-          Text(widget.datenumbers),
+          // Text(widget.datenumbers),
           Padding(
             padding: const EdgeInsets.only(left: 30.0, top: 00, bottom: 0),
             child: Align(
@@ -761,6 +805,7 @@ class _SalleItemState extends State<SalleItem> {
               // print('snapshot >> is : ${snapshot.data}');
             },
           ),
+          // Text(inmycart.toString()),
           Visibility(
             visible: !alreadyadded,
             child: Padding(
@@ -771,10 +816,10 @@ class _SalleItemState extends State<SalleItem> {
                 ),
                 elevation: 0,
                 onPressed: () {
+                  print('the id is the :::::::::::${widget.id}');
                   _save(widget.id, _n, widget.data);
-                  setState(() {
-                    alreadyadded = true;
-                  });
+
+                  print(alreadyadded);
                 },
                 color: Colors.green,
                 // disabledColor: Colors.grey[200],

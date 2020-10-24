@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:delayed_display/delayed_display.dart';
 import 'package:dolovery_app/screens/addadress.dart';
 import 'package:dolovery_app/screens/search.dart';
@@ -57,7 +59,8 @@ class HomeScreenState extends State<HomeScreen> {
     @override
     void initState() {
       // print('Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-      getLocation();
+      // getLocation();
+      setupAddress();
       super.initState();
     }
   }
@@ -184,9 +187,24 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   bool newuser = true;
+  var all_addresses;
+  var chosen_address;
+  Future setupAddress() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('addresses') != null) {
+      all_addresses = json.decode(prefs.getString('addresses'));
+    }
+    chosen_address = prefs.getString('address');
+    print('the chsoen address is $chosen_address');
+  }
+
   Future setupVerification() async {
     // print("USER BEING WATCHED");
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    // final prefs = \
+
+    final prefs = await SharedPreferences.getInstance();
+
     final uid = user.uid;
     final name = user.displayName;
     final uemail = user.email;
@@ -196,6 +214,11 @@ class HomeScreenState extends State<HomeScreen> {
 
     if (usercollection.exists) {
       newuser = false;
+      // chosen_address = usercollection.data["chosen_address"];
+      // print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
+      // print(usercollection.data['address']);
+      // prefs.setString('addresses', json.encode(usercollection.data['address']));
+      // prefs.setString('address', usercollection.data["chosen_address"]);
     }
     return newuser;
   }
@@ -304,6 +327,10 @@ class HomeScreenState extends State<HomeScreen> {
             .get();
         if (newUser.exists) {
           print('USER EXISTSSSSSSSSSSSSSSSSSSSSSSS');
+          final prefs = await SharedPreferences.getInstance();
+          chosen_address = newUser.data["chosen_address"];
+          prefs.setString('addresses', json.encode(newUser.data['address']));
+          prefs.setString('address', newUser.data["chosen_address"]);
           notsetup = false;
           welcomeheight = 350;
         } else {
@@ -573,172 +600,270 @@ class HomeScreenState extends State<HomeScreen> {
       child: SafeArea(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 10.0, right: 10.0, top: 0.0, bottom: 10.0),
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5.0),
-                    child: Icon(
-                      Icons.near_me,
-                      color: Colors.redAccent[700],
-                      size: 20.0,
-                    ),
-                  ),
-                  Text(
-                    "Delivering to",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                      fontFamily: 'Axiforma',
-                      color: Colors.redAccent[700],
-                    ),
-                  ),
-                  // Text('$newuser'),
-                  FutureBuilder(
-                    future: setupVerification(),
-                    builder: (context, snapshot) {
-                      return Column(
-                        children: [
-                          Visibility(
-                            // visible: newuser,
-                            visible: true,
-                            child: Column(
+            // Padding(
+            //   padding: const EdgeInsets.only(
+            //       left: 10.0, right: 10.0, top: 0.0, bottom: 10.0),
+            //   child: Row(
+            //     children: <Widget>[
+            //       Padding(
+            //         padding: const EdgeInsets.only(right: 5.0),
+            //         child: Icon(
+            //           Icons.near_me,
+            //           color: Colors.redAccent[700],
+            //           size: 20.0,
+            //         ),
+            //       ),
+            //       Text(
+            //         "Delivering to",
+            //         style: TextStyle(
+            //           fontWeight: FontWeight.bold,
+            //           fontSize: 16.0,
+            //           fontFamily: 'Axiforma',
+            //           color: Colors.redAccent[700],
+            //         ),
+            //       ),
+            //       // Text('$newuser'),
+            //       FutureBuilder(
+            //         future: setupVerification(),
+            //         builder: (context, snapshot) {
+            //           return Column(
+            //             children: [
+            //               Visibility(
+            //                 // visible: newuser,
+            //                 visible: true,
+            //                 child: Column(
+            //                   children: [
+            //                     Visibility(
+            //                       visible: c_position == null ? true : false,
+            //                       child: Container(
+            //                         margin:
+            //                             const EdgeInsets.fromLTRB(6, 0, 0, 0),
+            //                         child: MaterialButton(
+            //                           shape: RoundedRectangleBorder(
+            //                             borderRadius:
+            //                                 BorderRadius.circular(7.0),
+            //                           ),
+            //                           onPressed: () {
+            //                             getLocation();
+            //                           },
+            //                           color: Colors.redAccent[700],
+            //                           textColor: Colors.white,
+            //                           minWidth: 0,
+            //                           height: 0,
+            //                           // padding: EdgeInsets.zero,
+            //                           padding: EdgeInsets.only(
+            //                               left: 6, top: 0, right: 6, bottom: 1),
+            //                           child: FutureBuilder(
+            //                             future: getLocation(),
+            //                             builder: (context, snapshot) {
+            //                               return Text(
+            //                                 'Enable Location',
+            //                                 style: TextStyle(
+            //                                   fontWeight: FontWeight.bold,
+            //                                   fontSize: 16.0,
+            //                                   fontFamily: 'Axiforma',
+            //                                   color: Colors.white,
+            //                                 ),
+            //                               );
+            //                             },
+            //                           ),
+            //                         ),
+            //                       ),
+            //                     ),
+            //                     Visibility(
+            //                       visible: c_position == null ? false : true,
+            //                       child: SizedBox(
+            //                         //width: 200,
+            //                         child: Container(
+            //                           // width: 200,
+            //                           margin:
+            //                               const EdgeInsets.fromLTRB(6, 0, 0, 0),
+            //                           child: MaterialButton(
+            //                             shape: RoundedRectangleBorder(
+            //                               borderRadius:
+            //                                   BorderRadius.circular(7.0),
+            //                             ),
+            //                             onPressed: () {
+            //                               // _signInPopUp(context);
+            //                             },
+            //                             color: Colors.redAccent[700],
+            //                             textColor: Colors.white,
+            //                             minWidth: 0,
+            //                             height: 0,
+            //                             // padding: EdgeInsets.zero,
+            //                             padding: EdgeInsets.only(
+            //                                 left: 6,
+            //                                 top: 0,
+            //                                 right: 6,
+            //                                 bottom: 1),
+            //                             child: FutureBuilder(
+            //                               future: getLocation(),
+            //                               builder: (context, snapshot) {
+            //                                 return Text(
+            //                                   c_position.toString(),
+            //                                   overflow: TextOverflow.ellipsis,
+            //                                   style: TextStyle(
+            //                                     fontWeight: FontWeight.bold,
+            //                                     fontSize: 16.0,
+            //                                     fontFamily: 'Axiforma',
+            //                                     color: Colors.white,
+            //                                   ),
+            //                                 );
+            //                               },
+            //                             ),
+            //                           ),
+            //                         ),
+            //                       ),
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ),
+            //               Visibility(
+            //                 // visible: !newuser,
+            //                 visible: false,
+            //                 child: SizedBox(
+            //                   //width: 200,
+            //                   child: Container(
+            //                     width: 200,
+            //                     margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+            //                     child: MaterialButton(
+            //                       shape: RoundedRectangleBorder(
+            //                         borderRadius: BorderRadius.circular(7.0),
+            //                       ),
+            //                       onPressed: () {
+            //                         // _signInPopUp(context);
+            //                       },
+            //                       color: Colors.redAccent[700],
+            //                       textColor: Colors.white,
+            //                       minWidth: 0,
+            //                       height: 0,
+            //                       // padding: EdgeInsets.zero,
+            //                       padding: EdgeInsets.only(
+            //                           left: 6, top: 0, right: 6, bottom: 1),
+            //                       child: FutureBuilder(
+            //                         future: setupVerification(),
+            //                         builder: (context, snapshot) {
+            //                           return Text(
+            //                             c2_position.toString(),
+            //                             overflow: TextOverflow.ellipsis,
+            //                             style: TextStyle(
+            //                               fontWeight: FontWeight.bold,
+            //                               fontSize: 16.0,
+            //                               fontFamily: 'Axiforma',
+            //                               color: Colors.white,
+            //                             ),
+            //                           );
+            //                         },
+            //                       ),
+            //                     ),
+            //                   ),
+            //                 ),
+            //               )
+            //             ],
+            //           );
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // if (addresses.length > 0)
+            // Text(chosen_address.toString()),
+            FutureBuilder(
+                future: setupAddress(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return Container(height: 20);
+                    default:
+                      if (snapshot.hasError)
+                        return Text('Error: ${snapshot.error}');
+                      else if (chosen_address != null)
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 15.0, top: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
                               children: [
-                                Visibility(
-                                  visible: c_position == null ? true : false,
-                                  child: Container(
-                                    margin:
-                                        const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                                    child: MaterialButton(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(7.0),
-                                      ),
-                                      onPressed: () {
-                                        getLocation();
-                                      },
-                                      color: Colors.redAccent[700],
-                                      textColor: Colors.white,
-                                      minWidth: 0,
-                                      height: 0,
-                                      // padding: EdgeInsets.zero,
-                                      padding: EdgeInsets.only(
-                                          left: 6, top: 0, right: 6, bottom: 1),
-                                      child: FutureBuilder(
-                                        future: getLocation(),
-                                        builder: (context, snapshot) {
-                                          return Text(
-                                            'Enable Location',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16.0,
-                                              fontFamily: 'Axiforma',
-                                              color: Colors.white,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5.0),
+                                  child: Icon(
+                                    Icons.near_me,
+                                    color: Colors.redAccent[700],
+                                    size: 20.0,
                                   ),
                                 ),
-                                Visibility(
-                                  visible: c_position == null ? false : true,
-                                  child: SizedBox(
-                                    //width: 200,
-                                    child: Container(
-                                      // width: 200,
-                                      margin:
-                                          const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                                      child: MaterialButton(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(7.0),
-                                        ),
-                                        onPressed: () {
-                                          // _signInPopUp(context);
-                                        },
-                                        color: Colors.redAccent[700],
-                                        textColor: Colors.white,
-                                        minWidth: 0,
-                                        height: 0,
-                                        // padding: EdgeInsets.zero,
-                                        padding: EdgeInsets.only(
-                                            left: 6,
-                                            top: 0,
-                                            right: 6,
-                                            bottom: 1),
-                                        child: FutureBuilder(
-                                          future: getLocation(),
-                                          builder: (context, snapshot) {
-                                            return Text(
-                                              c_position.toString(),
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16.0,
-                                                fontFamily: 'Axiforma',
-                                                color: Colors.white,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
+                                Text(
+                                  "Delivering to your",
+                                  // the_chosen_address[0]['name'].toString(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.0,
+                                    fontFamily: 'Axiforma',
+                                    color: Colors.redAccent[700],
+                                  ),
+                                ),
+                                // Container(width: 0),
+                                Container(
+                                  // margin: EdgeInsets.symmetric(vertical: 0),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 0),
+                                  height: 30,
+                                  // width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    // color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(7),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      for (var address = 0;
+                                          address < all_addresses.length;
+                                          address++)
+                                        if (all_addresses[address]['id'] ==
+                                            chosen_address)
+                                          Text(
+                                            // "Delivering to",
+                                            // the_chosen_address[0]['name']
+                                            all_addresses[address]['name'],
+                                            // .toString(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17.0,
+                                              fontFamily: 'Axiforma',
+                                              color: Colors.redAccent[700],
+                                            ),
+                                          ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          Visibility(
-                            // visible: !newuser,
-                            visible: false,
-                            child: SizedBox(
-                              //width: 200,
-                              child: Container(
-                                width: 200,
-                                margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                                child: MaterialButton(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(7.0),
-                                  ),
-                                  onPressed: () {
-                                    // _signInPopUp(context);
-                                  },
-                                  color: Colors.redAccent[700],
-                                  textColor: Colors.white,
-                                  minWidth: 0,
-                                  height: 0,
-                                  // padding: EdgeInsets.zero,
-                                  padding: EdgeInsets.only(
-                                      left: 6, top: 0, right: 6, bottom: 1),
-                                  child: FutureBuilder(
-                                    future: setupVerification(),
-                                    builder: (context, snapshot) {
-                                      return Text(
-                                        c2_position.toString(),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16.0,
-                                          fontFamily: 'Axiforma',
-                                          color: Colors.white,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
+                        );
+                      else
+                        return Container();
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left: 18.0, top: 10),
+                    //   child: Align(
+                    //     alignment: Alignment.centerLeft,
+                    //     child: Row(
+                    //       children: [
+                    //         Text(
+                    //           "Ready to serve you",
+                    //           // the_chosen_address[0]['name'].toString(),
+                    //           style: TextStyle(
+                    //             fontWeight: FontWeight.bold,
+                    //             fontSize: 17.0,
+                    //             fontFamily: 'Axiforma',
+                    //             color: Colors.redAccent[700],
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // );
+                  }
+                }),
+
             Padding(
               padding: const EdgeInsets.only(
                   left: 20.0, right: 10.0, top: 0.0, bottom: 10.0),
@@ -746,7 +871,7 @@ class HomeScreenState extends State<HomeScreen> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      _signInOut();
+                      // _signInOut();
                     },
                     child: Text(
                       "What are you looking for?",

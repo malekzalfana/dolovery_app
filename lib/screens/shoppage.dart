@@ -378,18 +378,20 @@ class _ShopPageState extends State<ShopPage> {
                         padding: const EdgeInsets.only(top: 30.0),
                         child: Row(
                           children: [
-                            SizedBox(
-                              width: width,
-                              height: 180,
-                              child: GoogleMap(
-                                onMapCreated: _onMapCreated,
-                                myLocationButtonEnabled: false,
-                                mapToolbarEnabled: false,
-                                zoomControlsEnabled: false,
-                                markers: markers,
-                                initialCameraPosition: CameraPosition(
-                                  target: _center,
-                                  zoom: 14.0,
+                            IgnorePointer(
+                              child: SizedBox(
+                                width: width,
+                                height: 180,
+                                child: GoogleMap(
+                                  onMapCreated: _onMapCreated,
+                                  myLocationButtonEnabled: false,
+                                  mapToolbarEnabled: false,
+                                  zoomControlsEnabled: false,
+                                  markers: markers,
+                                  initialCameraPosition: CameraPosition(
+                                    target: _center,
+                                    zoom: 14.0,
+                                  ),
                                 ),
                               ),
                             ),

@@ -275,7 +275,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             //     "aasas":2133221
             //   }
             // }
-            add();
+
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
             String shop_name = data.documents[index]['shop'];
@@ -293,52 +293,82 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             //   add
             // }
             if (usercartmap_v2.containsKey(shop_name)) {
-              if (usercartmap_v2[shop_name].containsKey(itemid)) {
-                usercartmap_v2[shop_name][itemid]['count'] = int.parse(
-                        usercartmap_v2[shop_name][itemid]['count'].toString()) +
-                    1;
-                usercartmap_v2[shop_name][itemid]['rate'] = rate;
-                usercartmap_v2[shop_name][itemid]['data'] = item.data;
-                usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+              if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
+                usercartmap_v2[shop_name]['products'][itemid]['count'] =
+                    int.parse(usercartmap_v2[shop_name]['products'][itemid]
+                                ['count']
+                            .toString()) +
+                        1;
+                usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
+                usercartmap_v2[shop_name]['products'][itemid]['data'] =
+                    item.data;
+                usercartmap_v2[shop_name]['products'][itemid]['date'] =
+                    item.data['date'];
               } else {
-                usercartmap_v2[shop_name][itemid] = {};
-                usercartmap_v2[shop_name][itemid]['rate'] = rate;
-                usercartmap_v2[shop_name][itemid]['count'] = 1;
-                usercartmap_v2[shop_name][itemid]['data'] = item.data;
-                usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+                usercartmap_v2[shop_name]['products'][itemid] = {};
+                usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
+                usercartmap_v2[shop_name]['products'][itemid]['count'] = 1;
+                usercartmap_v2[shop_name]['products'][itemid]['data'] =
+                    item.data;
+                usercartmap_v2[shop_name]['products'][itemid]['date'] =
+                    item.data['date'];
               }
             } else {
-              usercartmap_v2[shop_name] = {};
-              usercartmap_v2[shop_name][itemid] = {};
-              usercartmap_v2[shop_name][itemid]['rate'] = rate;
-              usercartmap_v2[shop_name][itemid]['count'] = 1;
-              usercartmap_v2[shop_name][itemid]['data'] = item.data;
-              usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
+              var shopname;
+              var shopinfo2 = await Firestore.instance
+                  .collection('shops')
+                  .where('username', isEqualTo: shopName)
+                  .getDocuments()
+                  .then(
+                (value) {
+                  print('thid id the value');
+                  print(value);
+                  if (value.documents.length > 0) {
+                    shopname = value.documents[0].data['name'];
+                    usercartmap_v2[shop_name] = {
+                      'products': {},
+                      'data': {'name': shopname}
+                    };
+                    // return rate;
+                  } else {
+                    print('returbned none');
+                    // return null;
+                  }
+                },
+              );
+
+              usercartmap_v2[shop_name]['products'] = {};
+              usercartmap_v2[shop_name]['products'][itemid] = {};
+              usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
+              usercartmap_v2[shop_name]['products'][itemid]['count'] = 1;
+              usercartmap_v2[shop_name]['products'][itemid]['data'] = item.data;
+              usercartmap_v2[shop_name]['products'][itemid]['date'] =
+                  item.data['date'];
             }
+            add();
             prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
             // START
-            usercartmap = prefs.getString("usercartmap");
-            // prefs.remove('usercartmap');
-            if (usercartmap == null) {
-              usercartmap = {};
-              print('made an empty map');
-            } else {
-              usercartmap = json.decode(usercartmap);
-              print('found the map');
-              print(json.encode(usercartmap));
-            }
-            if (usercartmap.containsKey(shop_name)) {
-              if (usercartmap[shop_name].containsKey(itemid)) {
-                usercartmap[shop_name][itemid] =
-                    int.parse(usercartmap[shop_name][itemid].toString()) + 1;
-              } else {
-                usercartmap[shop_name][itemid] = 1;
-              }
-            } else {
-              usercartmap[shop_name] = {};
-              usercartmap[shop_name][itemid] = 1;
-            }
-            prefs.setString('usercartmap', json.encode(usercartmap));
+            // usercartmap = prefs.getString("usercartmap");
+            // if (usercartmap == null) {
+            //   usercartmap = {};
+            //   print('made an empty map');
+            // } else {
+            //   usercartmap = json.decode(usercartmap);
+            //   print('found the map');
+            //   print(json.encode(usercartmap));
+            // }
+            // if (usercartmap.containsKey(shop_name)) {
+            //   if (usercartmap[shop_name].containsKey(itemid)) {
+            //     usercartmap[shop_name][itemid] =
+            //         int.parse(usercartmap[shop_name][itemid].toString()) + 1;
+            //   } else {
+            //     usercartmap[shop_name][itemid] = 1;
+            //   }
+            // } else {
+            //   usercartmap[shop_name] = {};
+            //   usercartmap[shop_name][itemid] = 1;
+            // }
+            // prefs.setString('usercartmap', json.encode(usercartmap));
             // print(prefs.getString('usercartmap'));
             String type = data.documents[index][
                 'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
@@ -379,6 +409,8 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             // print('saved $total');
             // print('saved $type');
             // print('saved $items');
+            print(rate);
+            print('################');
           }
 
           void minus() {
@@ -419,63 +451,42 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             //   }
             // }
             if (usercartmap_v2.containsKey(shop_name)) {
-              if (usercartmap_v2[shop_name].containsKey(itemid)) {
-                usercartmap_v2[shop_name][itemid]['count'] = int.parse(
-                        usercartmap_v2[shop_name][itemid]['count'].toString()) -
-                    1;
-                if (usercartmap_v2[shop_name][itemid]['count'] == 0) {
-                  usercartmap_v2[shop_name].remove(itemid);
+              if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
+                usercartmap_v2[shop_name]['products'][itemid]['count'] =
+                    int.parse(usercartmap_v2[shop_name]['products'][itemid]
+                                ['count']
+                            .toString()) -
+                        1;
+                if (usercartmap_v2[shop_name]['products'][itemid]['count'] ==
+                    0) {
+                  usercartmap_v2[shop_name]['products'].remove(itemid);
                 }
               }
             }
 
-            // if (usercartmap_v2.containsKey(shop_name)) {
-            //   if (usercartmap_v2[shop_name].containsKey(itemid)) {
-            //     usercartmap_v2[shop_name][itemid]['count'] = int.parse(
-            //             usercartmap_v2[shop_name][itemid]['count'].toString()) -
-            //         1;
-            //     usercartmap_v2[shop_name][itemid]['rate'] = rate;
-            //     usercartmap_v2[shop_name][itemid]['data'] = item.data;
-            //     usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
-            //   } else {
-            //     usercartmap_v2[shop_name][itemid] = {};
-            //     usercartmap_v2[shop_name][itemid]['rate'] = rate;
-            //     usercartmap_v2[shop_name][itemid]['count'] = 1;
-            //     usercartmap_v2[shop_name][itemid]['data'] = item.data;
-            //     usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
-            //   }
-            // } else {
-            //   usercartmap_v2[shop_name] = {};
-            //   usercartmap_v2[shop_name][itemid] = {};
-            //   usercartmap_v2[shop_name][itemid]['rate'] = rate;
-            //   usercartmap_v2[shop_name][itemid]['count'] = 1;
-            //   usercartmap_v2[shop_name][itemid]['data'] = item.data;
-            //   usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
-            // }
             prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
-            // START
-            usercartmap = prefs.getString("usercartmap");
-            // START
-            usercartmap = prefs.getString("usercartmap");
-            // prefs.remove('usercartmap');
-            if (usercartmap == null) {
-              usercartmap = {};
-              print('made an empty map');
-            } else {
-              usercartmap = json.decode(usercartmap);
-              print('found the map');
-              print(json.encode(usercartmap));
-            }
-            if (usercartmap.containsKey(shop_name)) {
-              if (usercartmap[shop_name].containsKey(itemid)) {
-                usercartmap[shop_name][itemid] =
-                    int.parse(usercartmap[shop_name][itemid].toString()) - 1;
-                if (usercartmap[shop_name][itemid] == 0) {
-                  usercartmap[shop_name].remove(itemid);
-                }
-              }
-            }
-            prefs.setString('usercartmap', json.encode(usercartmap));
+
+            // // START
+            // usercartmap = prefs.getString("usercartmap");
+            // // prefs.remove('usercartmap');
+            // if (usercartmap == null) {
+            //   usercartmap = {};
+            //   print('made an empty map');
+            // } else {
+            //   usercartmap = json.decode(usercartmap);
+            //   print('found the map');
+            //   print(json.encode(usercartmap));
+            // }
+            // if (usercartmap.containsKey(shop_name)) {
+            //   if (usercartmap[shop_name].containsKey(itemid)) {
+            //     usercartmap[shop_name][itemid] =
+            //         int.parse(usercartmap[shop_name][itemid].toString()) - 1;
+            //     if (usercartmap[shop_name][itemid] == 0) {
+            //       usercartmap[shop_name].remove(itemid);
+            //     }
+            //   }
+            // }
+            // prefs.setString('usercartmap', json.encode(usercartmap));
             // print(prefs.getString('usercartmap'));
             String type = data.documents[index][
                 'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');

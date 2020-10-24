@@ -102,7 +102,7 @@ setSalle() async {
     "Week 4": week,
   };
 
-  Firestore.instance.collection('salle').document('10-2020').setData(week);
+  // Firestore.instance.collection('salle').document('10-2020').setData(week);
 }
 
 var dato;
@@ -173,20 +173,21 @@ class SalleScreenState extends State<SalleScreen> {
                 ),
               ),
               // Text(formattedThisMonth.toString()),
-              Padding(
-                padding: const EdgeInsets.all(13.0),
-                child: Text(
-                  getCurrentDate(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              Spacer()
+              // I REMOVED THIS
+              // Padding(
+              //   padding: const EdgeInsets.all(13.0),
+              //   child: Text(
+              //     getCurrentDate(),
+              //     textAlign: TextAlign.center,
+              //     style: TextStyle(
+              //       fontWeight: FontWeight.w800,
+              //       fontSize: 16.0,
+              //       fontFamily: 'Axiforma',
+              //       color: Colors.black,
+              //     ),
+              //   ),
+              // ),
+              // Spacer()
             ],
           ),
           Padding(
@@ -201,6 +202,20 @@ class SalleScreenState extends State<SalleScreen> {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(13.0),
+            child: Text(
+              'Meal Basket',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 26.0,
+                fontFamily: 'Axiforma',
+                color: Colors.black,
+              ),
+            ),
+          ),
+          Spacer(),
           FutureBuilder(
             future: getMonth(),
             builder: (context, snapshot) {
@@ -209,15 +224,18 @@ class SalleScreenState extends State<SalleScreen> {
                   initialIndex: 0,
                   child: Column(
                     children: <Widget>[
-                      TabBar(
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.grey[500],
-                          tabs: [
-                            Tab(text: 'Past'),
-                            Tab(text: 'Upcoming'),
-                            // Tab(text: 'Week 3'),
-                            // Tab(text: 'Week 4')
-                          ]),
+                      // Visibility(
+                      //   visible: false,
+                      //   child: TabBar(
+                      //       labelColor: Colors.black,
+                      //       unselectedLabelColor: Colors.grey[500],
+                      //       tabs: [
+                      //         Tab(text: 'Past'),
+                      //         Tab(text: 'Upcoming'),
+                      //         // Tab(text: 'Week 3'),
+                      //         // Tab(text: 'Week 4')
+                      //       ]),
+                      // ),
                       StreamBuilder(
                         stream: Firestore.instance
                             .collection('salle')
@@ -235,64 +253,33 @@ class SalleScreenState extends State<SalleScreen> {
                           else
                             return Container(
                               height: height - 345,
-                              child: TabBarView(children: [
-                                for (var numb = 1; numb < 3; numb++)
-                                  // ListView(
-                                  //   controller:
-                                  //       new ScrollController(keepScrollOffset: true),
-                                  //   children: List.generate(7, (dayindex) {
-                                  // if (dayindex == 0)
-                                  Opacity(
-                                    opacity: 1,
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.vertical,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 45.0),
-                                        child: Column(
-                                          children: [
-                                            for (var dayindex =
-                                                    1 + ((numb - 1) * today);
-                                                dayindex <
-                                                    today +
-                                                        1 +
-                                                        ((numb - 1) *
-                                                            (31 - today));
-                                                dayindex++)
-                                              Column(
-                                                children: [
-                                                  buildDateOfSalle(
-                                                      dayindex.toString(),
-                                                      sallesnapshot,
-                                                      dayindex,
-                                                      numb),
-                                                  // buildSalleItemList(),
-                                                ],
-                                              ),
-                                          ],
-                                        ),
-                                      ),
+                              child: Opacity(
+                                opacity: 1,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 45.0),
+                                    child: Column(
+                                      children: [
+                                        for (var dayindex = 1 + today;
+                                            dayindex < today + (32 - today);
+                                            dayindex++)
+                                          Column(
+                                            children: [
+                                              buildDateOfSalle(
+                                                  dayindex.toString(),
+                                                  sallesnapshot,
+                                                  dayindex,
+                                                  2),
+                                              // buildSalleItemList(),
+                                            ],
+                                          ),
+                                      ],
                                     ),
                                   ),
-                                //   }),
-                                // ),
-                                // Column(
-                                //   children: [
-                                //     for (var days = 0; days < 7; days++)
-                                //       // var newdays =
-                                //       //                     ? days
-                                //       //                         .toString()
-                                //       //
-                                //       //                     : days.toString()
-
-                                //   ],
-                                // )
-
-                                // buildSalleList(1, snapshot),
-                                // buildSalleList(2, snapshot),
-                                // buildSalleList(3, snapshot),
-                                // buildSalleList(4, snapshot),
-                              ]),
+                                ),
+                              ),
                             );
                         },
                       ),
@@ -420,8 +407,8 @@ class SalleScreenState extends State<SalleScreen> {
                 .document(sallesnapshot.data[(dayindex).toString()])
                 .snapshots(),
             builder: (context, snapshot) {
-              print(sallesnapshot.data[(dayindex).toString()]);
-              print('index above');
+              // print(sallesnapshot.data[(dayindex).toString()]);
+              // print('index above');
 
               if (sallesnapshot.data[(dayindex).toString()] == null)
                 return Container();
@@ -445,9 +432,11 @@ class SalleScreenState extends State<SalleScreen> {
                                   snapshot.data['description'],
                                   dato,
                                   datenumbers,
-                                  snapshot.data.documentID)))
+                                  snapshot.data.documentID +
+                                      '_' +
+                                      datenumbers)))
                           .then((_) {
-                        // widgenotifyParent2();
+                        widget.notifyParent2();
                         setState(() {});
                       });
                     }

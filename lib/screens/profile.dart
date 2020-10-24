@@ -408,7 +408,32 @@ class FormScreenState extends State<ProfileScreen> {
   }
 
   var currentSelectedValue;
-  static const deviceTypes = ["Beirut", "Tripoli", "Saida"];
+  static const deviceTypes = [
+    "Aley",
+    "Baabda",
+    "Baalback",
+    "Batroun",
+    "Beirut ",
+    "Bent Jbeil",
+    "Besharreh",
+    "Hasbayah",
+    "Hermil",
+    "Jbeil",
+    "Jezzine",
+    "Kesrouan",
+    "Koura",
+    "Marjayoun",
+    "Matn",
+    "Nabatiyeh",
+    "Rashaya",
+    "Shouf",
+    "Sidon",
+    "Tripoli",
+    "Tyre",
+    "West bekaa",
+    "Zahle",
+    "Zgharta",
+  ];
 
   Widget _address1Build() {
     return Padding(

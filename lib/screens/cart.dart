@@ -37,9 +37,11 @@ class _CartState extends State<Cart> {
   // int serving = 0;
   List<String> finalcart = [];
 
-  void add() {
+  void add() async {
     // print ( _n );
+    final prefs = await SharedPreferences.getInstance();
     setState(() {
+      total = prefs.getDouble('total');
       if (_n < 10) _n++;
       if (_n == 30) {
         maximum = true;
@@ -47,13 +49,16 @@ class _CartState extends State<Cart> {
         minimum = false;
         maximum = false;
       }
+
       // print(_n);
     });
   }
 
-  void minus() {
+  void minus() async {
+    final prefs = await SharedPreferences.getInstance();
     // print(_n);
     setState(() {
+      total = prefs.getDouble('total');
       if (_n != 1) _n--;
       if (_n == 1)
         minimum = true;
@@ -148,7 +153,7 @@ class _CartState extends State<Cart> {
   dynamic usercartmap;
 
   _save(itemid, rate, shop_name, type, shop_price, currency, item) async {
-    add();
+    // add();
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
     usercartmap_v2 = prefs.getString("usercartmap_v2");
@@ -165,53 +170,57 @@ class _CartState extends State<Cart> {
     //   add
     // }
     if (usercartmap_v2.containsKey(shop_name)) {
-      if (usercartmap_v2[shop_name].containsKey(itemid)) {
-        usercartmap_v2[shop_name][itemid]['count'] =
-            int.parse(usercartmap_v2[shop_name][itemid]['count'].toString()) +
-                1;
-        usercartmap_v2[shop_name][itemid]['rate'] = rate;
-        usercartmap_v2[shop_name][itemid]['data'] = item;
-        usercartmap_v2[shop_name][itemid]['date'] = item['date'];
+      if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
+        usercartmap_v2[shop_name]['products'][itemid]['count'] = int.parse(
+                usercartmap_v2[shop_name]['products'][itemid]['count']
+                    .toString()) +
+            1;
+        usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
+        usercartmap_v2[shop_name]['products'][itemid]['data'] = item;
+        usercartmap_v2[shop_name]['products'][itemid]['date'] = item['date'];
       } else {
-        usercartmap_v2[shop_name][itemid] = {};
-        usercartmap_v2[shop_name][itemid]['rate'] = rate;
-        usercartmap_v2[shop_name][itemid]['count'] = 1;
-        usercartmap_v2[shop_name][itemid]['data'] = item;
-        usercartmap_v2[shop_name][itemid]['date'] = item['date'];
+        usercartmap_v2[shop_name]['products'][itemid] = {};
+        usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
+        usercartmap_v2[shop_name]['products'][itemid]['count'] = 1;
+        usercartmap_v2[shop_name]['products'][itemid]['data'] = item;
+        usercartmap_v2[shop_name]['products'][itemid]['date'] = item['date'];
       }
     } else {
       usercartmap_v2[shop_name] = {};
-      usercartmap_v2[shop_name][itemid] = {};
-      usercartmap_v2[shop_name][itemid]['rate'] = rate;
-      usercartmap_v2[shop_name][itemid]['count'] = 1;
-      usercartmap_v2[shop_name][itemid]['data'] = item;
-      usercartmap_v2[shop_name][itemid]['date'] = item['date'];
+      usercartmap_v2[shop_name]['products'] = {};
+      usercartmap_v2[shop_name]['products'][itemid] = {};
+      usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
+      usercartmap_v2[shop_name]['products'][itemid]['count'] = 1;
+      usercartmap_v2[shop_name]['products'][itemid]['data'] = item;
+      usercartmap_v2[shop_name]['products'][itemid]['date'] = item['date'];
     }
     prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
     // String shop_name = data.documents[index]['shop'];
     // START
-    usercartmap = prefs.getString("usercartmap");
-    // prefs.remove('usercartmap');
-    if (usercartmap == null) {
-      usercartmap = {};
-      // print('made an empty map');
-    } else {
-      usercartmap = json.decode(usercartmap);
-      // print('found the map');
-      // print(json.encode(usercartmap));
-    }
-    if (usercartmap.containsKey(shop_name)) {
-      if (usercartmap[shop_name].containsKey(itemid)) {
-        usercartmap[shop_name][itemid] =
-            int.parse(usercartmap[shop_name][itemid].toString()) + 1;
-      } else {
-        usercartmap[shop_name][itemid] = 1;
-      }
-    } else {
-      usercartmap[shop_name] = {};
-      usercartmap[shop_name][itemid] = 1;
-    }
-    prefs.setString('usercartmap', json.encode(usercartmap));
+
+    // usercartmap = prefs.getString("usercartmap");
+    // // prefs.remove('usercartmap');
+    // if (usercartmap == null) {
+    //   usercartmap = {};
+    //   // print('made an empty map');
+    // } else {
+    //   usercartmap = json.decode(usercartmap);
+    //   // print('found the map');
+    //   // print(json.encode(usercartmap));
+    // }
+    // if (usercartmap.containsKey(shop_name)) {
+    //   if (usercartmap[shop_name].containsKey(itemid)) {
+    //     usercartmap[shop_name][itemid] =
+    //         int.parse(usercartmap[shop_name][itemid].toString()) + 1;
+    //   } else {
+    //     usercartmap[shop_name][itemid] = 1;
+    //   }
+    // } else {
+    //   usercartmap[shop_name] = {};
+    //   usercartmap[shop_name][itemid] = 1;
+    // }
+    // prefs.setString('usercartmap', json.encode(usercartmap));
+
     // print(prefs.getString('usercartmap'));
     // String type = data.documents[index][
     //     'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
@@ -228,6 +237,7 @@ class _CartState extends State<Cart> {
         ? 0
         : prefs.getDouble('total') + shop_price;
     prefs.setDouble('total', total);
+    add();
     if (cart == null) {
       cart = [];
     }
@@ -255,7 +265,6 @@ class _CartState extends State<Cart> {
   }
 
   _remove(itemid, rate, shop_name, type, shop_price, currency, item) async {
-    minus();
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
     usercartmap_v2 = prefs.getString("usercartmap_v2");
@@ -272,61 +281,42 @@ class _CartState extends State<Cart> {
     //   add
     // }
     if (usercartmap_v2.containsKey(shop_name)) {
-      if (usercartmap_v2[shop_name].containsKey(itemid)) {
-        usercartmap_v2[shop_name][itemid]['count'] =
-            int.parse(usercartmap_v2[shop_name][itemid]['count'].toString()) -
-                1;
-        if (usercartmap_v2[shop_name][itemid]['count'] == 0) {
-          usercartmap_v2[shop_name].remove(itemid);
+      if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
+        usercartmap_v2[shop_name]['products'][itemid]['count'] = int.parse(
+                usercartmap_v2[shop_name]['products'][itemid]['count']
+                    .toString()) -
+            1;
+        if (usercartmap_v2[shop_name]['products'][itemid]['count'] == 0) {
+          usercartmap_v2[shop_name]['products'].remove(itemid);
         }
       }
     }
-    // if (usercartmap_v2.containsKey(shop_name)) {
-    //   if (usercartmap_v2[shop_name].containsKey(itemid)) {
-    //     usercartmap_v2[shop_name][itemid]['count'] =
-    //         int.parse(usercartmap_v2[shop_name][itemid]['count'].toString()) -
-    //             1;
-    //     usercartmap_v2[shop_name][itemid]['rate'] = rate;
-    //     usercartmap_v2[shop_name][itemid]['data'] = item.data;
-    //     usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
-    //   } else {
-    //     usercartmap_v2[shop_name][itemid] = {};
-    //     usercartmap_v2[shop_name][itemid]['rate'] = rate;
-    //     usercartmap_v2[shop_name][itemid]['count'] = 1;
-    //     usercartmap_v2[shop_name][itemid]['data'] = item.data;
-    //     usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
-    //   }
-    // } else {
-    //   usercartmap_v2[shop_name] = {};
-    //   usercartmap_v2[shop_name][itemid] = {};
-    //   usercartmap_v2[shop_name][itemid]['rate'] = rate;
-    //   usercartmap_v2[shop_name][itemid]['count'] = 1;
-    //   usercartmap_v2[shop_name][itemid]['data'] = item.data;
-    //   usercartmap_v2[shop_name][itemid]['date'] = item.data['date'];
-    // }
+
     prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
     // String shop_name = data.documents[index]['shop'];
-    // START
-    usercartmap = prefs.getString("usercartmap");
-    // prefs.remove('usercartmap');
-    if (usercartmap == null) {
-      usercartmap = {};
-      // print('made an empty map');
-    } else {
-      usercartmap = json.decode(usercartmap);
-      // print('found the map');
-      // print(json.encode(usercartmap));
-    }
-    if (usercartmap.containsKey(shop_name)) {
-      if (usercartmap[shop_name].containsKey(itemid)) {
-        usercartmap[shop_name][itemid] =
-            int.parse(usercartmap[shop_name][itemid].toString()) - 1;
-        if (usercartmap[shop_name][itemid] == 0) {
-          usercartmap[shop_name].remove(itemid);
-        }
-      }
-    }
-    prefs.setString('usercartmap', json.encode(usercartmap));
+
+    // // START
+    // usercartmap = prefs.getString("usercartmap");
+    // // prefs.remove('usercartmap');
+    // if (usercartmap == null) {
+    //   usercartmap = {};
+    //   // print('made an empty map');
+    // } else {
+    //   usercartmap = json.decode(usercartmap);
+    //   // print('found the map');
+    //   // print(json.encode(usercartmap));
+    // }
+    // if (usercartmap.containsKey(shop_name)) {
+    //   if (usercartmap[shop_name].containsKey(itemid)) {
+    //     usercartmap[shop_name][itemid] =
+    //         int.parse(usercartmap[shop_name][itemid].toString()) - 1;
+    //     if (usercartmap[shop_name][itemid] == 0) {
+    //       usercartmap[shop_name].remove(itemid);
+    //     }
+    //   }
+    // }
+    // prefs.setString('usercartmap', json.encode(usercartmap));
+
     // print(prefs.getString('usercartmap'));
     // String type = data.documents[index][
     //     'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
@@ -343,6 +333,7 @@ class _CartState extends State<Cart> {
     double total = prefs.getDouble('total') == null
         ? 0
         : prefs.getDouble('total') - shop_price;
+    minus();
     prefs.setDouble('total', total);
     if (cart == null) {
       cart = [];
@@ -484,10 +475,16 @@ class _CartState extends State<Cart> {
       });
   }
 
+  var addresses;
+  String chosen_address;
   // dynamic usercartmap;
   Future<bool> loadcart() async {
     final prefs = await SharedPreferences.getInstance();
     usercartmap = prefs.getString("usercartmap");
+    if (!alreadyChosenAddress) {
+      chosen_address = prefs.getString('address');
+      print('JUST ADDED  AN ADDRESS');
+    }
     if (usercartmap == null) {
       usercartmap = json.decode("{}");
     } else {
@@ -501,8 +498,11 @@ class _CartState extends State<Cart> {
       usercartmap_v2 = json.decode(usercartmap_v2);
     }
 
-    print(usercartmap);
+    print('the chose isa s address is $chosen_address');
+
+    print(usercartmap_v2);
     print('this is the cart ');
+    addresses = json.decode(prefs.getString('addresses'));
 
     if (torestart)
       setState(() {
@@ -784,6 +784,15 @@ class _CartState extends State<Cart> {
     }
   }
 
+  refresh() {
+    print('back to icart');
+    loadcart();
+    setupVerification();
+    setState(() {
+      var s = 's';
+    });
+  }
+
   _showMaterialDialog() {
     showDialog(
         context: context,
@@ -836,9 +845,6 @@ class _CartState extends State<Cart> {
       // print(widget.thisUser);
 
       if (this_user.exists) {
-        if (!alreadyChosenAddress) {
-          chosen_address = this_user.data["chosen_address"];
-        }
         // print("checking addresssss");
         if (!prefs.containsKey('address')) {
           // print("no addressssss");
@@ -880,9 +886,10 @@ class _CartState extends State<Cart> {
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   bool loadingorder = false;
-  String chosen_address;
+
   @override
   Widget build(BuildContext context) {
+    // reset(); //www
     // setState(() {});
     // final double itemHeight = (size.height) /x 2;
     // final double itemWidth = size.width / 2;
@@ -906,1057 +913,726 @@ class _CartState extends State<Cart> {
           child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 18.0),
-          child: FutureBuilder(
-            future: loadcart(),
-            builder: (context, AsyncSnapshot snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return Center(
-                      child:
-                          Image.asset("assets/images/loading.gif", height: 30));
-                default:
-                  if (snapshot.hasError)
-                    return Text('Error: ${snapshot.error}');
-                  else if (loadingorder)
-                    return SizedBox(
-                      height: height,
-                      child: Center(
-                          child: Image.asset("assets/images/loading.gif",
-                              height: 30)),
-                    );
-                  else
-                    return Column(
-                      children: <Widget>[
-                        AppBar(
-                          iconTheme: IconThemeData(
-                            color: Colors.black, //change your color here
-                          ),
-                          backgroundColor: Colors.transparent,
-                          elevation: 0.0,
-                          // automaticallyImplyLeading: false,
-                          //BackButton(color: Colors.black),
-                          centerTitle: true,
-                          title: Text(
-                            'Cart',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.black,
-                            ),
-                          ),
-                          actions: [
-                            GestureDetector(
-                              onTap: () {
-                                // reset();
-                                _showMaterialDialog();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 20.0),
-                                child: Icon(Icons.delete),
-                              ),
-                            ),
-                            // Icon(Icons.add),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 22.0, top: 20, bottom: 10),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Your Items",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13.0,
-                                fontFamily: 'Axiforma',
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ),
-                        ),
-                        // Text(usercartmap_v2.toString()),
-                        if (usercartmap_v2.keys.length > 0)
-                          Column(
-                            children: [
-                              for (var shop in usercartmap_v2.keys)
+          child: Column(
+            children: <Widget>[
+              AppBar(
+                iconTheme: IconThemeData(
+                  color: Colors.black, //change your color here
+                ),
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+                // automaticallyImplyLeading: false,
+                //BackButton(color: Colors.black),
+                centerTitle: true,
+                title: Text(
+                  'Cart',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16.0,
+                    fontFamily: 'Axiforma',
+                    color: Colors.black,
+                  ),
+                ),
+                actions: [
+                  GestureDetector(
+                    onTap: () {
+                      // reset();
+                      _showMaterialDialog();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: Icon(Icons.delete),
+                    ),
+                  ),
+                  // Icon(Icons.add),
+                ],
+              ),
+              // Text(usercartmap_v2.toString()),
+              Padding(
+                padding: const EdgeInsets.only(left: 22.0, top: 20, bottom: 10),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Your Items",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13.0,
+                      fontFamily: 'Axiforma',
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
+              ),
+              // Text(usercartmap_v2.toString()),
+              if (usercartmap_v2.keys.length > 0)
+                Column(
+                  children: [
+                    for (var shop in usercartmap_v2.keys)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      FutureBuilder(
-                                          future: getRate(shop),
-                                          builder: (context, snapshot) {
-                                            switch (snapshot.connectionState) {
-                                              case ConnectionState.waiting:
-                                                return Text('Loading....');
-                                              default:
-                                                if (snapshot.hasError)
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                if (usercartmap_v2[shop]
-                                                        .keys
-                                                        .length ==
-                                                    0) {
-                                                  removeShopFromCart(shop);
-                                                  return Container();
-                                                }
-                                                return Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    StreamBuilder(
-                                                        stream: Firestore
-                                                            .instance
-                                                            .collection('shops')
-                                                            .where('username',
-                                                                isEqualTo: shop)
-                                                            .snapshots(),
-                                                        builder: (context,
-                                                            snapshot) {
-                                                          var shopinfo =
-                                                              snapshot.data
-                                                                  .documents[0];
-
-                                                          return Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 22.0),
-                                                            child: Align(
-                                                              alignment: Alignment
-                                                                  .centerLeft,
-                                                              child: Text(
-                                                                snapshot.data
-                                                                        .documents[
-                                                                    0]['name'],
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .left,
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                    fontSize:
-                                                                        23.0,
-                                                                    fontFamily:
-                                                                        'Axiforma',
-                                                                    color: Colors
-                                                                        .black),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        }),
-                                                    Column(
-                                                      children: [
-                                                        for (var product
-                                                            in usercartmap_v2[
-                                                                    shop]
-                                                                .keys)
-                                                          buildCartItem_v2(
-                                                              usercartmap_v2[
-                                                                      shop]
-                                                                  [product],
-                                                              int.parse(usercartmap_v2[
-                                                                              shop]
-                                                                          [
-                                                                          product]
-                                                                      ['count']
-                                                                  .toString()),
-                                                              cachedshops[shop],
-                                                              product)
-                                                      ],
-                                                    )
-                                                  ],
-                                                );
-                                            }
-                                          }),
-                                    ],
+                                  padding: const EdgeInsets.only(left: 22.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      usercartmap_v2[shop]['data']['name'],
+                                      // 'ss,',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 23.0,
+                                          fontFamily: 'Axiforma',
+                                          color: Colors.black),
+                                    ),
                                   ),
                                 ),
-                            ],
-                          ),
-
-                        // Column(
-                        //   children: [
-                        //     for (var shop in usercartmap.keys)
-                        //       Padding(
-                        //         padding: const EdgeInsets.only(bottom: 8.0),
-                        //         child: Column(
-                        //           mainAxisAlignment: MainAxisAlignment.start,
-                        //           children: [
-                        //             FutureBuilder(
-                        //                 future: getRate(shop),
-                        //                 builder: (context, snapshot) {
-                        //                   switch (snapshot.connectionState) {
-                        //                     case ConnectionState.waiting:
-                        //                       return Text('Loading....');
-                        //                     default:
-                        //                       if (snapshot.hasError)
-                        //                         return Text(
-                        //                             'Error: ${snapshot.error}');
-                        //                       if (usercartmap[shop].keys.length ==
-                        //                           0) {
-                        //                         removeShopFromCart(shop);
-                        //                         return Container();
-                        //                       }
-                        //                       return Column(
-                        //                         children: [
-                        //                           Padding(
-                        //                             padding: const EdgeInsets.only(
-                        //                                 left: 22.0),
-                        //                             child: Align(
-                        //                               alignment:
-                        //                                   Alignment.centerLeft,
-                        //                               child: Text(
-                        //                                 snapshot.data['name'],
-                        //                                 textAlign: TextAlign.left,
-                        //                                 style: TextStyle(
-                        //                                     fontWeight:
-                        //                                         FontWeight.w800,
-                        //                                     fontSize: 23.0,
-                        //                                     fontFamily: 'Axiforma',
-                        //                                     color: Colors.black),
-                        //                               ),
-                        //                             ),
-                        //                           ),
-                        //                           // StreamBuilder(
-                        //                           //     stream: Firestore.instance
-                        //                           //         .collection('shops')
-                        //                           //         .where('username', isEqualTo: shop)
-                        //                           //         .snapshots(),
-                        //                           //     builder: (context, snapshot) {
-                        //                           //       var shopinfo =
-                        //                           //           snapshot.data.docuemnts[0];
-
-                        //                           //       return Text(
-                        //                           //         shopinfo['name'],
-                        //                           //         textAlign: TextAlign.left,
-                        //                           //         style: TextStyle(
-                        //                           //             fontWeight: FontWeight.w800,
-                        //                           //             fontSize: 25.0,
-                        //                           //             fontFamily: 'Axiforma',
-                        //                           //             color: Colors.black),
-                        //                           //       );
-                        //                           //     }),
-                        //                           for (var product
-                        //                               in usercartmap[shop].keys)
-                        //                             StreamBuilder<Object>(
-                        //                                 stream: Firestore.instance
-                        //                                     .collection("products")
-                        //                                     // .where('id', isEqualTo: product)
-                        //                                     .document(
-                        //                                         product.toString())
-                        //                                     .snapshots(),
-                        //                                 builder:
-                        //                                     (context, snapshot) {
-                        //                                   // print('the item is' +
-                        //                                   //     snapshot
-                        //                                   //         .data['image']);
-                        //                                   // print(
-                        //                                   //     'we are past streaming');
-                        //                                   // print("rate is:::" +
-                        //                                   //     rate.toString());
-                        //                                   // print(snapshot.data);
-                        //                                   // print(product);
-                        //                                   // print(int.parse(
-                        //                                   //     usercartmap[shop]
-                        //                                   //             [product]
-                        //                                   //         .toString()));
-                        //                                   if (snapshot.hasData) {
-                        //                                     return Visibility(
-                        //                                       visible: false,
-                        //                                       child: buildCartItem(
-                        //                                           snapshot.data,
-                        //                                           int.parse(usercartmap[
-                        //                                                       shop]
-                        //                                                   [product]
-                        //                                               .toString()),
-                        //                                           cachedshops[
-                        //                                               shop]),
-                        //                                     );
-                        //                                   } else {
-                        //                                     return CircularProgressIndicator();
-                        //                                   }
-                        //                                 })
-                        //                         ],
-                        //                       );
-                        //                   }
-                        //                 }),
-                        //           ],
-                        //         ),
-                        //       ),
-                        //   ],
-                        // ),
-
-                        FutureBuilder(
-                          future: getTotal(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 30.0, top: 20, bottom: 10),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Total",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13.0,
-                                          fontFamily: 'Axiforma',
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 30.0, top: 00, bottom: 10),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        total.toInt().toString() + 'L.L.',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 25.0,
-                                            fontFamily: 'Axiforma',
-                                            color: Colors.redAccent[700]),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                            return CircularProgressIndicator(); // or some other widget
-                          },
+                                Column(
+                                  children: [
+                                    for (var product in usercartmap_v2[shop]
+                                            ['products']
+                                        .keys)
+                                      buildCartItem_v2(
+                                          usercartmap_v2[shop]['products']
+                                              [product],
+                                          usercartmap_v2[shop]['products']
+                                              [product]['count'],
+                                          product)
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
                         ),
+                      ),
+                  ],
+                ),
+              Column(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 30.0, top: 20, bottom: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Total",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13.0,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 30.0, top: 00, bottom: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        total.toInt().toString() + 'L.L.',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 25.0,
+                            fontFamily: 'Axiforma',
+                            color: Colors.redAccent[700]),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // Text(chosen_address.toString()),
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Delivering to",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13.0,
+                      fontFamily: 'Axiforma',
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
+              ),
+              // Text(chosen_address),
 
-                        // fixxxxxx
-                        FutureBuilder(
-                            future: setupVerification(), // async work
-                            builder: (context, snapshot) {
-                              print(notsetup);
-                              print('not setup is the floowing:::::::::::::::');
-                              switch (snapshot.connectionState) {
-                                case ConnectionState.waiting:
-                                  return Visibility(
-                                      visible: false,
-                                      child: Text('Loading....'));
-                                default:
-                                  if ((snapshot.hasError)) {
-                                    return Text('Error: ${snapshot.error}');
-                                  } else {
-                                    if (!notsetup) {
-                                      return Column(
-                                        children: [
+              for (var index = 0; index < addresses.length; index++)
+                Padding(
+                  padding: const EdgeInsets.only(
+                      right: 30.0, bottom: 10, left: 30, top: 12),
+                  child: GestureDetector(
+                    onTap: () {
+                      // print(addresses);
+                      // chosen_address ==
+                      //     addresses[index]
+                      //         ["id"];
+                      // print(isDefault);
+                      print("______________________");
+                      if (addresses.length > 1) {
+                        selectAddress(addresses[index]["id"], index);
+                        addAddressToCart(addresses[index]);
+                      }
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 2.2,
+                              blurRadius: 2.5,
+                              offset:
+                                  Offset(0, 4), // changes position of shadow
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(15))),
+                      // color: Colors.grey,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          IconButton(
+                              icon: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Icon(
+                                  Icons.place,
+                                  color: chosen_address.toString() ==
+                                          addresses[index]["id"]
+                                      ? Colors.black
+                                      : Colors.grey[400],
+                                  size: 36,
+                                ),
+                              ),
+                              onPressed: () {
+                                // Navigator.of(context).pop();
+                                // setState(() {
+                                //   showerrortextbool = false;
+                                // });
+                              }),
+                          Container(
+                              // color: Colors.green,
+                              margin: new EdgeInsets.only(left: 10.0, right: 0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.5),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10.0, left: 0, bottom: 5),
+                                          child: Text(
+                                            addresses[index]["name"],
+                                            // textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              fontFamily: 'Axiforma',
+                                              color: chosen_address ==
+                                                      addresses[index]["id"]
+                                                  ? Colors.black
+                                                  : Colors.grey[500],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 30.0,
-                                                top: 10,
-                                                bottom: 10),
-                                            child: Align(
-                                              alignment: Alignment.centerLeft,
+                                                left: 0.0, bottom: 8),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  145,
                                               child: Text(
-                                                "Delivering to",
+                                                addresses[index]
+                                                    ["street_address"],
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13.0,
+                                                  height: 1.1,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 14.5,
                                                   fontFamily: 'Axiforma',
-                                                  color: Colors.black54,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          if (usersignedin)
-                                            for (var index = 0;
-                                                index <
-                                                    this_user
-                                                        .data["address"].length;
-                                                index++)
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 30.0,
-                                                    bottom: 10,
-                                                    left: 30,
-                                                    top: 12),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    // print(this_user.data["address"]);
-                                                    // chosen_address ==
-                                                    //     this_user.data["address"][index]
-                                                    //         ["id"];
-                                                    // print(isDefault);
-                                                    print(
-                                                        "______________________");
-                                                    if (this_user
-                                                            .data["address"]
-                                                            .length >
-                                                        1) {
-                                                      selectAddress(
-                                                          this_user.data[
-                                                                  "address"]
-                                                              [index]["id"],
-                                                          index);
-                                                      addAddressToCart(this_user
-                                                              .data["address"]
-                                                          [index]);
-                                                    }
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: Colors.grey
-                                                                .withOpacity(
-                                                                    0.1),
-                                                            spreadRadius: 2.2,
-                                                            blurRadius: 2.5,
-                                                            offset: Offset(0,
-                                                                4), // changes position of shadow
-                                                          ),
-                                                        ],
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    15))),
-                                                    // color: Colors.grey,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        IconButton(
-                                                            icon: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          8.0),
-                                                              child: Icon(
-                                                                Icons.place,
-                                                                color: chosen_address ==
-                                                                        this_user.data["address"][index]
-                                                                            [
-                                                                            "id"]
-                                                                    ? Colors
-                                                                        .black
-                                                                    : Colors.grey[
-                                                                        400],
-                                                                size: 36,
-                                                              ),
-                                                            ),
-                                                            onPressed: () {
-                                                              // Navigator.of(context).pop();
-                                                              // setState(() {
-                                                              //   showerrortextbool = false;
-                                                              // });
-                                                            }),
-                                                        Container(
-                                                            // color: Colors.green,
-                                                            margin:
-                                                                new EdgeInsets
-                                                                        .only(
-                                                                    left: 10.0,
-                                                                    right: 0),
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.5),
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                children: <
-                                                                    Widget>[
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Padding(
-                                                                        padding: const EdgeInsets.only(
-                                                                            top:
-                                                                                10.0,
-                                                                            left:
-                                                                                0,
-                                                                            bottom:
-                                                                                5),
-                                                                        child:
-                                                                            Text(
-                                                                          this_user.data["address"][index]
-                                                                              [
-                                                                              "name"],
-                                                                          // textAlign: TextAlign.left,
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            fontSize:
-                                                                                16,
-                                                                            fontFamily:
-                                                                                'Axiforma',
-                                                                            color: chosen_address == this_user.data["address"][index]["id"]
-                                                                                ? Colors.black
-                                                                                : Colors.grey[500],
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        top: 0),
-                                                                    child: Row(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .min,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .start,
-                                                                      children: <
-                                                                          Widget>[
-                                                                        Padding(
-                                                                          padding: const EdgeInsets.only(
-                                                                              left: 0.0,
-                                                                              bottom: 8),
-                                                                          child:
-                                                                              SizedBox(
-                                                                            width:
-                                                                                MediaQuery.of(context).size.width - 145,
-                                                                            child:
-                                                                                Text(
-                                                                              this_user.data["address"][index]["street_address"],
-                                                                              overflow: TextOverflow.ellipsis,
-                                                                              textAlign: TextAlign.left,
-                                                                              style: TextStyle(
-                                                                                height: 1.1,
-                                                                                fontWeight: FontWeight.normal,
-                                                                                fontSize: 14.5,
-                                                                                fontFamily: 'Axiforma',
-                                                                                color: Colors.grey[500],
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ))
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 30.0,
-                                                top: 10,
-                                                bottom: 10),
-                                            child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                "Payment",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13.0,
-                                                  fontFamily: 'Axiforma',
-                                                  color: Colors.black54,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Opacity(
-                                            opacity: 1,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 30.0,
-                                                  bottom: 20,
-                                                  left: 30,
-                                                  top: 12),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.grey
-                                                            .withOpacity(0.1),
-                                                        spreadRadius: 2.2,
-                                                        blurRadius: 2.5,
-                                                        offset: Offset(0,
-                                                            4), // changes position of shadow
-                                                      ),
-                                                    ],
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                14))),
-                                                // color: Colors.grey,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 15.0),
-                                                        child: Icon(
-                                                            Icons.payment,
-                                                            size: 30,
-                                                            color:
-                                                                Colors.black)),
-                                                    Container(
-                                                        // color: Colors.green,
-                                                        margin:
-                                                            new EdgeInsets.only(
-                                                                left: 10.0,
-                                                                right: 0,
-                                                                bottom: 0),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.5),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: <Widget>[
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                children: <
-                                                                    Widget>[
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        top:
-                                                                            10.0,
-                                                                        left: 6,
-                                                                        bottom:
-                                                                            5),
-                                                                    child: Text(
-                                                                      'Cash On Delivery',
-                                                                      // textAlign: TextAlign.left,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontFamily:
-                                                                            'Axiforma',
-                                                                        color: Colors
-                                                                            .black,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                children: <
-                                                                    Widget>[
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        left:
-                                                                            8.0,
-                                                                        bottom:
-                                                                            8),
-                                                                    child: Text(
-                                                                      'Pay when the delivery arrives',
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .left,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        height:
-                                                                            1.1,
-                                                                        fontWeight:
-                                                                            FontWeight.normal,
-                                                                        fontSize:
-                                                                            14.5,
-                                                                        fontFamily:
-                                                                            'Axiforma',
-                                                                        color: Colors
-                                                                            .grey[500],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                25, 10, 25, 12),
-                                            child: MaterialButton(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15.0),
-                                              ),
-                                              elevation: 0,
-                                              onPressed: notsetup ||
-                                                      loadingorder
-                                                  ? null
-                                                  : () {
-                                                      getCartAddress() async {
-                                                        final prefs =
-                                                            await SharedPreferences
-                                                                .getInstance();
-                                                        var thecartaddress =
-                                                            json.encode(
-                                                                prefs.getString(
-                                                                    'address'));
-                                                        print(thecartaddress);
-                                                        List<String> fullorder =
-                                                            [];
-                                                        List<String>
-                                                            fullorder_shops =
-                                                            [];
-                                                        var completeproducts =
-                                                            {};
-                                                        for (var cartshop
-                                                            in usercartmap_v2
-                                                                .keys) {
-                                                          completeproducts[
-                                                              cartshop] = {};
-                                                          var datashop =
-                                                              await Firestore
-                                                                  .instance
-                                                                  .collection(
-                                                                      "shops")
-                                                                  .where(
-                                                                      'username',
-                                                                      isEqualTo:
-                                                                          cartshop)
-                                                                  .getDocuments();
-                                                          var rate = datashop
-                                                              .documents[0]
-                                                              .data['rate'];
-                                                          print(
-                                                              'the shop is $datashop');
-                                                          if (rate == null) {
-                                                            rate = 1;
-                                                            print(
-                                                                'changed rate to ZERO');
-                                                          }
-                                                          // for (var product
-                                                          //     in usercartmap_v2[cartshop].keys) {
-                                                          //   print('looping through $product');
-                                                          //   var dataproduct = await Firestore
-                                                          //       .instance
-                                                          //       .collection("products")
-                                                          //       .document(product)
-                                                          //       .get();
-                                                          //   var newrate = rate;
-                                                          //   if (dataproduct.data['currency'] !=
-                                                          //       'dollar') {
-                                                          //     print('rate ks ');
-                                                          //     newrate = 1;
-                                                          //   }
-                                                          //   print(dataproduct.documentID);
-                                                          //   completeproducts[cartshop]
-                                                          //       [product] = {
-                                                          //     'name': dataproduct.data['name'],
-                                                          //     'count': usercartmap_v2[cartshop]
-                                                          //         [product],
-                                                          //     'shop_price': dataproduct
-                                                          //                 .data['type'] !=
-                                                          //             'salle'
-                                                          //         ? int.parse(dataproduct
-                                                          //                 .data['shop_price']
-                                                          //                 .toString()) *
-                                                          //             newrate
-                                                          //         : dataproduct
-                                                          //                 .data['serving_prices'][
-                                                          //             usercartmap_v2[cartshop]
-                                                          //                 [product]],
-                                                          //     'shop_discounted': dataproduct
-                                                          //         .data['shop_discounted'],
-                                                          //     'unit': dataproduct.data['unit'],
-                                                          //     'image': dataproduct.data['image'],
-                                                          //     'type': dataproduct.data['type'],
-                                                          //     'arabic_name':
-                                                          //         dataproduct.data['arabic_name']
-                                                          //   };
-                                                          // }
-                                                          print(
-                                                              completeproducts);
-                                                          print(
-                                                              completeproducts[
-                                                                  cartshop]);
-                                                          print(
-                                                              'starting orderinggggggggggggggggggggggg');
-                                                          var order_id = ">>" +
-                                                              UniqueKey()
-                                                                  .hashCode
-                                                                  .toString();
-                                                          Firestore.instance
-                                                              .collection(
-                                                                  'shop_orders')
-                                                              .document(
-                                                                  order_id)
-                                                              .setData({
-                                                            "address":
-                                                                thecartaddress,
-                                                            "total":
-                                                                total.toInt(),
-                                                            "count":
-                                                                usercartmap_v2[
-                                                                        cartshop]
-                                                                    .length,
-                                                            "payment":
-                                                                "cashondelivery",
-                                                            "date":
-                                                                DateTime.now(),
-                                                            "shop": cartshop,
-                                                            "products":
-                                                                usercartmap_v2[
-                                                                    cartshop],
-                                                            "user": uid,
-                                                          });
-                                                          fullorder
-                                                              .add(order_id);
-                                                          fullorder_shops
-                                                              .add(cartshop);
-                                                        }
-
-                                                        var fullorder_id =
-                                                            UniqueKey()
-                                                                .hashCode
-                                                                .toString();
-                                                        Firestore.instance
-                                                            .collection(
-                                                                'orders')
-                                                            .document(
-                                                                fullorder_id)
-                                                            .setData({
-                                                          "address":
-                                                              thecartaddress,
-                                                          "total":
-                                                              total.toInt(),
-                                                          "count": items,
-                                                          "payment":
-                                                              "cashondelivery",
-                                                          "date":
-                                                              DateTime.now(),
-                                                          "products":
-                                                              usercartmap_v2,
-                                                          "user": uid,
-                                                          "shop_list":
-                                                              fullorder_shops,
-                                                          "order_list":
-                                                              fullorder
-                                                        }).then((doc) {
-                                                          print(fullorder_id);
-                                                          reset(false);
-                                                          Navigator.pop(
-                                                              context);
-
-                                                          // loadingorder = true;
-                                                          Navigator.of(context).push(
-                                                              MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      OrderPage(
-                                                                          fullorder_id)));
-                                                        }).catchError((error) {
-                                                          print(error);
-                                                        });
-                                                      }
-
-                                                      getCartAddress();
-
-                                                      // final thecartaddress =
-                                                      //     getCartAddress();
-                                                    },
-                                              color: Colors.redAccent[700],
-                                              disabledColor: Colors.grey[200],
-                                              textColor: Colors.white,
-                                              minWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 0,
-                                              // padding: EdgeInsets.zero,
-                                              padding: EdgeInsets.only(
-                                                  left: 23,
-                                                  top: 12,
-                                                  right: 23,
-                                                  bottom: 10),
-                                              child: Text(
-                                                "Confirm Order",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15.0,
-                                                  fontFamily: 'Axiforma',
-                                                  // color: Colors.white,
+                                                  color: Colors.grey[500],
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ],
-                                      );
-                                    } else if (notsetup && usersignedin) {
-                                      return Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            25, 15, 25, 0),
-                                        child: MaterialButton(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                          ),
-                                          elevation: 0,
-                                          onPressed: () {
-                                            // print("xlicked");
-                                            Navigator.of(context)
-                                                .push(MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ProfileScreen()))
-                                                .then((_) {
-                                              // refreshcart();
-                                              setupVerification();
-                                              setState(() {});
-                                            });
-                                          },
-                                          color: Colors.redAccent[700],
-                                          disabledColor: Colors.grey[200],
-                                          textColor: Colors.white,
-                                          minWidth:
-                                              MediaQuery.of(context).size.width,
-                                          height: 0,
-                                          // padding: EdgeInsets.zero,
-                                          padding: EdgeInsets.only(
-                                              left: 23,
-                                              top: 10,
-                                              right: 23,
-                                              bottom: 10),
-                                          child: Text(
-                                            "Setup your profile to continue",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                              fontFamily: 'Axiforma',
-                                              // color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      return Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            25, 15, 25, 0),
-                                        child: MaterialButton(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                          ),
-                                          elevation: 0,
-                                          onPressed: () {
-                                            print("xlicked");
-                                            _signInPopUp(context);
-                                          },
-                                          color: Colors.redAccent[700],
-                                          disabledColor: Colors.grey[200],
-                                          textColor: Colors.white,
-                                          minWidth:
-                                              MediaQuery.of(context).size.width,
-                                          height: 0,
-                                          // padding: EdgeInsets.zero,
-                                          padding: EdgeInsets.only(
-                                              left: 23,
-                                              top: 10,
-                                              right: 23,
-                                              bottom: 10),
-                                          child: Text(
-                                            "Sign in to continue",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                              fontFamily: 'Axiforma',
-                                              // color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  }
-                              }
-                            }),
-
-                        // Text(usersignedin
-                        //     ? "user is signed in"
-                        //     : "user not signed in"),
-                        // Text(notsetup ? "user is not setup" : "user is setup"),
-                        Visibility(
-                          visible: false,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
-                            child: Center(
-                              child: SizedBox(
-                                width: width - 44,
-                                child: Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 18.0),
-                                      child: Icon(
-                                        Icons.info,
-                                        size: 18,
-                                        color: Colors.grey[500],
                                       ),
                                     ),
-                                    // Expanded(
-                                    //   child: Text(
-                                    //     "All meal baskets come with a detailed cooking instructions!",
-                                    //     style: TextStyle(
-                                    //       fontWeight: FontWeight.normal,
-                                    //       fontSize: 12.0,
-                                    //       fontFamily: 'Axiforma',
-                                    //       color: Colors.grey[500],
-                                    //     ),
-                                    //   ),
-                                    // ),
                                   ],
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Payment",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13.0,
+                      fontFamily: 'Axiforma',
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
+              ),
+              Opacity(
+                opacity: 1,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      right: 30.0, bottom: 20, left: 30, top: 12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 2.2,
+                            blurRadius: 2.5,
+                            offset: Offset(0, 4), // changes position of shadow
+                          ),
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(14))),
+                    // color: Colors.grey,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                            padding: const EdgeInsets.only(left: 15.0),
+                            child: Icon(Icons.payment,
+                                size: 30, color: Colors.black)),
+                        Container(
+                            // color: Colors.green,
+                            margin: new EdgeInsets.only(
+                                left: 10.0, right: 0, bottom: 0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.5),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10.0, left: 6, bottom: 5),
+                                        child: Text(
+                                          'Cash On Delivery',
+                                          // textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            fontFamily: 'Axiforma',
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8.0, bottom: 8),
+                                        child: Text(
+                                          'Pay when the delivery arrives',
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            height: 1.1,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 14.5,
+                                            fontFamily: 'Axiforma',
+                                            color: Colors.grey[500],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // fixxxxxx
+              FutureBuilder(
+                  future: setupVerification(), // async work
+                  builder: (context, snapshot) {
+                    print(notsetup);
+                    print('not setup is the floowing:::::::::::::::');
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 18.0),
+                          child: Center(
+                            child: Image.asset("assets/images/loading.gif",
+                                width: 30),
+                          ),
+                        );
+                      default:
+                        if ((snapshot.hasError)) {
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(25, 10, 25, 12),
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              elevation: 0,
+                              onPressed: null,
+                              color: Colors.redAccent[700],
+                              disabledColor: Colors.grey[200],
+                              textColor: Colors.white,
+                              minWidth: MediaQuery.of(context).size.width,
+                              height: 0,
+                              // padding: EdgeInsets.zero,
+                              padding: EdgeInsets.only(
+                                  left: 23, top: 12, right: 23, bottom: 10),
+                              child: Text(
+                                "No internet connection",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  fontFamily: 'Axiforma',
+                                  // color: Colors.white,
                                 ),
                               ),
                             ),
+                          );
+                        } else {
+                          if (!notsetup) {
+                            return Column(
+                              children: [
+                                if (usersignedin)
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        25, 10, 25, 12),
+                                    child: MaterialButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      elevation: 0,
+                                      onPressed: notsetup || loadingorder
+                                          ? null
+                                          : () {
+                                              getCartAddress() async {
+                                                final prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                var thecartaddress =
+                                                    json.encode(prefs
+                                                        .getString('address'));
+                                                print(thecartaddress);
+                                                List<String> fullorder = [];
+                                                List<String> fullorder_shops =
+                                                    [];
+                                                var completeproducts = {};
+                                                for (var cartshop
+                                                    in usercartmap_v2.keys) {
+                                                  completeproducts[cartshop] =
+                                                      {};
+                                                  var datashop = await Firestore
+                                                      .instance
+                                                      .collection("shops")
+                                                      .where('username',
+                                                          isEqualTo: cartshop)
+                                                      .getDocuments();
+                                                  var rate = datashop
+                                                      .documents[0]
+                                                      .data['rate'];
+                                                  print(
+                                                      'the shop is $datashop');
+                                                  if (rate == null) {
+                                                    rate = 1;
+                                                    print(
+                                                        'changed rate to ZERO');
+                                                  }
+                                                  // for (var product
+                                                  //     in usercartmap_v2[cartshop].keys) {
+                                                  //   print('looping through $product');
+                                                  //   var dataproduct = await Firestore
+                                                  //       .instance
+                                                  //       .collection("products")
+                                                  //       .document(product)
+                                                  //       .get();
+                                                  //   var newrate = rate;
+                                                  //   if (dataproduct.data['currency'] !=
+                                                  //       'dollar') {
+                                                  //     print('rate ks ');
+                                                  //     newrate = 1;
+                                                  //   }
+                                                  //   print(dataproduct.documentID);
+                                                  //   completeproducts[cartshop]
+                                                  //       [product] = {
+                                                  //     'name': dataproduct.data['name'],
+                                                  //     'count': usercartmap_v2[cartshop]
+                                                  //         [product],
+                                                  //     'shop_price': dataproduct
+                                                  //                 .data['type'] !=
+                                                  //             'salle'
+                                                  //         ? int.parse(dataproduct
+                                                  //                 .data['shop_price']
+                                                  //                 .toString()) *
+                                                  //             newrate
+                                                  //         : dataproduct
+                                                  //                 .data['serving_prices'][
+                                                  //             usercartmap_v2[cartshop]
+                                                  //                 [product]],
+                                                  //     'shop_discounted': dataproduct
+                                                  //         .data['shop_discounted'],
+                                                  //     'unit': dataproduct.data['unit'],
+                                                  //     'image': dataproduct.data['image'],
+                                                  //     'type': dataproduct.data['type'],
+                                                  //     'arabic_name':
+                                                  //         dataproduct.data['arabic_name']
+                                                  //   };
+                                                  // }
+                                                  print(completeproducts);
+                                                  print(completeproducts[
+                                                      cartshop]);
+                                                  print(
+                                                      'starting orderinggggggggggggggggggggggg');
+                                                  var order_id = ">>" +
+                                                      UniqueKey()
+                                                          .hashCode
+                                                          .toString();
+                                                  Firestore.instance
+                                                      .collection('shop_orders')
+                                                      .document(order_id)
+                                                      .setData({
+                                                    "address": thecartaddress,
+                                                    "total": total.toInt(),
+                                                    "count":
+                                                        usercartmap_v2[cartshop]
+                                                            .length,
+                                                    "payment": "cashondelivery",
+                                                    "date": DateTime.now(),
+                                                    "shop": cartshop,
+                                                    "products": usercartmap_v2[
+                                                        cartshop],
+                                                    "user": uid,
+                                                  });
+                                                  fullorder.add(order_id);
+                                                  fullorder_shops.add(cartshop);
+                                                }
+
+                                                var fullorder_id = UniqueKey()
+                                                    .hashCode
+                                                    .toString();
+                                                Firestore.instance
+                                                    .collection('orders')
+                                                    .document(fullorder_id)
+                                                    .setData({
+                                                  "address": thecartaddress,
+                                                  "total": total.toInt(),
+                                                  "count": items,
+                                                  "payment": "cashondelivery",
+                                                  "date": DateTime.now(),
+                                                  "products": usercartmap_v2,
+                                                  "user": uid,
+                                                  "shop_list": fullorder_shops,
+                                                  "order_list": fullorder
+                                                }).then((doc) {
+                                                  print(fullorder_id);
+                                                  reset(false);
+                                                  Navigator.pop(context);
+
+                                                  // loadingorder = true;
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              OrderPage(
+                                                                  fullorder_id)));
+                                                }).catchError((error) {
+                                                  print(error);
+                                                });
+                                              }
+
+                                              getCartAddress();
+
+                                              // final thecartaddress =
+                                              //     getCartAddress();
+                                            },
+                                      color: Colors.redAccent[700],
+                                      disabledColor: Colors.grey[200],
+                                      textColor: Colors.white,
+                                      minWidth:
+                                          MediaQuery.of(context).size.width,
+                                      height: 0,
+                                      // padding: EdgeInsets.zero,
+                                      padding: EdgeInsets.only(
+                                          left: 23,
+                                          top: 12,
+                                          right: 23,
+                                          bottom: 10),
+                                      child: Text(
+                                        "Confirm Order",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15.0,
+                                          fontFamily: 'Axiforma',
+                                          // color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          } else if (notsetup && usersignedin) {
+                            return Padding(
+                              padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                              child: MaterialButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                elevation: 0,
+                                onPressed: () {
+                                  // print("xlicked");
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProfileScreen()))
+                                      .then((_) {
+                                    // refreshcart();
+                                    setupVerification();
+                                    setState(() {});
+                                  });
+                                },
+                                color: Colors.redAccent[700],
+                                disabledColor: Colors.grey[200],
+                                textColor: Colors.white,
+                                minWidth: MediaQuery.of(context).size.width,
+                                height: 0,
+                                // padding: EdgeInsets.zero,
+                                padding: EdgeInsets.only(
+                                    left: 23, top: 10, right: 23, bottom: 10),
+                                child: Text(
+                                  "Setup your profile to continue",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.0,
+                                    fontFamily: 'Axiforma',
+                                    // color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                              child: MaterialButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                elevation: 0,
+                                onPressed: () {
+                                  print("xlicked");
+                                  _signInPopUp(context);
+                                },
+                                color: Colors.redAccent[700],
+                                disabledColor: Colors.grey[200],
+                                textColor: Colors.white,
+                                minWidth: MediaQuery.of(context).size.width,
+                                height: 0,
+                                // padding: EdgeInsets.zero,
+                                padding: EdgeInsets.only(
+                                    left: 23, top: 10, right: 23, bottom: 10),
+                                child: Text(
+                                  "Sign in to continue",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.0,
+                                    fontFamily: 'Axiforma',
+                                    // color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                    }
+                  }),
+
+              // Text(usersignedin
+              //     ? "user is signed in"
+              //     : "user not signed in"),
+              // Text(notsetup ? "user is not setup" : "user is setup"),
+              Visibility(
+                visible: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
+                  child: Center(
+                    child: SizedBox(
+                      width: width - 44,
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 18.0),
+                            child: Icon(
+                              Icons.info,
+                              size: 18,
+                              color: Colors.grey[500],
+                            ),
                           ),
-                        )
-                      ],
-                    );
-              }
-            },
+                          // Expanded(
+                          //   child: Text(
+                          //     "All meal baskets come with a detailed cooking instructions!",
+                          //     style: TextStyle(
+                          //       fontWeight: FontWeight.normal,
+                          //       fontSize: 12.0,
+                          //       fontFamily: 'Axiforma',
+                          //       color: Colors.grey[500],
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
+          // }
+          // },
+          // ),
         ),
       )),
     );
@@ -1988,89 +1664,19 @@ class _CartState extends State<Cart> {
 
   var rateArray = [];
 
-  getRate(shopName) async {
-    // if (started == true) {
-    //   // print('skipedddddddd');
-    //   return rate;
-    // }
-    // print(
-    //     "started prefrererererererere_______________________________________________________________");
-    final prefs = await SharedPreferences.getInstance();
-    bool skip = false;
-    cachedshops = prefs.getString("cached_shops");
-    if (cachedshops != null) {
-      cachedshops = json.decode(cachedshops);
-    } else {
-      cachedshops = {};
-      skip = true;
-    }
-    print('___________________________________________________________');
-    print('$shopName');
-    print(prefs.getString("cached_shops"));
-    if (!cachedshops.containsKey(shopName)) {
-      shopinfo = Firestore.instance
-          .collection('shops')
-          .where('username', isEqualTo: shopName)
-          .getDocuments()
-          .then(
-        (value) {
-          print('thid id the value');
-          print(value);
-          if (value.documents.length > 0) {
-            cachedshops[shopName] = value.documents[0].data['rate'];
-            prefs.setString('cached_shops', json.encode(cachedshops));
-            // print(prefs.getString("cached_shops").toString() +
-            //     "this is the cached");
-            started = true;
-            rate = value.documents[0].data['rate'];
-            print('returned $rate');
-            // return rate;
-          } else {
-            print('returbned none');
-            // return null;
-          }
-        },
-      );
-    } else {
-      // cachedshops[shopName] = value.documents[0].data['rate'];
-      rate = json.decode(prefs.getString("cached_shops"))[shopName];
-      print("$rate");
-
-      started = true;
-      rateArray.add(rate);
-    }
-    // debugPrint("rate is:::::" + rate.toString());
-    started = true;
-    // return rate = 1;
-  }
-
-  // Widget buildShopName(shop) {
-  //   return FutureBuilder(
-  //       future: getRate(shop),
-  //       builder: (context, snapshot) {
-  //         return Text(
-  //           shop,
-  //           textAlign: TextAlign.left,
-  //           style: TextStyle(
-  //               fontWeight: FontWeight.w800,
-  //               fontSize: 25.0,
-  //               fontFamily: 'Axiforma',
-  //               color: Colors.black),
-  //         );
-  //       });
-  // }
-
-  Padding buildCartItem_v2(
-      dynamic cartitem, int count, int rate, String cartitemID) {
+  Padding buildCartItem_v2(dynamic cartitem, int count, String cartitemID) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     var shopPrice = cartitem['data']['shop_price'] != null
         ? cartitem['data']['shop_price']
         : 1;
 
-    if (cartitem['data']['currency'] != "dollar") {
-      rate = 1;
-    }
+    // if (cartitem['data']['currency'] != "dollar") {
+    //   rate = 1;
+    // } else {
+    //   rate = cartitem['rate'];
+    // }
+    rate = cartitem['rate'];
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -2181,7 +1787,7 @@ class _CartState extends State<Cart> {
                                   : true,
                               child: Text(
                                 (int.parse(shopPrice.toString()) *
-                                            (rate != null ? rate.toInt() : 1))
+                                            (cartitem['rate']))
                                         .toString() +
                                     "L.L.",
                                 // overflow: TextOverflow.ellipsis,
@@ -2267,8 +1873,7 @@ class _CartState extends State<Cart> {
                                     cartitem['date'],
                                     cartitemID)))
                             .then((_) {
-                          setupVerification();
-                          setState(() {});
+                          refresh();
                         });
                       },
                       color: Colors.redAccent[700],
@@ -2308,12 +1913,12 @@ class _CartState extends State<Cart> {
                           onPressed: () {
                             _remove(
                                 cartitemID,
-                                rate,
+                                cartitem['rate'],
                                 cartitem['data']['shop'],
                                 cartitem['data']['type'],
                                 (int.parse(cartitem['data']['shop_price']
                                         .toString()) *
-                                    int.parse(rate.toString())),
+                                    cartitem['rate']),
                                 cartitem['data']['currency'],
                                 cartitem['data']);
                           },
@@ -2346,12 +1951,12 @@ class _CartState extends State<Cart> {
                             // },
                             _save(
                                 cartitemID,
-                                rate,
+                                cartitem['rate'],
                                 cartitem['data']['shop'],
                                 cartitem['data']['type'],
                                 (int.parse(cartitem['data']['shop_price']
                                         .toString()) *
-                                    int.parse(rate.toString())),
+                                    cartitem['rate']),
                                 cartitem['data']['currency'],
                                 cartitem['data']);
                           },
@@ -2487,7 +2092,7 @@ class _CartState extends State<Cart> {
                                   cartitem['type'] == 'salle' ? false : true,
                               child: Text(
                                 (int.parse(shopPrice.toString()) *
-                                            (rate != null ? rate.toInt() : 1))
+                                            cartitem['rate'])
                                         .toString() +
                                     "L.L.",
                                 // overflow: TextOverflow.ellipsis,
@@ -2614,7 +2219,7 @@ class _CartState extends State<Cart> {
                                 cartitem['shop'],
                                 cartitem['type'],
                                 (int.parse(cartitem['shop_price'].toString()) *
-                                    int.parse(rate.toString())),
+                                    cartitem['rate']),
                                 cartitem['currency'],
                                 cartitem['data']);
                           },
@@ -2651,7 +2256,7 @@ class _CartState extends State<Cart> {
                                 cartitem['shop'],
                                 cartitem['type'],
                                 (int.parse(cartitem['shop_price'].toString()) *
-                                    int.parse(rate.toString())),
+                                    cartitem['rate']),
                                 cartitem['currency'],
                                 cartitem['data']);
                           },

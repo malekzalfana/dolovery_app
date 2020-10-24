@@ -100,18 +100,30 @@ class AddAddressState extends State<AddAddress> {
 
   var currentSelectedValue;
   static const deviceTypes = [
-    "Beirut",
+    "Aley",
+    "Baabda",
+    "Baalback",
+    "Batroun",
+    "Beirut ",
+    "Bent Jbeil",
+    "Besharreh",
+    "Hasbayah",
+    "Hermil",
+    "Jbeil",
+    "Jezzine",
+    "Kesrouan",
+    "Koura",
+    "Marjayoun",
+    "Matn",
+    "Nabatiyeh",
+    "Rashaya",
+    "Shouf",
+    "Sidon",
     "Tripoli",
-    "Saida",
-    "Beirut1",
-    "Tripoli1",
-    "Saida1",
-    "Beirut2",
-    "Tripoli2",
-    "Saida2",
-    "Beirut3",
-    "Tripoli3",
-    "Saida3"
+    "Tyre",
+    "West bekaa",
+    "Zahle",
+    "Zgharta",
   ];
 
   Widget _address1Build() {

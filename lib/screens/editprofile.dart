@@ -383,6 +383,7 @@ class EditProfileState extends State<EditProfileScreen> {
         onInputValidated: (bool value) {
           print(value);
         },
+
         ignoreBlank: false,
         selectorType: PhoneInputSelectorType.DIALOG,
         countries: countries,
@@ -390,6 +391,7 @@ class EditProfileState extends State<EditProfileScreen> {
         autoValidate: false,
         selectorTextStyle: TextStyle(color: Colors.black),
         initialValue: _numberparsed,
+        // initialSelection: _code,
         hintText: _number,
         textFieldController: controller,
         inputBorder: OutlineInputBorder(
@@ -401,7 +403,32 @@ class EditProfileState extends State<EditProfileScreen> {
   }
 
   var currentSelectedValue;
-  static const deviceTypes = ["Beirut", "Tripoli", "Saida"];
+  static const deviceTypes = [
+    "Aley",
+    "Baabda",
+    "Baalback",
+    "Batroun",
+    "Beirut ",
+    "Bent Jbeil",
+    "Besharreh",
+    "Hasbayah",
+    "Hermil",
+    "Jbeil",
+    "Jezzine",
+    "Kesrouan",
+    "Koura",
+    "Marjayoun",
+    "Matn",
+    "Nabatiyeh",
+    "Rashaya",
+    "Shouf",
+    "Sidon",
+    "Tripoli",
+    "Tyre",
+    "West bekaa",
+    "Zahle",
+    "Zgharta",
+  ];
 
   Widget _buildCity() {
     return Padding(
@@ -541,6 +568,7 @@ class EditProfileState extends State<EditProfileScreen> {
       padding: const EdgeInsets.only(top: 10.0),
       child: TextFormField(
         initialValue: _name,
+
         decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
