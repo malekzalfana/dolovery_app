@@ -78,6 +78,7 @@ class _PrivacyState extends State<Orders> {
                       stream: Firestore.instance
                           .collection('orders')
                           .where('user', isEqualTo: widget.uid)
+                          .orderBy('date', descending: true)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {

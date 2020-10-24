@@ -809,6 +809,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             stream: Firestore.instance
                                 .collection('orders')
                                 .where('user', isEqualTo: uid)
+                                .orderBy('date', descending: true)
                                 .limit(4)
                                 .snapshots(),
                             builder: (context, snapshot) {
