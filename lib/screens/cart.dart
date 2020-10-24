@@ -711,6 +711,8 @@ class _CartState extends State<Cart> {
     setState(() {});
   }
 
+  bool ordered = false;
+
   addAddressToCart(cartaddress) async {
     final prefs = await SharedPreferences.getInstance();
     var newcartaddress;
@@ -954,6 +956,7 @@ class _CartState extends State<Cart> {
                 ],
               ),
               // Text(usercartmap_v2.toString()),
+
               Padding(
                 padding: const EdgeInsets.only(left: 22.0, top: 20, bottom: 10),
                 child: Align(
@@ -1371,7 +1374,7 @@ class _CartState extends State<Cart> {
                           if (!notsetup) {
                             return Column(
                               children: [
-                                if (usersignedin)
+                                if (usersignedin & ordered == false)
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         25, 10, 25, 12),
@@ -1384,14 +1387,42 @@ class _CartState extends State<Cart> {
                                       onPressed: notsetup || loadingorder
                                           ? null
                                           : () {
+                                              setState(() {
+                                                ordered = true;
+                                              });
+                                              print('STSRTEDDDDDDD');
                                               getCartAddress() async {
                                                 final prefs =
                                                     await SharedPreferences
                                                         .getInstance();
-                                                var thecartaddress =
-                                                    json.encode(prefs
-                                                        .getString('address'));
-                                                print(thecartaddress);
+                                                // var thecartaddress =
+                                                //     json.encode(prefs
+                                                //         .getString('address'));
+                                                var all_addresses = json.decode(
+                                                    prefs.getString(
+                                                        'addresses'));
+                                                print(addresses);
+                                                print(
+                                                    'THIS ARE THE ADDRESSES ');
+                                                var addresstouse = {};
+
+                                                for (var address = 0;
+                                                    address <
+                                                        all_addresses.length;
+                                                    address++) {
+                                                  print(all_addresses[address]
+                                                      ['id']);
+                                                  print(chosen_address);
+                                                  if (all_addresses[address]
+                                                          ['id'] ==
+                                                      chosen_address) {
+                                                    addresstouse =
+                                                        all_addresses[address];
+                                                    print('theyre the same');
+                                                  }
+                                                }
+
+                                                // print(thecartaddress);
                                                 List<String> fullorder = [];
                                                 List<String> fullorder_shops =
                                                     [];
@@ -1469,7 +1500,7 @@ class _CartState extends State<Cart> {
                                                       .collection('shop_orders')
                                                       .document(order_id)
                                                       .setData({
-                                                    "address": thecartaddress,
+                                                    "address": addresstouse,
                                                     "total": total.toInt(),
                                                     "count":
                                                         usercartmap_v2[cartshop]
@@ -1492,7 +1523,7 @@ class _CartState extends State<Cart> {
                                                     .collection('orders')
                                                     .document(fullorder_id)
                                                     .setData({
-                                                  "address": thecartaddress,
+                                                  "address": addresstouse,
                                                   "total": total.toInt(),
                                                   "count": items,
                                                   "payment": "cashondelivery",
@@ -1543,6 +1574,15 @@ class _CartState extends State<Cart> {
                                           // color: Colors.white,
                                         ),
                                       ),
+                                    ),
+                                  ),
+                                if (usersignedin & ordered)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 18.0),
+                                    child: Center(
+                                      child: Image.asset(
+                                          "assets/images/loading.gif",
+                                          width: 30),
                                     ),
                                   ),
                               ],

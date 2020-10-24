@@ -86,20 +86,20 @@ class _OrderPageState extends State<OrderPage> {
             ),
           ),
           SizedBox(height: 10),
-          SizedBox(
-            width: 300,
-            child: Text(
-              "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 14.0,
-                height: 1.15,
-                fontFamily: 'Axiforma',
-                color: Colors.black54,
-              ),
-            ),
-          ),
+          // SizedBox(
+          //   width: 300,
+          //   child: Text(
+          //     "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
+          //     textAlign: TextAlign.center,
+          //     style: TextStyle(
+          //       fontWeight: FontWeight.normal,
+          //       fontSize: 14.0,
+          //       height: 1.15,
+          //       fontFamily: 'Axiforma',
+          //       color: Colors.black54,
+          //     ),
+          //   ),
+          // ),
           // Text(widget.orderid.toString()),
           SizedBox(
             height: 20,
@@ -116,16 +116,45 @@ class _OrderPageState extends State<OrderPage> {
                 }
                 var order = snapshot.data;
                 return SizedBox(
-                  width: width - 20,
+                  width: width - 50,
                   child: Container(
                     // color: Colors.grey[200],
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 10.0, bottom: 0),
+                            child: Text(
+                              'Address',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 17.0,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.black),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 7.0, bottom: 10),
+                            child: Text(
+                              "${order.data['address']['city'].toString()}, ${order.data['address']['street_address'].toString()}, ${order.data['address']['landmark'].toString()}, ${order.data['address']['apartment'].toString()}",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 17.0,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.black),
+                            ),
+                          ),
                           for (var shop in order.data['products'].keys)
                             Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(
@@ -179,7 +208,7 @@ class _OrderPageState extends State<OrderPage> {
                                   )
                               ],
                             ),
-                          SizedBox(height: 0),
+                          SizedBox(height: 10),
                           Padding(
                             padding:
                                 const EdgeInsets.only(top: 10.0, bottom: 0),
@@ -213,33 +242,33 @@ class _OrderPageState extends State<OrderPage> {
                 );
               }),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  side: BorderSide(color: Colors.red)),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              color: Colors.redAccent[700],
-              textColor: Colors.white,
-              minWidth: 0,
-              height: 0,
-              // padding: EdgeInsets.zero,
-              padding:
-                  EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
-              child: Text(
-                "Continue",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15.0,
-                  fontFamily: 'Axiforma',
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 8.0),
+          //   child: MaterialButton(
+          //     shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(20.0),
+          //         side: BorderSide(color: Colors.red)),
+          //     onPressed: () {
+          //       Navigator.pop(context);
+          //     },
+          //     color: Colors.redAccent[700],
+          //     textColor: Colors.white,
+          //     minWidth: 0,
+          //     height: 0,
+          //     // padding: EdgeInsets.zero,
+          //     padding:
+          //         EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
+          //     child: Text(
+          //       "Continue",
+          //       style: TextStyle(
+          //         fontWeight: FontWeight.bold,
+          //         fontSize: 15.0,
+          //         fontFamily: 'Axiforma',
+          //         color: Colors.white,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           SizedBox(height: 30),
 
           // Column(
@@ -283,13 +312,13 @@ class _OrderPageState extends State<OrderPage> {
     //   rate = 1;
     // }
     return Padding(
-      padding: const EdgeInsets.fromLTRB(5, 15, 5, 10),
+      padding: const EdgeInsets.fromLTRB(0, 15, 5, 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
             // color: Colors.green,
-            margin: new EdgeInsets.only(left: 12.0, right: 10),
+            margin: new EdgeInsets.only(left: 0.0, right: 10),
             child: Container(
                 height: 70,
                 width: 70,

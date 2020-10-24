@@ -402,63 +402,77 @@ class SalleScreenState extends State<SalleScreen> {
         Opacity(
           opacity: numb == 1 ? 0.5 : 1,
           child: StreamBuilder(
-            stream: Firestore.instance
-                .collection('products')
-                .document(sallesnapshot.data[(dayindex).toString()])
-                .snapshots(),
-            builder: (context, snapshot) {
-              // print(sallesnapshot.data[(dayindex).toString()]);
-              // print('index above');
-
-              if (sallesnapshot.data[(dayindex).toString()] == null)
-                return Container();
-              else
-                // var salleid = dayindex > 9
-                //     ? '01'
-                //     : sallesnapshot
-                //         .data[dayindex.toString()];
-                return GestureDetector(
-                  onTap: () {
-                    if (numb == 1) {
-                      null;
-                    } else {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(
-                              builder: (context) => SalleItem(
-                                  snapshot.data.data,
-                                  weeks[0],
-                                  snapshot.data['serving_prices'],
-                                  snapshot.data['descriptions'],
-                                  snapshot.data['description'],
-                                  dato,
-                                  datenumbers,
-                                  snapshot.data.documentID +
-                                      '_' +
-                                      datenumbers)))
-                          .then((_) {
-                        widget.notifyParent2();
-                        setState(() {});
-                      });
-                    }
-                  },
-                  child:
-                      // Text(snapshot
-                      //         .data['name']
-                      //         .toString()
-                      SalleImage(
-                          salleName: snapshot.data['name'],
-                          sallePhoto: snapshot.data['image'] == null
-                              ? 's'
-                              : snapshot.data['image'],
-                          salleArabicName: snapshot.data['arabic_name'],
-                          salleItems: snapshot.data['items'].toString(),
-                          salleTime: snapshot.data['time'].toString(),
-                          salleID: snapshot.data.documentID,
-                          salleStartingPrice:
-                              snapshot.data['serving_prices'][0].toString()),
-                );
-            },
-          ),
+              stream: Firestore.instance
+                  .collection('products')
+                  .document(sallesnapshot.data[(dayindex).toString()])
+                  .snapshots(),
+              builder: (context, snapshot) {
+                // print(sallesnapshot.data[(dayindex).toString()]);
+                // print('index above');
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 45.0),
+                      child: Center(
+                        child: Image.asset(
+                          "assets/images/loading.gif",
+                          width: 30,
+                        ),
+                      ),
+                    );
+                  default:
+                    if (snapshot.hasError)
+                      return Text('Error: ${snapshot.error}');
+                    else if (sallesnapshot.data[(dayindex).toString()] == null)
+                      return Container();
+                    else
+                      // var salleid = dayindex > 9
+                      //     ? '01'
+                      //     : sallesnapshot
+                      //         .data[dayindex.toString()];
+                      return GestureDetector(
+                        onTap: () {
+                          if (numb == 1) {
+                            null;
+                          } else {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (context) => SalleItem(
+                                        snapshot.data.data,
+                                        weeks[0],
+                                        snapshot.data['serving_prices'],
+                                        snapshot.data['descriptions'],
+                                        snapshot.data['description'],
+                                        dato,
+                                        datenumbers,
+                                        snapshot.data.documentID +
+                                            '_' +
+                                            datenumbers)))
+                                .then((_) {
+                              widget.notifyParent2();
+                              setState(() {});
+                            });
+                          }
+                        },
+                        child:
+                            // Text(snapshot
+                            //         .data['name']
+                            //         .toString()
+                            SalleImage(
+                                salleName: snapshot.data['name'],
+                                sallePhoto: snapshot.data['image'] == null
+                                    ? 's'
+                                    : snapshot.data['image'],
+                                salleArabicName: snapshot.data['arabic_name'],
+                                salleItems: snapshot.data['items'].toString(),
+                                salleTime: snapshot.data['time'].toString(),
+                                salleID: snapshot.data.documentID,
+                                salleStartingPrice: snapshot
+                                    .data['serving_prices'][0]
+                                    .toString()),
+                      );
+                }
+              }),
         ),
       ],
     );

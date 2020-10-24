@@ -113,6 +113,21 @@ class FormScreenState extends State<ShopListing> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: GestureDetector(
+                              onTap: () {
+                                // widget.notifyParent();
+                                Navigator.pop(context);
+                              },
+                              child: Icon(
+                                Icons.keyboard_arrow_left,
+                                color: Colors.black,
+                                size: 35.0,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 16),
                           Text(
                             widget.type == 'supplements'
                                 ? "Supplements"
@@ -124,18 +139,19 @@ class FormScreenState extends State<ShopListing> {
                               color: Colors.black,
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: IconButton(
-                                icon: Icon(
-                                  Icons.clear,
-                                  color: Colors.grey,
-                                  size: 30,
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                }),
-                          ),
+                          Spacer(),
+                          // Align(
+                          //   alignment: Alignment.centerRight,
+                          //   child: IconButton(
+                          //       icon: Icon(
+                          //         Icons.clear,
+                          //         color: Colors.grey,
+                          //         size: 30,
+                          //       ),
+                          //       onPressed: () {
+                          //         Navigator.of(context).pop();
+                          //       }),
+                          // ),
                           // Image.asset("assets/images/fullfilldolovery.png",
                           //     height: 23),
                         ],
