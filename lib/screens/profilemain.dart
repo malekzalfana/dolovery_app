@@ -780,9 +780,15 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          EditProfileScreen()));
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditProfileScreen()))
+                                      .then((_) {
+                                    // refreshcart();
+                                    // setupVerification();
+                                    setState(() {});
+                                  });
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 18.0),

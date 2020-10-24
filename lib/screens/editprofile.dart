@@ -333,6 +333,7 @@ class EditProfileState extends State<EditProfileScreen> {
   var _number;
   PhoneNumber _numberparsed;
   var _code;
+  PhoneNumber this_number;
 
   bool newuser = true;
   Future setupVerification() async {
@@ -347,8 +348,16 @@ class EditProfileState extends State<EditProfileScreen> {
     if (usercollection.exists) {
       newuser = false;
       _name = usercollection.data['fullname'];
-      final _number = usercollection.data['number'];
-      final _code = usercollection.data['code'];
+      // _phone = ;
+      _number = usercollection.data['number'];
+      _code = usercollection.data['code'];
+      String phoneNumber = '+96171439082';
+      this_number = await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber);
+      String parsableNumber = this_number.parseNumber();
+      // `controller reference`.text = parsableNumber
+
+      print('this sis sis is sis is is si si sis');
+      print(parsableNumber);
       // _numberparsed = PhoneNumber.getParsableNumber(_code + _number);
       // PhoneNumber _number =
       //     await PhoneNumber.(phoneNumber);
@@ -356,14 +365,14 @@ class EditProfileState extends State<EditProfileScreen> {
     return newuser = false;
   }
 
-  void getPhoneNumber(String phoneNumber) async {
-    PhoneNumber number =
-        await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber, 'US');
+  // void getPhoneNumber(String phoneNumber) async {
+  //   PhoneNumber number =
+  //       await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber, 'US');
 
-    setState(() {
-      this.number = number;
-    });
-  }
+  //   setState(() {
+  //     this.number = number;
+  //   });
+  // }
 
   // @override
   // void dispose() {
@@ -384,15 +393,17 @@ class EditProfileState extends State<EditProfileScreen> {
           print(value);
         },
 
-        ignoreBlank: false,
+        ignoreBlank: true,
         selectorType: PhoneInputSelectorType.DIALOG,
         countries: countries,
         maxLength: 15,
         autoValidate: false,
         selectorTextStyle: TextStyle(color: Colors.black),
-        initialValue: _numberparsed,
+        initialValue: this_number,
+        locale: 'LB',
         // initialSelection: _code,
-        hintText: _number,
+        // ignoreBlank: true,
+        hintText: _numberparsed.toString(),
         textFieldController: controller,
         inputBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -681,146 +692,172 @@ class EditProfileState extends State<EditProfileScreen> {
                       key: _formKey,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          // Text(
-                          //   "Enter the details",
-                          //   textAlign: TextAlign.left,
-                          //   style: TextStyle(
-                          //     fontWeight: FontWeight.w800,
-                          //     fontSize: 28.0,
-                          //     fontFamily: 'Axiforma',
-                          //     color: Colors.black,
-                          //   ),
-                          // ),
-                          _fullnameBuild(),
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              // Text(
+                              //   "Your name",
+                              //   textAlign: TextAlign.left,
+                              //   style: TextStyle(
+                              //     fontWeight: FontWeight.normal,
+                              //     fontSize: 16.0,
+                              //     fontFamily: 'Axiforma',
+                              //     color: Colors.black54,
+                              //   ),
+                              // ),
+                              // Text(
+                              //   _name,
+                              //   textAlign: TextAlign.left,
+                              //   style: TextStyle(
+                              //     fontWeight: FontWeight.w800,
+                              //     fontSize: 28.0,
+                              //     fontFamily: 'Axiforma',
+                              //     color: Colors.black,
+                              //   ),
+                              // ),
+                              // SizedBox(height: 20),
+                              // Text(
+                              //   "Your phone number",
+                              //   textAlign: TextAlign.left,
+                              //   style: TextStyle(
+                              //     fontWeight: FontWeight.normal,
+                              //     fontSize: 16.0,
+                              //     fontFamily: 'Axiforma',
+                              //     color: Colors.black54,
+                              //   ),
+                              // ),
+                              // Text(
+                              //   _number.toString(),
+                              //   textAlign: TextAlign.left,
+                              //   style: TextStyle(
+                              //     fontWeight: FontWeight.w800,
+                              //     fontSize: 28.0,
+                              //     fontFamily: 'Axiforma',
+                              //     color: Colors.black,
+                              //   ),
+                              // ),
+                              _fullnameBuild(),
+                              _newPhoneNumber(),
+                              SizedBox(height: 10),
+                              Visibility(
+                                visible: canSubmit,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        side: BorderSide(color: Colors.red)),
+                                    onPressed: () {
+                                      if (!_formKey.currentState.validate()) {
+                                        return;
+                                      }
 
-                          // _buildCity(),
-                          _newPhoneNumber(),
-                          // _buildStreetAddress(),
-                          // _buildLandmark(),
-                          // _address4Build(),
-                          SizedBox(height: 10),
-                          Visibility(
-                            visible: canSubmit,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: MaterialButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    side: BorderSide(color: Colors.red)),
-                                onPressed: () {
-                                  if (!_formKey.currentState.validate()) {
-                                    return;
-                                  }
+                                      _formKey.currentState.save();
 
-                                  _formKey.currentState.save();
+                                      print("adding profile");
+                                      void inputData() async {
+                                        final FirebaseUser user =
+                                            await FirebaseAuth.instance
+                                                .currentUser();
+                                        final uid = user.uid;
+                                        final name = user.displayName;
+                                        final uemail = user.email;
+                                        Map<String, dynamic> thisuser = {
+                                          "fullname": _fullname,
+                                          "number": _phone,
+                                          "email": uemail,
+                                          // "address": addresses,
+                                          // "chosen_address": chosen_address
+                                          // "id": uid,
+                                          // "city": _city,
+                                          // "street_address": _streetaddress,
+                                          // "landmark": _landmark,
+                                          // "apartment": _apartment,
+                                        };
 
-                                  print("adding profile");
-                                  void inputData() async {
-                                    final FirebaseUser user = await FirebaseAuth
-                                        .instance
-                                        .currentUser();
-                                    final uid = user.uid;
-                                    final name = user.displayName;
-                                    final uemail = user.email;
-                                    String chosen_address =
-                                        UniqueKey().hashCode.toString();
-                                    Map<String, dynamic> thisAddress = {
-                                      "name": 'Home',
-                                      "city": _city,
-                                      "street_address": _streetaddress,
-                                      "landmark": _landmark,
-                                      "apartment": _apartment,
-                                      "id": chosen_address,
-                                      // "order": "1"
-                                    };
-                                    List addresses = [thisAddress];
-                                    Map<String, dynamic> thisuser = {
-                                      "fullname": _fullname,
-                                      "number": _phone,
-                                      "email": uemail,
-                                      // "address": addresses,
-                                      // "chosen_address": chosen_address
-                                      // "id": uid,
-                                      // "city": _city,
-                                      // "street_address": _streetaddress,
-                                      // "landmark": _landmark,
-                                      // "apartment": _apartment,
-                                    };
+                                        // print("USERNAME")
+                                        Firestore.instance
+                                            .collection("users")
+                                            .document(uid)
+                                            .updateData(thisuser);
+                                        //     .add({
+                                        //   "fullname": name,
+                                        //   "number": _phone,
+                                        //   "email": uemail,
+                                        //   "id": uid,
+                                        //   "city": _city,
+                                        //   "street_address": _streetaddress,
+                                        //   "landmark": _landmark,
+                                        //   "apartment": _apartment,
+                                        // });
 
-                                    // print("USERNAME")
-                                    Firestore.instance
-                                        .collection("users")
-                                        .document(uid)
-                                        .setData(thisuser);
-                                    //     .add({
-                                    //   "fullname": name,
-                                    //   "number": _phone,
-                                    //   "email": uemail,
-                                    //   "id": uid,
-                                    //   "city": _city,
-                                    //   "street_address": _streetaddress,
-                                    //   "landmark": _landmark,
-                                    //   "apartment": _apartment,
-                                    // });
+                                        // here you write the codes to input the data into firestore
+                                      }
 
-                                    // here you write the codes to input the data into firestore
-                                  }
+                                      inputData();
+                                      Navigator.of(context).pop();
+                                      // Navigator.of(context).pop();
 
-                                  inputData();
-                                  Navigator.of(context).pop();
-                                  // Navigator.of(context).pop();
-
-                                  //Send to API
-                                },
-                                color: Colors.redAccent[700],
-                                textColor: Colors.white,
-                                minWidth: MediaQuery.of(context).size.width,
-                                height: 0,
-                                // padding: EdgeInsets.zero,
-                                padding: EdgeInsets.only(
-                                    left: 20, top: 10, right: 20, bottom: 10),
-                                child: Text(
-                                  "Confirm",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15.0,
-                                    fontFamily: 'Axiforma',
-                                    color: Colors.white,
+                                      //Send to API
+                                    },
+                                    color: Colors.redAccent[700],
+                                    textColor: Colors.white,
+                                    minWidth: MediaQuery.of(context).size.width,
+                                    height: 0,
+                                    // padding: EdgeInsets.zero,
+                                    padding: EdgeInsets.only(
+                                        left: 20,
+                                        top: 10,
+                                        right: 20,
+                                        bottom: 10),
+                                    child: Text(
+                                      "Confirm",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: canSubmit == false, //canSubmit,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: MaterialButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                elevation: 0,
-                                onPressed: null,
-                                color: Colors.grey[200],
-                                disabledColor: Colors.grey[200],
-                                textColor: Colors.grey[300],
-                                minWidth: MediaQuery.of(context).size.width,
-                                height: 0,
-                                // padding: EdgeInsets.zero,
-                                padding: EdgeInsets.only(
-                                    left: 20, top: 10, right: 20, bottom: 10),
-                                child: Text(
-                                  "Confirm",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15.0,
-                                    fontFamily: 'Axiforma',
-                                    // color: Colors.white,
+                              Visibility(
+                                visible: canSubmit == false, //canSubmit,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    elevation: 0,
+                                    onPressed: null,
+                                    color: Colors.grey[200],
+                                    disabledColor: Colors.grey[200],
+                                    textColor: Colors.grey[300],
+                                    minWidth: MediaQuery.of(context).size.width,
+                                    height: 0,
+                                    // padding: EdgeInsets.zero,
+                                    padding: EdgeInsets.only(
+                                        left: 20,
+                                        top: 10,
+                                        right: 20,
+                                        bottom: 10),
+                                    child: Text(
+                                      "Confirm",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0,
+                                        fontFamily: 'Axiforma',
+                                        // color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
