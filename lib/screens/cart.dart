@@ -358,6 +358,9 @@ class _CartState extends State<Cart> {
     // print('saved $total');
     // print('saved $type');
     // print('saved $items');
+    if (usercartmap_v2[shop_name]['products'].keys.length == 0) {
+      usercartmap_v2.remove(shop_name);
+    }
     if (cart.length == 0) {
       reset();
 
@@ -502,7 +505,9 @@ class _CartState extends State<Cart> {
 
     print(usercartmap_v2);
     print('this is the cart ');
-    addresses = json.decode(prefs.getString('addresses'));
+    if (prefs.getString('addresses') != null) {
+      addresses = json.decode(prefs.getString('addresses'));
+    }
 
     if (torestart)
       setState(() {
@@ -1049,125 +1054,251 @@ class _CartState extends State<Cart> {
                 ],
               ),
               // Text(chosen_address.toString()),
-              Padding(
-                padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Delivering to",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13.0,
-                      fontFamily: 'Axiforma',
-                      color: Colors.black54,
+              if (addresses != null)
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 30.0, top: 10, bottom: 10),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Delivering to",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.0,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              // Text(chosen_address),
+                    // Text(chosen_address),
 
-              for (var index = 0; index < addresses.length; index++)
-                Padding(
-                  padding: const EdgeInsets.only(
-                      right: 30.0, bottom: 10, left: 30, top: 12),
-                  child: GestureDetector(
-                    onTap: () {
-                      // print(addresses);
-                      // chosen_address ==
-                      //     addresses[index]
-                      //         ["id"];
-                      // print(isDefault);
-                      print("______________________");
-                      if (addresses.length > 1) {
-                        selectAddress(addresses[index]["id"], index);
-                        addAddressToCart(addresses[index]);
-                      }
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              spreadRadius: 2.2,
-                              blurRadius: 2.5,
-                              offset:
-                                  Offset(0, 4), // changes position of shadow
-                            ),
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(15))),
-                      // color: Colors.grey,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          IconButton(
-                              icon: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Icon(
-                                  Icons.place,
-                                  color: chosen_address.toString() ==
-                                          addresses[index]["id"]
-                                      ? Colors.black
-                                      : Colors.grey[400],
-                                  size: 36,
-                                ),
-                              ),
-                              onPressed: () {
-                                // Navigator.of(context).pop();
-                                // setState(() {
-                                //   showerrortextbool = false;
-                                // });
-                              }),
-                          Container(
-                              // color: Colors.green,
-                              margin: new EdgeInsets.only(left: 10.0, right: 0),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 10.0, left: 0, bottom: 5),
-                                          child: Text(
-                                            addresses[index]["name"],
-                                            // textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              fontFamily: 'Axiforma',
-                                              color: chosen_address ==
-                                                      addresses[index]["id"]
-                                                  ? Colors.black
-                                                  : Colors.grey[500],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                    for (var index = 0; index < addresses.length; index++)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            right: 30.0, bottom: 10, left: 30, top: 12),
+                        child: GestureDetector(
+                          onTap: () {
+                            // print(addresses);
+                            // chosen_address ==
+                            //     addresses[index]
+                            //         ["id"];
+                            // print(isDefault);
+                            print("______________________");
+                            if (addresses.length > 1) {
+                              selectAddress(addresses[index]["id"], index);
+                              addAddressToCart(addresses[index]);
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    spreadRadius: 2.2,
+                                    blurRadius: 2.5,
+                                    offset: Offset(
+                                        0, 4), // changes position of shadow
+                                  ),
+                                ],
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            // color: Colors.grey,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                IconButton(
+                                    icon: Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Icon(
+                                        Icons.place,
+                                        color: chosen_address.toString() ==
+                                                addresses[index]["id"]
+                                            ? Colors.black
+                                            : Colors.grey[400],
+                                        size: 36,
+                                      ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
+                                    onPressed: () {
+                                      // Navigator.of(context).pop();
+                                      // setState(() {
+                                      //   showerrortextbool = false;
+                                      // });
+                                    }),
+                                Container(
+                                    // color: Colors.green,
+                                    margin: new EdgeInsets.only(
+                                        left: 10.0, right: 0),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.5),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: <Widget>[
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 10.0,
+                                                    left: 0,
+                                                    bottom: 5),
+                                                child: Text(
+                                                  addresses[index]["name"],
+                                                  // textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                    fontFamily: 'Axiforma',
+                                                    color: chosen_address ==
+                                                            addresses[index]
+                                                                ["id"]
+                                                        ? Colors.black
+                                                        : Colors.grey[500],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 0.0, bottom: 8),
-                                            child: SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  145,
+                                            padding:
+                                                const EdgeInsets.only(top: 0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 0.0, bottom: 8),
+                                                  child: SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            145,
+                                                    child: Text(
+                                                      addresses[index]
+                                                          ["street_address"],
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        height: 1.1,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontSize: 14.5,
+                                                        fontFamily: 'Axiforma',
+                                                        color: Colors.grey[500],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ))
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 30.0, top: 10, bottom: 10),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Payment",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.0,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Opacity(
+                      opacity: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            right: 30.0, bottom: 20, left: 30, top: 12),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  spreadRadius: 2.2,
+                                  blurRadius: 2.5,
+                                  offset: Offset(
+                                      0, 4), // changes position of shadow
+                                ),
+                              ],
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(14))),
+                          // color: Colors.grey,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  child: Icon(Icons.payment,
+                                      size: 30, color: Colors.black)),
+                              Container(
+                                  // color: Colors.green,
+                                  margin: new EdgeInsets.only(
+                                      left: 10.0, right: 0, bottom: 0),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.5),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0,
+                                                  left: 6,
+                                                  bottom: 5),
                                               child: Text(
-                                                addresses[index]
-                                                    ["street_address"],
+                                                'Cash On Delivery',
+                                                // textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  fontFamily: 'Axiforma',
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0, bottom: 8),
+                                              child: Text(
+                                                'Pay when the delivery arrives',
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
@@ -1179,117 +1310,18 @@ class _CartState extends State<Cart> {
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ))
-                        ],
+                                  )),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              Padding(
-                padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Payment",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13.0,
-                      fontFamily: 'Axiforma',
-                      color: Colors.black54,
-                    ),
-                  ),
-                ),
-              ),
-              Opacity(
-                opacity: 1,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      right: 30.0, bottom: 20, left: 30, top: 12),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 2.2,
-                            blurRadius: 2.5,
-                            offset: Offset(0, 4), // changes position of shadow
-                          ),
-                        ],
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(14))),
-                    // color: Colors.grey,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Icon(Icons.payment,
-                                size: 30, color: Colors.black)),
-                        Container(
-                            // color: Colors.green,
-                            margin: new EdgeInsets.only(
-                                left: 10.0, right: 0, bottom: 0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.5),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 10.0, left: 6, bottom: 5),
-                                        child: Text(
-                                          'Cash On Delivery',
-                                          // textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            fontFamily: 'Axiforma',
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 8.0, bottom: 8),
-                                        child: Text(
-                                          'Pay when the delivery arrives',
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            height: 1.1,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 14.5,
-                                            fontFamily: 'Axiforma',
-                                            color: Colors.grey[500],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
 
               // fixxxxxx
               FutureBuilder(

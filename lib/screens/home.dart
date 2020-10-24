@@ -866,7 +866,7 @@ class HomeScreenState extends State<HomeScreen> {
 
             Padding(
               padding: const EdgeInsets.only(
-                  left: 20.0, right: 10.0, top: 0.0, bottom: 10.0),
+                  left: 20.0, right: 10.0, top: 10.0, bottom: 0.0),
               child: Row(
                 children: <Widget>[
                   GestureDetector(

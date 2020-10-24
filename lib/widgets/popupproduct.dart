@@ -522,6 +522,9 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
               shops.remove(shop_name);
               prefs.setStringList("shops", shops);
             }
+            if (usercartmap_v2[shop_name]['products'].keys.length == 0) {
+              usercartmap_v2.remove(shop_name);
+            }
             print('saved $value');
             print('saved $total');
             print('saved $type');
