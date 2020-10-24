@@ -647,17 +647,18 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                       //             int.parse(rate.toString()))
                       //         .toString() +
                       //     "L.L."),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Text(
-                          data.documents[index]['unit'],
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 14.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.black38),
+                      if (data.documents[index]['unit'] != "")
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: Text(
+                            data.documents[index]['unit'],
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 14.0,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black38),
+                          ),
                         ),
-                      ),
                       buildProductPrice(),
                     ],
                   ),

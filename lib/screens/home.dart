@@ -1257,7 +1257,7 @@ class HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Visibility(
-              visible: false,
+              visible: true,
               child: Padding(
                   padding: const EdgeInsets.only(
                       left: 5.0, right: 5, top: 0, bottom: 0),
@@ -1275,7 +1275,7 @@ class HomeScreenState extends State<HomeScreen> {
                               new ScrollController(keepScrollOffset: false),
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
-                          children: List.generate(8, (index) {
+                          children: List.generate(2, (index) {
                             return GestureDetector(
                               onTap: () {
                                 openProductPopUp(
@@ -1289,18 +1289,21 @@ class HomeScreenState extends State<HomeScreen> {
                                     : snapshot
                                         .data.documents[index]['old_price']
                                         .toString(),
-                                productName: snapshot.data.documents[0]['name'],
-                                productImage: snapshot.data.documents[0]
+                                productName: snapshot.data.documents[index]
+                                    ['name'],
+                                productImage: snapshot.data.documents[index]
                                     ['image'],
                                 productPrice: snapshot
-                                    .data.documents[0]['shop_price']
+                                    .data.documents[index]['shop_price']
                                     .toString(),
-                                shopName: snapshot.data.documents[0]['shop'],
-                                productUnit:
-                                    snapshot.data.documents[0]['unit'] != null
-                                        ? snapshot.data.documents[0]['unit']
-                                        : '',
-                                productCurrency: snapshot.data.documents[0]
+                                shopName: snapshot.data.documents[index]
+                                    ['shop'],
+                                productUnit: snapshot.data.documents[index]
+                                            ['unit'] !=
+                                        null
+                                    ? snapshot.data.documents[index]['unit']
+                                    : '',
+                                productCurrency: snapshot.data.documents[index]
                                             ['currency'] !=
                                         null
                                     ? snapshot.data.documents[0]['currency']
