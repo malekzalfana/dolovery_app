@@ -56,6 +56,7 @@ dependencies:
   flutter_phoenix: ^0.1.0
   jiffy: ^3.0.1
   delayed_display: ^1.0.3
+  flutter_statusbarcolor: ^0.2.3
   # flutter_advanced_networkimage: ^0.7.0
 
 

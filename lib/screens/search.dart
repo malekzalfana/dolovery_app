@@ -206,21 +206,23 @@ class _SearchState extends State<Search> {
                                     children:
                                         List.generate(_results.length, (index) {
                                       return GestureDetector(
-                                          onTap: () {
-                                            openProductPopUp(
-                                                context, snap.data, index);
-                                          },
-                                          child: ProductImage(
-                                            productName: snap.data['name'],
-                                            productImage: snap.data['image'],
-                                            productPrice: snap
-                                                .data['shop_price']
-                                                .toString(),
-                                            productUnit:
-                                                snap.data['unit'] != null
-                                                    ? snap.data['unit']
-                                                    : '',
-                                          ));
+                                        onTap: () {
+                                          openProductPopUp(
+                                              context, snap.data, index);
+                                        },
+                                        child: Text(snap.data['name']),
+                                        // ProductImage(
+                                        //   productName: snap.data['name'],
+                                        //   productImage: snap.data['image'],
+                                        //   productPrice: snap
+                                        //       .data['shop_price']
+                                        //       .toString(),
+                                        //   productUnit:
+                                        //       snap.data['unit'] != null
+                                        //           ? snap.data['unit']
+                                        //           : '',
+                                        // )
+                                      );
                                     }).toList(),
                                   );
                                 },

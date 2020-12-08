@@ -808,12 +808,206 @@ class _CartState extends State<Cart> {
               // content: new Text("Hey! I'm Coflutter!"),
               actions: <Widget>[
                 FlatButton(
+                  child: Text('Cancel'),
+                  textColor: Colors.grey,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
                   child: Text('Confirm'),
                   onPressed: () {
                     reset();
                     Navigator.of(context).pop();
                   },
-                )
+                ),
+              ],
+            ));
+  }
+
+  _confirmOrder() {
+    showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              title: new Text("Confirm your order?"),
+              // content: new Text("Hey! I'm Coflutter!"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Cancel'),
+                  textColor: Colors.grey,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text('Confirm'),
+                  onPressed: () {
+                    // reset();
+
+                    setState(() {
+                      ordered = true;
+                    });
+                    print('STSRTEDDDDDDD');
+                    getCartAddress() async {
+                      final prefs = await SharedPreferences.getInstance();
+                      // var thecartaddress =
+                      //     json.encode(prefs
+                      //         .getString('address'));
+                      var all_addresses =
+                          json.decode(prefs.getString('addresses'));
+                      print(addresses);
+                      print('THIS ARE THE ADDRESSES ');
+                      var addresstouse = {};
+
+                      for (var address = 0;
+                          address < all_addresses.length;
+                          address++) {
+                        print(all_addresses[address]['id']);
+                        print(chosen_address);
+                        if (all_addresses[address]['id'] == chosen_address) {
+                          addresstouse = all_addresses[address];
+                          print('theyre the same');
+                        }
+                      }
+
+                      // print(thecartaddress);
+                      List<String> fullorder = [];
+                      List<String> fullorder_shops = [];
+                      var completeproducts = {};
+                      for (var cartshop in usercartmap_v2.keys) {
+                        completeproducts[cartshop] = {};
+                        var datashop = await Firestore.instance
+                            .collection("shops")
+                            .where('username', isEqualTo: cartshop)
+                            .getDocuments();
+                        var rate = datashop.documents[0].data['rate'];
+                        print('the shop is $datashop');
+                        if (rate == null) {
+                          rate = 1;
+                          print('changed rate to ZERO');
+                        }
+                        // for (var product
+                        //     in usercartmap_v2[cartshop].keys) {
+                        //   print('looping through $product');
+                        //   var dataproduct = await Firestore
+                        //       .instance
+                        //       .collection("products")
+                        //       .document(product)
+                        //       .get();
+                        //   var newrate = rate;
+                        //   if (dataproduct.data['currency'] !=
+                        //       'dollar') {
+                        //     print('rate ks ');
+                        //     newrate = 1;
+                        //   }
+                        //   print(dataproduct.documentID);
+                        //   completeproducts[cartshop]
+                        //       [product] = {
+                        //     'name': dataproduct.data['name'],
+                        //     'count': usercartmap_v2[cartshop]
+                        //         [product],
+                        //     'shop_price': dataproduct
+                        //                 .data['type'] !=
+                        //             'salle'
+                        //         ? int.parse(dataproduct
+                        //                 .data['shop_price']
+                        //                 .toString()) *
+                        //             newrate
+                        //         : dataproduct
+                        //                 .data['serving_prices'][
+                        //             usercartmap_v2[cartshop]
+                        //                 [product]],
+                        //     'shop_discounted': dataproduct
+                        //         .data['shop_discounted'],
+                        //     'unit': dataproduct.data['unit'],
+                        //     'image': dataproduct.data['image'],
+                        //     'type': dataproduct.data['type'],
+                        //     'arabic_name':
+                        //         dataproduct.data['arabic_name']
+                        //   };
+                        // }
+                        print(completeproducts);
+                        print(completeproducts[cartshop]);
+                        print('starting orderinggggggggggggggggggggggg');
+                        var order_id = ">>" + UniqueKey().hashCode.toString();
+                        Firestore.instance
+                            .collection('shop_orders')
+                            .document(order_id)
+                            .setData({
+                          "address": addresstouse,
+                          "total": total.toInt(),
+                          "count": usercartmap_v2[cartshop].length,
+                          "payment": "cashondelivery",
+                          "date": DateTime.now(),
+                          "shop": cartshop,
+                          "products": usercartmap_v2[cartshop],
+                          "user": uid,
+                        });
+                        fullorder.add(order_id);
+                        fullorder_shops.add(cartshop);
+                      }
+
+                      var fullorder_id = UniqueKey().hashCode.toString();
+                      Firestore.instance
+                          .collection('orders')
+                          .document(fullorder_id)
+                          .setData({
+                        "address": addresstouse,
+                        "total": total.toInt(),
+                        "count": items,
+                        "payment": "cashondelivery",
+                        "date": DateTime.now(),
+                        "products": usercartmap_v2,
+                        "user": uid,
+                        "shop_list": fullorder_shops,
+                        "order_list": fullorder
+                      }).then((doc) {
+                        print(fullorder_id);
+                        reset(false);
+                        Navigator.pop(context);
+
+                        // loadingorder = true;
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => OrderPage(fullorder_id)));
+                      }).catchError((error) {
+                        print(error);
+                      });
+                    }
+
+                    getCartAddress();
+
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ));
+  }
+
+  _askToRemoveProduct(c1, c2, c3, c4, c5, c6, c7) {
+    showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              title:
+                  new Text("Do you want to remove this item from your cart?"),
+              // content: new Text("Hey! I'm Coflutter!"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Cancel'),
+                  textColor: Colors.grey,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    return 'false';
+                  },
+                ),
+                FlatButton(
+                  child: Text('Confirm'),
+                  onPressed: () {
+                    _remove(c1, c2, c3, c4, c5, c6, c7);
+                    // removefunciton();
+                    Navigator.of(context).pop();
+                    return 'true';
+                  },
+                ),
               ],
             ));
   }
@@ -1387,171 +1581,7 @@ class _CartState extends State<Cart> {
                                       onPressed: notsetup || loadingorder
                                           ? null
                                           : () {
-                                              setState(() {
-                                                ordered = true;
-                                              });
-                                              print('STSRTEDDDDDDD');
-                                              getCartAddress() async {
-                                                final prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                // var thecartaddress =
-                                                //     json.encode(prefs
-                                                //         .getString('address'));
-                                                var all_addresses = json.decode(
-                                                    prefs.getString(
-                                                        'addresses'));
-                                                print(addresses);
-                                                print(
-                                                    'THIS ARE THE ADDRESSES ');
-                                                var addresstouse = {};
-
-                                                for (var address = 0;
-                                                    address <
-                                                        all_addresses.length;
-                                                    address++) {
-                                                  print(all_addresses[address]
-                                                      ['id']);
-                                                  print(chosen_address);
-                                                  if (all_addresses[address]
-                                                          ['id'] ==
-                                                      chosen_address) {
-                                                    addresstouse =
-                                                        all_addresses[address];
-                                                    print('theyre the same');
-                                                  }
-                                                }
-
-                                                // print(thecartaddress);
-                                                List<String> fullorder = [];
-                                                List<String> fullorder_shops =
-                                                    [];
-                                                var completeproducts = {};
-                                                for (var cartshop
-                                                    in usercartmap_v2.keys) {
-                                                  completeproducts[cartshop] =
-                                                      {};
-                                                  var datashop = await Firestore
-                                                      .instance
-                                                      .collection("shops")
-                                                      .where('username',
-                                                          isEqualTo: cartshop)
-                                                      .getDocuments();
-                                                  var rate = datashop
-                                                      .documents[0]
-                                                      .data['rate'];
-                                                  print(
-                                                      'the shop is $datashop');
-                                                  if (rate == null) {
-                                                    rate = 1;
-                                                    print(
-                                                        'changed rate to ZERO');
-                                                  }
-                                                  // for (var product
-                                                  //     in usercartmap_v2[cartshop].keys) {
-                                                  //   print('looping through $product');
-                                                  //   var dataproduct = await Firestore
-                                                  //       .instance
-                                                  //       .collection("products")
-                                                  //       .document(product)
-                                                  //       .get();
-                                                  //   var newrate = rate;
-                                                  //   if (dataproduct.data['currency'] !=
-                                                  //       'dollar') {
-                                                  //     print('rate ks ');
-                                                  //     newrate = 1;
-                                                  //   }
-                                                  //   print(dataproduct.documentID);
-                                                  //   completeproducts[cartshop]
-                                                  //       [product] = {
-                                                  //     'name': dataproduct.data['name'],
-                                                  //     'count': usercartmap_v2[cartshop]
-                                                  //         [product],
-                                                  //     'shop_price': dataproduct
-                                                  //                 .data['type'] !=
-                                                  //             'salle'
-                                                  //         ? int.parse(dataproduct
-                                                  //                 .data['shop_price']
-                                                  //                 .toString()) *
-                                                  //             newrate
-                                                  //         : dataproduct
-                                                  //                 .data['serving_prices'][
-                                                  //             usercartmap_v2[cartshop]
-                                                  //                 [product]],
-                                                  //     'shop_discounted': dataproduct
-                                                  //         .data['shop_discounted'],
-                                                  //     'unit': dataproduct.data['unit'],
-                                                  //     'image': dataproduct.data['image'],
-                                                  //     'type': dataproduct.data['type'],
-                                                  //     'arabic_name':
-                                                  //         dataproduct.data['arabic_name']
-                                                  //   };
-                                                  // }
-                                                  print(completeproducts);
-                                                  print(completeproducts[
-                                                      cartshop]);
-                                                  print(
-                                                      'starting orderinggggggggggggggggggggggg');
-                                                  var order_id = ">>" +
-                                                      UniqueKey()
-                                                          .hashCode
-                                                          .toString();
-                                                  Firestore.instance
-                                                      .collection('shop_orders')
-                                                      .document(order_id)
-                                                      .setData({
-                                                    "address": addresstouse,
-                                                    "total": total.toInt(),
-                                                    "count":
-                                                        usercartmap_v2[cartshop]
-                                                            .length,
-                                                    "payment": "cashondelivery",
-                                                    "date": DateTime.now(),
-                                                    "shop": cartshop,
-                                                    "products": usercartmap_v2[
-                                                        cartshop],
-                                                    "user": uid,
-                                                  });
-                                                  fullorder.add(order_id);
-                                                  fullorder_shops.add(cartshop);
-                                                }
-
-                                                var fullorder_id = UniqueKey()
-                                                    .hashCode
-                                                    .toString();
-                                                Firestore.instance
-                                                    .collection('orders')
-                                                    .document(fullorder_id)
-                                                    .setData({
-                                                  "address": addresstouse,
-                                                  "total": total.toInt(),
-                                                  "count": items,
-                                                  "payment": "cashondelivery",
-                                                  "date": DateTime.now(),
-                                                  "products": usercartmap_v2,
-                                                  "user": uid,
-                                                  "shop_list": fullorder_shops,
-                                                  "order_list": fullorder
-                                                }).then((doc) {
-                                                  print(fullorder_id);
-                                                  reset(false);
-                                                  Navigator.pop(context);
-
-                                                  // loadingorder = true;
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              OrderPage(
-                                                                  fullorder_id)));
-                                                }).catchError((error) {
-                                                  print(error);
-                                                });
-                                              }
-
-                                              getCartAddress();
-
-                                              // final thecartaddress =
-                                              //     getCartAddress();
+                                              _confirmOrder();
                                             },
                                       color: Colors.redAccent[700],
                                       disabledColor: Colors.grey[200],
@@ -1983,16 +2013,29 @@ class _CartState extends State<Cart> {
                         width: 25,
                         child: RawMaterialButton(
                           onPressed: () {
-                            _remove(
-                                cartitemID,
-                                cartitem['rate'],
-                                cartitem['data']['shop'],
-                                cartitem['data']['type'],
-                                (int.parse(cartitem['data']['shop_price']
-                                        .toString()) *
-                                    cartitem['rate']),
-                                cartitem['data']['currency'],
-                                cartitem['data']);
+                            if (count == 1) {
+                              _askToRemoveProduct(
+                                  cartitemID,
+                                  cartitem['rate'],
+                                  cartitem['data']['shop'],
+                                  cartitem['data']['type'],
+                                  (int.parse(cartitem['data']['shop_price']
+                                          .toString()) *
+                                      cartitem['rate']),
+                                  cartitem['data']['currency'],
+                                  cartitem['data']);
+                            } else {
+                              _remove(
+                                  cartitemID,
+                                  cartitem['rate'],
+                                  cartitem['data']['shop'],
+                                  cartitem['data']['type'],
+                                  (int.parse(cartitem['data']['shop_price']
+                                          .toString()) *
+                                      cartitem['rate']),
+                                  cartitem['data']['currency'],
+                                  cartitem['data']);
+                            }
                           },
                           elevation: 2,
                           fillColor: Colors.redAccent[700],

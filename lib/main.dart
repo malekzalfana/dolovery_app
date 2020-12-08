@@ -13,6 +13,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 // ignore: unused_import
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'screens/100lebanese.dart';
@@ -61,6 +62,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(Colors.black45);
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,

@@ -806,7 +806,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 Container(
                                   // margin: EdgeInsets.symmetric(vertical: 0),
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 0),
+                                      horizontal: 5, vertical: 1),
                                   height: 30,
                                   // width: double.infinity,
                                   decoration: BoxDecoration(
@@ -924,74 +924,77 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            DelayedDisplay(
-              delay: Duration(milliseconds: 100),
-              fadingDuration: const Duration(milliseconds: 100),
-              slidingBeginOffset: const Offset(0.0, 0.15),
-              child: GestureDetector(
-                onTap: () {
-                  // Navigator.of(context)
-                  //     .push(MaterialPageRoute(builder: (context) => SalleScreen() ));
-                  // setState(
-                  //   () {
-                  //     widget._selectedItemIndex = 2;
-                  //   },
-                  // );
-                  print('clicked');
-                  widget.notifyParent();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 135,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 2.2,
-                          blurRadius: 2.5,
-                          offset: Offset(0, 4), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 40.0, left: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Meal Basket",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 20.0,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Text(
-                                "Everyday a new recipe!",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13.0,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.redAccent[700],
-                                ),
-                              ),
-                            ],
+            Visibility(
+              visible: false,
+              child: DelayedDisplay(
+                delay: Duration(milliseconds: 100),
+                fadingDuration: const Duration(milliseconds: 100),
+                slidingBeginOffset: const Offset(0.0, 0.15),
+                child: GestureDetector(
+                  onTap: () {
+                    // Navigator.of(context)
+                    //     .push(MaterialPageRoute(builder: (context) => SalleScreen() ));
+                    // setState(
+                    //   () {
+                    //     widget._selectedItemIndex = 2;
+                    //   },
+                    // );
+                    print('clicked');
+                    widget.notifyParent();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Container(
+                      height: 135,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 2.2,
+                            blurRadius: 2.5,
+                            offset: Offset(0, 4), // changes position of shadow
                           ),
-                        ),
-                        Image.asset(
-                          'assets/images/salle.png',
-                          width: 120,
-                        )
-                      ],
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 40.0, left: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Meal Basket",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 20.0,
+                                    fontFamily: 'Axiforma',
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Text(
+                                  "Everyday a new recipe!",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13.0,
+                                    fontFamily: 'Axiforma',
+                                    color: Colors.redAccent[700],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Image.asset(
+                            'assets/images/salle.png',
+                            width: 120,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
