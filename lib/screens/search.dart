@@ -206,23 +206,52 @@ class _SearchState extends State<Search> {
                                     children:
                                         List.generate(_results.length, (index) {
                                       return GestureDetector(
-                                        onTap: () {
-                                          openProductPopUp(
-                                              context, snap.data, index);
-                                        },
-                                        child: Text(snap.data['name']),
-                                        // ProductImage(
-                                        //   productName: snap.data['name'],
-                                        //   productImage: snap.data['image'],
-                                        //   productPrice: snap
-                                        //       .data['shop_price']
-                                        //       .toString(),
-                                        //   productUnit:
-                                        //       snap.data['unit'] != null
-                                        //           ? snap.data['unit']
-                                        //           : '',
-                                        // )
-                                      );
+                                          onTap: () {
+                                            openProductPopUp(
+                                              context,
+                                              snap.data['data'],
+                                              index,
+                                            );
+                                          },
+                                          child:
+                                              //  Text(snap.data['data']['shop'])
+                                              ProductImage(
+                                            productName: snap.data['data']
+                                                        ['name'] !=
+                                                    null
+                                                ? snap.data['data']['name']
+                                                : '',
+                                            productImage: snap.data['data']
+                                                        ['image'] !=
+                                                    null
+                                                ? snap.data['data']['image']
+                                                : '',
+                                            productPrice: snap.data['data']
+                                                        ['shop_price'] !=
+                                                    null
+                                                ? snap.data['data']
+                                                        ['shop_price']
+                                                    .toString()
+                                                : '0',
+                                            oldPrice: snap.data['data']
+                                                        ['old_price'] !=
+                                                    null
+                                                ? snap.data['data']['old_price']
+                                                    .toString()
+                                                : '',
+                                            productUnit: snap.data['data']
+                                                        ['unit'] !=
+                                                    null
+                                                ? snap.data['data']['unit']
+                                                : '',
+                                            productCurrency: snap.data['data']
+                                                        ['currency'] !=
+                                                    null
+                                                ? snap.data['data']['currency']
+                                                : '',
+                                            shopName: snap.data['data']['shop']
+                                                .toString(),
+                                          ));
                                     }).toList(),
                                   );
                                 },

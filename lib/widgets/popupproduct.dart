@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:delayed_display/delayed_display.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_counter/flutter_counter.dart';
@@ -237,6 +237,8 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
     }
   }
 
+  bool showmessage = false;
+
   // int serving = 0;
 
   Future<void> future = showModalBottomSheet<void>(
@@ -411,6 +413,10 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             // print('saved $items');
             print(rate);
             print('################');
+            showmessage = true;
+            Timer(Duration(seconds: 3), () {
+              showmessage = false;
+            });
           }
 
           void minus() {
@@ -529,6 +535,10 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             print('saved $total');
             print('saved $type');
             print('saved $items');
+            showmessage = true;
+            Timer(Duration(seconds: 3), () {
+              showmessage = false;
+            });
           }
 
           int countOccurrencesUsingLoop(List<String> list, String element) {
@@ -698,6 +708,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                                 // add;
                                 _save(data.documents[index],
                                     data.documents[index].documentID, rate);
+
                                 // _save2(data.documents[index], rate);
                               },
                               elevation: !maximum ? 2 : 0,
@@ -716,6 +727,27 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                           ],
                         ),
                       ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: showmessage,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: DelayedDisplay(
+                          delay: Duration(milliseconds: 200),
+                          fadingDuration: const Duration(milliseconds: 300),
+                          slidingBeginOffset: const Offset(0.0, 0.15),
+                          child: Text(
+                            _n > 0
+                                ? 'You have ${_n} items in your cart!'
+                                : 'Item removed from your cart!',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              fontFamily: 'Axiforma',
+                              color: Colors.black54,
+                            ),
+                          )),
                     ),
                   ),
                   Visibility(

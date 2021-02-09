@@ -35,7 +35,7 @@ class _ShopListState extends State<ShopList> {
   // _shopImageState(this.shopImage);
   @override
   Widget build(BuildContext context) {
-    double width = 200; //MediaQuery.of(context).size.width - 22;
+    double width = MediaQuery.of(context).size.width - 22;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(

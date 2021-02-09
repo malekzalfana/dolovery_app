@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "algolia-firebase-functions": "^4.0.0",
+    "algolia-firebase-functions": "^0.1.1",
     "algolia-firestore-sync": "^2.0.0",
     "algoliasearch": "^4.8.3"
   },

@@ -289,6 +289,9 @@ class _CartState extends State<Cart> {
         if (usercartmap_v2[shop_name]['products'][itemid]['count'] == 0) {
           usercartmap_v2[shop_name]['products'].remove(itemid);
         }
+        if (usercartmap_v2[shop_name]['products'].length == 0) {
+          usercartmap_v2.remove(shop_name);
+        }
       }
     }
 
@@ -358,9 +361,9 @@ class _CartState extends State<Cart> {
     // print('saved $total');
     // print('saved $type');
     // print('saved $items');
-    if (usercartmap_v2[shop_name]['products'].keys.length == 0) {
-      usercartmap_v2.remove(shop_name);
-    }
+    // if (usercartmap_v2[shop_name]['products'].keys.length == 0) {
+    //   usercartmap_v2.remove(shop_name);
+    // }
     if (cart.length == 0) {
       reset();
 
@@ -1171,6 +1174,7 @@ class _CartState extends State<Cart> {
                 Column(
                   children: [
                     for (var shop in usercartmap_v2.keys)
+                      // if (usercartmap_v2[shop]['products'].keys.length > 0)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Column(
