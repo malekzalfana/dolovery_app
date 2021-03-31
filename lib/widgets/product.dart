@@ -130,6 +130,7 @@ class _ProductImageState extends State<ProductImage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     buildProductPrice(),
+                    // Container()
                   ],
                 ),
               )
@@ -218,72 +219,77 @@ class _ProductImageState extends State<ProductImage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Visibility(
-                              visible: int.parse(oldPrice) > 0,
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 7.0),
-                                child: SizedBox(
-                                  height: 20,
-                                  child: Text(
-                                    (int.parse(oldPrice.toString()) *
-                                                (rate != null
-                                                    ? int.parse(rate.toString())
-                                                    : 1))
-                                            .toString() +
-                                        "L.L.",
-                                    // rate.toString(),
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      decoration: TextDecoration.lineThrough,
-                                      decorationThickness: 2,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 11.7,
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.black54,
+                            if (!oldPrice.isEmpty)
+                              Visibility(
+                                // visible: int.parse(oldPrice) > 0,
+                                visible: true,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 7.0),
+                                  child: SizedBox(
+                                    height: 20,
+                                    child: Text(
+                                      (int.parse(oldPrice.toString()) *
+                                                  (rate != null
+                                                      ? int.parse(
+                                                          rate.toString())
+                                                      : 1))
+                                              .toString() +
+                                          "L.L.",
+                                      // rate.toString(),
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationThickness: 2,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 11.7,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.black54,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
+                            if (productPrice != null)
+                              SizedBox(
+                                height: 20,
+                                child: Text(
+                                  (int.parse(productPrice.toString()) *
+                                              (rate != null
+                                                  ? int.parse(rate.toString())
+                                                  : 1))
+                                          .toString() +
+                                      "L.L.",
+                                  // rate.toString(),
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 11.7,
+                                    fontFamily: 'Axiforma',
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        if (productUnit != null)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 0.0),
+                            child: SizedBox(
                               height: 20,
                               child: Text(
-                                (int.parse(productPrice.toString()) *
-                                            (rate != null
-                                                ? int.parse(rate.toString())
-                                                : 1))
-                                        .toString() +
-                                    "L.L.",
-                                // rate.toString(),
+                                productUnit.toString(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: 11.7,
                                   fontFamily: 'Axiforma',
-                                  color: Colors.black54,
+                                  color: Colors.black26,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 0.0),
-                          child: SizedBox(
-                            height: 20,
-                            child: Text(
-                              productUnit.toString(),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 11.7,
-                                fontFamily: 'Axiforma',
-                                color: Colors.black26,
-                              ),
-                            ),
                           ),
-                        ),
                       ],
                     );
                   break;

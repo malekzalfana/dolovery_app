@@ -2069,15 +2069,16 @@ class _CartState extends State<Cart> {
                             //       false);
                             // },
                             _save(
-                                cartitemID,
-                                cartitem['rate'],
-                                cartitem['data']['shop'],
-                                cartitem['data']['type'],
-                                (int.parse(cartitem['data']['shop_price']
-                                        .toString()) *
-                                    cartitem['rate']),
-                                cartitem['data']['currency'],
-                                cartitem['data']);
+                              cartitemID,
+                              cartitem['rate'],
+                              cartitem['data']['shop'],
+                              cartitem['data']['type'],
+                              (int.parse(cartitem['data']['shop_price']
+                                      .toString()) *
+                                  cartitem['rate']),
+                              cartitem['data']['currency'],
+                              cartitem['data'],
+                            );
                           },
                           elevation: !maximum ? 2 : 0,
                           fillColor: !maximum

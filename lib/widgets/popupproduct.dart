@@ -159,40 +159,42 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             whenDone: (dynamic data) => Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Visibility(
-                  visible: oldPrice > 0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Text(
-                        (int.parse(oldPrice.toString()) *
-                                    int.parse(rate.toString()))
-                                .toString() +
-                            "L.L.",
-                        // rate.toString(),
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          decoration: TextDecoration.lineThrough,
-                          decorationThickness: 2,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black54,
-                        )),
+                if (oldPrice != null)
+                  Visibility(
+                    visible: oldPrice > 0,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text(
+                          (int.parse(oldPrice.toString()) *
+                                      int.parse(rate.toString()))
+                                  .toString() +
+                              "L.L.",
+                          // rate.toString(),
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            decoration: TextDecoration.lineThrough,
+                            decorationThickness: 2,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black54,
+                          )),
+                    ),
                   ),
-                ),
-                Text(
-                    (int.parse(productPrice.toString()) *
-                                int.parse(rate.toString()))
-                            .toString() +
-                        "L.L.",
-                    // rate.toString(),
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 15,
-                      fontFamily: 'Axiforma',
-                      color: Colors.black54,
-                    )),
+                if (productPrice != null)
+                  Text(
+                      (int.parse(productPrice.toString()) *
+                                  int.parse(rate.toString()))
+                              .toString() +
+                          "L.L.",
+                      // rate.toString(),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 15,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black54,
+                      )),
               ],
             ),
             whenNotDone: Center(child: Text('Loading...')),
@@ -204,34 +206,36 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Visibility(
-            visible: oldPrice > 0,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Text(oldPrice.toString() + "L.L.",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    decoration: TextDecoration.lineThrough,
-                    decorationThickness: 2,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    fontFamily: 'Axiforma',
-                    color: Colors.black54,
-                  )),
-            ),
-          ),
-          Padding(
-              padding: const EdgeInsets.only(top: 0.0),
-              child: Text(
-                productPrice.toString() + "L.L.",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14.7,
-                  fontFamily: 'Axiforma',
-                  color: Colors.black54,
-                ),
-              )),
+          // if (oldPrice != null)
+          //   Visibility(
+          //     visible: oldPrice > 0,
+          //     child: Padding(
+          //       padding: const EdgeInsets.only(right: 8.0),
+          //       child: Text(oldPrice.toString() + "L.L.",
+          //           textAlign: TextAlign.left,
+          //           style: TextStyle(
+          //             decoration: TextDecoration.lineThrough,
+          //             decorationThickness: 2,
+          //             fontWeight: FontWeight.bold,
+          //             fontSize: 15,
+          //             fontFamily: 'Axiforma',
+          //             color: Colors.black54,
+          //           )),
+          //     ),
+          //   ),
+          // if (productPrice != null)
+          //   Padding(
+          //       padding: const EdgeInsets.only(top: 0.0),
+          //       child: Text(
+          //         productPrice.toString() + "L.L.",
+          //         textAlign: TextAlign.left,
+          //         style: TextStyle(
+          //           fontWeight: FontWeight.normal,
+          //           fontSize: 14.7,
+          //           fontFamily: 'Axiforma',
+          //           color: Colors.black54,
+          //         ),
+          //       )),
         ],
       );
     }
@@ -594,17 +598,18 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                             ),
                             onPressed: () {}),
                       ),
-                      Align(
-                          alignment: Alignment.topCenter,
-                          child: Text(
-                            data.documents[index]['category'].toUpperCase(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13.0,
-                                letterSpacing: 1.1,
-                                fontFamily: 'Axiforma',
-                                color: Colors.grey[400]),
-                          )),
+                      if (data.documents[index]['category'] != null)
+                        Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              data.documents[index]['category'].toUpperCase(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13.0,
+                                  letterSpacing: 1.1,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.grey[400]),
+                            )),
                       Align(
                         alignment: Alignment.topRight,
                         child: IconButton(
@@ -623,55 +628,70 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                       ),
                     ],
                   ),
-                  Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0, top: 20),
-                      child: Center(
-                          child: CachedNetworkImage(
-                        width: 170,
-                        placeholder: (context, url) => Image.asset(
-                            "assets/images/loading.gif",
-                            height: 30),
-                        imageUrl: data.documents[index]['image'],
-                        errorWidget: (context, url, error) =>
-                            Center(child: new Icon(Icons.error)),
-                      ))),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0, right: 00),
-                    child: SizedBox(
-                      width: width - 50,
-                      child: Text(
-                        data.documents[index]['name'],
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
-                            fontFamily: 'Axiforma',
-                            color: Colors.black),
+                  if (data.documents[index]['image'] != null)
+                    Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0, top: 20),
+                        child: Center(
+                            child: CachedNetworkImage(
+                          width: 170,
+                          placeholder: (context, url) => Image.asset(
+                              "assets/images/loading.gif",
+                              height: 30),
+                          imageUrl: data.documents[index]['image'],
+                          errorWidget: (context, url, error) => Center(
+                              child: Expanded(
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Container(
+                                  // color: Colors.red,
+                                  // width: width - 80,
+                                  width: 400,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey[100]),
+                                  child: new Icon(Icons.error)),
+                            ),
+                          )),
+                        ))),
+                  if (data.documents[index]['name'] != null)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 0, right: 00),
+                      child: SizedBox(
+                        width: width - 50,
+                        child: Text(
+                          data.documents[index]['name'],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              fontFamily: 'Axiforma',
+                              color: Colors.black),
+                        ),
                       ),
                     ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      // Text((int.parse(productPrice.toString()) *
-                      //             int.parse(rate.toString()))
-                      //         .toString() +
-                      //     "L.L."),
-                      if (data.documents[index]['unit'] != "")
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Text(
-                            data.documents[index]['unit'],
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 14.0,
-                                fontFamily: 'Axiforma',
-                                color: Colors.black38),
+                  if (data.documents[index]['unit'] != null)
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        // Text((int.parse(productPrice.toString()) *
+                        //             int.parse(rate.toString()))
+                        //         .toString() +
+                        //     "L.L."),
+                        if (data.documents[index]['unit'] != "")
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Text(
+                              data.documents[index]['unit'],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 14.0,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.black38),
+                            ),
                           ),
-                        ),
-                      buildProductPrice(),
-                    ],
-                  ),
+                        buildProductPrice(),
+                      ],
+                    ),
                   Visibility(
                     visible: true,
                     child: Padding(
@@ -772,24 +792,25 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 30.0, right: 30.0, top: 0, bottom: 30),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              data.documents[index]['description'] != null
-                                  ? data.documents[index]['description']
-                                  : "",
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 13.0,
-                                fontFamily: 'Axiforma',
-                                color: Colors.black,
+                        if (data.documents[index]['description'] != null)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 30.0, right: 30.0, top: 0, bottom: 30),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                data.documents[index]['description'] != null
+                                    ? data.documents[index]['description']
+                                    : "",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 13.0,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),

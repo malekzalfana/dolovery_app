@@ -927,7 +927,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               } else if (snapshot.hasError) {
                                 return Text(snapshot.error.toString());
                               }
-                              return Center(child: CircularProgressIndicator());
+                              return Center(child: Container());
                             },
                           ),
                           Column(

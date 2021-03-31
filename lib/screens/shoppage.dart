@@ -426,130 +426,178 @@ class _ShopPageState extends State<ShopPage> {
                           // }
                           var first = 0;
                           switch (snapshot.connectionState) {
-                            // case ConnectionState.waiting:
-                            //   return Container();
+                            case ConnectionState.waiting:
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 45.0),
+                                child: Center(
+                                  child: Image.asset(
+                                    "assets/images/loading.gif",
+                                    width: 30,
+                                  ),
+                                ),
+                              );
                             default:
                               if (snapshot.hasError)
                                 return Text('Error: ${snapshot.error}');
-                              else if (type != null)
-                                return SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                        children: type['categories']
-                                            .keys
-                                            .map<Widget>((entry) {
-                                      // print("main category");
-                                      // print(entry);
-                                      // print(type["categories"].keys[1]);
-                                      // for (var book in type["categories"].keys) {
-                                      //   print(
-                                      //       '$book was written by ${type["categories"][book]}');
-                                      // }
-                                      // print(type['categories'][entry]);
-
-                                      first++;
-                                      // print
-
-                                      // var w = Text("ssss");
-                                      // type['categories'](entry.key);
-                                      // return w;
-                                      if (widget.data['categories'] != null)
-                                        return Visibility(
-                                          visible: widget.data['categories']
-                                              .contains(entry),
-                                          child: Padding(
-                                            padding: first == 1
-                                                ? const EdgeInsets.only(
-                                                    left: 10)
-                                                : const EdgeInsets.only(
-                                                    left: 0),
-                                            child: Padding(
+                              else if (type != null &&
+                                  snapshot.connectionState ==
+                                      ConnectionState.done)
+                                return Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
                                               padding: const EdgeInsets.only(
-                                                  right: 10.0,
-                                                  bottom: 20,
-                                                  top: 26),
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  setCategory(entry);
-                                                  setState(() {});
-                                                },
-                                                child: Container(
-                                                    height: 80,
-                                                    // 180
-                                                    width: 120,
-                                                    decoration: BoxDecoration(
-                                                      // image: DecorationImage(
-                                                      //   image: AssetImage(
-                                                      //       'assets/images/meat.png'),
-                                                      //   fit: BoxFit.cover,
-                                                      // ),
-                                                      color: entry ==
-                                                              chosen_category
-                                                          ? Colors
-                                                              .redAccent[700]
-                                                          : Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topLeft: Radius
-                                                                  .circular(15),
-                                                              topRight: Radius
-                                                                  .circular(15),
-                                                              bottomLeft: Radius
-                                                                  .circular(15),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          15)),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors.grey
-                                                              .withOpacity(0.1),
-                                                          spreadRadius: 2.2,
-                                                          blurRadius: 2.5,
-                                                          offset: Offset(0,
-                                                              4), // changes position of shadow
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: <Widget>[
-                                                        // Image.asset(
-                                                        //     "assets/images/meaticon.png",
-                                                        //     height: 30),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: Text(
-                                                            entry,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800,
-                                                              fontSize: 12.5,
-                                                              height: 1.3,
-                                                              fontFamily:
-                                                                  'Axiforma',
-                                                              color: entry ==
-                                                                      chosen_category
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )),
+                                                  top: 15.0, left: 20),
+                                              child: Text(
+                                                'Categories',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16.0,
+                                                  fontFamily: 'Axiforma',
+                                                  color: Colors.black,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                    }).toList()));
+                                            Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: type['categories']
+                                                    .keys
+                                                    .map<Widget>((entry) {
+                                                  first++;
+
+                                                  // print
+
+                                                  // var w = Text("ssss");
+                                                  // type['categories'](entry.key);
+                                                  // return w;
+                                                  if (widget
+                                                          .data['categories'] !=
+                                                      null)
+                                                    return Visibility(
+                                                      visible: widget
+                                                          .data['categories']
+                                                          .contains(entry),
+                                                      child: Padding(
+                                                        padding: first == 1
+                                                            ? const EdgeInsets
+                                                                .only(left: 10)
+                                                            : const EdgeInsets
+                                                                .only(left: 0),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 10.0,
+                                                                  bottom: 20,
+                                                                  top: 20),
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap: () {
+                                                              setCategory(
+                                                                  entry);
+                                                              setState(() {});
+                                                            },
+                                                            child: Container(
+                                                                height: 80,
+                                                                // 180
+                                                                width: 120,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  // image: DecorationImage(
+                                                                  //   image: AssetImage(
+                                                                  //       'assets/images/meat.png'),
+                                                                  //   fit: BoxFit.cover,
+                                                                  // ),
+                                                                  color: entry ==
+                                                                          chosen_category
+                                                                      ? Colors.redAccent[
+                                                                          700]
+                                                                      : Colors
+                                                                          .white,
+                                                                  borderRadius: BorderRadius.only(
+                                                                      topLeft:
+                                                                          Radius.circular(
+                                                                              15),
+                                                                      topRight:
+                                                                          Radius.circular(
+                                                                              15),
+                                                                      bottomLeft:
+                                                                          Radius.circular(
+                                                                              15),
+                                                                      bottomRight:
+                                                                          Radius.circular(
+                                                                              15)),
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .withOpacity(
+                                                                              0.1),
+                                                                      spreadRadius:
+                                                                          2.2,
+                                                                      blurRadius:
+                                                                          2.5,
+                                                                      offset: Offset(
+                                                                          0,
+                                                                          4), // changes position of shadow
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceAround,
+                                                                  children: <
+                                                                      Widget>[
+                                                                    // Image.asset(
+                                                                    //     "assets/images/meaticon.png",
+                                                                    //     height: 30),
+                                                                    Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                              8.0),
+                                                                      child:
+                                                                          Text(
+                                                                        entry,
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.w800,
+                                                                          fontSize:
+                                                                              12.5,
+                                                                          height:
+                                                                              1.3,
+                                                                          fontFamily:
+                                                                              'Axiforma',
+                                                                          color: entry == chosen_category
+                                                                              ? Colors.white
+                                                                              : Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                )),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                }).toList()),
+                                          ],
+                                        ),
+                                      )),
+                                );
                           }
                         },
                       ),
@@ -563,20 +611,23 @@ class _ShopPageState extends State<ShopPage> {
                           //   print('$type was written by ${type[cat]}');
                           // }
                           switch (snapshot.connectionState) {
-                            // case ConnectionState.waiting:
-                            //   return Padding(
-                            //     padding: const EdgeInsets.only(top: 45.0),
-                            //     child: Center(
-                            //       child: Image.asset(
-                            //         "assets/images/loading.gif",
-                            //         width: 30,
-                            //       ),
-                            //     ),
-                            //   );
+                            case ConnectionState.waiting:
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 45.0),
+                                child: Center(
+                                  child: Container(),
+                                  // child: Image.asset(
+                                  //   "assets/images/loading.gif",
+                                  //   width: 30,
+                                  // ),
+                                ),
+                              );
                             default:
                               if (snapshot.hasError)
                                 return Text('Error: ${snapshot.error}');
-                              else if (type != null)
+                              else if (type != null &&
+                                  snapshot.connectionState ==
+                                      ConnectionState.done)
                                 return Column(
                                   children: [
                                     Column(
@@ -599,96 +650,103 @@ class _ShopPageState extends State<ShopPage> {
                                           child: null,
                                         );
                                       else
-                                        return SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0),
-                                            child: Row(
-                                                children: List<Widget>.generate(
-                                                    type['categories'][entry]
-                                                        .length, (int index) {
-                                              // print(categories[index]);
-                                              return Visibility(
-                                                visible: entry ==
-                                                            chosen_category &&
-                                                        widget.data[
-                                                                'subcategories']
-                                                            .contains(type[
-                                                                    'categories']
-                                                                [entry][index])
-                                                    ? true
-                                                    : false,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 0.0,
-                                                          bottom: 0,
-                                                          top: 0,
-                                                          left: 0),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      // print("something");
-                                                      setSubCategory(
+                                        return Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10.0),
+                                              child: Row(
+                                                  children:
+                                                      List<Widget>.generate(
                                                           type['categories']
-                                                              [entry][index]);
-                                                      // setState(() {});
-                                                      // setState(() {
-                                                      //   chosen_subcategory =
-                                                      //       type['categories'][entry][index];
-                                                      //   print(chosen_subcategory);
-                                                      // });
-                                                    },
-                                                    child: Container(
-                                                        height: 50,
-                                                        // 180
-                                                        width: 110,
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceAround,
-                                                          children: <Widget>[
-                                                            // Image.asset(
-                                                            //     "assets/images/meaticon.png",
-                                                            //     height: 30),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: Text(
-                                                                type['categories']
-                                                                        [entry]
-                                                                    [index],
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  fontSize:
-                                                                      12.0,
-                                                                  height: 1.3,
-                                                                  fontFamily:
-                                                                      'Axiforma',
-                                                                  color: type['categories'][entry]
-                                                                              [
-                                                                              index] ==
-                                                                          chosen_subcategory
-                                                                      ? Colors
-                                                                          .red
-                                                                      : Colors
-                                                                          .grey,
+                                                                  [entry]
+                                                              .length,
+                                                          (int index) {
+                                                // print(categories[index]);
+                                                return Visibility(
+                                                  visible: entry ==
+                                                              chosen_category &&
+                                                          widget.data[
+                                                                  'subcategories']
+                                                              .contains(type[
+                                                                      'categories']
+                                                                  [
+                                                                  entry][index])
+                                                      ? true
+                                                      : false,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 0.0,
+                                                            bottom: 10,
+                                                            top: 0,
+                                                            left: 0),
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        // print("something");
+                                                        setSubCategory(
+                                                            type['categories']
+                                                                [entry][index]);
+                                                        // setState(() {});
+                                                        // setState(() {
+                                                        //   chosen_subcategory =
+                                                        //       type['categories'][entry][index];
+                                                        //   print(chosen_subcategory);
+                                                        // });
+                                                      },
+                                                      child: Container(
+                                                          height: 50,
+                                                          // 180
+                                                          width: 110,
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: <Widget>[
+                                                              // Image.asset(
+                                                              //     "assets/images/meaticon.png",
+                                                              //     height: 30),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child: Text(
+                                                                  type['categories']
+                                                                          [
+                                                                          entry]
+                                                                      [index],
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                    fontSize:
+                                                                        12.0,
+                                                                    height: 1.3,
+                                                                    fontFamily:
+                                                                        'Axiforma',
+                                                                    color: type['categories'][entry][index] ==
+                                                                            chosen_subcategory
+                                                                        ? Colors
+                                                                            .red
+                                                                        : Colors
+                                                                            .grey,
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ],
-                                                        )),
+                                                            ],
+                                                          )),
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                            })),
+                                                );
+                                              })),
+                                            ),
                                           ),
                                         );
                                     }).toList()),
