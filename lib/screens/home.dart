@@ -1270,6 +1270,14 @@ class HomeScreenState extends State<HomeScreen> {
                         .where('type', isEqualTo: 'lebanese')
                         .snapshots(),
                     builder: (context, snapshot) {
+                      if (snapshot.data.documents.length < 2) {
+                        return Opacity(
+                          opacity: 0.3,
+                          child: SizedBox(
+                              height: 200,
+                              child: Center(child: Text('No items found.'))),
+                        );
+                      }
                       if (snapshot.hasData) {
                         return GridView.count(
                           crossAxisCount: 2,
@@ -1400,6 +1408,14 @@ class HomeScreenState extends State<HomeScreen> {
                     // .where('type', isEqualTo: 'pets')
                     .snapshots(),
                 builder: (context, snapshot) {
+                  if (snapshot.data.documents.length < 2) {
+                    return Opacity(
+                      opacity: 0.3,
+                      child: SizedBox(
+                          height: 200,
+                          child: Center(child: Text('No items found.'))),
+                    );
+                  }
                   if (snapshot.hasData) {
                     // print(snapshot);
                     return SingleChildScrollView(
@@ -1438,122 +1454,6 @@ class HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            // Padding(
-            //     padding: const EdgeInsets.only(
-            //         left: 10.0, right: 10, top: 0, bottom: 20),
-            //     child: StreamBuilder(
-            //       stream: Firestore.instance.collection('bundles').snapshots(),
-            //       builder: (context, snapshot) {
-            //         if (snapshot.hasData) {
-            //           return GestureDetector(
-            //             onTap: () {
-            //               openProductPopUp(
-            //                   context, snapshot.data, index, refreshcart);
-            //             },
-            //             child: Container(
-            //               height: 200,
-            //               decoration: BoxDecoration(
-            //                 color:
-            //                     Hexcolor(snapshot.data.documents[0]['bcolor']),
-            //                 borderRadius: BorderRadius.only(
-            //                     topLeft: Radius.circular(10),
-            //                     topRight: Radius.circular(10),
-            //                     bottomLeft: Radius.circular(10),
-            //                     bottomRight: Radius.circular(10)),
-            //                 boxShadow: [
-            //                   BoxShadow(
-            //                     color: Colors.grey.withOpacity(0.1),
-            //                     spreadRadius: 2.2,
-            //                     blurRadius: 2.5,
-            //                     offset:
-            //                         Offset(0, 4), // changes position of shadow
-            //                   ),
-            //                 ],
-            //               ),
-            //               child: Row(
-            //                 children: <Widget>[
-            //                   Flexible(
-            //                     flex: 2,
-            //                     child: Column(
-            //                       mainAxisAlignment: MainAxisAlignment.start,
-            //                       children: <Widget>[
-            //                         Padding(
-            //                           padding: const EdgeInsets.only(
-            //                               top: 15, left: 15),
-            //                           child: Text(
-            //                             snapshot.data.documents[0]['title'],
-            //                             textAlign: TextAlign.left,
-            //                             style: TextStyle(
-            //                               fontWeight: FontWeight.w800,
-            //                               fontSize: 18.0,
-            //                               fontFamily: 'Axiforma',
-            //                               color: Colors.white,
-            //                             ),
-            //                           ),
-            //                         ),
-            //                         Padding(
-            //                           padding:
-            //                               const EdgeInsets.only(left: 15.0),
-            //                           child: Align(
-            //                             alignment: Alignment.bottomLeft,
-            //                             child: Text(
-            //                               snapshot.data.documents[0]['price'] +
-            //                                   "L.L.",
-            //                               style: TextStyle(
-            //                                 fontWeight: FontWeight.w500,
-            //                                 fontSize: 17.0,
-            //                                 fontFamily: 'Axiforma',
-            //                                 color: Hexcolor(snapshot.data
-            //                                     .documents[0]['buttoncolor']),
-            //                               ),
-            //                             ),
-            //                           ),
-            //                         ),
-            //                         Padding(
-            //                           padding: const EdgeInsets.only(
-            //                               top: 10, left: 15),
-            //                           child: Text(
-            //                             snapshot.data.documents[0]['details'],
-            //                             textAlign: TextAlign.left,
-            //                             style: TextStyle(
-            //                               fontWeight: FontWeight.normal,
-            //                               fontSize: 13.0,
-            //                               fontFamily: 'Axiforma',
-            //                               color: Colors.white70,
-            //                             ),
-            //                           ),
-            //                         ),
-            //                       ],
-            //                     ),
-            //                   ),
-            //                   Flexible(
-            //                     flex: 1,
-            //                     child: Container(
-            //                       decoration: BoxDecoration(
-            //                         borderRadius: BorderRadius.only(
-            //                             topLeft: Radius.circular(10),
-            //                             topRight: Radius.circular(10),
-            //                             bottomLeft: Radius.circular(10),
-            //                             bottomRight: Radius.circular(10)),
-            //                         image: DecorationImage(
-            //                           image: NetworkImage(
-            //                               snapshot.data.documents[0]['image']),
-            //                           fit: BoxFit.cover,
-            //                         ),
-            //                       ),
-            //                       child: null /* add child content here */,
-            //                     ),
-            //                   )
-            //                 ],
-            //               ),
-            //             ),
-            //           );
-            //         } else if (snapshot.hasError) {
-            //           return Text(snapshot.error.toString());
-            //         }
-            //         return Center(child: CircularProgressIndicator());
-            //       },
-            //     )),
             Padding(
               padding: const EdgeInsets.all(14.0),
               child: Row(
@@ -1586,6 +1486,14 @@ class HomeScreenState extends State<HomeScreen> {
                       .where('type', isEqualTo: 'Supplements')
                       .snapshots(),
                   builder: (context, snapshot) {
+                    if (snapshot.data.documents.length < 2) {
+                      return Opacity(
+                        opacity: 0.3,
+                        child: SizedBox(
+                            height: 200,
+                            child: Center(child: Text('No items found.'))),
+                      );
+                    }
                     if (snapshot.hasData) {
                       return GridView.count(
                         crossAxisCount: 2,
@@ -1712,6 +1620,14 @@ class HomeScreenState extends State<HomeScreen> {
                     .where('type', isEqualTo: 'pets')
                     .snapshots(),
                 builder: (context, snapshot) {
+                  if (snapshot.data.documents.length < 2) {
+                    return Opacity(
+                      opacity: 0.3,
+                      child: SizedBox(
+                          height: 200,
+                          child: Center(child: Text('No items found.'))),
+                    );
+                  }
                   if (snapshot.hasData) {
                     // print(snapshot);
                     return SingleChildScrollView(

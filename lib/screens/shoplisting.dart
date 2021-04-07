@@ -131,7 +131,9 @@ class FormScreenState extends State<ShopListing> {
                           Text(
                             widget.type == 'supplements'
                                 ? "Supplements"
-                                : widget.type == 'pets' ? 'Pets' : 'Lebanese',
+                                : widget.type == 'pets'
+                                    ? 'Pets'
+                                    : 'Lebanese',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 28.0,
@@ -140,20 +142,6 @@ class FormScreenState extends State<ShopListing> {
                             ),
                           ),
                           Spacer(),
-                          // Align(
-                          //   alignment: Alignment.centerRight,
-                          //   child: IconButton(
-                          //       icon: Icon(
-                          //         Icons.clear,
-                          //         color: Colors.grey,
-                          //         size: 30,
-                          //       ),
-                          //       onPressed: () {
-                          //         Navigator.of(context).pop();
-                          //       }),
-                          // ),
-                          // Image.asset("assets/images/fullfilldolovery.png",
-                          //     height: 23),
                         ],
                       ),
                     ),
