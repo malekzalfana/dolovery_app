@@ -446,23 +446,26 @@ class _ShopPageState extends State<ShopPage> {
                                 return Text('Error: ${snapshot.error}');
                               else if (type != null &&
                                   snapshot.connectionState ==
-                                      ConnectionState.done)
+                                      ConnectionState
+                                          .done) if (snapshot.data.length == 0)
+                                return SizedBox(height: 30);
+                              else
                                 return Align(
                                   alignment: Alignment.centerLeft,
                                   child: SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: Align(
                                         alignment: Alignment.centerLeft,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 15.0, left: 20),
-                                              child: Text(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 15.0, left: 20),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
                                                 'Categories',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
@@ -471,135 +474,123 @@ class _ShopPageState extends State<ShopPage> {
                                                   color: Colors.black,
                                                 ),
                                               ),
-                                            ),
-                                            Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: type['categories']
-                                                    .keys
-                                                    .map<Widget>((entry) {
-                                                  first++;
-
-                                                  // print
-
-                                                  // var w = Text("ssss");
-                                                  // type['categories'](entry.key);
-                                                  // return w;
-                                                  if (widget
-                                                          .data['categories'] !=
-                                                      null)
-                                                    return Visibility(
-                                                      visible: widget
-                                                          .data['categories']
-                                                          .contains(entry),
-                                                      child: Padding(
-                                                        padding: first == 1
-                                                            ? const EdgeInsets
-                                                                .only(left: 10)
-                                                            : const EdgeInsets
-                                                                .only(left: 0),
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: type['categories']
+                                                      .keys
+                                                      .map<Widget>((entry) {
+                                                    first++;
+                                                    if (widget.data[
+                                                            'categories'] !=
+                                                        null)
+                                                      return Visibility(
+                                                        visible: widget
+                                                            .data['categories']
+                                                            .contains(entry),
                                                         child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
+                                                          padding: first == 1
+                                                              ? const EdgeInsets
                                                                       .only(
-                                                                  right: 10.0,
-                                                                  bottom: 20,
-                                                                  top: 20),
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () {
-                                                              setCategory(
-                                                                  entry);
-                                                              setState(() {});
-                                                            },
-                                                            child: Container(
-                                                                height: 80,
-                                                                // 180
-                                                                width: 120,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  // image: DecorationImage(
-                                                                  //   image: AssetImage(
-                                                                  //       'assets/images/meat.png'),
-                                                                  //   fit: BoxFit.cover,
-                                                                  // ),
-                                                                  color: entry ==
-                                                                          chosen_category
-                                                                      ? Colors.redAccent[
-                                                                          700]
-                                                                      : Colors
-                                                                          .white,
-                                                                  borderRadius: BorderRadius.only(
-                                                                      topLeft:
-                                                                          Radius.circular(
-                                                                              15),
-                                                                      topRight:
-                                                                          Radius.circular(
-                                                                              15),
-                                                                      bottomLeft:
-                                                                          Radius.circular(
-                                                                              15),
-                                                                      bottomRight:
-                                                                          Radius.circular(
-                                                                              15)),
-                                                                  boxShadow: [
-                                                                    BoxShadow(
-                                                                      color: Colors
-                                                                          .grey
-                                                                          .withOpacity(
-                                                                              0.1),
-                                                                      spreadRadius:
-                                                                          2.2,
-                                                                      blurRadius:
-                                                                          2.5,
-                                                                      offset: Offset(
-                                                                          0,
-                                                                          4), // changes position of shadow
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceAround,
-                                                                  children: <
-                                                                      Widget>[
-                                                                    // Image.asset(
-                                                                    //     "assets/images/meaticon.png",
-                                                                    //     height: 30),
-                                                                    Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
-                                                                      child:
-                                                                          Text(
-                                                                        entry,
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontWeight:
-                                                                              FontWeight.w800,
-                                                                          fontSize:
-                                                                              12.5,
-                                                                          height:
-                                                                              1.3,
-                                                                          fontFamily:
-                                                                              'Axiforma',
-                                                                          color: entry == chosen_category
-                                                                              ? Colors.white
-                                                                              : Colors.black,
+                                                                  left: 10)
+                                                              : const EdgeInsets
+                                                                      .only(
+                                                                  left: 0),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right: 10.0,
+                                                                    bottom: 20,
+                                                                    top: 20),
+                                                            child:
+                                                                GestureDetector(
+                                                              onTap: () {
+                                                                setCategory(
+                                                                    entry);
+                                                                setState(() {});
+                                                              },
+                                                              child: Container(
+                                                                  height: 80,
+                                                                  // 180
+                                                                  width: 120,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: entry ==
+                                                                            chosen_category
+                                                                        ? Colors.redAccent[
+                                                                            700]
+                                                                        : Colors
+                                                                            .white,
+                                                                    borderRadius: BorderRadius.only(
+                                                                        topLeft:
+                                                                            Radius.circular(
+                                                                                15),
+                                                                        topRight:
+                                                                            Radius.circular(
+                                                                                15),
+                                                                        bottomLeft:
+                                                                            Radius.circular(
+                                                                                15),
+                                                                        bottomRight:
+                                                                            Radius.circular(15)),
+                                                                    boxShadow: [
+                                                                      BoxShadow(
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .withOpacity(0.1),
+                                                                        spreadRadius:
+                                                                            2.2,
+                                                                        blurRadius:
+                                                                            2.5,
+                                                                        offset: Offset(
+                                                                            0,
+                                                                            4), // changes position of shadow
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  child: Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceAround,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      // Image.asset(
+                                                                      //     "assets/images/meaticon.png",
+                                                                      //     height: 30),
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(8.0),
+                                                                        child:
+                                                                            Text(
+                                                                          entry,
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          style:
+                                                                              TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.w800,
+                                                                            fontSize:
+                                                                                12.5,
+                                                                            height:
+                                                                                1.3,
+                                                                            fontFamily:
+                                                                                'Axiforma',
+                                                                            color: entry == chosen_category
+                                                                                ? Colors.white
+                                                                                : Colors.black,
+                                                                          ),
                                                                         ),
                                                                       ),
-                                                                    ),
-                                                                  ],
-                                                                )),
+                                                                    ],
+                                                                  )),
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    );
-                                                }).toList()),
-                                          ],
+                                                      );
+                                                  }).toList()),
+                                            ],
+                                          ),
                                         ),
                                       )),
                                 );
@@ -609,22 +600,12 @@ class _ShopPageState extends State<ShopPage> {
                       FutureBuilder(
                         future: getcategories(),
                         builder: (context, snapshot) {
-                          // print(type.data['categories'].keys[0]);
-                          // return Text("dsddd");
-
-                          // for (var cat in type.data['categories'].keys) {
-                          //   print('$type was written by ${type[cat]}');
-                          // }
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
                               return Padding(
                                 padding: const EdgeInsets.only(top: 45.0),
                                 child: Center(
                                   child: Container(),
-                                  // child: Image.asset(
-                                  //   "assets/images/loading.gif",
-                                  //   width: 30,
-                                  // ),
                                 ),
                               );
                             default:
@@ -639,16 +620,6 @@ class _ShopPageState extends State<ShopPage> {
                                         children: type['categories']
                                             .keys
                                             .map<Widget>((entry) {
-                                      // print("key");
-                                      // var w = Text("ssss");
-                                      // type['categories'](entry.key);
-                                      // return w;
-                                      // return Text(entry);
-                                      // return Row(children: [
-                                      //   type['categories'][entry].map<Widget>((entry) {
-                                      //     return Text("text");
-                                      //   })
-                                      // ]);
                                       if (!widget.data['categories']
                                           .contains(entry))
                                         return Container(
@@ -694,12 +665,6 @@ class _ShopPageState extends State<ShopPage> {
                                                         setSubCategory(
                                                             type['categories']
                                                                 [entry][index]);
-                                                        // setState(() {});
-                                                        // setState(() {
-                                                        //   chosen_subcategory =
-                                                        //       type['categories'][entry][index];
-                                                        //   print(chosen_subcategory);
-                                                        // });
                                                       },
                                                       child: Container(
                                                           height: 50,
@@ -710,9 +675,6 @@ class _ShopPageState extends State<ShopPage> {
                                                                 MainAxisAlignment
                                                                     .spaceAround,
                                                             children: <Widget>[
-                                                              // Image.asset(
-                                                              //     "assets/images/meaticon.png",
-                                                              //     height: 30),
                                                               Padding(
                                                                 padding:
                                                                     const EdgeInsets
@@ -755,7 +717,6 @@ class _ShopPageState extends State<ShopPage> {
                                           ),
                                         );
                                     }).toList()),
-                                    // Text('$hideeverything is the hideeverything'),
                                     Visibility(
                                       visible: hideeverything,
                                       child: SizedBox(
@@ -766,7 +727,6 @@ class _ShopPageState extends State<ShopPage> {
                                                 height: 30)),
                                       ),
                                     ),
-
                                     Visibility(
                                       visible: !hideeverything &&
                                               chosen_category != '' &&
@@ -793,15 +753,19 @@ class _ShopPageState extends State<ShopPage> {
                                                         chosen_subcategory)
                                                 .snapshots(),
                                             builder: (context, snapshot) {
-if (snapshot.data.documents.length < 2) {
-                        return Opacity(
-                          opacity: 0.3,
-                          child: SizedBox(
-                              height: 200,
-                              child: Center(child: Text('No items found.'))),
-                        );
-                      }
                                               if (snapshot.hasData) {
+                                                if (snapshot
+                                                        .data.documents.length <
+                                                    2) {
+                                                  return Opacity(
+                                                    opacity: 0.3,
+                                                    child: SizedBox(
+                                                        height: 200,
+                                                        child: Center(
+                                                            child: Text(
+                                                                'No items found.'))),
+                                                  );
+                                                }
                                                 return GridView.count(
                                                   crossAxisCount: 2,
                                                   childAspectRatio: 0.65,
@@ -930,6 +894,15 @@ if (snapshot.data.documents.length < 2) {
                                               } else if (snapshot.hasError) {
                                                 return Text(
                                                     snapshot.error.toString());
+                                              } else if (!snapshot.hasData) {
+                                                return Opacity(
+                                                  opacity: 0.3,
+                                                  child: SizedBox(
+                                                      height: 200,
+                                                      child: Center(
+                                                          child: Text(
+                                                              'No items found.'))),
+                                                );
                                               }
                                               return Center(
                                                   child:
@@ -961,6 +934,17 @@ if (snapshot.data.documents.length < 2) {
                                                 //     isEqualTo: chosen_subcategory)
                                                 .snapshots(),
                                             builder: (context, snapshot) {
+                                              if (snapshot.hasData &&
+                                                  snapshot.data.documents
+                                                          .length <
+                                                      1) {
+                                                return Opacity(
+                          opacity: 0.3,
+                          child: SizedBox(
+                              height: 200,
+                              child: Center(child: Text('No items found.'))),
+                        );
+                                              }
                                               if (snapshot.hasData) {
                                                 return GridView.count(
                                                   crossAxisCount: 2,

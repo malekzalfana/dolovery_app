@@ -1438,7 +1438,6 @@ class _CartState extends State<Cart> {
                   future: setupVerification(), // async work
                   builder: (context, snapshot) {
                     print(notsetup);
-                    print('not setup is the floowing:::::::::::::::');
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
                         return Padding(

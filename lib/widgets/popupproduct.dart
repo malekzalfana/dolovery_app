@@ -78,11 +78,8 @@ dynamic cachedshops;
 int rate = 1;
 getRate(shopName) async {
   if (started == true) {
-    // print('skipedddddddd');
     return rate;
   }
-  print(
-      "started prefrererererererere_______________________________________________________________");
   final prefs = await SharedPreferences.getInstance();
   bool skip = false;
   cachedshops = prefs.getString("cached_shops");
@@ -112,21 +109,16 @@ getRate(shopName) async {
       },
     );
   } else {
-    // cachedshops[shopName] = value.documents[0].data['rate'];
-    print("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     rate = json.decode(prefs.getString("cached_shops"))[shopName];
     print(prefs.getString("cached_shops"));
     started = true;
-    // print("just got: " + rate.toString());
   }
   debugPrint("rate is:::::" + rate.toString());
   started = true;
-  // return rate = 1;
 }
 
 void openProductPopUp(context, data, index, [sendrefreshtohome]) {
   started = false;
-  print("opened product fireddddddddddd");
   int _n = 0;
   bool minimum = true;
   bool maximum = false;
@@ -137,6 +129,9 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
   if (oldPrice == null) {
     oldPrice = 0;
   }
+  // else {
+  //   oldPrice = int.parse(oldPrice);
+  // }
 
   Widget buildProductPrice() {
     if (productCurrency == "dollar") {
@@ -144,14 +139,13 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
           padding: const EdgeInsets.only(top: 0.0),
           child: EnhancedFutureBuilder(
             future: getRate(shopName),
-            // this is where the magic happens
             rememberFutureResult: true,
             whenDone: (dynamic data) => Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (oldPrice != null)
                   Visibility(
-                    visible: oldPrice > 0,
+                    visible: oldPrice.toString().length > 0,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Text(
@@ -159,7 +153,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                                       int.parse(rate.toString()))
                                   .toString() +
                               "L.L.",
-                          // rate.toString(),
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             decoration: TextDecoration.lineThrough,
@@ -177,7 +170,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                                   int.parse(rate.toString()))
                               .toString() +
                           "L.L.",
-                      // rate.toString(),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
@@ -190,7 +182,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             whenNotDone: Center(child: Text('Loading...')),
           ));
     } else {
-      // print('product is not dollar');
+      // product is not dollar
       rate = 1;
       started = true;
       return Row(
@@ -198,7 +190,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
         children: [
           if (oldPrice != null)
             Visibility(
-              visible: oldPrice > 0,
+              visible: oldPrice.toString().length > 0,
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Text(oldPrice.toString() + "L.L.",
@@ -233,8 +225,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
 
   bool showmessage = false;
 
-  // int serving = 0;
-
   Future<void> future = showModalBottomSheet<void>(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -247,8 +237,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter mystate) {
           add() {
-            // print ( _n );
-
             mystate(() {
               if (_n < 10) _n++;
               if (_n == 10) {
