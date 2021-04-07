@@ -75,8 +75,7 @@ getRate(shopName) async {
         if (value.documents.length > 0) {
           cachedshops[shopName] = value.documents[0].data['rate'];
           prefs.setString('cached_shops', json.encode(cachedshops));
-          // print(prefs.getString("cached_shops").toString() +
-          //     "this is the cached");
+
           started = true;
           return rate = value.documents[0].data['rate'];
         } else {
@@ -155,7 +154,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             whenNotDone: Center(child: Text('Loading...')),
           ));
     } else {
-      // product is not dollar
       rate = 1;
       started = true;
       return Row(
@@ -203,17 +201,14 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
         borderRadius: BorderRadius.circular(10.0),
       ),
       context: context,
-      // isDismissible: false,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        // mpesachecked =false;
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter mystate) {
           add() {
             mystate(() {
               if (_n < 10) _n++;
               if (_n == 10) {
-                // maximum = true;
               } else {
                 minimum = false;
                 maximum = false;
@@ -222,7 +217,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             });
           }
 
-          // dynamic usercartmap;
           dynamic usercartmap_v2;
 
           _save(item, itemid, rate) async {
@@ -230,7 +224,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             List<String> cart = prefs.getStringList('cart');
             String shop_name = data.documents[index]['shop'];
             usercartmap_v2 = prefs.getString("usercartmap_v2");
-            // prefs.remove('usercartmap');
+
             if (usercartmap_v2 == null) {
               usercartmap_v2 = {};
               print('made an empty map');
@@ -276,10 +270,8 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                       'products': {},
                       'data': {'name': shopname}
                     };
-                    // return rate;
                   } else {
                     print('returbned none');
-                    // return null;
                   }
                 },
               );
@@ -328,10 +320,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
               prefs.setStringList("shops", shops);
             }
 
-            // print('saved $value');
-            // print('saved $total');
-            // print('saved $type');
-            // print('saved $items');
             print(rate);
             print('################');
             showmessage = true;
@@ -359,7 +347,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             List<String> cart = prefs.getStringList('cart');
             String shop_name = data.documents[index]['shop'];
             usercartmap_v2 = prefs.getString("usercartmap_v2");
-            // prefs.remove('usercartmap');
+
             if (usercartmap_v2 == null) {
               usercartmap_v2 = {};
               print('made an empty map');
@@ -385,8 +373,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
 
             prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
 
-            String type = data.documents[index][
-                'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
+            String type = data.documents[index]['type'];
             prefs.setString('type', type);
             if (prefs.getDouble('total') == null) {
               prefs.setDouble('total', 0);
@@ -457,15 +444,11 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                 minimum = false;
               }
             });
-            // print (count)
           }
 
           _setnumber();
-          // print(_n);
 
           double width = MediaQuery.of(context).size.width;
-
-          // print(_setnumber());
 
           return Container(
             height: MediaQuery.of(context).size.height * 0.75,
@@ -506,11 +489,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                               size: 30,
                             ),
                             onPressed: () {
-                              // sendrefreshtohome();
                               Navigator.of(context).pop();
-                              // setState(() {
-                              //   showerrortextbool = false;
-                              // });
                             }),
                       ),
                     ],
@@ -530,8 +509,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                             child: AspectRatio(
                               aspectRatio: 1,
                               child: Container(
-                                  // color: Colors.red,
-                                  // width: width - 80,
                                   width: 400,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
@@ -608,7 +585,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                             ),
                             RawMaterialButton(
                               onPressed: () {
-                                // add;
                                 _save(data.documents[index],
                                     data.documents[index].documentID, rate);
                               },

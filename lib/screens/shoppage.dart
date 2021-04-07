@@ -18,8 +18,6 @@ class ShopPage extends StatefulWidget {
 class _ShopPageState extends State<ShopPage> {
   Completer<GoogleMapController> _controller = Completer();
 
-  TabController _controller2;
-
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
   }
@@ -29,94 +27,76 @@ class _ShopPageState extends State<ShopPage> {
     super.initState();
   }
 
-  String chosen_category = '';
-  String chosen_subcategory = '';
+  String chosenCategory = '';
+  String chosenSubcategory = '';
   setSubCategory(subcat) {
-    // print("asdasd");
-
-    if (chosen_subcategory == subcat) {
+    if (chosenSubcategory == subcat) {
       setState(() {
-        chosen_subcategory = '';
+        chosenSubcategory = '';
       });
     } else {
       cancelSubCategory();
       Future.delayed(Duration(milliseconds: 100), () {
         setState(() {
-          chosen_subcategory = subcat;
+          chosenSubcategory = subcat;
           hideeverything = false;
         });
       });
     }
-    return chosen_subcategory;
-
-    // print(subcat);
+    return chosenSubcategory;
   }
 
   bool hideeverything = false;
   cancelCategory() {
     setState(() {
-      chosen_category = '';
-      chosen_subcategory = '';
+      chosenCategory = '';
+      chosenSubcategory = '';
       hideeverything = true;
     });
   }
 
   cancelSubCategory() {
     setState(() {
-      chosen_subcategory = '';
+      chosenSubcategory = '';
       hideeverything = true;
     });
   }
 
   setCategory(cat) {
-    // print("asdasd");
+    print('$chosenCategory is the chosen shub and new one is $cat');
 
-    print('$chosen_category is the chosen shub and new one is $cat');
-    // setState(() {
-    //   chosen_subcategory = '';
-    // });
-    if (chosen_category == cat) {
+    if (chosenCategory == cat) {
       print('not change');
       setState(() {
-        chosen_category = '';
-        chosen_subcategory = '';
+        chosenCategory = '';
+        chosenSubcategory = '';
       });
     } else {
       print('changed');
       cancelCategory();
       Future.delayed(Duration(milliseconds: 100), () {
         setState(() {
-          chosen_category = cat;
-          chosen_subcategory = '';
+          chosenCategory = cat;
+          chosenSubcategory = '';
           hideeverything = false;
         });
       });
     }
 
-    return chosen_category;
-    // print("$chosen_category and ubb is $chosen_subcategory");
-    // print(subcat);
+    return chosenCategory;
   }
 
   dynamic type;
   Future getcategories() async {
-    // print("USER BEING WATCHED");
     String shoptype = widget.data['type'];
     type = await Firestore.instance
         .collection("types")
         .document(shoptype.toLowerCase())
         .get();
-    if (type != null) {
-      type.data['categories'].forEach((cat, sub) {
-        // print("Key : $cat, Value : $sub");
-        for (var i = 0; i < sub.length; i++) {
-          // print(sub[i]);
-        }
-      });
-    }
+
     print(
-        "loaded and chosen cat is $chosen_category and sub $chosen_subcategory");
-    return chosen_category;
+        "loaded and chosen cat is $chosenCategory and sub $chosenSubcategory");
+    return chosenCategory;
   }
 
   bool shophaslocation = false;
@@ -129,19 +109,14 @@ class _ShopPageState extends State<ShopPage> {
       double lat = widget.data['location'].latitude;
       double lng = widget.data['location'].longitude;
 
-      LatLng _shopCoordinates = new LatLng(lat, lng);
+      _shopCoordinates = new LatLng(lat, lng);
       markers.addAll([
         Marker(markerId: MarkerId('value'), position: LatLng(lat, lng)),
       ]);
       shophaslocation = true;
     }
 
-    // const LatLng _shopCoordinates = const LatLng(45.521563, -122.677433);
-    var size = MediaQuery.of(ctxt).size;
-    final double itemHeight = (size.height) / 2;
-    final double itemWidth = size.width / 2;
     double width = MediaQuery.of(context).size.width;
-    // Firestore.instance.collection("types").document(widget.data['type']).get()
     return new Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -154,7 +129,6 @@ class _ShopPageState extends State<ShopPage> {
                     alignment: Alignment.centerLeft,
                     child: GestureDetector(
                       onTap: () {
-                        // widget.notifyParent();
                         Navigator.pop(context);
                       },
                       child: Icon(
@@ -187,8 +161,7 @@ class _ShopPageState extends State<ShopPage> {
                                       color: Colors.grey.withOpacity(0.1),
                                       spreadRadius: 2.2,
                                       blurRadius: 2.5,
-                                      offset: Offset(
-                                          0, 4), // changes position of shadow
+                                      offset: Offset(0, 4),
                                     ),
                                   ],
                                   color: Colors.white,
@@ -221,7 +194,6 @@ class _ShopPageState extends State<ShopPage> {
                                         Expanded(
                                           child: Text(
                                             widget.data['name'],
-                                            // textAlign: TextAlign.left,
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 18,
@@ -254,7 +226,6 @@ class _ShopPageState extends State<ShopPage> {
                                               child: Text(
                                                 widget.data['time'].toString() +
                                                     " mins",
-                                                // overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   height: 1.1,
@@ -290,7 +261,6 @@ class _ShopPageState extends State<ShopPage> {
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
                                                 widget.data['address'],
-                                                // overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   height: 1.1,
@@ -423,12 +393,11 @@ class _ShopPageState extends State<ShopPage> {
                                                               },
                                                               child: Container(
                                                                   height: 80,
-                                                                  // 180
                                                                   width: 120,
                                                                   decoration:
                                                                       BoxDecoration(
                                                                     color: entry ==
-                                                                            chosen_category
+                                                                            chosenCategory
                                                                         ? Colors.redAccent[
                                                                             700]
                                                                         : Colors
@@ -456,7 +425,7 @@ class _ShopPageState extends State<ShopPage> {
                                                                             2.5,
                                                                         offset: Offset(
                                                                             0,
-                                                                            4), // changes position of shadow
+                                                                            4),
                                                                       ),
                                                                     ],
                                                                   ),
@@ -466,9 +435,6 @@ class _ShopPageState extends State<ShopPage> {
                                                                             .spaceAround,
                                                                     children: <
                                                                         Widget>[
-                                                                      // Image.asset(
-                                                                      //     "assets/images/meaticon.png",
-                                                                      //     height: 30),
                                                                       Padding(
                                                                         padding:
                                                                             const EdgeInsets.all(8.0),
@@ -487,7 +453,7 @@ class _ShopPageState extends State<ShopPage> {
                                                                                 1.3,
                                                                             fontFamily:
                                                                                 'Axiforma',
-                                                                            color: entry == chosen_category
+                                                                            color: entry == chosenCategory
                                                                                 ? Colors.white
                                                                                 : Colors.black,
                                                                           ),
@@ -551,10 +517,9 @@ class _ShopPageState extends State<ShopPage> {
                                                                   [entry]
                                                               .length,
                                                           (int index) {
-                                                // print(categories[index]);
                                                 return Visibility(
                                                   visible: entry ==
-                                                              chosen_category &&
+                                                              chosenCategory &&
                                                           widget.data[
                                                                   'subcategories']
                                                               .contains(type[
@@ -572,14 +537,12 @@ class _ShopPageState extends State<ShopPage> {
                                                             left: 0),
                                                     child: GestureDetector(
                                                       onTap: () {
-                                                        // print("something");
                                                         setSubCategory(
                                                             type['categories']
                                                                 [entry][index]);
                                                       },
                                                       child: Container(
                                                           height: 50,
-                                                          // 180
                                                           width: 110,
                                                           child: Column(
                                                             mainAxisAlignment:
@@ -610,7 +573,7 @@ class _ShopPageState extends State<ShopPage> {
                                                                     fontFamily:
                                                                         'Axiforma',
                                                                     color: type['categories'][entry][index] ==
-                                                                            chosen_subcategory
+                                                                            chosenSubcategory
                                                                         ? Colors
                                                                             .red
                                                                         : Colors
@@ -640,11 +603,10 @@ class _ShopPageState extends State<ShopPage> {
                                     ),
                                     Visibility(
                                       visible: !hideeverything &&
-                                              chosen_category != '' &&
-                                              chosen_subcategory != ''
+                                              chosenCategory != '' &&
+                                              chosenSubcategory != ''
                                           ? true
                                           : false,
-                                      // visible: false,
                                       child: Padding(
                                           padding: const EdgeInsets.only(
                                               left: 5.0,
@@ -658,10 +620,10 @@ class _ShopPageState extends State<ShopPage> {
                                                     isEqualTo:
                                                         widget.data['username'])
                                                 .where('category',
-                                                    isEqualTo: chosen_category)
+                                                    isEqualTo: chosenCategory)
                                                 .where('subcategory',
                                                     isEqualTo:
-                                                        chosen_subcategory)
+                                                        chosenSubcategory)
                                                 .snapshots(),
                                             builder: (context, snapshot) {
                                               if (snapshot.hasData) {
@@ -733,11 +695,10 @@ class _ShopPageState extends State<ShopPage> {
                                     ),
                                     Visibility(
                                       visible: !hideeverything &&
-                                              chosen_category != '' &&
-                                              chosen_subcategory == ''
+                                              chosenCategory != '' &&
+                                              chosenSubcategory == ''
                                           ? true
                                           : false,
-                                      // visible: !hideeverything,
                                       child: Padding(
                                           padding: const EdgeInsets.only(
                                               left: 5.0,
@@ -751,9 +712,7 @@ class _ShopPageState extends State<ShopPage> {
                                                     isEqualTo:
                                                         widget.data['username'])
                                                 .where('category',
-                                                    isEqualTo: chosen_category)
-                                                // .where('subcategory',
-                                                //     isEqualTo: chosen_subcategory)
+                                                    isEqualTo: chosenCategory)
                                                 .snapshots(),
                                             builder: (context, snapshot) {
                                               if (snapshot.hasData) {
@@ -823,11 +782,10 @@ class _ShopPageState extends State<ShopPage> {
                                     ),
                                     Visibility(
                                       visible: !hideeverything &&
-                                              chosen_category == '' &&
-                                              chosen_subcategory == ''
+                                              chosenCategory == '' &&
+                                              chosenSubcategory == ''
                                           ? true
                                           : false,
-                                      // visible: false,
                                       child: Padding(
                                           padding: const EdgeInsets.only(
                                               left: 5.0,
@@ -840,9 +798,6 @@ class _ShopPageState extends State<ShopPage> {
                                                 .where('shop',
                                                     isEqualTo:
                                                         widget.data['username'])
-                                                // .where('category', isEqualTo: chosen_category)
-                                                // .where('subcategory',
-                                                //     isEqualTo: chosen_subcategory)
                                                 .snapshots(),
                                             builder: (context, snapshot) {
                                               if (snapshot.hasData &&

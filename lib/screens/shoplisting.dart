@@ -15,7 +15,6 @@ class ShopListing extends StatefulWidget {
 }
 
 class FormScreenState extends State<ShopListing> {
-  // String type;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +35,6 @@ class FormScreenState extends State<ShopListing> {
                             alignment: Alignment.centerLeft,
                             child: GestureDetector(
                               onTap: () {
-                                // widget.notifyParent();
                                 Navigator.pop(context);
                               },
                               child: Icon(

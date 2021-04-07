@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:delayed_display/delayed_display.dart';
-import 'package:dolovery_app/screens/addadress.dart';
 import 'package:dolovery_app/screens/search.dart';
 import 'package:dolovery_app/screens/shoplisting.dart';
 import 'package:dolovery_app/widgets/bundle.dart';
@@ -11,23 +10,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-//import 'package:flutter_svg/svg.dart';
-// ignore: unused_import
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hexcolor/hexcolor.dart';
-// import 'package:location_permissions/location_permissions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../screens/100lebanese.dart';
-import '../screens/supplements.dart';
-import '../screens/pets.dart';
 import '../screens/shoppage.dart';
 import '../screens/search.dart';
 import '../screens/profile.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
 import 'package:dolovery_app/widgets/popupproduct.dart';
-// import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
