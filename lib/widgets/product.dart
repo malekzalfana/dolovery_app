@@ -66,6 +66,13 @@ class _ProductImageState extends State<ProductImage> {
 
   @override
   Widget build(BuildContext context) {
+    if (productPrice == "") {
+      productPrice = '1';
+    }
+    print(oldPrice + 'is the old price');
+    // if (oldPrice == "") {
+    //   oldPrice = ;
+    // }
     return Container(
         // color: Colors.green,
         margin: new EdgeInsets.only(left: 4.0, right: 4),
@@ -159,16 +166,10 @@ class _ProductImageState extends State<ProductImage> {
     // print(cachedshops);
     if (cachedshops != null) {
       cachedshops = json.decode(cachedshops);
-      // print(cachedshops);
     } else {
       cachedshops = {};
       skip = true;
-      // print('ITS NULLEDDDDDD');
     }
-    // print("passed");
-    // cachedshops = {"pro_nutrition": 2000};
-    // print(cachedshops.toString());
-    // print("under the ");
     if (!cachedshops.containsKey(shopName)) {
       shopinfo = Firestore.instance
           .collection('shops')
@@ -179,8 +180,6 @@ class _ProductImageState extends State<ProductImage> {
           if (value.documents.length > 0) {
             cachedshops[shopName] = value.documents[0].data['rate'];
             prefs.setString('cached_shops', json.encode(cachedshops));
-            // print(prefs.getString("cached_shops").toString() +
-            //     "this is the cached");
             return rate = value.documents[0].data['rate'];
           } else {
             return null;
@@ -188,15 +187,8 @@ class _ProductImageState extends State<ProductImage> {
         },
       );
     } else {
-      // cachedshops[shopName] = value.documents[0].data['rate'];
       rate = json.decode(prefs.getString("cached_shops"))[shopName];
-      // print("just got: " + rate.toString());
     }
-    // prefs.remove("cached_shops");
-    // rate = 1;
-    // print("rate is");
-    // print("++++++++++++++++");
-    // debugPrint(rate.toString());
     started = true;
   }
 
@@ -219,36 +211,33 @@ class _ProductImageState extends State<ProductImage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            if (!oldPrice.isEmpty)
-                              Visibility(
-                                // visible: int.parse(oldPrice) > 0,
-                                visible: true,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 7.0),
-                                  child: SizedBox(
-                                    height: 20,
-                                    child: Text(
-                                      (int.parse(oldPrice.toString()) *
-                                                  (rate != null
-                                                      ? int.parse(
-                                                          rate.toString())
-                                                      : 1))
-                                              .toString() +
-                                          "L.L.",
-                                      // rate.toString(),
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        decoration: TextDecoration.lineThrough,
-                                        decorationThickness: 2,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11.7,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.black54,
-                                      ),
+                            Visibility(
+                              visible: true,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 7.0),
+                                child: SizedBox(
+                                  height: 20,
+                                  child: Text(
+                                    (int.parse(oldPrice.toString()) *
+                                                (rate != null
+                                                    ? int.parse(rate.toString())
+                                                    : 1))
+                                            .toString() +
+                                        "L.L.",
+                                    // rate.toString(),
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationThickness: 2,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11.7,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.black54,
                                     ),
                                   ),
                                 ),
                               ),
+                            ),
                             if (productPrice != null)
                               SizedBox(
                                 height: 20,
@@ -309,7 +298,7 @@ class _ProductImageState extends State<ProductImage> {
           Row(
             children: [
               Visibility(
-                visible: int.parse(oldPrice) > 0,
+                visible: oldPrice.length > 0,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 7.0),
                   child: SizedBox(
@@ -367,6 +356,8 @@ class _ProductImageState extends State<ProductImage> {
           ),
         ],
       );
+      // else
+      //   return Container();
     }
   }
 }

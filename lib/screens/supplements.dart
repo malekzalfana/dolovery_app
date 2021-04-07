@@ -171,7 +171,12 @@ class FormScreenState extends State<SupplementsScreen> {
                   } else if (snapshot.hasError) {
                     return Text(snapshot.error.toString());
                   }
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                    child: Image.asset(
+                      "assets/images/loading.gif",
+                      width: 30,
+                    ),
+                  );
                 },
               ),
             ),

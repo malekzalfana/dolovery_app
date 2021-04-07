@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dolovery_app/widgets/popupproduct.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -123,18 +124,15 @@ class _ShopPageState extends State<ShopPage> {
 
   @override
   Widget build(BuildContext ctxt) {
-    // getcategories();
-    // GeoPoint shoplocation;
-    // GeoPoint geoPoint = widget.data['location'].getGeoPoint("position");
-    // print (widget.data['location']);
-    double lat = widget.data['location'].latitude;
-    double lng = widget.data['location'].longitude;
+    if (widget.data['location'] != null && widget.data['location']) {}
+    // double lat = widget.data['location'].latitude;
+    // double lng = widget.data['location'].longitude;
     Set<Marker> markers = Set();
-    LatLng _center = new LatLng(lat, lng);
+    LatLng _shopCoordinates = new LatLng(33.8553, 35.5359);
     markers.addAll([
-      Marker(markerId: MarkerId('value'), position: LatLng(lat, lng)),
+      Marker(markerId: MarkerId('value'), position: LatLng(33.8553, 35.5359)),
     ]);
-    // const LatLng _center = const LatLng(45.521563, -122.677433);
+    // const LatLng _shopCoordinates = const LatLng(45.521563, -122.677433);
     var size = MediaQuery.of(ctxt).size;
     final double itemHeight = (size.height) / 2;
     final double itemWidth = size.width / 2;
@@ -261,30 +259,37 @@ class _ShopPageState extends State<ShopPage> {
                               margin:
                                   new EdgeInsets.only(left: 12.0, right: 10),
                               child: Container(
-                                  height: 90,
-                                  width: 90,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(widget.data['image']),
-                                      fit: BoxFit.cover,
+                                height: 90,
+                                width: 90,
+                                decoration: BoxDecoration(
+                                  // image: DecorationImage(
+                                  //   image: NetworkImage(widget.data['image']),
+                                  //   fit: BoxFit.cover,
+                                  // ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.1),
+                                      spreadRadius: 2.2,
+                                      blurRadius: 2.5,
+                                      offset: Offset(
+                                          0, 4), // changes position of shadow
                                     ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.1),
-                                        spreadRadius: 2.2,
-                                        blurRadius: 2.5,
-                                        offset: Offset(
-                                            0, 4), // changes position of shadow
-                                      ),
-                                    ],
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10),
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10)),
-                                  ),
-                                  child: null),
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)),
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.data['image'],
+                                  placeholder: (context, url) =>
+                                      new CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      new Icon(Icons.error),
+                                ),
+                              ),
                             ),
                             Expanded(
                               child: Padding(
@@ -406,7 +411,7 @@ class _ShopPageState extends State<ShopPage> {
                                   zoomControlsEnabled: false,
                                   markers: markers,
                                   initialCameraPosition: CameraPosition(
-                                    target: _center,
+                                    target: _shopCoordinates,
                                     zoom: 14.0,
                                   ),
                                 ),
@@ -788,6 +793,14 @@ class _ShopPageState extends State<ShopPage> {
                                                         chosen_subcategory)
                                                 .snapshots(),
                                             builder: (context, snapshot) {
+if (snapshot.data.documents.length < 2) {
+                        return Opacity(
+                          opacity: 0.3,
+                          child: SizedBox(
+                              height: 200,
+                              child: Center(child: Text('No items found.'))),
+                        );
+                      }
                                               if (snapshot.hasData) {
                                                 return GridView.count(
                                                   crossAxisCount: 2,

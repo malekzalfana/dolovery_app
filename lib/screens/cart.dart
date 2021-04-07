@@ -296,33 +296,7 @@ class _CartState extends State<Cart> {
     }
 
     prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
-    // String shop_name = data.documents[index]['shop'];
 
-    // // START
-    // usercartmap = prefs.getString("usercartmap");
-    // // prefs.remove('usercartmap');
-    // if (usercartmap == null) {
-    //   usercartmap = {};
-    //   // print('made an empty map');
-    // } else {
-    //   usercartmap = json.decode(usercartmap);
-    //   // print('found the map');
-    //   // print(json.encode(usercartmap));
-    // }
-    // if (usercartmap.containsKey(shop_name)) {
-    //   if (usercartmap[shop_name].containsKey(itemid)) {
-    //     usercartmap[shop_name][itemid] =
-    //         int.parse(usercartmap[shop_name][itemid].toString()) - 1;
-    //     if (usercartmap[shop_name][itemid] == 0) {
-    //       usercartmap[shop_name].remove(itemid);
-    //     }
-    //   }
-    // }
-    // prefs.setString('usercartmap', json.encode(usercartmap));
-
-    // print(prefs.getString('usercartmap'));
-    // String type = data.documents[index][
-    //     'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
     prefs.setString('type', type);
     if (prefs.getDouble('total') == null) {
       prefs.setDouble('total', 0);
@@ -357,29 +331,14 @@ class _CartState extends State<Cart> {
       shops.remove(shop_name);
       prefs.setStringList("shops", shops);
     }
-    // print('saved $value');
-    // print('saved $total');
-    // print('saved $type');
-    // print('saved $items');
-    // if (usercartmap_v2[shop_name]['products'].keys.length == 0) {
-    //   usercartmap_v2.remove(shop_name);
-    // }
+
     if (cart.length == 0) {
       reset();
 
       return print('XXXXXXXXXXXXX');
     }
-
-    // print('saved $value');
-    // print('saved $total');
-    // print('saved $type');
-    // print('saved $items');
   }
 
-  // List supplementsCart = [];
-  // List supplementsCart = [];
-  // List supplementsCart = [];
-  // List supplementsCart = [];
   Map cartshopsproductsmap = {};
   Map cartshopsmap = {};
   dynamic usercartmap_v2 = {};
@@ -889,46 +848,6 @@ class _CartState extends State<Cart> {
                           rate = 1;
                           print('changed rate to ZERO');
                         }
-                        // for (var product
-                        //     in usercartmap_v2[cartshop].keys) {
-                        //   print('looping through $product');
-                        //   var dataproduct = await Firestore
-                        //       .instance
-                        //       .collection("products")
-                        //       .document(product)
-                        //       .get();
-                        //   var newrate = rate;
-                        //   if (dataproduct.data['currency'] !=
-                        //       'dollar') {
-                        //     print('rate ks ');
-                        //     newrate = 1;
-                        //   }
-                        //   print(dataproduct.documentID);
-                        //   completeproducts[cartshop]
-                        //       [product] = {
-                        //     'name': dataproduct.data['name'],
-                        //     'count': usercartmap_v2[cartshop]
-                        //         [product],
-                        //     'shop_price': dataproduct
-                        //                 .data['type'] !=
-                        //             'salle'
-                        //         ? int.parse(dataproduct
-                        //                 .data['shop_price']
-                        //                 .toString()) *
-                        //             newrate
-                        //         : dataproduct
-                        //                 .data['serving_prices'][
-                        //             usercartmap_v2[cartshop]
-                        //                 [product]],
-                        //     'shop_discounted': dataproduct
-                        //         .data['shop_discounted'],
-                        //     'unit': dataproduct.data['unit'],
-                        //     'image': dataproduct.data['image'],
-                        //     'type': dataproduct.data['type'],
-                        //     'arabic_name':
-                        //         dataproduct.data['arabic_name']
-                        //   };
-                        // }
                         print(completeproducts);
                         print(completeproducts[cartshop]);
                         print('starting orderinggggggggggggggggggggggg');
@@ -1043,10 +962,6 @@ class _CartState extends State<Cart> {
       uid = user.uid;
       name = user.displayName;
       uemail = user.email;
-      // print("USERNAME")
-
-      // print(this_user.data['number']);
-      // print(widget.thisUser);
 
       if (this_user.exists) {
         // print("checking addresssss");
@@ -1282,12 +1197,6 @@ class _CartState extends State<Cart> {
                             right: 30.0, bottom: 10, left: 30, top: 12),
                         child: GestureDetector(
                           onTap: () {
-                            // print(addresses);
-                            // chosen_address ==
-                            //     addresses[index]
-                            //         ["id"];
-                            // print(isDefault);
-                            print("______________________");
                             if (addresses.length > 1) {
                               selectAddress(addresses[index]["id"], index);
                               addAddressToCart(addresses[index]);

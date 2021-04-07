@@ -130,7 +130,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
   int _n = 0;
   bool minimum = true;
   bool maximum = false;
-
   var productCurrency = data.documents[index]['currency'];
   var productPrice = data.documents[index]['shop_price'];
   var shopName = data.documents[index]['shop'];
@@ -138,15 +137,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
   if (oldPrice == null) {
     oldPrice = 0;
   }
-  // var rate = 6000;
-
-  // int rate;
-
-  // Map newCachedShops;
-  // removeRate() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   prefs.remove("cached_shops");
-  // }
 
   Widget buildProductPrice() {
     if (productCurrency == "dollar") {
@@ -206,36 +196,36 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // if (oldPrice != null)
-          //   Visibility(
-          //     visible: oldPrice > 0,
-          //     child: Padding(
-          //       padding: const EdgeInsets.only(right: 8.0),
-          //       child: Text(oldPrice.toString() + "L.L.",
-          //           textAlign: TextAlign.left,
-          //           style: TextStyle(
-          //             decoration: TextDecoration.lineThrough,
-          //             decorationThickness: 2,
-          //             fontWeight: FontWeight.bold,
-          //             fontSize: 15,
-          //             fontFamily: 'Axiforma',
-          //             color: Colors.black54,
-          //           )),
-          //     ),
-          //   ),
-          // if (productPrice != null)
-          //   Padding(
-          //       padding: const EdgeInsets.only(top: 0.0),
-          //       child: Text(
-          //         productPrice.toString() + "L.L.",
-          //         textAlign: TextAlign.left,
-          //         style: TextStyle(
-          //           fontWeight: FontWeight.normal,
-          //           fontSize: 14.7,
-          //           fontFamily: 'Axiforma',
-          //           color: Colors.black54,
-          //         ),
-          //       )),
+          if (oldPrice != null)
+            Visibility(
+              visible: oldPrice > 0,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Text(oldPrice.toString() + "L.L.",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      decoration: TextDecoration.lineThrough,
+                      decorationThickness: 2,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      fontFamily: 'Axiforma',
+                      color: Colors.black54,
+                    )),
+              ),
+            ),
+          if (productPrice != null)
+            Padding(
+                padding: const EdgeInsets.only(top: 0.0),
+                child: Text(
+                  productPrice.toString() + "L.L.",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14.7,
+                    fontFamily: 'Axiforma',
+                    color: Colors.black54,
+                  ),
+                )),
         ],
       );
     }
@@ -271,17 +261,10 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             });
           }
 
-          dynamic usercartmap;
+          // dynamic usercartmap;
           dynamic usercartmap_v2;
 
           _save(item, itemid, rate) async {
-            // {
-            //   "shop1": {
-            //     "12123":1123,
-            //     "aasas":2133221
-            //   }
-            // }
-
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
             String shop_name = data.documents[index]['shop'];
@@ -295,9 +278,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
               print('found the map');
               print(json.encode(usercartmap_v2));
             }
-            // if ( item.data['type'] ==  'salle') {
-            //   add
-            // }
             if (usercartmap_v2.containsKey(shop_name)) {
               if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
                 usercartmap_v2[shop_name]['products'][itemid]['count'] =
@@ -451,15 +431,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
               print('found the map');
               print(json.encode(usercartmap_v2));
             }
-            // if (usercartmap_v2.containsKey(shop_name)) {
-            //   if (usercartmap_v2[shop_name].containsKey(itemid)) {
-            //     usercartmap_v2[shop_name][itemid]['count'] =
-            //         int.parse(usercartmap_v2[shop_name][itemid].toString()) - 1;
-            //     if (usercartmap_v2[shop_name][itemid]['count'] == 0) {
-            //       usercartmap_v2[shop_name].remove(itemid);
-            //     }
-            //   }
-            // }
+
             if (usercartmap_v2.containsKey(shop_name)) {
               if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
                 usercartmap_v2[shop_name]['products'][itemid]['count'] =
@@ -476,28 +448,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
 
             prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
 
-            // // START
-            // usercartmap = prefs.getString("usercartmap");
-            // // prefs.remove('usercartmap');
-            // if (usercartmap == null) {
-            //   usercartmap = {};
-            //   print('made an empty map');
-            // } else {
-            //   usercartmap = json.decode(usercartmap);
-            //   print('found the map');
-            //   print(json.encode(usercartmap));
-            // }
-            // if (usercartmap.containsKey(shop_name)) {
-            //   if (usercartmap[shop_name].containsKey(itemid)) {
-            //     usercartmap[shop_name][itemid] =
-            //         int.parse(usercartmap[shop_name][itemid].toString()) - 1;
-            //     if (usercartmap[shop_name][itemid] == 0) {
-            //       usercartmap[shop_name].remove(itemid);
-            //     }
-            //   }
-            // }
-            // prefs.setString('usercartmap', json.encode(usercartmap));
-            // print(prefs.getString('usercartmap'));
             String type = data.documents[index][
                 'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
             prefs.setString('type', type);
@@ -673,10 +623,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        // Text((int.parse(productPrice.toString()) *
-                        //             int.parse(rate.toString()))
-                        //         .toString() +
-                        //     "L.L."),
                         if (data.documents[index]['unit'] != "")
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10.0),
@@ -728,8 +674,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                                 // add;
                                 _save(data.documents[index],
                                     data.documents[index].documentID, rate);
-
-                                // _save2(data.documents[index], rate);
                               },
                               elevation: !maximum ? 2 : 0,
                               fillColor: !maximum

@@ -184,7 +184,15 @@ class FormScreenState extends State<ShopListing> {
                     } else if (snapshot.hasError) {
                       return Text(snapshot.error.toString());
                     }
-                    return Center(child: CircularProgressIndicator());
+                    return SizedBox(
+                      height: 300,
+                      child: Center(
+                        child: Image.asset(
+                          "assets/images/loading.gif",
+                          width: 30,
+                        ),
+                      ),
+                    );
                   },
                 ),
               ),
