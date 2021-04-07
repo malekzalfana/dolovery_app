@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:flutter_svg/svg.dart';
-// ignore: unused_import
+
 import 'package:dropdownfield/dropdownfield.dart';
-// import 'package:country_code_picker/country_code_picker.dart';
+
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-// import 'package:international_phone_input/international_phone_input.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -16,10 +14,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class FormScreenState extends State<ProfileScreen> {
-  // String _address = "";
   String _streetaddress = "";
   String _landmark = "";
-  // String _city;
+
   String _apartment = "";
   String _phone = "";
   String _code = "";
@@ -34,11 +31,6 @@ class FormScreenState extends State<ProfileScreen> {
   String phoneNumber;
   String phoneIsoCode;
   bool canSubmit = false;
-
-  // void onStart() {
-  //   canSubmit = false;
-  //   print("sss");
-  // }
 
   List<String> countries = [
     "AF",
@@ -308,7 +300,6 @@ class FormScreenState extends State<ProfileScreen> {
   }
 
   void onFieldChange() {
-    // print()
     var fields = <String>[
       _fullname,
       _phone,
@@ -319,16 +310,7 @@ class FormScreenState extends State<ProfileScreen> {
     ];
     bool allgood = true;
     print(fields);
-    // for (var i = 0; i <= fields.length; i++) {
-    //   if (fields[i].toString().length < 2) {
-    //     allgood = false;
-    //   }
-    // }
-    // if (allgood) {
-    //   setState(() {
-    //     canSubmit = true;
-    //   });
-    // }
+
     if (fields.contains("") || fields.contains(null)) {
       print(canSubmit);
       setState(() {
@@ -345,9 +327,7 @@ class FormScreenState extends State<ProfileScreen> {
   Future setupVerification() async {
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final uid = user.uid;
-    // final name = user.displayName;
-    // final uemail = user.email;
-    // print("USERNAME")
+
     var usercollection =
         await Firestore.instance.collection("users").document(uid).get();
 
@@ -365,12 +345,6 @@ class FormScreenState extends State<ProfileScreen> {
       this.number = number;
     });
   }
-
-  // @override
-  // void dispose() {
-  //   controller?.dispose();
-  //   super.dispose();
-  // }
 
   Widget _newPhoneNumber() {
     return Padding(
@@ -439,7 +413,6 @@ class FormScreenState extends State<ProfileScreen> {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: Container(
-        // padding: EdgeInsets.symmetric(horizontal: 20),
         width: MediaQuery.of(context).size.width,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
@@ -450,16 +423,11 @@ class FormScreenState extends State<ProfileScreen> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-
-                  // focusedBorder: InputBorder.none,
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-
-                // errorBorder: InputBorder.none,
-                // disabledBorder: InputBorder.none,),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     hint: Text("Select City"),
@@ -498,30 +466,19 @@ class FormScreenState extends State<ProfileScreen> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
             labelText: 'Street Adress'),
         maxLength: 100,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Street Adress is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _streetaddress = value;
         },
         onChanged: (value) {
-          // print("street");
           onTextChange("Address", value);
           onFieldChange();
         },
@@ -537,28 +494,17 @@ class FormScreenState extends State<ProfileScreen> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
             labelText: 'Landmark'),
         maxLength: 50,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Landmark is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _landmark = value;
-          // onFieldChange();
         },
         onChanged: (value) {
           onTextChange("Landmark", value);
@@ -576,28 +522,17 @@ class FormScreenState extends State<ProfileScreen> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
             labelText: 'Full Name'),
         maxLength: 50,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Landmark is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _fullname = value;
-          // onFieldChange();
         },
         onChanged: (value) {
           onTextChange("Full Name", value);
@@ -615,29 +550,17 @@ class FormScreenState extends State<ProfileScreen> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
-
             labelText: 'Apartment / Floor'),
         maxLength: 50,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Apartment is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _apartment = value;
-          // onFieldChange();
         },
         onChanged: (value) {
           onTextChange("Apartment", value);
@@ -674,16 +597,6 @@ class FormScreenState extends State<ProfileScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                // Text(
-                //   "Enter the details",
-                //   textAlign: TextAlign.left,
-                //   style: TextStyle(
-                //     fontWeight: FontWeight.w800,
-                //     fontSize: 28.0,
-                //     fontFamily: 'Axiforma',
-                //     color: Colors.black,
-                //   ),
-                // ),
                 _fullnameBuild(),
                 _address1Build(),
                 _newPhoneNumber(),
@@ -722,7 +635,6 @@ class FormScreenState extends State<ProfileScreen> {
                             "landmark": _landmark,
                             "apartment": _apartment,
                             "id": chosen_address,
-                            // "order": "1"
                           };
                           List addresses = [thisAddress];
                           Map<String, dynamic> thisuser = {
@@ -732,43 +644,21 @@ class FormScreenState extends State<ProfileScreen> {
                             "email": uemail,
                             "address": addresses,
                             "chosen_address": chosen_address
-                            // "id": uid,
-                            // "city": _city,
-                            // "street_address": _streetaddress,
-                            // "landmark": _landmark,
-                            // "apartment": _apartment,
                           };
 
-                          // print("USERNAME")
                           Firestore.instance
                               .collection("users")
                               .document(uid)
                               .setData(thisuser);
-                          //     .add({
-                          //   "fullname": name,
-                          //   "number": _phone,
-                          //   "email": uemail,
-                          //   "id": uid,
-                          //   "city": _city,
-                          //   "street_address": _streetaddress,
-                          //   "landmark": _landmark,
-                          //   "apartment": _apartment,
-                          // });
-
-                          // here you write the codes to input the data into firestore
                         }
 
                         inputData();
                         Navigator.of(context).pop();
-                        // Navigator.of(context).pop();
-
-                        //Send to API
                       },
                       color: Colors.redAccent[700],
                       textColor: Colors.white,
                       minWidth: MediaQuery.of(context).size.width,
                       height: 0,
-                      // padding: EdgeInsets.zero,
                       padding: EdgeInsets.only(
                           left: 20, top: 10, right: 20, bottom: 10),
                       child: Text(
@@ -784,7 +674,7 @@ class FormScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 Visibility(
-                  visible: canSubmit == false, //canSubmit,
+                  visible: canSubmit == false,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: MaterialButton(
@@ -798,7 +688,6 @@ class FormScreenState extends State<ProfileScreen> {
                       textColor: Colors.grey[300],
                       minWidth: MediaQuery.of(context).size.width,
                       height: 0,
-                      // padding: EdgeInsets.zero,
                       padding: EdgeInsets.only(
                           left: 20, top: 10, right: 20, bottom: 10),
                       child: Text(
@@ -807,7 +696,6 @@ class FormScreenState extends State<ProfileScreen> {
                           fontWeight: FontWeight.bold,
                           fontSize: 15.0,
                           fontFamily: 'Axiforma',
-                          // color: Colors.white,
                         ),
                       ),
                     ),

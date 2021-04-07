@@ -11,8 +11,7 @@ import 'package:dolovery_app/screens/terms.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:flutter_svg/svg.dart';
-// ignore: unused_import
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -24,12 +23,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileMainScreen extends StatefulWidget {
   final Function() notifyParent;
-  // dynamic thisUser;
-  // ProfileMainScreen(thisUser);
-  ProfileMainScreen({Key key, @required this.notifyParent}) : super(key: key);
 
-  // @override
-  // ProfileScreenState createState() => new ProfileScreenState();
+  ProfileMainScreen({Key key, @required this.notifyParent}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -37,17 +32,12 @@ class ProfileMainScreen extends StatefulWidget {
   }
 }
 
-// SignInFunctions._welcomePopUp(context, name)
-// _welcomePopUp(context, name);
-
-// String finalDate = '';
-
 getCurrentDate() {
   final DateTime now = DateTime.now();
   final DateFormat formatter = DateFormat('yMMMMd');
   final String formatted = formatter.format(now);
 
-  return formatted; // s
+  return formatted;
 }
 
 var this_user;
@@ -77,9 +67,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       },
     );
     new Future.delayed(new Duration(seconds: 3), () {
-      Navigator.pop(context); //pop dialog
+      Navigator.pop(context);
       showSignIn();
-      // _login();
     });
   }
 
@@ -112,11 +101,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
 
       final FirebaseUser user =
           (await _auth.signInWithCredential(credential)).user;
-      // _onLoading();
-      // var docRef = db.collection("cities").doc("SF");
-      print("signed in " + user.uid);
 
-      // used before user.uid
+      print("signed in " + user.uid);
 
       double welcomeheight;
       final newUser =
@@ -139,21 +125,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       if (!newUser.exists) {
         print("user exists");
       }
-      // } else {
-      //   Firestore.instance.collection("users").add({
-      //     "name": "john",
-      //     "age": 50,
-      //     "email": "example@example.com",
-      //     "address": {"street": "street 24", "city": "new york"}
-      //   }).then((value) {
-      //     print(value.documentID);
-      //   });
-      // }
-
-      // if (Firestore.instance.collection("users").document(user.uid).get() != null) {
-
-      // Scaffold.of(context).showSnackBar(snackBar);
-      // }
 
       return user;
     } catch (e) {
@@ -177,7 +148,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
         final FirebaseUser user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
         print('signed in ' + user.displayName);
-        // bool notsetup;
+
         double welcomeheight;
         final newUser = await Firestore.instance
             .collection("users")
@@ -219,7 +190,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         context: context,
-        // isDismissible: false,
         isScrollControlled: true,
         builder: (BuildContext context) {
           return Container(
@@ -245,7 +215,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                   padding: const EdgeInsets.only(bottom: 50.0),
                   child: Image.asset(
                     'assets/images/doloverywhiteback.png',
-                    // height: 120.0,
                     width: 120.0,
                   ),
                 ),
@@ -289,7 +258,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                       textColor: Colors.white,
                       minWidth: 0,
                       height: 0,
-                      // padding: EdgeInsets.zero,
                       padding: EdgeInsets.only(
                           left: 20, top: 10, right: 20, bottom: 10),
                       child: Text(
@@ -330,16 +298,14 @@ class ProfileScreenState extends State<ProfileMainScreen> {
         context: context,
         builder: (_) => new AlertDialog(
               title: new Text("Are your sure you want to sign out?"),
-              // content: new Text("Hey! I'm Coflutter!"),
               actions: <Widget>[
                 FlatButton(
                   child: Text('Confirm'),
                   onPressed: () {
-                    // reset();
                     signOut();
                     setupVerification();
                     resetEverything();
-                    // setState(() {});
+
                     widget.notifyParent();
                     Navigator.of(context).pop();
                   },
@@ -371,17 +337,12 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         showSignIn();
-                        // setState(() {
-                        //   _readtosignin = false;
-                        //   print(_readtosignin);
-                        // });
                       }),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 50.0),
                   child: Image.asset(
                     'assets/images/doloverywhiteback.png',
-                    // height: 120.0,
                     width: 120.0,
                   ),
                 ),
@@ -406,7 +367,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           Image.asset('assets/images/glogin.jpg', width: 300),
                       onTap: () {
                         _readtosignin = false;
-                        // print("ssssssss");
+
                         hideSignIn();
                         _googleSignUp();
                       }),
@@ -450,18 +411,12 @@ class ProfileScreenState extends State<ProfileMainScreen> {
 
   void showSignIn() {
     print("SHOWWWWWWWWWW");
-    // Navigator.pop(context);
-    // _signInPopUp(context);
+
     setState(() {
       _readtosignin = true;
       showerrortextbool = false;
     });
   }
-
-  // refreshcart() {
-  //   // print("sssss");
-  //   widget.notifyParent2();
-  // }
 
   String showerrortext = "Error";
   void showError(String text) {
@@ -472,7 +427,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       setState(() {
         showerrortextbool = false;
       });
-      // _login();
     });
   }
 
@@ -487,8 +441,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   @override
   void initState() {
     super.initState();
-    // loadcart();
-    // setupVerification();
   }
 
   String chosen_address;
@@ -502,13 +454,12 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       uid = user.uid;
       name = user.displayName;
       uemail = user.email;
-      // print("USERNAME")
+
       this_user =
           await Firestore.instance.collection("users").document(uid).get();
 
-      // print(this_user.data['number']);
       print('ss');
-      // print(widget.thisUser);
+
       print('ss');
 
       if (this_user.exists) {
@@ -517,7 +468,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
         chosen_address = this_user.data["chosen_address"];
         prefs.setString('addresses', json.encode(this_user.data['address']));
         prefs.setString('address', this_user.data["chosen_address"]);
-        // }
+
         print('_________________________________________________________');
         print(prefs.getString('address'));
         print('_________________________________________________________');
@@ -528,24 +479,16 @@ class ProfileScreenState extends State<ProfileMainScreen> {
     } else {
       user_is_signed_in = false;
     }
-
-    // var userAddresses = json.encode(prefs.getString('address'));
-    // if (userAddresses == null) {
-
-    // return this_user;
   }
 
   @override
   Widget build(BuildContext context) {
-    // checkAddress();
-    // setupVerification();
     double width = MediaQuery.of(context).size.width;
-    // print(UniqueKey().hashCode.toString());
-    // print('_____________________________');
+
     setState(() {});
     return SafeArea(
       child: FutureBuilder(
-        future: setupVerification(), // async work
+        future: setupVerification(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -556,7 +499,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
               if ((snapshot.hasError)) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                // return Text('dddd');
                 if (user_is_signed_in == false) {
                   return Center(
                     child: Column(
@@ -583,7 +525,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           padding: const EdgeInsets.only(top: 8.0),
                           child: SizedBox(
                             width: 320,
-                            // height:200,
                             child: Text(
                               "Create an account and get everything you need delivered to your doorstep!",
                               textAlign: TextAlign.center,
@@ -604,20 +545,16 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             ),
                             elevation: 0,
                             onPressed: () {
-                              // signin.testfunction(ProfileScreenState());
                               setState(() {
                                 _readtosignin = true;
                               });
 
                               _signInPopUp(context);
-                              // signin.SignInFunctions.welcomePopUp(context, name);
                             },
                             color: Colors.redAccent[700],
-                            // disabledColor: Colors.grey[200],
                             textColor: Colors.white,
                             minWidth: MediaQuery.of(context).size.width,
                             height: 0,
-                            // padding: EdgeInsets.zero,
                             padding: EdgeInsets.only(
                                 left: 33, top: 10, right: 33, bottom: 10),
                             child: Text(
@@ -626,7 +563,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15.0,
                                 fontFamily: 'Axiforma',
-                                // color: Colors.white,
                               ),
                             ),
                           ),
@@ -660,7 +596,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           padding: const EdgeInsets.only(top: 8.0),
                           child: SizedBox(
                             width: 320,
-                            // height:200,
                             child: Text(
                               "Create an account and get everything you need delivered to your doorstep!",
                               textAlign: TextAlign.center,
@@ -681,7 +616,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             ),
                             elevation: 0,
                             onPressed: () {
-                              // signin.testfunction(ProfileScreenState());
                               setState(() {
                                 _readtosignin = true;
                               });
@@ -690,17 +624,13 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                   .push(MaterialPageRoute(
                                       builder: (context) => ProfileScreen()))
                                   .then((_) {
-                                // Navigator.pop(context);
                                 setState(() {});
                               });
-                              // signin.SignInFunctions.welcomePopUp(context, name);
                             },
                             color: Colors.redAccent[700],
-                            // disabledColor: Colors.grey[200],
                             textColor: Colors.white,
                             minWidth: MediaQuery.of(context).size.width,
                             height: 0,
-                            // padding: EdgeInsets.zero,
                             padding: EdgeInsets.only(
                                 left: 33, top: 10, right: 33, bottom: 10),
                             child: Text(
@@ -709,7 +639,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15.0,
                                 fontFamily: 'Axiforma',
-                                // color: Colors.white,
                               ),
                             ),
                           ),
@@ -734,16 +663,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                   children: <Widget>[
                                     Center(
                                       child: GestureDetector(
-                                        onTap: () {
-                                          // Navigator.of(context)
-                                          //     .push(MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //             AddAddress(this_user
-                                          //                 .data["address"])))
-                                          //     .then((_) {
-                                          //   setState(() {});
-                                          // });
-                                        },
+                                        onTap: () {},
                                         child: Text(
                                           this_user.data['fullname'],
                                           style: TextStyle(
@@ -785,8 +705,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                           builder: (context) =>
                                               EditProfileScreen()))
                                       .then((_) {
-                                    // refreshcart();
-                                    // setupVerification();
                                     setState(() {});
                                   });
                                 },
@@ -853,7 +771,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                               children: List<Widget>.generate(
                                                   snapshot.data.documents
                                                       .length, (int index) {
-                                                // print(categories[index]);
                                                 return Visibility(
                                                   visible: index != 3,
                                                   child: GestureDetector(
@@ -948,7 +865,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                   ),
                                 ),
                               ),
-                              // for (var index in this_user.data["address"].length)
                               if (this_user != null)
                                 for (var index = 0;
                                     index < this_user.data["address"].length;
@@ -988,14 +904,12 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                     .withOpacity(0.1),
                                                 spreadRadius: 2.2,
                                                 blurRadius: 2.5,
-                                                offset: Offset(0,
-                                                    4), // changes position of shadow
+                                                offset: Offset(0, 4),
                                               ),
                                             ],
                                             color: Colors.white,
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(15))),
-                                        // color: Colors.grey,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -1016,14 +930,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                     size: 36,
                                                   ),
                                                 ),
-                                                onPressed: () {
-                                                  // Navigator.of(context).pop();
-                                                  // setState(() {
-                                                  //   showerrortextbool = false;
-                                                  // });
-                                                }),
+                                                onPressed: () {}),
                                             Container(
-                                                // color: Colors.green,
                                                 margin: new EdgeInsets.only(
                                                     left: 10.0, right: 0),
                                                 child: Padding(
@@ -1053,7 +961,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                                       "address"]
                                                                   [
                                                                   index]["name"],
-                                                              // textAlign: TextAlign.left,
                                                               style: TextStyle(
                                                                 fontWeight:
                                                                     FontWeight
@@ -1198,7 +1105,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                     textColor: Colors.white,
                                     minWidth: 0,
                                     height: 0,
-                                    // padding: EdgeInsets.zero,
                                     padding: EdgeInsets.only(
                                         left: 20,
                                         top: 10,

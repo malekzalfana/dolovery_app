@@ -3,17 +3,15 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:flutter_svg/svg.dart';
-// ignore: unused_import
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:dolovery_app/widgets/product.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_counter/flutter_counter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:dolovery_app/widgets/counter.dart';
 
 class SalleItem extends StatefulWidget {
-  final dynamic data; //if you have multiple values add here
+  final dynamic data;
   final String day;
   final List descriptions;
   final String description;
@@ -24,7 +22,7 @@ class SalleItem extends StatefulWidget {
   SalleItem(this.data, this.day, this.prices, this.descriptions,
       this.description, this.datewords, this.datenumbers, this.id,
       {Key key})
-      : super(key: key); //add also..example this.abc,this...
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SalleItemState();
@@ -37,10 +35,8 @@ class _SalleItemState extends State<SalleItem> {
   int _n = 0;
   bool minimum = true;
   bool maximum = false;
-  // int serving = 0;
 
   void add() {
-    // print ( _n );
     setState(() {
       if (_n < 9) _n++;
       if (_n == 9) {
@@ -55,7 +51,6 @@ class _SalleItemState extends State<SalleItem> {
       } else {
         showChangeButton = false;
       }
-      // alreadyadded = true;
     });
   }
 
@@ -73,13 +68,10 @@ class _SalleItemState extends State<SalleItem> {
       newusercartmap_v2 = json.decode(temp);
     }
 
-    // print('--------------------------');
-    // print(prefs.getString('usercartmap'));
     if (newusercartmap_v2 == null) {
       newusercartmap_v2 = {};
     }
-    // print(widget.datenumbers);
-    // print(widget.id + '_${widget.datenumbers}');
+
     if (newusercartmap_v2.containsKey('dolovery')) {
       print('it has dolovery in  it');
       print(widget.id);
@@ -87,17 +79,14 @@ class _SalleItemState extends State<SalleItem> {
       print(newusercartmap_v2['dolovery']['products'][widget.id].toString());
       if (newusercartmap_v2['dolovery']['products'].containsKey(widget.id)) {
         print('dolovery has documentid in it');
-        // print(alreadyadded);
+
         if (loaded == false) {
-          // print("it has not loaded");
           setState(() {
             alreadyadded = true;
             loaded = true;
             inmycart =
                 newusercartmap_v2['dolovery']['products'][widget.id]['count'];
             print("$inmycart is in my cart");
-
-            // print("there is one beforeeeeeeeeeee");
           });
         }
 
@@ -111,31 +100,25 @@ class _SalleItemState extends State<SalleItem> {
   _save(itemid, int count, item) async {
     print(count.toString());
     print('this is the count');
-    // print(item);
-    // print('hayda l item');
+
     oldsalletotal = null;
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
     String shop_name = 'dolovery';
     usercartmap_v2 = prefs.getString("usercartmap_v2");
-    // prefs.remove('usercartmap');
+
     if (usercartmap_v2 == null) {
       usercartmap_v2 = {};
-      // print('made an empty map');
     } else {
       usercartmap_v2 = json.decode(usercartmap_v2);
-      // print('found the map');
-      // print(json.encode(usercartmap_v2));
     }
-    // if ( item.data['type'] ==  'salle') {
-    //   add
-    // }
-    var new_itemid = itemid; // + '_${widget.datenumbers}';
+
+    var new_itemid = itemid;
     print(new_itemid);
     if (usercartmap_v2.containsKey(shop_name)) {
       if (usercartmap_v2[shop_name]['products'].containsKey(new_itemid)) {
         usercartmap_v2[shop_name]['products'][new_itemid]['count'] = count;
-        // usercartmap_v2[shop_name]['products'][new_itemid]['rate'] = rate;
+
         usercartmap_v2[shop_name]['products'][new_itemid]['data'] = item;
         usercartmap_v2[shop_name]['products'][new_itemid]['date'] =
             widget.datenumbers;
@@ -143,9 +126,8 @@ class _SalleItemState extends State<SalleItem> {
         usercartmap_v2[shop_name]['products'][new_itemid]['date-words'] =
             widget.datewords;
       } else {
-        // usercartmap_v2[shop_name]['products'] = {};
         usercartmap_v2[shop_name]['products'][new_itemid] = {};
-        // usercartmap_v2[shop_name]['products'][new_itemid]['rate'] = rate;
+
         usercartmap_v2[shop_name]['products'][new_itemid]['count'] = count;
         usercartmap_v2[shop_name]['products'][new_itemid]['data'] = item;
         usercartmap_v2[shop_name]['products'][new_itemid]['rate'] = 1;
@@ -159,9 +141,9 @@ class _SalleItemState extends State<SalleItem> {
         'data': {'name': 'Dolovery'},
         'products': {}
       };
-      // usercartmap_v2[shop_name]['products'] = {};
+
       usercartmap_v2[shop_name]['products'][new_itemid] = {};
-      // usercartmap_v2[shop_name]['products'][new_itemid]['rate'] = rate;
+
       usercartmap_v2[shop_name]['products'][new_itemid]['count'] = count;
       usercartmap_v2[shop_name]['products'][new_itemid]['data'] = item;
       usercartmap_v2[shop_name]['products'][new_itemid]['rate'] = 1;
@@ -171,18 +153,15 @@ class _SalleItemState extends State<SalleItem> {
           widget.datewords;
     }
     prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
-    // START
+
     usercartmap = prefs.getString("usercartmap");
-    // print('user cartmap');
+
     print(usercartmap_v2);
-    // prefs.remove('usercartmap');
+
     if (usercartmap == null) {
       usercartmap = {};
-      // print('made an empty map');
     } else {
       usercartmap = json.decode(usercartmap);
-      // print('found the map');
-      // print(json.encode(usercartmap));
     }
 
     if (cart == null) {
@@ -193,7 +172,6 @@ class _SalleItemState extends State<SalleItem> {
       if (usercartmap[shop_name]['products'].containsKey(new_itemid)) {
         oldsalletotal = usercartmap[shop_name]['products'][new_itemid];
         usercartmap[shop_name]['products'][new_itemid] = _n;
-        // int.parse(usercartmap[shop_name]['products'][new_itemid].toString()) + (1 * count);
       } else {
         usercartmap[shop_name]['products'][new_itemid] = 1 * count;
         cart.add(new_itemid);
@@ -205,17 +183,12 @@ class _SalleItemState extends State<SalleItem> {
       cart.add(new_itemid);
     }
 
-    // print(prefs.getString('usercartmap'));
-    String type = widget.data[
-        'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
+    String type = widget.data['type'];
     prefs.setString('type', type);
     if (prefs.getDouble('total') == null) {
       prefs.setDouble('total', 0);
     }
-    // print("the old salle total is: " + oldsalletotal.toString());
-    // var shop_price = int.parse(widget.data['shop_price'].toString()).toDouble();
-    // print(widget.data['serving_prices'][oldsalletotal]);
-    // print(widget.data['serving_prices'][count]);
+
     var oldprice;
     if (oldsalletotal == null) {
       oldprice = 0;
@@ -224,18 +197,12 @@ class _SalleItemState extends State<SalleItem> {
           double.parse(widget.data['serving_prices'][oldsalletotal].toString());
     }
 
-    // print("old price is $oldprice");
-    // if (count == 0) {
-    //   oldprice = 0;
-    //   print("count is ZERO");
-    // }
     double total = prefs.getDouble('total') == null
         ? 0
         : prefs.getDouble('total') -
             oldprice +
             double.parse(widget.data['serving_prices'][count].toString());
-    // print('above the erroes');
-    // print("the tortal is ${total.toString()}");
+
     prefs.setDouble('total', total);
     prefs.setString('usercartmap', json.encode(usercartmap));
     prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
@@ -252,14 +219,6 @@ class _SalleItemState extends State<SalleItem> {
       shops = [];
     }
 
-    // checkIfCart() async {
-    //   if (_n == ) {
-    //   showChangeButton = true;
-    // }
-    // }
-
-    // print(shop_name);
-    // print('shopaboive______________');
     if (!shops.contains(shop_name)) {
       shops.add(shop_name);
       prefs.setStringList("shops", shops);
@@ -271,32 +230,24 @@ class _SalleItemState extends State<SalleItem> {
       alreadyadded = true;
       showChangeButton = false;
     });
-
-    // setState(() {});
-
-    // print('saved $value');
-    // print('saved $total');
-    // print('saved $type');
-    // print('saved $items');
   }
 
   cancelCartItem(itemid) async {
-    // oldsalletotal = null;
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
     String shop_name = widget.data['shop'];
-    // START
+
     usercartmap = prefs.getString("usercartmap");
     print('user cartmap');
     print(usercartmap);
-    // prefs.remove('usercartmap');
+
     usercartmap = json.decode(usercartmap);
 
     usercartmap_v2 = prefs.getString("usercartmap_v2");
     print('user cartmap');
     print(usercartmap_v2);
-    // prefs.remove('usercartmap');
-    var new_itemid = itemid; //+ '_${widget.datenumbers}';
+
+    var new_itemid = itemid;
     usercartmap_v2 = json.decode(usercartmap_v2);
     usercartmap_v2[shop_name]['products'].remove(new_itemid);
 
@@ -321,8 +272,7 @@ class _SalleItemState extends State<SalleItem> {
     print("THE old price is $oldprice");
     double total = prefs.getDouble('total') == null
         ? 0
-        : prefs.getDouble('total') - double.parse(oldprice.toString()); // +
-    // double.parse(widget.data['serving_prices'][count].toString());
+        : prefs.getDouble('total') - double.parse(oldprice.toString());
 
     if (cart == null) {
       cart = [];
@@ -347,10 +297,6 @@ class _SalleItemState extends State<SalleItem> {
       usercartmap_v2[shop_name].remove(itemid);
     }
 
-    // if (!shops.contains(shop_name)) {
-    //   shops.add(shop_name);
-    //   prefs.setStringList("shops", shops);
-    // }
     alreadyadded = false;
     showChangeButton = false;
     setState(() {});
@@ -378,39 +324,30 @@ class _SalleItemState extends State<SalleItem> {
   @override
   void initState() {
     super.initState();
-    // getSalleStatus();
   }
 
   bool showChangeButton = false;
 
   @override
   Widget build(BuildContext context) {
-    // final double itemHeight = (size.height) / 2;
-    // final double itemWidth = size.width / 2;
-    // new Date(widget.data['salle_date'].seconds * 1000 + widget.data['salle_date'].nanoseconds/1000000)
-    // var date = DateTime.fromMicrosecondsSinceEpoch(
-    // widget.data['salle_date']);
     double width = MediaQuery.of(context).size.width;
 
     if (inmycart != _n && loaded) {
       showChangeButton = true;
     }
 
-    // var timestamp = (widget.data['salle_date'] as Timestamp).toDate();
     num _defaultValue = 0;
-    // String formatted_date = DateFormat.yMMMMd().format(timestamp);
+
     return new Scaffold(
       body: SingleChildScrollView(
           child: Column(
         children: <Widget>[
           AppBar(
             iconTheme: IconThemeData(
-              color: Colors.black, //change your color here
+              color: Colors.black,
             ),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            // automaticallyImplyLeading: false,
-            //BackButton(color: Colors.black),
             centerTitle: true,
             title: Text(
               'Basket Details',
@@ -447,7 +384,6 @@ class _SalleItemState extends State<SalleItem> {
                       bottomLeft: Radius.circular(15),
                       bottomRight: Radius.circular(15)),
                 ),
-                // color: Colors.red,
                 child: Icon(Icons.error)),
           ),
           Padding(
@@ -465,7 +401,6 @@ class _SalleItemState extends State<SalleItem> {
               ),
             ),
           ),
-          // Text(widget.datenumbers),
           Padding(
             padding: const EdgeInsets.only(left: 30.0, top: 00, bottom: 0),
             child: Align(
@@ -573,8 +508,6 @@ class _SalleItemState extends State<SalleItem> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                // ENABLE TO USE ARRAYS
-                // widget.descriptions[_n == 0 ? 0 : _n - 1].toString(),
                 widget.description,
                 style: TextStyle(
                   fontWeight: FontWeight.normal,
@@ -603,7 +536,6 @@ class _SalleItemState extends State<SalleItem> {
           Padding(
             padding: const EdgeInsets.only(left: 0, top: 20.0),
             child: Container(
-              // width: width,
               child: new Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -690,14 +622,10 @@ class _SalleItemState extends State<SalleItem> {
                             child: Container(
                               decoration: BoxDecoration(
                                   color: Colors.green[700],
-                                  // border: Border.all(
-                                  //   color: Colors.green[500],
-                                  // ),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15))),
                               height: 45,
                               width: width - 44,
-                              // color: Colors.red,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -736,9 +664,7 @@ class _SalleItemState extends State<SalleItem> {
                                           content: Text('Removed from cart!'),
                                           action: SnackBarAction(
                                             label: 'OK',
-                                            onPressed: () {
-                                              // Some code to undo the change.
-                                            },
+                                            onPressed: () {},
                                           ));
                                       Scaffold.of(context)
                                           .showSnackBar(snackBar);
@@ -770,7 +696,6 @@ class _SalleItemState extends State<SalleItem> {
                                 ),
                                 elevation: 0,
                                 onPressed: () {
-                                  // correct
                                   _save(widget.id, _n, widget.data);
                                   setState(() {
                                     loaded = false;
@@ -779,11 +704,9 @@ class _SalleItemState extends State<SalleItem> {
                                   });
                                 },
                                 color: Colors.redAccent[700],
-                                // disabledColor: Colors.grey[200],
                                 textColor: Colors.white,
                                 minWidth: MediaQuery.of(context).size.width,
                                 height: 0,
-                                // padding: EdgeInsets.zero,
                                 padding: EdgeInsets.only(
                                     left: 30, top: 10, right: 30, bottom: 10),
                                 child: Text(
@@ -792,7 +715,6 @@ class _SalleItemState extends State<SalleItem> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15.0,
                                     fontFamily: 'Axiforma',
-                                    // color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -802,10 +724,8 @@ class _SalleItemState extends State<SalleItem> {
                       ),
                     );
               }
-              // print('snapshot >> is : ${snapshot.data}');
             },
           ),
-          // Text(inmycart.toString()),
           Visibility(
             visible: !alreadyadded,
             child: Padding(
@@ -822,11 +742,9 @@ class _SalleItemState extends State<SalleItem> {
                   print(alreadyadded);
                 },
                 color: Colors.green,
-                // disabledColor: Colors.grey[200],
                 textColor: Colors.white,
                 minWidth: MediaQuery.of(context).size.width,
                 height: 0,
-                // padding: EdgeInsets.zero,
                 padding:
                     EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
                 child: Text(
@@ -835,7 +753,6 @@ class _SalleItemState extends State<SalleItem> {
                     fontWeight: FontWeight.bold,
                     fontSize: 15.0,
                     fontFamily: 'Axiforma',
-                    // color: Colors.white,
                   ),
                 ),
               ),

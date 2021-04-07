@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:dolovery_app/widgets/signinpopup.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolovery_app/screens/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,12 +19,9 @@ import 'package:delayed_display/delayed_display.dart';
 import 'orderpage.dart';
 
 class Cart extends StatefulWidget {
-  final dynamic user; //if you have multiple values add here
-  // final String day;
-  // final List descriptions;
-  // final List prices;
-  Cart(this.user, {Key key})
-      : super(key: key); //add also..example this.abc,this...
+  final dynamic user;
+
+  Cart(this.user, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CartState();
@@ -34,11 +31,10 @@ class _CartState extends State<Cart> {
   int _n = 1;
   bool minimum = true;
   bool maximum = false;
-  // int serving = 0;
+
   List<String> finalcart = [];
 
   void add() async {
-    // print ( _n );
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       total = prefs.getDouble('total');
@@ -49,14 +45,12 @@ class _CartState extends State<Cart> {
         minimum = false;
         maximum = false;
       }
-
-      // print(_n);
     });
   }
 
   void minus() async {
     final prefs = await SharedPreferences.getInstance();
-    // print(_n);
+
     setState(() {
       total = prefs.getDouble('total');
       if (_n != 1) _n--;
@@ -98,66 +92,16 @@ class _CartState extends State<Cart> {
       Navigator.of(context).pop();
     }
 
-    // print(prefs.getKeys());
     return true;
   }
 
-  // Future<void> refreshcartnumbers(
-  //     String itemid, int quantity, int price, bool add, bool remove) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   // List<String> cart = prefs.getStringList('cart');
-
-  //   // setState(() {
-
-  //   if (remove) {
-  //     for (var i; i <= quantity; i++) {
-  //       print('removed completely');
-  //       prefs.setDouble('items', prefs.getDouble('items') - quantity);
-  //       prefs.setDouble(
-  //           'total',
-  //           prefs.getDouble('total') -
-  //               (quantity * int.parse(price.toString())));
-  //       cart.remove(itemid);
-  //     }
-  //   } else {
-  //     if (add) {
-  //       // print(prefs.getDouble('cart'));
-  //       prefs.setDouble('items', prefs.getDouble('items') + 1);
-  //       prefs.setDouble('total',
-  //           prefs.getDouble('total') + (1 * int.parse(price.toString())));
-
-  //       print('added');
-  //       cart.add(itemid);
-  //       print(itemid);
-  //     } else {
-  //       print('removed');
-  //       prefs.setDouble('items', prefs.getDouble('items') - 1);
-  //       prefs.setDouble('total',
-  //           prefs.getDouble('total') - (1 * int.parse(price.toString())));
-  //       cart.remove(itemid);
-  //       if (cart.length == 0) {
-  //         reset();
-
-  //         return print('XXXXXXXXXXXXX');
-  //       }
-  //     }
-  //   }
-  //   prefs.setStringList('cart', cart);
-  //   print(prefs.getStringList('cart'));
-
-  //   // print(cart);
-  //   // });
-
-  //   // getcartmap();
-  // }
   dynamic usercartmap;
 
   _save(itemid, rate, shop_name, type, shop_price, currency, item) async {
-    // add();
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
     usercartmap_v2 = prefs.getString("usercartmap_v2");
-    // prefs.remove('usercartmap');
+
     if (usercartmap_v2 == null) {
       usercartmap_v2 = {};
       print('made an empty map');
@@ -166,9 +110,7 @@ class _CartState extends State<Cart> {
       print('found the map');
       print(json.encode(usercartmap_v2));
     }
-    // if ( item.data['type'] ==  'salle') {
-    //   add
-    // }
+
     if (usercartmap_v2.containsKey(shop_name)) {
       if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
         usercartmap_v2[shop_name]['products'][itemid]['count'] = int.parse(
@@ -195,41 +137,12 @@ class _CartState extends State<Cart> {
       usercartmap_v2[shop_name]['products'][itemid]['date'] = item['date'];
     }
     prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
-    // String shop_name = data.documents[index]['shop'];
-    // START
 
-    // usercartmap = prefs.getString("usercartmap");
-    // // prefs.remove('usercartmap');
-    // if (usercartmap == null) {
-    //   usercartmap = {};
-    //   // print('made an empty map');
-    // } else {
-    //   usercartmap = json.decode(usercartmap);
-    //   // print('found the map');
-    //   // print(json.encode(usercartmap));
-    // }
-    // if (usercartmap.containsKey(shop_name)) {
-    //   if (usercartmap[shop_name].containsKey(itemid)) {
-    //     usercartmap[shop_name][itemid] =
-    //         int.parse(usercartmap[shop_name][itemid].toString()) + 1;
-    //   } else {
-    //     usercartmap[shop_name][itemid] = 1;
-    //   }
-    // } else {
-    //   usercartmap[shop_name] = {};
-    //   usercartmap[shop_name][itemid] = 1;
-    // }
-    // prefs.setString('usercartmap', json.encode(usercartmap));
-
-    // print(prefs.getString('usercartmap'));
-    // String type = data.documents[index][
-    //     'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
     prefs.setString('type', type);
     if (prefs.getDouble('total') == null) {
       prefs.setDouble('total', 0);
     }
-    // var shop_price =
-    //     int.parse(data.documents[index]['shop_price'].toString()).toDouble();
+
     if (currency == 'dollar') {
       rate = 1;
     }
@@ -251,24 +164,17 @@ class _CartState extends State<Cart> {
       shops = [];
     }
 
-    // print(shop_name);
-    // print('shopaboive______________');
     if (!shops.contains(shop_name)) {
       shops.add(shop_name);
       prefs.setStringList("shops", shops);
     }
-
-    // print('saved $value');
-    // print('saved $total');
-    // print('saved $type');
-    // print('saved $items');
   }
 
   _remove(itemid, rate, shop_name, type, shop_price, currency, item) async {
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList('cart');
     usercartmap_v2 = prefs.getString("usercartmap_v2");
-    // prefs.remove('usercartmap');
+
     if (usercartmap_v2 == null) {
       usercartmap_v2 = {};
       print('made an empty map');
@@ -277,9 +183,7 @@ class _CartState extends State<Cart> {
       print('found the map');
       print(json.encode(usercartmap_v2));
     }
-    // if ( item.data['type'] ==  'salle') {
-    //   add
-    // }
+
     if (usercartmap_v2.containsKey(shop_name)) {
       if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
         usercartmap_v2[shop_name]['products'][itemid]['count'] = int.parse(
@@ -302,8 +206,6 @@ class _CartState extends State<Cart> {
       prefs.setDouble('total', 0);
     }
 
-    // var shop_price =
-    //     int.parse(data.documents[index]['shop_price'].toString()).toDouble();
     if (currency == 'dollar') {
       rate = 1;
     }
@@ -325,8 +227,6 @@ class _CartState extends State<Cart> {
       shops = [];
     }
 
-    // print(shop_name);
-    // print('shopaboive______________');
     if (!shops.contains(shop_name)) {
       shops.remove(shop_name);
       prefs.setStringList("shops", shops);
@@ -344,37 +244,26 @@ class _CartState extends State<Cart> {
   dynamic usercartmap_v2 = {};
   getcartmap() async {
     for (var cartshop in shops) {
-      // print("started" + cartshop.toString());
-
       for (var cartitem in finalcart) {
-        // print("started item: " + cartitem.toString());
         Firestore.instance
             .collection("products")
             .document(cartitem)
             .get()
             .then((value) {
-          // print("shop 1 =" + value.data['shop'].toString());
-          // print("shop §1 =" + cartshop.toString());
           if (value.data['shop'] == cartshop.toString()) {
             if (!cartshopsproductsmap.containsKey(cartitem)) {
               cartshopsproductsmap[cartitem] = 1;
-              // print("counting********* " +
+
               cartshopsproductsmap[cartitem].toInt();
-              // finalcart.add(cart[i]);
             } else {
               cartshopsproductsmap[cartitem] =
                   cartshopsproductsmap[cartitem].toInt() + 1;
-              // print("counting:::::::::: " +
-              //     cartshopsproductsmap[cartitem].toInt());
             }
-            // cartshopsproductsmap.add(cartitem.toString());
-            // print(cartshopsproductsmap);
+
             cartshopsmap[cartshop.toString()] = cartshopsproductsmap;
           }
         });
       }
-      // print("shopmap_____________");
-      // print(cartshopsmap);
     }
   }
 
@@ -401,48 +290,37 @@ class _CartState extends State<Cart> {
         }
 
         for (var cartshop in shops) {
-          // print("started" + cartshop.toString());
           Map cartshopsproductsmap = {};
           for (var cartitem in cart) {
-            // print("started item: " + cartitem.toString());
             Firestore.instance
                 .collection("products")
                 .document(cartitem)
                 .get()
                 .then((value) {
-              // print("shop 1 =" + value.data['shop'].toString());
-              // print("shop §1 =" + cartshop.toString());
               if (value.data['shop'] == cartshop.toString()) {
                 if (!cartshopsproductsmap.containsKey(cartitem)) {
                   cartshopsproductsmap[cartitem] = 1;
-                  // print("added product to map_____________");
-                  // print(cartshopsproductsmap[cartitem].toString());
+
                   finalcart.add(cartshopsproductsmap[cartitem].toString());
                 } else {
-                  // print("counting:::::::::: ");
-                  //     cartshopsproductsmap[cartitem].toInt().toString());
                   cartshopsproductsmap[cartitem] =
                       cartshopsproductsmap[cartitem].toInt() + 1;
                 }
-                // cartshopsproductsmap.add(cartitem.toString());
-                // print(cartshopsproductsmap);
+
                 cartshopsmap[cartshop.toString()] = cartshopsproductsmap;
               }
             });
           }
-
-          // print("shopmap_____________");
-          // print(cartshopsmap);
         }
         torestart = false;
-        // final finalshops = await cartshopsmap;
+
         return shops;
       });
   }
 
   var addresses;
   String chosen_address;
-  // dynamic usercartmap;
+
   Future<bool> loadcart() async {
     final prefs = await SharedPreferences.getInstance();
     usercartmap = prefs.getString("usercartmap");
@@ -489,17 +367,15 @@ class _CartState extends State<Cart> {
         }
 
         torestart = false;
-        // final finalshops = await cartshopsmap;
-        // return shops;
+
         return true;
       });
   }
 
   @override
   void initState() {
-    // getcartmap();
     setupVerification();
-    // loadcart();
+
     super.initState();
     loadcart();
   }
@@ -541,7 +417,6 @@ class _CartState extends State<Cart> {
                   padding: const EdgeInsets.only(bottom: 50.0),
                   child: Image.asset(
                     'assets/images/doloverywhiteback.png',
-                    // height: 120.0,
                     width: 120.0,
                   ),
                 ),
@@ -593,7 +468,6 @@ class _CartState extends State<Cart> {
                   padding: const EdgeInsets.only(bottom: 50.0),
                   child: Image.asset(
                     'assets/images/doloverywhiteback.png',
-                    // height: 120.0,
                     width: 120.0,
                   ),
                 ),
@@ -648,7 +522,6 @@ class _CartState extends State<Cart> {
                                 textColor: Colors.white,
                                 minWidth: 0,
                                 height: 0,
-                                // padding: EdgeInsets.zero,
                                 padding: EdgeInsets.only(
                                     left: 20, top: 10, right: 20, bottom: 10),
                                 child: Text(
@@ -680,8 +553,6 @@ class _CartState extends State<Cart> {
     var newcartaddress;
 
     prefs.setString('address', json.encode(cartaddress));
-    // print('thi is the new address');
-    // print(prefs.getString('address'));
   }
 
   Future<void> _googleSignUp() async {
@@ -706,27 +577,18 @@ class _CartState extends State<Cart> {
         content: Text('Welcome to Dolovery!'),
         action: SnackBarAction(
           label: 'Undo',
-          onPressed: () {
-            // Some code to undo the change.
-          },
+          onPressed: () {},
         ),
       );
-      // var docRef = db.collection("cities").doc("SF");
-      // print("signed in " + user.uid);
+
       Navigator.of(context).pop();
       _welcomePopUp(context, user.displayName);
-      // used before user.uid
+
       final notsetup =
           await Firestore.instance.collection("users").document(user.uid).get();
       if (!notsetup.exists) {
-        // print("user exists");
         hasprofile = true;
       }
-
-      // if (Firestore.instance.collection("users").document(user.uid).get() != null) {
-
-      // Scaffold.of(context).showSnackBar(snackBar);
-      // }
 
       return user;
     } catch (e) {
@@ -767,7 +629,6 @@ class _CartState extends State<Cart> {
         context: context,
         builder: (_) => new AlertDialog(
               title: new Text("Delete all cart items?"),
-              // content: new Text("Hey! I'm Coflutter!"),
               actions: <Widget>[
                 FlatButton(
                   child: Text('Cancel'),
@@ -792,7 +653,6 @@ class _CartState extends State<Cart> {
         context: context,
         builder: (_) => new AlertDialog(
               title: new Text("Confirm your order?"),
-              // content: new Text("Hey! I'm Coflutter!"),
               actions: <Widget>[
                 FlatButton(
                   child: Text('Cancel'),
@@ -804,17 +664,13 @@ class _CartState extends State<Cart> {
                 FlatButton(
                   child: Text('Confirm'),
                   onPressed: () {
-                    // reset();
-
                     setState(() {
                       ordered = true;
                     });
                     print('STSRTEDDDDDDD');
                     getCartAddress() async {
                       final prefs = await SharedPreferences.getInstance();
-                      // var thecartaddress =
-                      //     json.encode(prefs
-                      //         .getString('address'));
+
                       var all_addresses =
                           json.decode(prefs.getString('addresses'));
                       print(addresses);
@@ -832,7 +688,6 @@ class _CartState extends State<Cart> {
                         }
                       }
 
-                      // print(thecartaddress);
                       List<String> fullorder = [];
                       List<String> fullorder_shops = [];
                       var completeproducts = {};
@@ -888,7 +743,6 @@ class _CartState extends State<Cart> {
                         reset(false);
                         Navigator.pop(context);
 
-                        // loadingorder = true;
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => OrderPage(fullorder_id)));
                       }).catchError((error) {
@@ -911,7 +765,6 @@ class _CartState extends State<Cart> {
         builder: (_) => new AlertDialog(
               title:
                   new Text("Do you want to remove this item from your cart?"),
-              // content: new Text("Hey! I'm Coflutter!"),
               actions: <Widget>[
                 FlatButton(
                   child: Text('Cancel'),
@@ -925,7 +778,7 @@ class _CartState extends State<Cart> {
                   child: Text('Confirm'),
                   onPressed: () {
                     _remove(c1, c2, c3, c4, c5, c6, c7);
-                    // removefunciton();
+
                     Navigator.of(context).pop();
                     return 'true';
                   },
@@ -939,7 +792,7 @@ class _CartState extends State<Cart> {
   removeShopFromCart(shop) async {
     final prefs = await SharedPreferences.getInstance();
     usercartmap = prefs.getString("usercartmap");
-    // prefs.remove('usercartmap');
+
     if (usercartmap == null) {
       usercartmap = {};
     } else {
@@ -952,7 +805,6 @@ class _CartState extends State<Cart> {
   bool loadedthepage = false;
 
   Future setupVerification() async {
-    // print("USER BEING WATCHED");
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final prefs = await SharedPreferences.getInstance();
     this_user =
@@ -964,14 +816,10 @@ class _CartState extends State<Cart> {
       uemail = user.email;
 
       if (this_user.exists) {
-        // print("checking addresssss");
         if (!prefs.containsKey('address')) {
-          // print("no addressssss");
           var counter = 0;
           for (var useraddress in this_user.data['address']) {
-            // print(this_user.data['address'][counter]);
             if (useraddress['id'] == chosen_address) {
-              // print('added');
               prefs.setString(
                   'address', this_user.data['address'][counter].toString());
             }
@@ -979,23 +827,17 @@ class _CartState extends State<Cart> {
           }
         }
         notsetup = false;
-        // print("user is setup");
       }
     } else {
       usersignedin = false;
-      // print("usre is not signed in");
     }
     if (!loadedthepage) {
       setState(() {});
     }
     loadedthepage = true;
-
-    // return notsetup;
   }
 
   selectAddress(String chosenAddress, int addressIndex) {
-    // print(chosenAddress);
-    // print(addressIndex);
     setState(() {
       chosen_address = chosenAddress;
       alreadyChosenAddress = true;
@@ -1008,24 +850,12 @@ class _CartState extends State<Cart> {
 
   @override
   Widget build(BuildContext context) {
-    // reset(); //www
-    // setState(() {});
-    // final double itemHeight = (size.height) /x 2;
-    // final double itemWidth = size.width / 2;
-    // new Date(widget.data.documents[0]['salle_date'].seconds * 1000 + widget.data.documents[0]['salle_date'].nanoseconds/1000000)
-    // var date = DateTime.fromMicrosecondsSinceEpoch(
-    // widget.data.documents[0]['salle_date']);
-
-    // var timestamp =
-    //     (widget.data.documents[0]['salle_date'] as Timestamp).toDate();
     num _defaultValue = 0;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    // print(cart);
+
     List<Widget> list = new List<Widget>();
-    // setupVerification();
-    // setState(() {});
-    // String formatted_date = DateFormat.yMMMMd().format(timestamp);
+
     return new Scaffold(
       key: _scaffoldKey,
       body: SingleChildScrollView(
@@ -1036,12 +866,10 @@ class _CartState extends State<Cart> {
             children: <Widget>[
               AppBar(
                 iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
+                  color: Colors.black,
                 ),
                 backgroundColor: Colors.transparent,
                 elevation: 0.0,
-                // automaticallyImplyLeading: false,
-                //BackButton(color: Colors.black),
                 centerTitle: true,
                 title: Text(
                   'Cart',
@@ -1056,7 +884,6 @@ class _CartState extends State<Cart> {
                 actions: [
                   GestureDetector(
                     onTap: () {
-                      // reset();
                       _showMaterialDialog();
                     },
                     child: Padding(
@@ -1064,11 +891,8 @@ class _CartState extends State<Cart> {
                       child: Icon(Icons.delete),
                     ),
                   ),
-                  // Icon(Icons.add),
                 ],
               ),
-              // Text(usercartmap_v2.toString()),
-
               Padding(
                 padding: const EdgeInsets.only(left: 22.0, top: 20, bottom: 10),
                 child: Align(
@@ -1084,12 +908,10 @@ class _CartState extends State<Cart> {
                   ),
                 ),
               ),
-              // Text(usercartmap_v2.toString()),
               if (usercartmap_v2.keys.length > 0)
                 Column(
                   children: [
                     for (var shop in usercartmap_v2.keys)
-                      // if (usercartmap_v2[shop]['products'].keys.length > 0)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Column(
@@ -1104,7 +926,6 @@ class _CartState extends State<Cart> {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       usercartmap_v2[shop]['data']['name'],
-                                      // 'ss,',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w800,
@@ -1169,7 +990,6 @@ class _CartState extends State<Cart> {
                   ),
                 ],
               ),
-              // Text(chosen_address.toString()),
               if (addresses != null)
                 Column(
                   children: [
@@ -1189,8 +1009,6 @@ class _CartState extends State<Cart> {
                         ),
                       ),
                     ),
-                    // Text(chosen_address),
-
                     for (var index = 0; index < addresses.length; index++)
                       Padding(
                         padding: const EdgeInsets.only(
@@ -1209,14 +1027,12 @@ class _CartState extends State<Cart> {
                                     color: Colors.grey.withOpacity(0.1),
                                     spreadRadius: 2.2,
                                     blurRadius: 2.5,
-                                    offset: Offset(
-                                        0, 4), // changes position of shadow
+                                    offset: Offset(0, 4),
                                   ),
                                 ],
                                 color: Colors.white,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(15))),
-                            // color: Colors.grey,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
@@ -1232,14 +1048,8 @@ class _CartState extends State<Cart> {
                                         size: 36,
                                       ),
                                     ),
-                                    onPressed: () {
-                                      // Navigator.of(context).pop();
-                                      // setState(() {
-                                      //   showerrortextbool = false;
-                                      // });
-                                    }),
+                                    onPressed: () {}),
                                 Container(
-                                    // color: Colors.green,
                                     margin: new EdgeInsets.only(
                                         left: 10.0, right: 0),
                                     child: Padding(
@@ -1261,7 +1071,6 @@ class _CartState extends State<Cart> {
                                                     bottom: 5),
                                                 child: Text(
                                                   addresses[index]["name"],
-                                                  // textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 16,
@@ -1350,14 +1159,12 @@ class _CartState extends State<Cart> {
                                   color: Colors.grey.withOpacity(0.1),
                                   spreadRadius: 2.2,
                                   blurRadius: 2.5,
-                                  offset: Offset(
-                                      0, 4), // changes position of shadow
+                                  offset: Offset(0, 4),
                                 ),
                               ],
                               color: Colors.white,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(14))),
-                          // color: Colors.grey,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
@@ -1366,7 +1173,6 @@ class _CartState extends State<Cart> {
                                   child: Icon(Icons.payment,
                                       size: 30, color: Colors.black)),
                               Container(
-                                  // color: Colors.green,
                                   margin: new EdgeInsets.only(
                                       left: 10.0, right: 0, bottom: 0),
                                   child: Padding(
@@ -1388,7 +1194,6 @@ class _CartState extends State<Cart> {
                                                   bottom: 5),
                                               child: Text(
                                                 'Cash On Delivery',
-                                                // textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16,
@@ -1432,10 +1237,8 @@ class _CartState extends State<Cart> {
                     ),
                   ],
                 ),
-
-              // fixxxxxx
               FutureBuilder(
-                  future: setupVerification(), // async work
+                  future: setupVerification(),
                   builder: (context, snapshot) {
                     print(notsetup);
                     switch (snapshot.connectionState) {
@@ -1462,7 +1265,6 @@ class _CartState extends State<Cart> {
                               textColor: Colors.white,
                               minWidth: MediaQuery.of(context).size.width,
                               height: 0,
-                              // padding: EdgeInsets.zero,
                               padding: EdgeInsets.only(
                                   left: 23, top: 12, right: 23, bottom: 10),
                               child: Text(
@@ -1471,7 +1273,6 @@ class _CartState extends State<Cart> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15.0,
                                   fontFamily: 'Axiforma',
-                                  // color: Colors.white,
                                 ),
                               ),
                             ),
@@ -1501,7 +1302,6 @@ class _CartState extends State<Cart> {
                                       minWidth:
                                           MediaQuery.of(context).size.width,
                                       height: 0,
-                                      // padding: EdgeInsets.zero,
                                       padding: EdgeInsets.only(
                                           left: 23,
                                           top: 12,
@@ -1513,7 +1313,6 @@ class _CartState extends State<Cart> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15.0,
                                           fontFamily: 'Axiforma',
-                                          // color: Colors.white,
                                         ),
                                       ),
                                     ),
@@ -1538,13 +1337,11 @@ class _CartState extends State<Cart> {
                                 ),
                                 elevation: 0,
                                 onPressed: () {
-                                  // print("xlicked");
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(
                                           builder: (context) =>
                                               ProfileScreen()))
                                       .then((_) {
-                                    // refreshcart();
                                     setupVerification();
                                     setState(() {});
                                   });
@@ -1554,7 +1351,6 @@ class _CartState extends State<Cart> {
                                 textColor: Colors.white,
                                 minWidth: MediaQuery.of(context).size.width,
                                 height: 0,
-                                // padding: EdgeInsets.zero,
                                 padding: EdgeInsets.only(
                                     left: 23, top: 10, right: 23, bottom: 10),
                                 child: Text(
@@ -1563,7 +1359,6 @@ class _CartState extends State<Cart> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15.0,
                                     fontFamily: 'Axiforma',
-                                    // color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -1585,7 +1380,6 @@ class _CartState extends State<Cart> {
                                 textColor: Colors.white,
                                 minWidth: MediaQuery.of(context).size.width,
                                 height: 0,
-                                // padding: EdgeInsets.zero,
                                 padding: EdgeInsets.only(
                                     left: 23, top: 10, right: 23, bottom: 10),
                                 child: Text(
@@ -1594,7 +1388,6 @@ class _CartState extends State<Cart> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15.0,
                                     fontFamily: 'Axiforma',
-                                    // color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -1603,11 +1396,6 @@ class _CartState extends State<Cart> {
                         }
                     }
                   }),
-
-              // Text(usersignedin
-              //     ? "user is signed in"
-              //     : "user not signed in"),
-              // Text(notsetup ? "user is not setup" : "user is setup"),
               Visibility(
                 visible: false,
                 child: Padding(
@@ -1625,17 +1413,6 @@ class _CartState extends State<Cart> {
                               color: Colors.grey[500],
                             ),
                           ),
-                          // Expanded(
-                          //   child: Text(
-                          //     "All meal baskets come with a detailed cooking instructions!",
-                          //     style: TextStyle(
-                          //       fontWeight: FontWeight.normal,
-                          //       fontSize: 12.0,
-                          //       fontFamily: 'Axiforma',
-                          //       color: Colors.grey[500],
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
@@ -1644,9 +1421,6 @@ class _CartState extends State<Cart> {
               )
             ],
           ),
-          // }
-          // },
-          // ),
         ),
       )),
     );
@@ -1666,9 +1440,7 @@ class _CartState extends State<Cart> {
     return total;
   }
 
-  // dynamic shopdetails;
   getShop(shop) async {
-    // print('seraching for: $shop');
     var document = await Firestore.instance
         .collection('shops')
         .where("username", isEqualTo: shop)
@@ -1685,11 +1457,6 @@ class _CartState extends State<Cart> {
         ? cartitem['data']['shop_price']
         : 1;
 
-    // if (cartitem['data']['currency'] != "dollar") {
-    //   rate = 1;
-    // } else {
-    //   rate = cartitem['rate'];
-    // }
     rate = cartitem['rate'];
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -1697,7 +1464,6 @@ class _CartState extends State<Cart> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            // color: Colors.green,
             margin: new EdgeInsets.only(left: 12.0, right: 10),
             child: Container(
                 height: 90,
@@ -1708,7 +1474,7 @@ class _CartState extends State<Cart> {
                       color: Colors.grey.withOpacity(0.07),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: Offset(0, 8), // changes position of shadow
+                      offset: Offset(0, 8),
                     ),
                   ],
                   color: Colors.white,
@@ -1745,7 +1511,6 @@ class _CartState extends State<Cart> {
                       width: width - 150,
                       child: Text(
                         cartitem['data']['name'],
-                        // textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
@@ -1770,7 +1535,6 @@ class _CartState extends State<Cart> {
                         cartitem['date-words'] != null
                             ? cartitem['date-words']
                             : '',
-                        // textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
@@ -1787,7 +1551,6 @@ class _CartState extends State<Cart> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Row(
-                    // mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
@@ -1804,10 +1567,8 @@ class _CartState extends State<Cart> {
                                             (cartitem['rate']))
                                         .toString() +
                                     "L.L.",
-                                // overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
-
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
@@ -1827,7 +1588,6 @@ class _CartState extends State<Cart> {
                                             .toString() +
                                         "L.L."
                                     : "",
-                                // overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -1851,7 +1611,6 @@ class _CartState extends State<Cart> {
                             cartitem['data']['unit'] != null
                                 ? cartitem['data']['unit'].toString()
                                 : '',
-                            // overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               height: 1.1,
@@ -1894,7 +1653,6 @@ class _CartState extends State<Cart> {
                       textColor: Colors.white,
                       minWidth: 0,
                       height: 0,
-                      // padding: EdgeInsets.zero,
                       padding:
                           EdgeInsets.only(left: 6, top: 2, right: 6, bottom: 1),
                       child: Text(
@@ -1909,16 +1667,9 @@ class _CartState extends State<Cart> {
                     ),
                   ),
                 ),
-                // ),
-                //  Visibility(
-                //   visible: cartitem['data']['type'] == 'salle' ? false : true,
-                //   child: Container(
-                //     child: Text()
-                //   )),
                 Visibility(
                   visible: cartitem['data']['type'] == 'salle' ? false : true,
                   child: Row(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(
@@ -1956,7 +1707,6 @@ class _CartState extends State<Cart> {
                             size: 13,
                             color: Colors.white,
                           ),
-                          // padding: EdgeInsets.all(0.0),
                           shape: CircleBorder(),
                         ),
                       ),
@@ -1969,13 +1719,6 @@ class _CartState extends State<Cart> {
                         width: 25,
                         child: RawMaterialButton(
                           onPressed: () {
-                            //   refreshcartnumbers(
-                            //       cartitem.documentID,
-                            //       count,
-                            //       int.parse(cartitem['shop_price'].toString()),
-                            //       true,
-                            //       false);
-                            // },
                             _save(
                               cartitemID,
                               cartitem['rate'],
@@ -2026,7 +1769,6 @@ class _CartState extends State<Cart> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            // color: Colors.green,
             margin: new EdgeInsets.only(left: 12.0, right: 10),
             child: Container(
                 height: 90,
@@ -2037,7 +1779,7 @@ class _CartState extends State<Cart> {
                       color: Colors.grey.withOpacity(0.07),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: Offset(0, 8), // changes position of shadow
+                      offset: Offset(0, 8),
                     ),
                   ],
                   color: Colors.white,
@@ -2065,7 +1807,6 @@ class _CartState extends State<Cart> {
                       width: width - 150,
                       child: Text(
                         cartitem['name'],
-                        // textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
@@ -2090,7 +1831,6 @@ class _CartState extends State<Cart> {
                         cartitem['arabic_name'] != null
                             ? cartitem['arabic_name']
                             : '',
-                        // textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
@@ -2107,7 +1847,6 @@ class _CartState extends State<Cart> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Row(
-                    // mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
@@ -2123,10 +1862,8 @@ class _CartState extends State<Cart> {
                                             cartitem['rate'])
                                         .toString() +
                                     "L.L.",
-                                // overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
-
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
@@ -2145,7 +1882,6 @@ class _CartState extends State<Cart> {
                                             .toString() +
                                         "L.L."
                                     : "",
-                                // overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -2168,7 +1904,6 @@ class _CartState extends State<Cart> {
                             cartitem['unit'] != null
                                 ? cartitem['unit'].toString()
                                 : '',
-                            // overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               height: 1.1,
@@ -2191,26 +1926,11 @@ class _CartState extends State<Cart> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       ),
-                      onPressed: () {
-                        // Navigator.of(context)
-                        //     .push(MaterialPageRoute(
-                        //         builder: (context) => SalleItem(
-                        //             cartitem,
-                        //             cartitem['day'],
-                        //             cartitem['serving_prices'],
-                        //             cartitem['descriptions'],
-                        //             cartitem['description'],
-                        //             cartitem['date'],
-                        //             cartitem['date-words'])))
-                        //     .then((_) {
-                        //   setState(() {});
-                        // });
-                      },
+                      onPressed: () {},
                       color: Colors.redAccent[700],
                       textColor: Colors.white,
                       minWidth: 0,
                       height: 0,
-                      // padding: EdgeInsets.zero,
                       padding:
                           EdgeInsets.only(left: 6, top: 2, right: 6, bottom: 1),
                       child: Text(
@@ -2225,16 +1945,9 @@ class _CartState extends State<Cart> {
                     ),
                   ),
                 ),
-                // ),
-                //  Visibility(
-                //   visible: cartitem['type'] == 'salle' ? false : true,
-                //   child: Container(
-                //     child: Text()
-                //   )),
                 Visibility(
                   visible: cartitem['type'] == 'salle' ? false : true,
                   child: Row(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(
@@ -2258,7 +1971,6 @@ class _CartState extends State<Cart> {
                             size: 13,
                             color: Colors.white,
                           ),
-                          // padding: EdgeInsets.all(0.0),
                           shape: CircleBorder(),
                         ),
                       ),
@@ -2271,13 +1983,6 @@ class _CartState extends State<Cart> {
                         width: 25,
                         child: RawMaterialButton(
                           onPressed: () {
-                            //   refreshcartnumbers(
-                            //       cartitem.documentID,
-                            //       count,
-                            //       int.parse(cartitem['shop_price'].toString()),
-                            //       true,
-                            //       false);
-                            // },
                             _save(
                                 cartitem.documentID,
                                 rate,

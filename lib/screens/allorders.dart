@@ -30,7 +30,6 @@ class _PrivacyState extends State<Orders> {
                       alignment: Alignment.centerLeft,
                       child: GestureDetector(
                         onTap: () {
-                          // widget.notifyParent();
                           Navigator.pop(context);
                         },
                         child: Icon(
@@ -62,18 +61,6 @@ class _PrivacyState extends State<Orders> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // Padding(
-                    //   padding: const EdgeInsets.only(top: 0, bottom: 50),
-                    //   child: Text(
-                    //     "Recent Orders",
-                    //     style: TextStyle(
-                    //       fontWeight: FontWeight.bold,
-                    //       fontSize: 28.0,
-                    //       fontFamily: 'Axiforma',
-                    //       color: Colors.black,
-                    //     ),
-                    //   ),
-                    // ),
                     StreamBuilder(
                       stream: Firestore.instance
                           .collection('orders')
@@ -93,7 +80,6 @@ class _PrivacyState extends State<Orders> {
                                     children: List<Widget>.generate(
                                         snapshot.data.documents.length,
                                         (int index) {
-                                      // print(categories[index]);
                                       return GestureDetector(
                                         onTap: () {
                                           Navigator.of(context).push(

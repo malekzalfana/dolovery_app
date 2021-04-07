@@ -1,24 +1,15 @@
 import 'dart:async';
 import 'dart:core';
 import 'dart:io';
-
 import 'package:dolovery_app/screens/cart.dart';
-import 'package:dolovery_app/widgets/product.dart';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-//import 'package:flutter_svg/svg.dart';
-// ignore: unused_import
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'screens/100lebanese.dart';
 import 'package:flutter/services.dart';
-import 'tools/hex.dart';
 import 'screens/home.dart';
 import 'screens/profile.dart';
 import 'screens/salle.dart';
@@ -38,28 +29,8 @@ String name;
 String uid;
 String uemail;
 bool newuser = true;
-// DELETEDDDDDDD
-// Future setupVerification() async {
-//   print("USER BEING WATCHED");
-//   final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-//   if (user != null) {
-//     uid = user.uid;
-//     name = user.displayName;
-//     uemail = user.email;
-//   }
-
-//   // print("USERNAME")
-//   this_user = await Firestore.instance.collection("users").document(uid).get();
-
-//   if (this_user.exists) {
-//     newuser = false;
-//   }
-//   print("newuser is:" + newuser.toString());
-//   // return this_user;
-// }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(Colors.black45);
@@ -123,24 +94,17 @@ class _MyHomePageState extends State<MyHomePage> {
         InternetAddress.lookup('google.com').then((result) {
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
             print('connected');
-            // super.initState();
+
             _getPrefs();
-          } else {
-            // _showDialog(); // show dialog
-          }
-        }).catchError((error) {
-          // _showDialog(); // show dialog
-        });
+          } else {}
+        }).catchError((error) {});
       } on SocketException catch (_) {
-        // _showDialog();
-        print('not connected'); // show dialog
+        print('not connected');
       }
-      // XXXXXXXXX commented out the showdialog all of them
     });
   }
 
   void _showDialog() {
-    // dialog implementation
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -158,18 +122,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // @override
-  // void initState() {
-  //   _getPrefs();
-  //   print('Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-  //   super.initState();
-  //   @override
-  //   void initState() {
-  //     print('Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-  //     super.initState();
-  //   }
-  // }
-
   Future<void> reset() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('type');
@@ -178,20 +130,18 @@ class _MyHomePageState extends State<MyHomePage> {
     prefs.remove('cart');
     prefs.remove('shops');
     prefs.remove('usercartmap');
-    // Navigator.of(context).pop();
+
     print(prefs.getKeys());
     return true;
   }
 
   List pages;
-// @override
+
   profilestatus() {
     var profilescreen;
-    // setupVerification();
+
     if (newuser == false) {
-      profilescreen = ProfileMainScreen(
-          // thisUser: this_user,
-          );
+      profilescreen = ProfileMainScreen();
       print('user NOT set up');
     } else {
       profilescreen = ProfileScreen();
@@ -200,11 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     pages = [
       HomeScreen(notifyParent: gotosalle, notifyParent2: refreshcart),
-      // null,
       SalleScreen(notifyParent: gotohome, notifyParent2: refreshcart),
-      // profilescreen
-      // null,
-      // ProfileScreen(),
       ProfileMainScreen(notifyParent: gotohome),
     ];
   }
@@ -216,56 +162,24 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  // @override
   void signOut() {
     FirebaseAuth.instance.signOut().then((onValue) {
       print("JUST LOGGED OUT");
     });
   }
 
-  Future<void> _signInOut() async {
-    if (await FirebaseAuth.instance.currentUser() == null) {
-      _signInPopUp(context);
-    } else {
-      signOut();
-    }
-  }
-
-  // _addtocart() async {
-  //       final prefs = await SharedPreferences.getInstance();
-
-  //       final key = 'cart';
-  //       final value = ['sss','aaa'];
-  //       prefs.setInt(key, value);
-  //       print('saved $value');
-  //     }
   double items;
   double total;
   String type;
-  // Future loadcart() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   // setState(() {
-  //   type = prefs.getString('type');
-  //   total = prefs.getDouble('total');
-  //   items = prefs.getDouble('items');
-  //   // });
-  //   return print(type);
-  //   // print('saved $total');
-  //   // print('saved $type');
-  // }
+
   SharedPreferences prefs;
 
   @override
   Widget build(BuildContext context) {
-    // setupVerification();
     profilestatus();
-    // _getPrefs();
-    // loadcart();
+
     var size = MediaQuery.of(context).size;
 
-    /*24 is for notification bar on Android*/
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
-    final double itemWidth = size.width / 2;
     print(newuser.toString() + 'this is the new user');
     return Scaffold(
         bottomNavigationBar: FutureBuilder(
@@ -282,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 cart_total = cart_total == null ? 0 : cart_total;
                 cart_total = cart_total == null ? 0 : cart_total;
                 print(cart_items.toString() + cart_total.toString());
-                //prefs.getDouble('total').toInt();
+
                 if (_getPrefs() != null) {
                   return SafeArea(
                     child: SizedBox(
@@ -347,7 +261,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                           minWidth: 0,
                                           height: 0,
                                           elevation: 0,
-                                          // padding: EdgeInsets.zero,
                                           padding: EdgeInsets.only(
                                               left: 9,
                                               top: 6,
@@ -370,7 +283,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                             ),
-                            // ),
                             Container(
                               color: Colors.white,
                               child: Row(
@@ -389,20 +301,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               } else if (snapshot.hasError) {
                 Text("there is an error");
-              } else {
-                // Text("else");
-              }
+              } else {}
               return Center(
                   child: Image.asset("assets/images/loading.gif", height: 30));
-              // return CircularProgressIndicator();
             }),
-
-        // appBar: AppBar(
-        //   backgroundColor: Colors.white,
-        //   title: Text(
-        //     widget.title,
-        //   ),
-        // ),
         body: pages[_selectedItemIndex]);
   }
 
@@ -435,11 +337,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _getPrefs() async {
     prefs = await SharedPreferences.getInstance();
     return true;
-    // setState(() {
-    //   type = prefs.getString('type');
-    // total = prefs.getDouble('total');
-    // items = prefs.getDouble('items');
-    // });
   }
 
   void _signInPopUp(context) {
@@ -469,7 +366,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.only(bottom: 50.0),
                   child: Image.asset(
                     'assets/images/doloverywhiteback.png',
-                    // height: 120.0,
                     width: 120.0,
                   ),
                 ),
@@ -517,7 +413,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.only(bottom: 50.0),
                   child: Image.asset(
                     'assets/images/doloverywhiteback.png',
-                    // height: 120.0,
                     width: 120.0,
                   ),
                 ),
@@ -555,7 +450,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     textColor: Colors.white,
                     minWidth: 0,
                     height: 0,
-                    // padding: EdgeInsets.zero,
                     padding: EdgeInsets.only(
                         left: 20, top: 10, right: 20, bottom: 10),
                     child: Text(
@@ -636,16 +530,14 @@ class _MyHomePageState extends State<MyHomePage> {
         content: Text('Welcome to Dolovery!'),
         action: SnackBarAction(
           label: 'Undo',
-          onPressed: () {
-            // Some code to undo the change.
-          },
+          onPressed: () {},
         ),
       );
-      // var docRef = db.collection("cities").doc("SF");
+
       print("signed in " + user.uid);
       Navigator.of(context).pop();
       _welcomePopUp(context, user.displayName);
-      // used before user.uid
+
       final newUser =
           await Firestore.instance.collection("users").document(user.uid).get();
       if (!newUser.exists) {
@@ -660,11 +552,6 @@ class _MyHomePageState extends State<MyHomePage> {
           print(value.documentID);
         });
       }
-
-      // if (Firestore.instance.collection("users").document(user.uid).get() != null) {
-
-      // Scaffold.of(context).showSnackBar(snackBar);
-      // }
 
       return user;
     } catch (e) {
@@ -715,6 +602,3 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 }
-// void refresh(){
-//   print ('refreshed');
-// }

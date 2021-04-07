@@ -12,11 +12,6 @@ class EditAddress extends StatefulWidget {
       {Key key})
       : super(key: key);
 
-  // final List addressArray;
-  // // EditAddress(this.addressArray);
-
-  // const EditAddress({Key key, this.addressArray}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() {
     return EditAddressState();
@@ -24,28 +19,19 @@ class EditAddress extends StatefulWidget {
 }
 
 class EditAddressState extends State<EditAddress> {
-  // String _address = "";
   String _streetaddress = "";
   String _landmark = "";
-  // String _city;
+
   String _apartment = "";
   String _phone = "";
   String _address_name = "";
   String _city = "";
   String addressID = "";
-  // List addressArray;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController controller = TextEditingController();
 
   bool canSubmit = true;
-
-  // Future checklocation() async {
-  //   Position position = await getLastKnownPosition();
-
-  //   bool isLocationServiceEnabled  = await isLocationServiceEnabled();
-
-  // }
 
   void onTextChange(String fieldname, String value) {
     print("started phone");
@@ -62,7 +48,6 @@ class EditAddressState extends State<EditAddress> {
   }
 
   void onFieldChange() {
-    // print()
     var fields = <String>[
       _address_name,
       _city,
@@ -87,9 +72,7 @@ class EditAddressState extends State<EditAddress> {
   Future setupVerification() async {
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final uid = user.uid;
-    // final name = user.displayName;
-    // final uemail = user.email;
-    // print("USERNAME")
+
     var usercollection =
         await Firestore.instance.collection("users").document(uid).get();
 
@@ -101,11 +84,6 @@ class EditAddressState extends State<EditAddress> {
 
   bool newIsDefault;
   bool ult;
-  // @override
-  // void dispose() {
-  //   controller?.dispose();
-  //   super.dispose();
-  // }
 
   var currentSelectedValue;
   static const deviceTypes = [
@@ -145,7 +123,7 @@ class EditAddressState extends State<EditAddress> {
           addressEdited = true;
         });
       },
-      controlAffinity: ListTileControlAffinity.leading, //  <-- leading Checkbox
+      controlAffinity: ListTileControlAffinity.leading,
     );
   }
 
@@ -153,7 +131,6 @@ class EditAddressState extends State<EditAddress> {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: Container(
-        // padding: EdgeInsets.symmetric(horizontal: 20),
         width: MediaQuery.of(context).size.width,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
@@ -164,16 +141,11 @@ class EditAddressState extends State<EditAddress> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-
-                  // focusedBorder: InputBorder.none,
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-
-                // errorBorder: InputBorder.none,
-                // disabledBorder: InputBorder.none,),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     hint: Text(_city),
@@ -213,31 +185,19 @@ class EditAddressState extends State<EditAddress> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
             labelText: 'Street Adress'),
         maxLength: 100,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Street Adress is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _streetaddress = value;
         },
         onChanged: (value) {
-          // print("street");
           onTextChange("Address", value);
           onFieldChange();
         },
@@ -254,28 +214,17 @@ class EditAddressState extends State<EditAddress> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
             labelText: 'Landmark'),
         maxLength: 50,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Landmark is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _landmark = value;
-          // onFieldChange();
         },
         onChanged: (value) {
           onTextChange("Landmark", value);
@@ -294,28 +243,17 @@ class EditAddressState extends State<EditAddress> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
             labelText: 'Address Name'),
         maxLength: 50,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Landmark is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _address_name = value;
-          // onFieldChange();
         },
         onChanged: (value) {
           onTextChange("Address Name", value);
@@ -334,29 +272,17 @@ class EditAddressState extends State<EditAddress> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
-
             labelText: 'Apartment / Floor'),
         maxLength: 50,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Apartment is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _apartment = value;
-          // onFieldChange();
         },
         onChanged: (value) {
           onTextChange("Apartment", value);
@@ -366,17 +292,11 @@ class EditAddressState extends State<EditAddress> {
     );
   }
 
-  // @override
-  // void initState() {
-  //   newIsDefault = widget.isDefault;
-  //   super.initState();
-  // }
   bool addressEdited = false;
   @override
   Widget build(BuildContext context) {
     _streetaddress = widget.addressArray[widget.addressCount]["street_address"];
     _landmark = widget.addressArray[widget.addressCount]["landmark"];
-    // String _city;
 
     _address_name = widget.addressArray[widget.addressCount]["name"];
     _city = widget.addressArray[widget.addressCount]["city"];
@@ -417,16 +337,6 @@ class EditAddressState extends State<EditAddress> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      // Text(
-                      //   "Enter the details",
-                      //   textAlign: TextAlign.left,
-                      //   style: TextStyle(
-                      //     fontWeight: FontWeight.w800,
-                      //     fontSize: 28.0,
-                      //     fontFamily: 'Axiforma',
-                      //     color: Colors.black,
-                      //   ),
-                      // ),
                       _address_nameBuild(),
                       _address1Build(),
                       _address2Build(),
@@ -468,29 +378,11 @@ class EditAddressState extends State<EditAddress> {
                                 print(thisAddress);
                                 print(widget.addressArray);
 
-                                // addressArray  ;
-                                // List finalAdressArray = [];
-                                // widget.addressArray.add(thisAddress);
-                                // var rList = [0, 1, 2, 3, 4, 5, 6];
                                 widget.addressArray.replaceRange(
                                     widget.addressCount,
                                     widget.addressCount + 1,
                                     [thisAddress]);
-                                // print('$rList'); // [0, 1, 10, 3, 4, 5, 6]
 
-                                // Future
-                                // List addresses = [thisAddress];
-                                // Map<String, dynamic> thisuser = {
-                                //   "fullname": _address_name,
-                                //   "number": _phone,
-                                //   "email": uemail,
-                                //   "address": addresses
-                                //   // "id": uid,
-                                //   // "city": _city,
-                                //   // "street_address": _streetaddress,
-                                //   // "landmark": _landmark,
-                                //   // "apartment": _apartment,
-                                // };
                                 Firestore.instance
                                     .collection('users')
                                     .document(uid)
@@ -501,7 +393,7 @@ class EditAddressState extends State<EditAddress> {
                                 }).catchError((onError) {
                                   print("onError");
                                 });
-                                // print("USERNAME")
+
                                 if (newIsDefault) {
                                   Firestore.instance
                                       .collection("users")
@@ -510,21 +402,15 @@ class EditAddressState extends State<EditAddress> {
                                     "chosen_address": addressID,
                                   });
                                 }
-
-                                // here you write the codes to input the data into firestore
                               }
 
                               inputData();
                               Navigator.of(context).pop();
-                              // Navigator.of(context).pop();
-
-                              //Send to API
                             },
                             color: Colors.redAccent[700],
                             textColor: Colors.white,
                             minWidth: MediaQuery.of(context).size.width,
                             height: 0,
-                            // padding: EdgeInsets.zero,
                             padding: EdgeInsets.only(
                                 left: 20, top: 10, right: 20, bottom: 10),
                             child: Text(
@@ -540,7 +426,7 @@ class EditAddressState extends State<EditAddress> {
                         ),
                       ),
                       Visibility(
-                        visible: canSubmit == false, //canSubmit,
+                        visible: canSubmit == false,
                         child: Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: MaterialButton(
@@ -554,7 +440,6 @@ class EditAddressState extends State<EditAddress> {
                             textColor: Colors.grey[300],
                             minWidth: MediaQuery.of(context).size.width,
                             height: 0,
-                            // padding: EdgeInsets.zero,
                             padding: EdgeInsets.only(
                                 left: 20, top: 10, right: 20, bottom: 10),
                             child: Text(
@@ -563,7 +448,6 @@ class EditAddressState extends State<EditAddress> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15.0,
                                 fontFamily: 'Axiforma',
-                                // color: Colors.white,
                               ),
                             ),
                           ),

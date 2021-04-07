@@ -6,11 +6,6 @@ class AddAddress extends StatefulWidget {
   final List addressArray;
   AddAddress(this.addressArray, {Key key}) : super(key: key);
 
-  // final List addressArray;
-  // // AddAddress(this.addressArray);
-
-  // const AddAddress({Key key, this.addressArray}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() {
     return AddAddressState();
@@ -18,27 +13,18 @@ class AddAddress extends StatefulWidget {
 }
 
 class AddAddressState extends State<AddAddress> {
-  // String _address = "";
   String _streetaddress = "";
   String _landmark = "";
-  // String _city;
+
   String _apartment = "";
   String _phone = "";
-  String _address_name = "";
+  String _addressName = "";
   String _city = "";
-  // List addressArray;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController controller = TextEditingController();
 
   bool canSubmit = false;
-
-  // Future checklocation() async {
-  //   Position position = await getLastKnownPosition();
-
-  //   bool isLocationServiceEnabled  = await isLocationServiceEnabled();
-
-  // }
 
   void onTextChange(String fieldname, String value) {
     print("started phone");
@@ -49,15 +35,14 @@ class AddAddressState extends State<AddAddress> {
     } else if (fieldname == "Apartment") {
       _apartment = value;
     } else if (fieldname == "Address Name") {
-      _address_name = value;
+      _addressName = value;
       print(_phone);
     }
   }
 
   void onFieldChange() {
-    // print()
     var fields = <String>[
-      _address_name,
+      _addressName,
       _city,
       _streetaddress,
       _landmark,
@@ -80,9 +65,7 @@ class AddAddressState extends State<AddAddress> {
   Future setupVerification() async {
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final uid = user.uid;
-    // final name = user.displayName;
-    // final uemail = user.email;
-    // print("USERNAME")
+
     var usercollection =
         await Firestore.instance.collection("users").document(uid).get();
 
@@ -91,12 +74,6 @@ class AddAddressState extends State<AddAddress> {
     }
     return newuser = false;
   }
-
-  // @override
-  // void dispose() {
-  //   controller?.dispose();
-  //   super.dispose();
-  // }
 
   var currentSelectedValue;
   static const deviceTypes = [
@@ -130,7 +107,6 @@ class AddAddressState extends State<AddAddress> {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: Container(
-        // padding: EdgeInsets.symmetric(horizontal: 20),
         width: MediaQuery.of(context).size.width,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
@@ -141,16 +117,11 @@ class AddAddressState extends State<AddAddress> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-
-                  // focusedBorder: InputBorder.none,
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-
-                // errorBorder: InputBorder.none,
-                // disabledBorder: InputBorder.none,),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     hint: Text("Select City"),
@@ -189,30 +160,19 @@ class AddAddressState extends State<AddAddress> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
             labelText: 'Street Adress'),
         maxLength: 100,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Street Adress is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _streetaddress = value;
         },
         onChanged: (value) {
-          // print("street");
           onTextChange("Address", value);
           onFieldChange();
         },
@@ -228,28 +188,17 @@ class AddAddressState extends State<AddAddress> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
             labelText: 'Landmark'),
         maxLength: 50,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Landmark is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _landmark = value;
-          // onFieldChange();
         },
         onChanged: (value) {
           onTextChange("Landmark", value);
@@ -267,28 +216,17 @@ class AddAddressState extends State<AddAddress> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
             labelText: 'Address Name'),
         maxLength: 50,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Landmark is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
-          _address_name = value;
-          // onFieldChange();
+          _addressName = value;
         },
         onChanged: (value) {
           onTextChange("Address Name", value);
@@ -306,29 +244,17 @@ class AddAddressState extends State<AddAddress> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
-
             labelText: 'Apartment / Floor'),
         maxLength: 50,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Apartment is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _apartment = value;
-          // onFieldChange();
         },
         onChanged: (value) {
           onTextChange("Apartment", value);
@@ -367,16 +293,6 @@ class AddAddressState extends State<AddAddress> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                // Text(
-                //   "Enter the details",
-                //   textAlign: TextAlign.left,
-                //   style: TextStyle(
-                //     fontWeight: FontWeight.w800,
-                //     fontSize: 28.0,
-                //     fontFamily: 'Axiforma',
-                //     color: Colors.black,
-                //   ),
-                // ),
                 _address_nameBuild(),
                 _address1Build(),
                 _address2Build(),
@@ -406,7 +322,7 @@ class AddAddressState extends State<AddAddress> {
                           final name = user.displayName;
                           final uemail = user.email;
                           Map<String, dynamic> thisAddress = {
-                            "name": _address_name,
+                            "name": _addressName,
                             "city": _city,
                             "street_address": _streetaddress,
                             "landmark": _landmark,
@@ -417,23 +333,8 @@ class AddAddressState extends State<AddAddress> {
                           print(thisAddress);
                           print(widget.addressArray);
 
-                          // addressArray  ;
-                          // List finalAdressArray = [];
                           widget.addressArray.add(thisAddress);
 
-                          // Future
-                          // List addresses = [thisAddress];
-                          // Map<String, dynamic> thisuser = {
-                          //   "fullname": _address_name,
-                          //   "number": _phone,
-                          //   "email": uemail,
-                          //   "address": addresses
-                          //   // "id": uid,
-                          //   // "city": _city,
-                          //   // "street_address": _streetaddress,
-                          //   // "landmark": _landmark,
-                          //   // "apartment": _apartment,
-                          // };
                           Firestore.instance
                               .collection('users')
                               .document(uid)
@@ -444,36 +345,15 @@ class AddAddressState extends State<AddAddress> {
                           }).catchError((onError) {
                             print("onError");
                           });
-                          // print("USERNAME")
-                          // Firestore.instance
-                          //     .collection("users")
-                          //     .document(uid)
-                          //     .setData(thisuser);
-                          //     .add({
-                          //   "fullname": name,
-                          //   "number": _phone,
-                          //   "email": uemail,
-                          //   "id": uid,
-                          //   "city": _city,
-                          //   "street_address": _streetaddress,
-                          //   "landmark": _landmark,
-                          //   "apartment": _apartment,
-                          // });
-
-                          // here you write the codes to input the data into firestore
                         }
 
                         inputData();
                         Navigator.of(context).pop();
-                        // Navigator.of(context).pop();
-
-                        //Send to API
                       },
                       color: Colors.redAccent[700],
                       textColor: Colors.white,
                       minWidth: MediaQuery.of(context).size.width,
                       height: 0,
-                      // padding: EdgeInsets.zero,
                       padding: EdgeInsets.only(
                           left: 20, top: 10, right: 20, bottom: 10),
                       child: Text(
@@ -489,7 +369,7 @@ class AddAddressState extends State<AddAddress> {
                   ),
                 ),
                 Visibility(
-                  visible: canSubmit == false, //canSubmit,
+                  visible: canSubmit == false,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: MaterialButton(
@@ -503,7 +383,6 @@ class AddAddressState extends State<AddAddress> {
                       textColor: Colors.grey[300],
                       minWidth: MediaQuery.of(context).size.width,
                       height: 0,
-                      // padding: EdgeInsets.zero,
                       padding: EdgeInsets.only(
                           left: 20, top: 10, right: 20, bottom: 10),
                       child: Text(
@@ -512,7 +391,6 @@ class AddAddressState extends State<AddAddress> {
                           fontWeight: FontWeight.bold,
                           fontSize: 15.0,
                           fontFamily: 'Axiforma',
-                          // color: Colors.white,
                         ),
                       ),
                     ),

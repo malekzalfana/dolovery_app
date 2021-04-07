@@ -11,10 +11,9 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class EditProfileState extends State<EditProfileScreen> {
-  // String _address = "";
   String _streetaddress = "";
   String _landmark = "";
-  // String _city;
+
   String _apartment = "";
   String _phone = "";
   String _fullname = "";
@@ -296,7 +295,6 @@ class EditProfileState extends State<EditProfileScreen> {
   }
 
   void onFieldChange() {
-    // print()
     var fields = <String>[
       _fullname,
       _phone,
@@ -343,7 +341,6 @@ class EditProfileState extends State<EditProfileScreen> {
         onInputValidated: (bool value) {
           print(value);
         },
-
         ignoreBlank: true,
         selectorType: PhoneInputSelectorType.DIALOG,
         countries: countries,
@@ -352,8 +349,6 @@ class EditProfileState extends State<EditProfileScreen> {
         selectorTextStyle: TextStyle(color: Colors.black),
         initialValue: this_number,
         locale: 'LB',
-        // initialSelection: _code,
-        // ignoreBlank: true,
         hintText: _numberparsed.toString(),
         textFieldController: controller,
         inputBorder: OutlineInputBorder(
@@ -494,7 +489,6 @@ class EditProfileState extends State<EditProfileScreen> {
                                           "email": uemail,
                                         };
 
-                                        // print("USERNAME")
                                         Firestore.instance
                                             .collection("users")
                                             .document(uid)
@@ -503,14 +497,11 @@ class EditProfileState extends State<EditProfileScreen> {
 
                                       inputData();
                                       Navigator.of(context).pop();
-
-                                      //Send to API
                                     },
                                     color: Colors.redAccent[700],
                                     textColor: Colors.white,
                                     minWidth: MediaQuery.of(context).size.width,
                                     height: 0,
-                                    // padding: EdgeInsets.zero,
                                     padding: EdgeInsets.only(
                                         left: 20,
                                         top: 10,
@@ -529,7 +520,7 @@ class EditProfileState extends State<EditProfileScreen> {
                                 ),
                               ),
                               Visibility(
-                                visible: canSubmit == false, //canSubmit,
+                                visible: canSubmit == false,
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
                                   child: MaterialButton(
@@ -543,7 +534,6 @@ class EditProfileState extends State<EditProfileScreen> {
                                     textColor: Colors.grey[300],
                                     minWidth: MediaQuery.of(context).size.width,
                                     height: 0,
-                                    // padding: EdgeInsets.zero,
                                     padding: EdgeInsets.only(
                                         left: 20,
                                         top: 10,
@@ -555,7 +545,6 @@ class EditProfileState extends State<EditProfileScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15.0,
                                         fontFamily: 'Axiforma',
-                                        // color: Colors.white,
                                       ),
                                     ),
                                   ),
