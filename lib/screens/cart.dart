@@ -1,20 +1,15 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dolovery_app/screens/editadress.dart';
 import 'package:dolovery_app/screens/salleitem.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolovery_app/screens/profile.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:delayed_display/delayed_display.dart';
 
 import 'orderpage.dart';
 
@@ -550,7 +545,6 @@ class _CartState extends State<Cart> {
 
   addAddressToCart(cartaddress) async {
     final prefs = await SharedPreferences.getInstance();
-    var newcartaddress;
 
     prefs.setString('address', json.encode(cartaddress));
   }
@@ -850,11 +844,11 @@ class _CartState extends State<Cart> {
 
   @override
   Widget build(BuildContext context) {
-    num _defaultValue = 0;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    // if ( chosen_address != null ) {
 
-    List<Widget> list = new List<Widget>();
+    // }
 
     return new Scaffold(
       key: _scaffoldKey,

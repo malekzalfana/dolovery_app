@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:dropdownfield/dropdownfield.dart';
-
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return FormScreenState();
+    return ProfileScreenState();
   }
 }
 
-class FormScreenState extends State<ProfileScreen> {
+class ProfileScreenState extends State<ProfileScreen> {
   String _streetaddress = "";
   String _landmark = "";
 
@@ -308,7 +305,6 @@ class FormScreenState extends State<ProfileScreen> {
       _landmark,
       _apartment
     ];
-    bool allgood = true;
     print(fields);
 
     if (fields.contains("") || fields.contains(null)) {
@@ -620,13 +616,12 @@ class FormScreenState extends State<ProfileScreen> {
                         _formKey.currentState.save();
 
                         print("adding profile");
-                        void inputData() async {
+                        void addAddresstoCustomer() async {
                           final FirebaseUser user =
                               await FirebaseAuth.instance.currentUser();
                           final uid = user.uid;
-                          final name = user.displayName;
                           final uemail = user.email;
-                          String chosen_address =
+                          String chosenAddress =
                               UniqueKey().hashCode.toString();
                           Map<String, dynamic> thisAddress = {
                             "name": 'Home',
@@ -634,7 +629,7 @@ class FormScreenState extends State<ProfileScreen> {
                             "street_address": _streetaddress,
                             "landmark": _landmark,
                             "apartment": _apartment,
-                            "id": chosen_address,
+                            "id": chosenAddress,
                           };
                           List addresses = [thisAddress];
                           Map<String, dynamic> thisuser = {
@@ -643,7 +638,7 @@ class FormScreenState extends State<ProfileScreen> {
                             "code": _code,
                             "email": uemail,
                             "address": addresses,
-                            "chosen_address": chosen_address
+                            "chosen_address": chosenAddress
                           };
 
                           Firestore.instance
@@ -652,7 +647,7 @@ class FormScreenState extends State<ProfileScreen> {
                               .setData(thisuser);
                         }
 
-                        inputData();
+                        addAddresstoCustomer();
                         Navigator.of(context).pop();
                       },
                       color: Colors.redAccent[700],

@@ -176,70 +176,78 @@ class SalleScreenState extends State<SalleScreen> {
             ),
           ),
           Spacer(),
-          FutureBuilder(
-            future: getMonth(),
-            builder: (context, snapshot) {
-              return DefaultTabController(
-                  length: 2,
-                  initialIndex: 0,
-                  child: Column(
-                    children: <Widget>[
-                      StreamBuilder(
-                        stream: Firestore.instance
-                            .collection('salle')
-                            .document(formattedThisMonth)
-                            .snapshots(),
-                        builder: (context, sallesnapshot) {
-                          if (snapshot.hasError) {
-                            return RaisedButton(
-                              child: Text('Retry'),
-                              onPressed: null,
-                            );
-                          }
-                          if (!sallesnapshot.hasData)
-                            return SizedBox(
-                              height: 300,
-                              child: Center(
-                                  child: Image.asset(
-                                      "assets/images/loading.gif",
-                                      height: 30)),
-                            );
-                          else
-                            return Container(
-                              height: height - 345,
-                              child: Opacity(
-                                opacity: 1,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.vertical,
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 45.0),
-                                    child: Column(
-                                      children: [
-                                        for (var dayindex = 1 + today;
-                                            dayindex < today + (32 - today);
-                                            dayindex++)
-                                          Column(
-                                            children: [
-                                              buildDateOfSalle(
-                                                  dayindex.toString(),
-                                                  sallesnapshot,
-                                                  dayindex,
-                                                  2),
-                                            ],
-                                          ),
-                                      ],
+          // shuuuwuuu pierre.. 7abbet hal condition
+          if (1 == 2)
+            FutureBuilder(
+              future: getMonth(),
+              builder: (context, snapshot) {
+                return DefaultTabController(
+                    length: 2,
+                    initialIndex: 0,
+                    child: Column(
+                      children: <Widget>[
+                        StreamBuilder(
+                          stream: Firestore.instance
+                              .collection('salle')
+                              .document(formattedThisMonth)
+                              .snapshots(),
+                          builder: (context, sallesnapshot) {
+                            if (snapshot.hasError) {
+                              return RaisedButton(
+                                child: Text('Retry'),
+                                onPressed: null,
+                              );
+                            }
+                            if (!sallesnapshot.hasData)
+                              return SizedBox(
+                                height: 300,
+                                child: Center(
+                                    child: Image.asset(
+                                        "assets/images/loading.gif",
+                                        height: 30)),
+                              );
+                            else
+                              return Container(
+                                height: height - 345,
+                                child: Opacity(
+                                  opacity: 1,
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.vertical,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 45.0),
+                                      child: Column(
+                                        children: [
+                                          for (var dayindex = 1 + today;
+                                              dayindex < today + (32 - today);
+                                              dayindex++)
+                                            Column(
+                                              children: [
+                                                buildDateOfSalle(
+                                                    dayindex.toString(),
+                                                    sallesnapshot,
+                                                    dayindex,
+                                                    2),
+                                              ],
+                                            ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                        },
-                      ),
-                    ],
-                  ));
-            },
-          ),
+                              );
+                          },
+                        ),
+                      ],
+                    ));
+              },
+            ),
+          if (1 == 1)
+            Opacity(
+              opacity: 0.3,
+              child: SizedBox(
+                  height: 200, child: Center(child: Text('No items found.'))),
+            ),
         ],
       ),
     );

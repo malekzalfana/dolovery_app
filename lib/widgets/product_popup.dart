@@ -447,9 +447,15 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
           _setnumber();
 
           double width = MediaQuery.of(context).size.width;
+          var popUpHeight;
+          if (productData['description'] != null) {
+            popUpHeight = MediaQuery.of(context).size.height * 0.75;
+          } else {
+            popUpHeight = 500.00;
+          }
 
           return Container(
-            height: MediaQuery.of(context).size.height * 0.75,
+            height: popUpHeight,
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
