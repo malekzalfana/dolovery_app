@@ -4,11 +4,9 @@ import 'dart:io';
 import 'package:dolovery_app/screens/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/services.dart';
 import 'screens/home.dart';
 import 'screens/profile.dart';
@@ -24,7 +22,7 @@ void main() {
   );
 }
 
-var this_user;
+var thisUser;
 String name;
 String uid;
 String uemail;
@@ -104,24 +102,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _showDialog() {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Internet needed!"),
-        content: Text("You need internet connection to use the app"),
-        actions: <Widget>[
-          FlatButton(
-              child: Text("Try Again"),
-              onPressed: () {
-                Phoenix.rebirth(context);
-              })
-        ],
-      ),
-    );
-  }
-
   Future<void> reset() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('type');
@@ -177,8 +157,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     profilestatus();
-
-    var size = MediaQuery.of(context).size;
 
     print(newuser.toString() + 'this is the new user');
     return Scaffold(
@@ -337,226 +315,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _getPrefs() async {
     prefs = await SharedPreferences.getInstance();
     return true;
-  }
-
-  void _signInPopUp(context) {
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            height: 450,
-            child: Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.grey,
-                        size: 30,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 50.0),
-                  child: Image.asset(
-                    'assets/images/doloverywhiteback.png',
-                    width: 120.0,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: GestureDetector(
-                    child: Image.asset('assets/images/fblogin.jpg', width: 300),
-                    onTap: () => signUpWithFacebook(),
-                  ),
-                ),
-                GestureDetector(
-                  child: Image.asset('assets/images/glogin.jpg', width: 300),
-                  onTap: () => _googleSignUp(),
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  void _welcomePopUp(context, name) {
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            height: 400,
-            child: Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.grey,
-                        size: 30,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 50.0),
-                  child: Image.asset(
-                    'assets/images/doloverywhiteback.png',
-                    width: 120.0,
-                  ),
-                ),
-                Text(
-                  "Welcome",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.black,
-                  ),
-                ),
-                Text(
-                  name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 28.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.redAccent[700],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        side: BorderSide(color: Colors.red)),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProfileScreen()));
-                    },
-                    color: Colors.redAccent[700],
-                    textColor: Colors.white,
-                    minWidth: 0,
-                    height: 0,
-                    padding: EdgeInsets.only(
-                        left: 20, top: 10, right: 20, bottom: 10),
-                    child: Text(
-                      "Setup your profile",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13.0,
-                        fontFamily: 'Axiforma',
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  void _popDetails(context) {
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            height: 700,
-            child: Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.grey,
-                        size: 30,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
-                ),
-                Text(
-                  "Add Details",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                    fontFamily: 'Axiforma',
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  Future<void> _googleSignUp() async {
-    try {
-      final GoogleSignIn _googleSignIn = GoogleSignIn(
-        scopes: ['email'],
-      );
-      final FirebaseAuth _auth = FirebaseAuth.instance;
-
-      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final FirebaseUser user =
-          (await _auth.signInWithCredential(credential)).user;
-      final snackBar = SnackBar(
-        content: Text('Welcome to Dolovery!'),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {},
-        ),
-      );
-
-      print("signed in " + user.uid);
-      Navigator.of(context).pop();
-      _welcomePopUp(context, user.displayName);
-
-      final newUser =
-          await Firestore.instance.collection("users").document(user.uid).get();
-      if (!newUser.exists) {
-        print("user exists");
-      } else {
-        Firestore.instance.collection("users").add({
-          "name": "john",
-          "age": 50,
-          "email": "example@example.com",
-          "address": {"street": "street 24", "city": "new york"}
-        }).then((value) {
-          print(value.documentID);
-        });
-      }
-
-      return user;
-    } catch (e) {
-      print(e.message);
-    }
   }
 
   Future<void> signUpWithFacebook() async {
