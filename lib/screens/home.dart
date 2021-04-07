@@ -16,7 +16,7 @@ import '../screens/shoppage.dart';
 import '../screens/search.dart';
 import '../screens/profile.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
-import 'package:dolovery_app/widgets/popupproduct.dart';
+import 'package:dolovery_app/widgets/product_popup.dart';
 import 'dart:async';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
@@ -947,8 +947,11 @@ class HomeScreenState extends State<HomeScreen> {
                                 children: List.generate(2, (index) {
                                   return GestureDetector(
                                     onTap: () {
-                                      openProductPopUp(context, snapshot.data,
-                                          index, refreshcart);
+                                      openProductPopUp(
+                                          context,
+                                          snapshot.data.documents[index],
+                                          index,
+                                          refreshcart);
                                     },
                                     child: ProductImage(
                                       oldPrice: snapshot.data.documents[index]
@@ -1084,8 +1087,11 @@ class HomeScreenState extends State<HomeScreen> {
                                       (int index) {
                                 return GestureDetector(
                                   onTap: () {
-                                    openProductPopUp(context, snapshot.data,
-                                        index, refreshcart);
+                                    openProductPopUp(
+                                        context,
+                                        snapshot.data.documents[index],
+                                        index,
+                                        refreshcart);
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 12),
@@ -1166,8 +1172,11 @@ class HomeScreenState extends State<HomeScreen> {
                               children: List.generate(8, (index) {
                                 return GestureDetector(
                                   onTap: () {
-                                    openProductPopUp(context, snapshot.data,
-                                        index, refreshcart);
+                                    openProductPopUp(
+                                        context,
+                                        snapshot.data.documents[index],
+                                        index,
+                                        refreshcart);
                                   },
                                   child: ProductImage(
                                     productName: snapshot.data.documents[index]

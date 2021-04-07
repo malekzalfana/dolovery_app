@@ -1,4 +1,4 @@
-import 'package:dolovery_app/widgets/popupproduct.dart';
+import 'package:dolovery_app/widgets/product_popup.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:dolovery_app/widgets/product.dart';
@@ -132,10 +132,10 @@ class _SearchState extends State<Search> {
                     ),
                   ],
                 ),
-                Text(searchlock.toString()),
-                Text(counter.toString()),
-                if (_results != null)
-                  Text('results count is' + _results.length.toString()),
+                // Text(searchlock.toString()),
+                // Text(counter.toString()),
+                // if (_results != null)
+                //   Text('results count is' + _results.length.toString()),
                 if (_results != null)
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, right: 10),

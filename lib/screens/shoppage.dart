@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dolovery_app/widgets/popupproduct.dart';
+import 'package:dolovery_app/widgets/product_popup.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -831,7 +831,9 @@ class _ShopPageState extends State<ShopPage> {
                                                       onTap: () {
                                                         openProductPopUp(
                                                             context,
-                                                            snapshot.data,
+                                                            snapshot.data
+                                                                    .documents[
+                                                                index],
                                                             index);
                                                       },
                                                       child: ProductImage(

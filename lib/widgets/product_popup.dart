@@ -88,19 +88,20 @@ getRate(shopName) async {
     print(prefs.getString("cached_shops"));
     started = true;
   }
-  debugPrint("rate is:::::" + rate.toString());
+  debugPrint("rate is:" + rate.toString());
   started = true;
 }
 
-void openProductPopUp(context, data, index, [sendrefreshtohome]) {
+void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
   started = false;
   int _n = 0;
   bool minimum = true;
   bool maximum = false;
-  var productCurrency = data.documents[index]['currency'];
-  var productPrice = data.documents[index]['shop_price'];
-  var shopName = data.documents[index]['shop'];
-  var oldPrice = data.documents[index]['old_price'];
+  print(productData);
+  var productCurrency = productData['currency'];
+  var productPrice = productData['shop_price'];
+  var shopName = productData['shop'];
+  var oldPrice = productData['old_price'];
   if (oldPrice == null) {
     oldPrice = 0;
   }
@@ -222,7 +223,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
           _save(item, itemid, rate) async {
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
-            String shop_name = data.documents[index]['shop'];
+            String shop_name = productData['shop'];
             usercartmap_v2 = prefs.getString("usercartmap_v2");
 
             if (usercartmap_v2 == null) {
@@ -286,14 +287,13 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             }
             add();
             prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
-            String type = data.documents[index]['type'];
+            String type = productData['type'];
             prefs.setString('type', type);
             if (prefs.getDouble('total') == null) {
               prefs.setDouble('total', 0);
             }
             var shop_price =
-                int.parse(data.documents[index]['shop_price'].toString())
-                    .toDouble();
+                int.parse(productData['shop_price'].toString()).toDouble();
             double total = prefs.getDouble('total') == null
                 ? 0
                 : prefs.getDouble('total') +
@@ -345,7 +345,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             minus();
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
-            String shop_name = data.documents[index]['shop'];
+            String shop_name = productData['shop'];
             usercartmap_v2 = prefs.getString("usercartmap_v2");
 
             if (usercartmap_v2 == null) {
@@ -373,14 +373,13 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
 
             prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
 
-            String type = data.documents[index]['type'];
+            String type = productData['type'];
             prefs.setString('type', type);
             if (prefs.getDouble('total') == null) {
               prefs.setDouble('total', 0);
             }
             var shop_price =
-                int.parse(data.documents[index]['shop_price'].toString())
-                    .toDouble();
+                int.parse(productData['shop_price'].toString()).toDouble();
             double total = prefs.getDouble('total') == null
                 ? 0
                 : prefs.getDouble('total') -
@@ -438,8 +437,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
             mystate(() {
-              _n = countOccurrencesUsingLoop(
-                  cart, data.documents[index].documentID);
+              _n = countOccurrencesUsingLoop(cart, productData.documentID);
               if (_n > 0) {
                 minimum = false;
               }
@@ -468,11 +466,11 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                             ),
                             onPressed: () {}),
                       ),
-                      if (data.documents[index]['category'] != null)
+                      if (productData['category'] != null)
                         Align(
                             alignment: Alignment.topCenter,
                             child: Text(
-                              data.documents[index]['category'].toUpperCase(),
+                              productData['category'].toUpperCase(),
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 13.0,
@@ -494,7 +492,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                       ),
                     ],
                   ),
-                  if (data.documents[index]['image'] != null)
+                  if (productData['image'] != null)
                     Padding(
                         padding: const EdgeInsets.only(bottom: 20.0, top: 20),
                         child: Center(
@@ -503,7 +501,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                           placeholder: (context, url) => Image.asset(
                               "assets/images/loading.gif",
                               height: 30),
-                          imageUrl: data.documents[index]['image'],
+                          imageUrl: productData['image'],
                           errorWidget: (context, url, error) => Center(
                               child: Expanded(
                             child: AspectRatio(
@@ -517,13 +515,13 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                             ),
                           )),
                         ))),
-                  if (data.documents[index]['name'] != null)
+                  if (productData['name'] != null)
                     Padding(
                       padding: const EdgeInsets.only(left: 0, right: 00),
                       child: SizedBox(
                         width: width - 50,
                         child: Text(
-                          data.documents[index]['name'],
+                          productData['name'],
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -533,15 +531,15 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                         ),
                       ),
                     ),
-                  if (data.documents[index]['unit'] != null)
+                  if (productData['unit'] != null)
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        if (data.documents[index]['unit'] != "")
+                        if (productData['unit'] != "")
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10.0),
                             child: Text(
-                              data.documents[index]['unit'],
+                              productData['unit'],
                               style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: 14.0,
@@ -562,8 +560,8 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                           children: <Widget>[
                             RawMaterialButton(
                               onPressed: () {
-                                _remove(data.documents[index],
-                                    data.documents[index].documentID, rate);
+                                _remove(
+                                    productData, productData.documentID, rate);
                               },
                               elevation: !minimum ? 2 : 0,
                               fillColor: !minimum
@@ -585,8 +583,8 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                             ),
                             RawMaterialButton(
                               onPressed: () {
-                                _save(data.documents[index],
-                                    data.documents[index].documentID, rate);
+                                _save(
+                                    productData, productData.documentID, rate);
                               },
                               elevation: !maximum ? 2 : 0,
                               fillColor: !maximum
@@ -628,9 +626,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                     ),
                   ),
                   Visibility(
-                    visible: data.documents[index]['description'] != null
-                        ? true
-                        : false,
+                    visible: productData['description'] != null ? true : false,
                     child: Column(
                       children: [
                         Padding(
@@ -649,15 +645,15 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
                             ),
                           ),
                         ),
-                        if (data.documents[index]['description'] != null)
+                        if (productData['description'] != null)
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 30.0, right: 30.0, top: 0, bottom: 30),
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                data.documents[index]['description'] != null
-                                    ? data.documents[index]['description']
+                                productData['description'] != null
+                                    ? productData['description']
                                     : "",
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
