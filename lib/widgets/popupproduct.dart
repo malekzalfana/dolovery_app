@@ -4,24 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_counter/flutter_counter.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:flutter_svg/svg.dart';
-// ignore: unused_import
-// import 'package:country_code_picker/country_code_picker.dart';
 
 class ProductPopUp extends StatefulWidget {
-  // final Widget child;
-
-  // final String popup_Name;
-
-  // final String popup_Price;
-
-  // final String popup_Image;
-
-  // final String popup_Details;
-  // final dynamic product;
   ProductPopUp(data, {Key key, this.notifyParent}) : super(key: key);
   final Function() notifyParent;
 
@@ -30,14 +16,8 @@ class ProductPopUp extends StatefulWidget {
 }
 
 class _ProductPopUpState extends State<ProductPopUp> {
-  // String popup_Image;
-  // String popup_Name;
-  // String popup_Price;
-  // final dynamic product;
-
   _ProductPopUpState();
 
-  // _ProductPopUpState(this.popup_Image);
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
@@ -67,10 +47,6 @@ class _ProductPopUpState extends State<ProductPopUp> {
     );
   }
 }
-
-// void sendrefreshtohome() {
-//   print('zooooooooom');
-// }
 
 dynamic shopinfo;
 bool started = false;
@@ -129,9 +105,6 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
   if (oldPrice == null) {
     oldPrice = 0;
   }
-  // else {
-  //   oldPrice = int.parse(oldPrice);
-  // }
 
   Widget buildProductPrice() {
     if (productCurrency == "dollar") {
@@ -321,31 +294,7 @@ void openProductPopUp(context, data, index, [sendrefreshtohome]) {
             }
             add();
             prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
-            // START
-            // usercartmap = prefs.getString("usercartmap");
-            // if (usercartmap == null) {
-            //   usercartmap = {};
-            //   print('made an empty map');
-            // } else {
-            //   usercartmap = json.decode(usercartmap);
-            //   print('found the map');
-            //   print(json.encode(usercartmap));
-            // }
-            // if (usercartmap.containsKey(shop_name)) {
-            //   if (usercartmap[shop_name].containsKey(itemid)) {
-            //     usercartmap[shop_name][itemid] =
-            //         int.parse(usercartmap[shop_name][itemid].toString()) + 1;
-            //   } else {
-            //     usercartmap[shop_name][itemid] = 1;
-            //   }
-            // } else {
-            //   usercartmap[shop_name] = {};
-            //   usercartmap[shop_name][itemid] = 1;
-            // }
-            // prefs.setString('usercartmap', json.encode(usercartmap));
-            // print(prefs.getString('usercartmap'));
-            String type = data.documents[index][
-                'type']; //prefs.getString('type') == null? 'nothing': prefs.getString('type');
+            String type = data.documents[index]['type'];
             prefs.setString('type', type);
             if (prefs.getDouble('total') == null) {
               prefs.setDouble('total', 0);

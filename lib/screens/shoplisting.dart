@@ -1,15 +1,9 @@
 import 'package:dolovery_app/screens/shoppage.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:flutter_svg/svg.dart';
-// ignore: unused_import
-import 'package:country_code_picker/country_code_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:dolovery_app/widgets/shopList.dart';
 
 class ShopListing extends StatefulWidget {
-  // ShopListing(String type);
   final String type;
 
   const ShopListing({Key key, @required this.type}) : super(key: key);
@@ -20,17 +14,7 @@ class ShopListing extends StatefulWidget {
   }
 }
 
-// String finalDate = '';
-
-getCurrentDate() {
-  final DateTime now = DateTime.now();
-  final DateFormat formatter = DateFormat('yMMMMd');
-  final String formatted = formatter.format(now);
-  return formatted; // s
-}
-
 class FormScreenState extends State<ShopListing> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // String type;
   @override
   Widget build(BuildContext context) {
@@ -89,7 +73,8 @@ class FormScreenState extends State<ShopListing> {
                       .where('type', isEqualTo: widget.type)
                       .snapshots(),
                   builder: (context, snapshot) {
-                    if (snapshot.hasData) {
+                    if (snapshot.hasData &&
+                        snapshot.data.documents.length == 0) {
                       return Opacity(
                         opacity: 0.3,
                         child: SizedBox(
@@ -104,10 +89,8 @@ class FormScreenState extends State<ShopListing> {
                           child: Column(
                               children: List<Widget>.generate(
                                   snapshot.data.documents.length, (int index) {
-                            // print(categories[index]);
                             return GestureDetector(
                               onTap: () {
-                                // Navigator.of(context).pop();
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => ShopPage(
                                         snapshot.data.documents[index])));

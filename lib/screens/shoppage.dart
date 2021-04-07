@@ -3,10 +3,7 @@ import 'package:dolovery_app/widgets/popupproduct.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:flutter_svg/svg.dart';
 import 'dart:async';
-// ignore: unused_import
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:dolovery_app/widgets/product.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -122,16 +119,23 @@ class _ShopPageState extends State<ShopPage> {
     return chosen_category;
   }
 
+  bool shophaslocation = false;
+  LatLng _shopCoordinates;
+
   @override
   Widget build(BuildContext ctxt) {
-    if (widget.data['location'] != null && widget.data['location']) {}
-    // double lat = widget.data['location'].latitude;
-    // double lng = widget.data['location'].longitude;
     Set<Marker> markers = Set();
-    LatLng _shopCoordinates = new LatLng(33.8553, 35.5359);
-    markers.addAll([
-      Marker(markerId: MarkerId('value'), position: LatLng(33.8553, 35.5359)),
-    ]);
+    if (widget.data['location'] != null) {
+      double lat = widget.data['location'].latitude;
+      double lng = widget.data['location'].longitude;
+
+      LatLng _shopCoordinates = new LatLng(lat, lng);
+      markers.addAll([
+        Marker(markerId: MarkerId('value'), position: LatLng(lat, lng)),
+      ]);
+      shophaslocation = true;
+    }
+
     // const LatLng _shopCoordinates = const LatLng(45.521563, -122.677433);
     var size = MediaQuery.of(ctxt).size;
     final double itemHeight = (size.height) / 2;
@@ -161,89 +165,6 @@ class _ShopPageState extends State<ShopPage> {
                     ),
                   ),
                 ),
-                Visibility(
-                  visible: false,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 17.0, right: 0.0, top: 10.0, bottom: 0.0),
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: Icon(
-                            Icons.near_me,
-                            color: Colors.redAccent[700],
-                            size: 20.0,
-                          ),
-                        ),
-                        Text(
-                          "Delivering to",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                            fontFamily: 'Axiforma',
-                            color: Colors.redAccent[700],
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                          child: MaterialButton(
-                            onPressed: () {
-                              () {};
-                            },
-                            color: Colors.redAccent[700],
-                            textColor: Colors.white,
-                            minWidth: 0,
-                            height: 0,
-                            // padding: EdgeInsets.zero,
-                            padding: EdgeInsets.only(
-                                left: 6, top: 0, right: 6, bottom: 1),
-                            child: Text(
-                              "Badaro",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                                fontFamily: 'Axiforma',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Spacer(),
-                        // Align(
-                        //   alignment: Alignment.centerRight,
-                        //   child: IconButton(
-                        //       icon: Icon(
-                        //         Icons.clear,
-                        //         color: Colors.grey,
-                        //         size: 30,
-                        //       ),
-                        //       onPressed: () {
-                        //         Navigator.of(context).pop();
-                        //       }),
-                        // ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   children: [
-                //     Align(
-                //       alignment: Alignment.centerRight,
-                //       child: IconButton(
-                //           icon: Icon(
-                //             Icons.clear,
-                //             color: Colors.grey,
-                //             size: 30,
-                //           ),
-                //           onPressed: () {
-                //             Navigator.of(context).pop();
-                //           }),
-                //     ),
-                //   ],
-                // ),
-                // Text('$chosen_category is cat and sub is $chosen_subcategory'),
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 0.0, right: 0.0, top: 0.0, bottom: 10.0),
@@ -255,17 +176,12 @@ class _ShopPageState extends State<ShopPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Container(
-                              // color: Colors.green,
                               margin:
                                   new EdgeInsets.only(left: 12.0, right: 10),
                               child: Container(
                                 height: 90,
                                 width: 90,
                                 decoration: BoxDecoration(
-                                  // image: DecorationImage(
-                                  //   image: NetworkImage(widget.data['image']),
-                                  //   fit: BoxFit.cover,
-                                  // ),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.grey.withOpacity(0.1),
@@ -396,39 +312,34 @@ class _ShopPageState extends State<ShopPage> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30.0),
-                        child: Row(
-                          children: [
-                            IgnorePointer(
-                              child: SizedBox(
-                                width: width,
-                                height: 180,
-                                child: GoogleMap(
-                                  onMapCreated: _onMapCreated,
-                                  myLocationButtonEnabled: false,
-                                  mapToolbarEnabled: false,
-                                  zoomControlsEnabled: false,
-                                  markers: markers,
-                                  initialCameraPosition: CameraPosition(
-                                    target: _shopCoordinates,
-                                    zoom: 14.0,
+                      if (shophaslocation)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30.0),
+                          child: Row(
+                            children: [
+                              IgnorePointer(
+                                child: SizedBox(
+                                  width: width,
+                                  height: 180,
+                                  child: GoogleMap(
+                                    onMapCreated: _onMapCreated,
+                                    myLocationButtonEnabled: false,
+                                    mapToolbarEnabled: false,
+                                    zoomControlsEnabled: false,
+                                    markers: markers,
+                                    initialCameraPosition: CameraPosition(
+                                      target: _shopCoordinates,
+                                      zoom: 14.0,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
                       FutureBuilder(
                         future: getcategories(),
                         builder: (context, snapshot) {
-                          // print(type.data['categories'].keys[0]);
-                          // return Text("dsddd");
-
-                          // for (var cat in type.data['categories'].keys) {
-                          //   print('$type was written by ${type[cat]}');
-                          // }
                           var first = 0;
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
@@ -939,11 +850,13 @@ class _ShopPageState extends State<ShopPage> {
                                                           .length <
                                                       1) {
                                                 return Opacity(
-                          opacity: 0.3,
-                          child: SizedBox(
-                              height: 200,
-                              child: Center(child: Text('No items found.'))),
-                        );
+                                                  opacity: 0.3,
+                                                  child: SizedBox(
+                                                      height: 200,
+                                                      child: Center(
+                                                          child: Text(
+                                                              'No items found.'))),
+                                                );
                                               }
                                               if (snapshot.hasData) {
                                                 return GridView.count(
