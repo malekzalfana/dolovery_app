@@ -299,7 +299,7 @@ class HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Visibility(
-                  visible: notsetup,
+                  visible: false, //notsetup,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: MaterialButton(

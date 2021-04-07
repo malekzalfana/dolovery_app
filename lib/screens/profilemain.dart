@@ -238,40 +238,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                     color: Colors.redAccent[700],
                   ),
                 ),
-                Visibility(
-                  visible: notsetup,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          side: BorderSide(color: Colors.red)),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(
-                                builder: (context) => ProfileScreen()))
-                            .then((value) => () {
-                                  Navigator.pop(context);
-                                });
-                      },
-                      color: Colors.redAccent[700],
-                      textColor: Colors.white,
-                      minWidth: 0,
-                      height: 0,
-                      padding: EdgeInsets.only(
-                          left: 20, top: 10, right: 20, bottom: 10),
-                      child: Text(
-                        "Setup your profile",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13.0,
-                          fontFamily: 'Axiforma',
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           );
@@ -576,6 +542,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        Spacer(),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 28.0),
                           child: Image.asset(
@@ -641,6 +608,85 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 fontFamily: 'Axiforma',
                               ),
                             ),
+                          ),
+                        ),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 15.0, left: 0, bottom: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment.center,
+                                child: MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      side:
+                                          BorderSide(color: Colors.grey[200])),
+                                  onPressed: () {
+                                    _showLogoutDialog();
+                                  },
+                                  color: Colors.grey[200],
+                                  elevation: 0,
+                                  textColor: Colors.white,
+                                  minWidth: 0,
+                                  height: 0,
+                                  padding: EdgeInsets.only(
+                                      left: 20, top: 10, right: 20, bottom: 10),
+                                  child: Text(
+                                    "Log Out",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13.0,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(25, 15, 22, 30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => Privacy()));
+                                },
+                                child: Text(
+                                  "Privacy Policy",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13.0,
+                                    fontFamily: 'Axiforma',
+                                    color: Colors.black38,
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => Terms()));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  child: Text(
+                                    "Terms & Conditions",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13.0,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.black38,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
