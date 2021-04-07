@@ -1265,70 +1265,78 @@ class HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(
                       left: 5.0, right: 5, top: 0, bottom: 0),
                   child: StreamBuilder(
-                    stream: Firestore.instance
-                        .collection('products')
-                        .where('type', isEqualTo: 'lebanese')
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.data.documents.length < 2) {
-                        return Opacity(
-                          opacity: 0.3,
-                          child: SizedBox(
-                              height: 200,
-                              child: Center(child: Text('No items found.'))),
-                        );
-                      }
-                      if (snapshot.hasData) {
-                        return GridView.count(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.65,
-                          controller:
-                              new ScrollController(keepScrollOffset: false),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          children: List.generate(2, (index) {
-                            return GestureDetector(
-                              onTap: () {
-                                openProductPopUp(
-                                    context, snapshot.data, index, refreshcart);
-                              },
-                              child: ProductImage(
-                                oldPrice: snapshot.data.documents[index]
-                                            ['old_price'] ==
-                                        null
-                                    ? "0"
-                                    : snapshot
-                                        .data.documents[index]['old_price']
-                                        .toString(),
-                                productName: snapshot.data.documents[index]
-                                    ['name'],
-                                productImage: snapshot.data.documents[index]
-                                    ['image'],
-                                productPrice: snapshot
-                                    .data.documents[index]['shop_price']
-                                    .toString(),
-                                shopName: snapshot.data.documents[index]
-                                    ['shop'],
-                                productUnit: snapshot.data.documents[index]
-                                            ['unit'] !=
-                                        null
-                                    ? snapshot.data.documents[index]['unit']
-                                    : '',
-                                productCurrency: snapshot.data.documents[index]
-                                            ['currency'] !=
-                                        null
-                                    ? snapshot.data.documents[0]['currency']
-                                    : "lebanese",
-                              ),
-                            );
-                          }).toList(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      }
-                      return Center(child: CircularProgressIndicator());
-                    },
-                  )),
+                      stream: Firestore.instance
+                          .collection('products')
+                          .where('type', isEqualTo: 'lebanese')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            return Container(height: 20);
+                          default:
+                            if (snapshot.data.documents.length < 2) {
+                              return Opacity(
+                                opacity: 0.3,
+                                child: SizedBox(
+                                    height: 200,
+                                    child:
+                                        Center(child: Text('No items found.'))),
+                              );
+                            }
+                            if (snapshot.hasData) {
+                              return GridView.count(
+                                crossAxisCount: 2,
+                                childAspectRatio: 0.65,
+                                controller: new ScrollController(
+                                    keepScrollOffset: false),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                children: List.generate(2, (index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      openProductPopUp(context, snapshot.data,
+                                          index, refreshcart);
+                                    },
+                                    child: ProductImage(
+                                      oldPrice: snapshot.data.documents[index]
+                                                  ['old_price'] ==
+                                              null
+                                          ? "0"
+                                          : snapshot.data
+                                              .documents[index]['old_price']
+                                              .toString(),
+                                      productName: snapshot
+                                          .data.documents[index]['name'],
+                                      productImage: snapshot
+                                          .data.documents[index]['image'],
+                                      productPrice: snapshot
+                                          .data.documents[index]['shop_price']
+                                          .toString(),
+                                      shopName: snapshot.data.documents[index]
+                                          ['shop'],
+                                      productUnit: snapshot.data
+                                                  .documents[index]['unit'] !=
+                                              null
+                                          ? snapshot.data.documents[index]
+                                              ['unit']
+                                          : '',
+                                      productCurrency:
+                                          snapshot.data.documents[index]
+                                                      ['currency'] !=
+                                                  null
+                                              ? snapshot.data.documents[0]
+                                                  ['currency']
+                                              : "lebanese",
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            }
+                            return Center(child: CircularProgressIndicator());
+                        }
+                      })),
             ),
             Padding(
               padding:
@@ -1358,7 +1366,7 @@ class HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "View All Lebanese Products".toUpperCase(),
+                      "View All Lebanese Shops".toUpperCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 14.0,
@@ -1402,57 +1410,62 @@ class HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: StreamBuilder(
-                stream: Firestore.instance
-                    .collection('products')
-                    .where('type', isEqualTo: 'bundle')
-                    // .where('type', isEqualTo: 'pets')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.data.documents.length < 2) {
-                    return Opacity(
-                      opacity: 0.3,
-                      child: SizedBox(
-                          height: 200,
-                          child: Center(child: Text('No items found.'))),
-                    );
-                  }
-                  if (snapshot.hasData) {
-                    // print(snapshot);
-                    return SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                            //snapshot.data.documents.length
-                            children: List<Widget>.generate(
-                                snapshot.data.documents.length, (int index) {
-                          // const double padding = index == 0 ? 12 : 0;
-                          // print(categories[index]);
-                          return GestureDetector(
-                            onTap: () {
-                              openProductPopUp(
-                                  context, snapshot.data, index, refreshcart);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 12),
-                              child: Bundle(
-                                bundleName: snapshot.data.documents[index]
-                                    ['name'],
-                                bundleDescription: snapshot
-                                    .data.documents[index]['description'],
-                                bundleIndex: 0,
-                                bundlePrice: int.parse(snapshot
-                                    .data.documents[index]['shop_price']),
-                                bundleImage: snapshot.data.documents[index]
-                                    ['image'],
-                              ),
-                            ),
+                  stream: Firestore.instance
+                      .collection('products')
+                      .where('type', isEqualTo: 'bundle')
+                      // .where('type', isEqualTo: 'pets')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Container(height: 20);
+                      default:
+                        if (snapshot.data.documents.length < 2) {
+                          return Opacity(
+                            opacity: 0.3,
+                            child: SizedBox(
+                                height: 200,
+                                child: Center(child: Text('No items found.'))),
                           );
-                        })));
-                  } else if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
-              ),
+                        }
+                        if (snapshot.hasData) {
+                          // print(snapshot);
+                          return SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                  //snapshot.data.documents.length
+                                  children: List<Widget>.generate(
+                                      snapshot.data.documents.length,
+                                      (int index) {
+                                // const double padding = index == 0 ? 12 : 0;
+                                // print(categories[index]);
+                                return GestureDetector(
+                                  onTap: () {
+                                    openProductPopUp(context, snapshot.data,
+                                        index, refreshcart);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 12),
+                                    child: Bundle(
+                                      bundleName: snapshot.data.documents[index]
+                                          ['name'],
+                                      bundleDescription: snapshot
+                                          .data.documents[index]['description'],
+                                      bundleIndex: 0,
+                                      bundlePrice: int.parse(snapshot
+                                          .data.documents[index]['shop_price']),
+                                      bundleImage: snapshot
+                                          .data.documents[index]['image'],
+                                    ),
+                                  ),
+                                );
+                              })));
+                        } else if (snapshot.hasError) {
+                          return Text(snapshot.error.toString());
+                        }
+                        return Center(child: CircularProgressIndicator());
+                    }
+                  }),
             ),
             Padding(
               padding: const EdgeInsets.all(14.0),
@@ -1481,67 +1494,76 @@ class HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.only(
                     left: 5.0, right: 5, top: 0, bottom: 0),
                 child: StreamBuilder(
-                  stream: Firestore.instance
-                      .collection('products')
-                      .where('type', isEqualTo: 'Supplements')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.data.documents.length < 2) {
-                      return Opacity(
-                        opacity: 0.3,
-                        child: SizedBox(
-                            height: 200,
-                            child: Center(child: Text('No items found.'))),
-                      );
-                    }
-                    if (snapshot.hasData) {
-                      return GridView.count(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.65,
-                        controller:
-                            new ScrollController(keepScrollOffset: false),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        children: List.generate(8, (index) {
-                          return GestureDetector(
-                            onTap: () {
-                              openProductPopUp(
-                                  context, snapshot.data, index, refreshcart);
-                            },
-                            child: ProductImage(
-                              productName: snapshot.data.documents[index]
-                                  ['name'],
-                              productImage: snapshot.data.documents[index]
-                                  ['image'],
-                              productPrice: snapshot
-                                  .data.documents[index]['shop_price']
-                                  .toString(),
-                              shopName: snapshot.data.documents[index]['shop'],
-                              productUnit:
-                                  snapshot.data.documents[index]['unit'] != null
-                                      ? snapshot.data.documents[index]['unit']
-                                      : '',
-                              productCurrency: snapshot.data.documents[index]
-                                          ['currency'] !=
-                                      null
-                                  ? snapshot.data.documents[index]['currency']
-                                  : "lebanese",
-                              oldPrice: snapshot.data.documents[index]
-                                          ['old_price'] ==
-                                      null
-                                  ? "0"
-                                  : snapshot.data.documents[index]['old_price']
-                                      .toString(),
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  },
-                )),
+                    stream: Firestore.instance
+                        .collection('products')
+                        .where('type', isEqualTo: 'Supplements')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return Container(height: 20);
+                        default:
+                          if (snapshot.data.documents.length < 2) {
+                            return Opacity(
+                              opacity: 0.3,
+                              child: SizedBox(
+                                  height: 200,
+                                  child:
+                                      Center(child: Text('No items found.'))),
+                            );
+                          }
+                          if (snapshot.hasData) {
+                            return GridView.count(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.65,
+                              controller:
+                                  new ScrollController(keepScrollOffset: false),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              children: List.generate(8, (index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    openProductPopUp(context, snapshot.data,
+                                        index, refreshcart);
+                                  },
+                                  child: ProductImage(
+                                    productName: snapshot.data.documents[index]
+                                        ['name'],
+                                    productImage: snapshot.data.documents[index]
+                                        ['image'],
+                                    productPrice: snapshot
+                                        .data.documents[index]['shop_price']
+                                        .toString(),
+                                    shopName: snapshot.data.documents[index]
+                                        ['shop'],
+                                    productUnit: snapshot.data.documents[index]
+                                                ['unit'] !=
+                                            null
+                                        ? snapshot.data.documents[index]['unit']
+                                        : '',
+                                    productCurrency: snapshot.data
+                                                .documents[index]['currency'] !=
+                                            null
+                                        ? snapshot.data.documents[index]
+                                            ['currency']
+                                        : "lebanese",
+                                    oldPrice: snapshot.data.documents[index]
+                                                ['old_price'] ==
+                                            null
+                                        ? "0"
+                                        : snapshot
+                                            .data.documents[index]['old_price']
+                                            .toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text(snapshot.error.toString());
+                          }
+                          return Center(child: CircularProgressIndicator());
+                      }
+                    })),
             Padding(
               padding:
                   const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20),
@@ -1570,7 +1592,7 @@ class HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "View All Supplements Products".toUpperCase(),
+                      "View All Supplements Shops".toUpperCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 14.0,

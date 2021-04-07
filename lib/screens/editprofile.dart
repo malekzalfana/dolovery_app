@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:flutter_svg/svg.dart';
-// ignore: unused_import
-import 'package:dropdownfield/dropdownfield.dart';
-// import 'package:country_code_picker/country_code_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-// import 'package:international_phone_input/international_phone_input.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
@@ -33,11 +28,6 @@ class EditProfileState extends State<EditProfileScreen> {
   String phoneNumber;
   String phoneIsoCode;
   bool canSubmit = true;
-
-  // void onStart() {
-  //   canSubmit = false;
-  //   print("sss");
-  // }
 
   List<String> countries = [
     "AF",
@@ -315,18 +305,6 @@ class EditProfileState extends State<EditProfileScreen> {
       _landmark,
       _apartment
     ];
-    bool allgood = true;
-    print(fields);
-    // if (fields.contains("") || fields.contains(null)) {
-    //   print(canSubmit);
-    //   setState(() {
-    //     canSubmit = false;
-    //   });
-    // } else {
-    //   setState(() {
-    //     canSubmit = true;
-    //   });
-    // }
   }
 
   String _name;
@@ -339,46 +317,19 @@ class EditProfileState extends State<EditProfileScreen> {
   Future setupVerification() async {
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final uid = user.uid;
-    // final name = user.displayName;
-    // final uemail = user.email;
-    // print("USERNAME")
     var usercollection =
         await Firestore.instance.collection("users").document(uid).get();
 
     if (usercollection.exists) {
       newuser = false;
       _name = usercollection.data['fullname'];
-      // _phone = ;
       _number = usercollection.data['number'];
       _code = usercollection.data['code'];
-      String phoneNumber = '+96171439082';
+      String phoneNumber = _code + _number;
       this_number = await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber);
-      String parsableNumber = this_number.parseNumber();
-      // `controller reference`.text = parsableNumber
-
-      print('this sis sis is sis is is si si sis');
-      print(parsableNumber);
-      // _numberparsed = PhoneNumber.getParsableNumber(_code + _number);
-      // PhoneNumber _number =
-      //     await PhoneNumber.(phoneNumber);
     }
     return newuser = false;
   }
-
-  // void getPhoneNumber(String phoneNumber) async {
-  //   PhoneNumber number =
-  //       await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber, 'US');
-
-  //   setState(() {
-  //     this.number = number;
-  //   });
-  // }
-
-  // @override
-  // void dispose() {
-  //   controller?.dispose();
-  //   super.dispose();
-  // }
 
   Widget _newPhoneNumber() {
     return Padding(
@@ -441,215 +392,29 @@ class EditProfileState extends State<EditProfileScreen> {
     "Zgharta",
   ];
 
-  Widget _buildCity() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
-      child: Container(
-        // padding: EdgeInsets.symmetric(horizontal: 20),
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: FormField<String>(
-            builder: (FormFieldState<String> state) {
-              return InputDecorator(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-
-                  // focusedBorder: InputBorder.none,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-
-                // errorBorder: InputBorder.none,
-                // disabledBorder: InputBorder.none,),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    hint: Text("Select City"),
-                    isExpanded: true,
-                    value: currentSelectedValue,
-                    isDense: true,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _city = newValue;
-                        currentSelectedValue = _city;
-                      });
-                      onFieldChange();
-                      print(currentSelectedValue);
-                    },
-                    items: deviceTypes.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStreetAddress() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            // focusedBorder: InputBorder.none,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
-            labelText: 'Street Adress'),
-        maxLength: 100,
-        style: new TextStyle(
-          fontFamily: "Axiforma",
-        ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Street Adress is Required';
-        //   }
-
-        //   return null;
-        // },
-        onSaved: (String value) {
-          _streetaddress = value;
-        },
-        onChanged: (value) {
-          // print("street");
-          onTextChange("Address", value);
-          onFieldChange();
-        },
-      ),
-    );
-  }
-
-  Widget _buildLandmark() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            // focusedBorder: InputBorder.none,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
-            labelText: 'Landmark'),
-        maxLength: 50,
-        style: new TextStyle(
-          fontFamily: "Axiforma",
-        ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Landmark is Required';
-        //   }
-
-        //   return null;
-        // },
-        onSaved: (String value) {
-          _landmark = value;
-          // onFieldChange();
-        },
-        onChanged: (value) {
-          onTextChange("Landmark", value);
-          onFieldChange();
-        },
-      ),
-    );
-  }
-
   Widget _fullnameBuild() {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: TextFormField(
         initialValue: _name,
-
         decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // focusedBorder: InputBorder.none,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
-
             labelText: 'Full Name'),
         maxLength: 50,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Landmark is Required';
-        //   }
-
-        //   return null;
-        // },
         onSaved: (String value) {
           _fullname = value;
-          // onFieldChange();
         },
         onChanged: (value) {
           onTextChange("Full Name", value);
-          onFieldChange();
-        },
-      ),
-    );
-  }
-
-  Widget _address4Build() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            // focusedBorder: InputBorder.none,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            // errorBorder: InputBorder.none,
-            // disabledBorder: InputBorder.none,
-
-            labelText: 'Apartment / Floor'),
-        maxLength: 50,
-        style: new TextStyle(
-          fontFamily: "Axiforma",
-        ),
-        // validator: (String value) {
-        //   if (value.isEmpty) {
-        //     return 'Apartment is Required';
-        //   }
-
-        //   return null;
-        // },
-        onSaved: (String value) {
-          _apartment = value;
-          // onFieldChange();
-        },
-        onChanged: (value) {
-          onTextChange("Apartment", value);
           onFieldChange();
         },
       ),
@@ -696,47 +461,6 @@ class EditProfileState extends State<EditProfileScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              // Text(
-                              //   "Your name",
-                              //   textAlign: TextAlign.left,
-                              //   style: TextStyle(
-                              //     fontWeight: FontWeight.normal,
-                              //     fontSize: 16.0,
-                              //     fontFamily: 'Axiforma',
-                              //     color: Colors.black54,
-                              //   ),
-                              // ),
-                              // Text(
-                              //   _name,
-                              //   textAlign: TextAlign.left,
-                              //   style: TextStyle(
-                              //     fontWeight: FontWeight.w800,
-                              //     fontSize: 28.0,
-                              //     fontFamily: 'Axiforma',
-                              //     color: Colors.black,
-                              //   ),
-                              // ),
-                              // SizedBox(height: 20),
-                              // Text(
-                              //   "Your phone number",
-                              //   textAlign: TextAlign.left,
-                              //   style: TextStyle(
-                              //     fontWeight: FontWeight.normal,
-                              //     fontSize: 16.0,
-                              //     fontFamily: 'Axiforma',
-                              //     color: Colors.black54,
-                              //   ),
-                              // ),
-                              // Text(
-                              //   _number.toString(),
-                              //   textAlign: TextAlign.left,
-                              //   style: TextStyle(
-                              //     fontWeight: FontWeight.w800,
-                              //     fontSize: 28.0,
-                              //     fontFamily: 'Axiforma',
-                              //     color: Colors.black,
-                              //   ),
-                              // ),
                               _fullnameBuild(),
                               _newPhoneNumber(),
                               SizedBox(height: 10),
@@ -768,13 +492,6 @@ class EditProfileState extends State<EditProfileScreen> {
                                           "fullname": _fullname,
                                           "number": _phone,
                                           "email": uemail,
-                                          // "address": addresses,
-                                          // "chosen_address": chosen_address
-                                          // "id": uid,
-                                          // "city": _city,
-                                          // "street_address": _streetaddress,
-                                          // "landmark": _landmark,
-                                          // "apartment": _apartment,
                                         };
 
                                         // print("USERNAME")
@@ -782,23 +499,10 @@ class EditProfileState extends State<EditProfileScreen> {
                                             .collection("users")
                                             .document(uid)
                                             .updateData(thisuser);
-                                        //     .add({
-                                        //   "fullname": name,
-                                        //   "number": _phone,
-                                        //   "email": uemail,
-                                        //   "id": uid,
-                                        //   "city": _city,
-                                        //   "street_address": _streetaddress,
-                                        //   "landmark": _landmark,
-                                        //   "apartment": _apartment,
-                                        // });
-
-                                        // here you write the codes to input the data into firestore
                                       }
 
                                       inputData();
                                       Navigator.of(context).pop();
-                                      // Navigator.of(context).pop();
 
                                       //Send to API
                                     },

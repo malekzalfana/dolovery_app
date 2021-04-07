@@ -39,71 +39,6 @@ class FormScreenState extends State<ShopListing> {
         child: SafeArea(
           child: Column(
             children: <Widget>[
-              Visibility(
-                visible: false,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10.0, right: 10.0, top: 30.0, bottom: 0.0),
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 5.0),
-                        child: Icon(
-                          Icons.near_me,
-                          color: Colors.redAccent[700],
-                          size: 20.0,
-                        ),
-                      ),
-                      Text(
-                        "Delivering to",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                          fontFamily: 'Axiforma',
-                          color: Colors.redAccent[700],
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                        child: MaterialButton(
-                          onPressed: () {
-                            () {};
-                          },
-                          color: Colors.redAccent[700],
-                          textColor: Colors.white,
-                          minWidth: 0,
-                          height: 0,
-                          // padding: EdgeInsets.zero,
-                          padding: EdgeInsets.only(
-                              left: 6, top: 0, right: 6, bottom: 1),
-                          child: Text(
-                            "Badaro",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
-                              fontFamily: 'Axiforma',
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: IconButton(
-                            icon: Icon(
-                              Icons.clear,
-                              color: Colors.grey,
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            }),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
               Padding(
                   padding: const EdgeInsets.only(
                       left: 5.0, right: 10.0, top: 15.0, bottom: 10.0),
@@ -155,6 +90,14 @@ class FormScreenState extends State<ShopListing> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      return Opacity(
+                        opacity: 0.3,
+                        child: SizedBox(
+                            height: 200,
+                            child: Center(child: Text('No shops found.'))),
+                      );
+                    }
+                    if (snapshot.hasData) {
                       print(snapshot);
                       return SingleChildScrollView(
                           scrollDirection: Axis.vertical,
@@ -182,7 +125,12 @@ class FormScreenState extends State<ShopListing> {
                             );
                           })));
                     } else if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
+                      return Opacity(
+                        opacity: 0.3,
+                        child: SizedBox(
+                            height: 300,
+                            child: Center(child: Text('There was an error.'))),
+                      );
                     }
                     return SizedBox(
                       height: 300,
