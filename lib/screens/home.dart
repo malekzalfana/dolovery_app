@@ -1288,7 +1288,7 @@ class HomeScreenState extends State<HomeScreen> {
                     .where('type', isEqualTo: 'pets')
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (snapshot.data.documents.length < 2) {
+                  if (snapshot.hasData && snapshot.data.documents.length < 2) {
                     return Opacity(
                       opacity: 0.3,
                       child: SizedBox(

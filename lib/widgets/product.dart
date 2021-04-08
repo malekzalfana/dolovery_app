@@ -1,15 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter_svg/svg.dart';
-// ignore: unused_import
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class ProductImage extends StatefulWidget {
-  // final Widget child;
-
   final String productName;
 
   final String productPrice;
@@ -57,7 +52,7 @@ class _ProductImageState extends State<ProductImage> {
   String oldPrice;
   _ProductImageState(this.productImage, this.productName, this.productPrice,
       this.productUnit, this.productCurrency, this.shopName, this.oldPrice);
-  // _ProductImageState(this.productImage);
+
   @override
   void initState() {
     super.initState();
@@ -70,11 +65,8 @@ class _ProductImageState extends State<ProductImage> {
       productPrice = '1';
     }
     print(oldPrice + 'is the old price');
-    // if (oldPrice == "") {
-    //   oldPrice = ;
-    // }
+
     return Container(
-        // color: Colors.green,
         margin: new EdgeInsets.only(left: 4.0, right: 4),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,7 +80,7 @@ class _ProductImageState extends State<ProductImage> {
                         color: Colors.grey.withOpacity(0.1),
                         spreadRadius: 2.2,
                         blurRadius: 2.5,
-                        offset: Offset(0, 4), // changes position of shadow
+                        offset: Offset(0, 4),
                       ),
                     ],
                     color: Colors.white,
@@ -106,15 +98,7 @@ class _ProductImageState extends State<ProductImage> {
                     imageUrl: productImage == null ? "s" : productImage,
                     errorWidget: (context, url, error) =>
                         Center(child: new Icon(Icons.error)),
-                  )
-
-                      // FadeInImage.assetNetwork(
-                      //   placeholder: 'assets/images/loading.gif',
-                      //   image: productImage,
-                      // ),
-
-                      // Image.network(productImage, height: 120, width: 120),
-                      )),
+                  ))),
               Padding(
                 padding: const EdgeInsets.only(top: 15.0, bottom: 2),
                 child: Text(
@@ -137,7 +121,6 @@ class _ProductImageState extends State<ProductImage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     buildProductPrice(),
-                    // Container()
                   ],
                 ),
               )
@@ -148,22 +131,19 @@ class _ProductImageState extends State<ProductImage> {
   dynamic shopinfo;
   bool started = false;
   dynamic cachedshops;
-  // Map newCachedShops;
+
   removeRate() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove("cached_shops");
   }
 
   getRate() async {
-    // print(
-    //     "started prefrererererererere_______________________________________________________________");
     final prefs = await SharedPreferences.getInstance();
-    // prefs.remove("cached_shops");
-    // var newcachedshops = {"pro_nutrition": 2000};
+
     bool skip = false;
-    // prefs.setString('cached_shops', json.encode(newcachedshops));
+
     cachedshops = prefs.getString("cached_shops");
-    // print(cachedshops);
+
     if (cachedshops != null) {
       cachedshops = json.decode(cachedshops);
     } else {
@@ -199,7 +179,6 @@ class _ProductImageState extends State<ProductImage> {
         child: FutureBuilder(
             future: getRate(),
             builder: (context, snapshot) {
-              // print(started);
               switch (snapshot.connectionState) {
                 case ConnectionState.done:
                   if (snapshot.hasError)
@@ -224,7 +203,6 @@ class _ProductImageState extends State<ProductImage> {
                                                     : 1))
                                             .toString() +
                                         "L.L.",
-                                    // rate.toString(),
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       decoration: TextDecoration.lineThrough,
@@ -248,7 +226,6 @@ class _ProductImageState extends State<ProductImage> {
                                                   : 1))
                                           .toString() +
                                       "L.L.",
-                                  // rate.toString(),
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
@@ -284,14 +261,11 @@ class _ProductImageState extends State<ProductImage> {
                   break;
 
                 default:
-                  // debugPrint("Snapshot " + snapshot.toString());
-                  return Text(
-                      '...'); // also check your listWidget(snapshot) as it may return null.
+                  return Text('...');
               }
             }),
       );
     } else {
-      // print('product is not dollar');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -305,7 +279,6 @@ class _ProductImageState extends State<ProductImage> {
                     height: 20,
                     child: Text(
                       oldPrice.toString() + "L.L.",
-                      // rate.toString(),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         decoration: TextDecoration.lineThrough,
@@ -356,8 +329,6 @@ class _ProductImageState extends State<ProductImage> {
           ),
         ],
       );
-      // else
-      //   return Container();
     }
   }
 }
