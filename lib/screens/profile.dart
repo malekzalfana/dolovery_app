@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:sizer/sizer.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -579,7 +580,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           textAlign: TextAlign.center,
           style: TextStyle(
             fontWeight: FontWeight.w800,
-            fontSize: 16.0,
+            fontSize: 12.0.sp,
             fontFamily: 'Axiforma',
             color: Colors.black,
           ),

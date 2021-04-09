@@ -10,7 +10,7 @@ import 'package:sizer/sizer_util.dart';
 
 void main() {
   runApp(
-    DevicePreview(enabled:!kReleaseMode,builder:(context)=> MyApp()),
+    DevicePreview(enabled:false,builder:(context)=> MyApp()),
   );
 }
 

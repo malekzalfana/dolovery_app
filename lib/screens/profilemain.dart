@@ -317,7 +317,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                   padding: const EdgeInsets.only(bottom: 50.0),
                   child: Image.asset(
                     'assets/images/doloverywhiteback.png',
-                    width: 120.0,
+                    width: 30.0.w,
                   ),
                 ),
                 Visibility(
@@ -326,7 +326,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: GestureDetector(
                       child:
-                          Image.asset('assets/images/fblogin.jpg', width: 300),
+                          Image.asset('assets/images/fblogin.jpg', width:75.0.w),
                       onTap: () {
                         hideSignIn();
                         signUpWithFacebook();
@@ -338,7 +338,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                   visible: _readtosignin,
                   child: GestureDetector(
                       child:
-                          Image.asset('assets/images/glogin.jpg', width: 300),
+                          Image.asset('assets/images/glogin.jpg', width: 75.0.w),
                       onTap: () {
                         _readtosignin = false;
 
@@ -602,7 +602,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             },
                             color: Colors.redAccent[700],
                             textColor: Colors.white,
-                            minWidth: MediaQuery.of(context).size.width,
+                            minWidth: 80.0.w,
                             height: 0,
                             padding: EdgeInsets.only(
                                 left: 33, top: 10, right: 33, bottom: 10),
@@ -610,7 +610,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               "Setup your profile",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15.0,
+                                fontSize: 11.0.sp,
                                 fontFamily: 'Axiforma',
                               ),
                             ),
