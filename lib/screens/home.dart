@@ -18,7 +18,7 @@ import 'package:dolovery_app/widgets/shopImage.dart';
 import 'package:dolovery_app/widgets/product_popup.dart';
 import 'dart:async';
 import 'package:location/location.dart';
-
+import 'package:sizer/sizer.dart';
 class HomeScreen extends StatefulWidget {
   final Function() notifyParent;
   final Function() notifyParent2;
@@ -442,7 +442,7 @@ class HomeScreenState extends State<HomeScreen> {
                                   "Delivering to your",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 17.0,
+                                    fontSize: 12.0.sp,
                                     fontFamily: 'Axiforma',
                                     color: Colors.redAccent[700],
                                   ),
@@ -492,7 +492,7 @@ class HomeScreenState extends State<HomeScreen> {
                       "What are you looking for?",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
+                        fontSize: 14.0.sp,
                         fontFamily: 'Axiforma',
                         color: Colors.black,
                       ),
@@ -527,7 +527,7 @@ class HomeScreenState extends State<HomeScreen> {
                         child: Text(
                           "Search for anything",
                           style: TextStyle(
-                            fontSize: 17,
+                            fontSize: 12.0.sp,
                             fontFamily: "Axiforma",
                             color: Colors.black26,
                           ),
@@ -625,7 +625,7 @@ class HomeScreenState extends State<HomeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Container(
-                    height: 135,
+                    height: 15.5.h,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -655,7 +655,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 20.0,
+                                  fontSize: 14.0.sp,
                                   fontFamily: 'Axiforma',
                                   color: Colors.black,
                                 ),
@@ -665,7 +665,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 13.0,
+                                  fontSize: 10.0.sp,
                                   fontFamily: 'Axiforma',
                                   color: Colors.redAccent[700],
                                 ),
@@ -675,7 +675,7 @@ class HomeScreenState extends State<HomeScreen> {
                         ),
                         Image.asset(
                           'assets/images/lebsec.jpg',
-                          width: 120,
+                          width: 30.0.w,
                         )
                       ],
                     ),
@@ -701,7 +701,7 @@ class HomeScreenState extends State<HomeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Container(
-                    height: 135,
+                    height: 15.5.h,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -731,7 +731,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 20.0,
+                                  fontSize:14.0.sp,
                                   fontFamily: 'Axiforma',
                                   color: Colors.black,
                                 ),
@@ -741,7 +741,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 13.0,
+                                  fontSize: 10.0.sp,
                                   fontFamily: 'Axiforma',
                                   color: Colors.redAccent[700],
                                 ),
@@ -751,7 +751,7 @@ class HomeScreenState extends State<HomeScreen> {
                         ),
                         Image.asset(
                           'assets/images/supsec.png',
-                          width: 120,
+                          width: 30.0.w
                         )
                       ],
                     ),
@@ -777,7 +777,7 @@ class HomeScreenState extends State<HomeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Container(
-                    height: 135,
+                    height: 15.5.h,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -807,7 +807,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 20.0,
+                                  fontSize: 14.0.sp,
                                   fontFamily: 'Axiforma',
                                   color: Colors.black,
                                 ),
@@ -817,7 +817,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 13.0,
+                                  fontSize: 10.0.sp,
                                   fontFamily: 'Axiforma',
                                   color: Colors.redAccent[700],
                                 ),
@@ -827,7 +827,7 @@ class HomeScreenState extends State<HomeScreen> {
                         ),
                         Image.asset(
                           'assets/images/petsec.png',
-                          width: 120,
+                          width: 30.0.w,
                         )
                       ],
                     ),
@@ -844,7 +844,7 @@ class HomeScreenState extends State<HomeScreen> {
                     "100% Lebanese",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 26.0,
+                      fontSize: 18.5.sp,
                       fontFamily: 'Axiforma',
                       color: Colors.black,
                     ),
@@ -857,7 +857,7 @@ class HomeScreenState extends State<HomeScreen> {
                       child: GestureDetector(
                         onTap: () {},
                         child: Image.asset("assets/images/fullfilldolovery.png",
-                            height: 23),
+                            height: 2.7.h),
                       ))
                 ],
               ),
@@ -881,7 +881,7 @@ class HomeScreenState extends State<HomeScreen> {
                               return Opacity(
                                 opacity: 0.3,
                                 child: SizedBox(
-                                    height: 200,
+                                    height: 22.0.h,
                                     child:
                                         Center(child: Text('No items found.'))),
                               );
@@ -973,7 +973,7 @@ class HomeScreenState extends State<HomeScreen> {
                       "View All Lebanese Shops".toUpperCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
-                        fontSize: 14.0,
+                        fontSize: 10.0.sp,
                         fontFamily: 'Axiforma',
                         color: Colors.black38,
                       ),
@@ -996,7 +996,7 @@ class HomeScreenState extends State<HomeScreen> {
                     "Monthly Bundle",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 26.0,
+                      fontSize: 18.5.sp,
                       fontFamily: 'Axiforma',
                       color: Colors.black,
                     ),
@@ -1024,7 +1024,7 @@ class HomeScreenState extends State<HomeScreen> {
                           return Opacity(
                             opacity: 0.3,
                             child: SizedBox(
-                                height: 200,
+                                height: 22.0.h,
                                 child: Center(child: Text('No items found.'))),
                           );
                         }
@@ -1085,7 +1085,7 @@ class HomeScreenState extends State<HomeScreen> {
                         () {};
                       },
                       child: Image.asset("assets/images/fullfilldolovery.png",
-                          height: 23))
+                          height: 2.7.h))
                 ],
               ),
             ),
@@ -1106,7 +1106,7 @@ class HomeScreenState extends State<HomeScreen> {
                             return Opacity(
                               opacity: 0.3,
                               child: SizedBox(
-                                  height: 200,
+                                  height:22.0.h,
                                   child:
                                       Center(child: Text('No items found.'))),
                             );
@@ -1195,7 +1195,7 @@ class HomeScreenState extends State<HomeScreen> {
                       "View All Supplements Shops".toUpperCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
-                        fontSize: 14.0,
+                        fontSize: 10.0.sp,
                         fontFamily: 'Axiforma',
                         color: Colors.black38,
                       ),
@@ -1218,7 +1218,7 @@ class HomeScreenState extends State<HomeScreen> {
                     "Pet Shops",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 26.0,
+                      fontSize: 18.5.sp,
                       fontFamily: 'Axiforma',
                       color: Colors.black,
                     ),
@@ -1226,7 +1226,7 @@ class HomeScreenState extends State<HomeScreen> {
                   GestureDetector(
                       onTap: () {},
                       child: Image.asset("assets/images/fullfilldolovery.png",
-                          height: 23))
+                          height: 2.7.h))
                 ],
               ),
             ),
@@ -1242,7 +1242,7 @@ class HomeScreenState extends State<HomeScreen> {
                     return Opacity(
                       opacity: 0.3,
                       child: SizedBox(
-                          height: 200,
+                          height:22.0.h,
                           child: Center(child: Text('No items found.'))),
                     );
                   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter/services.dart';
+import 'package:sizer/sizer_util.dart';
 
 void main() {
   runApp(
@@ -23,7 +24,13 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
 
-    return MaterialApp(
+    return LayoutBuilder(                           //return LayoutBuilder
+        builder: (context, constraints) {
+      return OrientationBuilder(                  //return OrientationBuilder
+          builder: (context, orientation) {
+        //initialize SizerUtil()
+        SizerUtil().init(constraints, orientation);
+        return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Dolovery',
       theme: ThemeData(
@@ -32,6 +39,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: MyHomePage(title: 'Homepage'),
+        );
+          },
+      );
+        },
     );
   }
 }
