@@ -423,7 +423,7 @@ class HomeScreenState extends State<HomeScreen> {
                     default:
                       if (snapshot.hasError)
                         return Text('Error: ${snapshot.error}');
-                      else if (chosen_address != null)
+                      else if (chosen_address != null) {
                         return Padding(
                           padding: const EdgeInsets.only(left: 15.0, top: 10),
                           child: Align(
@@ -449,8 +449,8 @@ class HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Container(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 1),
-                                  height: 30,
+                                      horizontal: 5, vertical: 1.9.h),
+                                  height: 8.0.h,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(7),
                                   ),
@@ -461,13 +461,15 @@ class HomeScreenState extends State<HomeScreen> {
                                           address++)
                                         if (all_addresses[address]['id'] ==
                                             chosen_address)
-                                          Text(
-                                            all_addresses[address]['name'],
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17.0,
-                                              fontFamily: 'Axiforma',
-                                              color: Colors.redAccent[700],
+                                          Expanded(
+                                            child: Text(
+                                              all_addresses[address]['name'],
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15.0.sp,
+                                                fontFamily: 'Axiforma',
+                                                color: Colors.redAccent[700],
+                                              ),
                                             ),
                                           ),
                                     ],
@@ -477,7 +479,7 @@ class HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         );
-                      else
+                      } else
                         return Container();
                   }
                 }),
@@ -646,7 +648,7 @@ class HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(top: 40.0, left: 15),
+                          padding:  EdgeInsets.only(top: 4.5.h, left: 15),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -722,7 +724,7 @@ class HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(top: 40.0, left: 15),
+                          padding:  EdgeInsets.only(top: 4.5.h, left: 15),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -798,7 +800,7 @@ class HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(top: 40.0, left: 15),
+                          padding:  EdgeInsets.only(top: 4.5.h, left: 15),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[

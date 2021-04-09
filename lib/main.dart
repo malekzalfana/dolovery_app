@@ -1,5 +1,7 @@
 import 'dart:core';
+import 'package:device_preview/device_preview.dart';
 import 'package:dolovery_app/screens/myhomepage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
@@ -8,9 +10,7 @@ import 'package:sizer/sizer_util.dart';
 
 void main() {
   runApp(
-    Phoenix(
-      child: MyApp(),
-    ),
+    DevicePreview(enabled:!kReleaseMode,builder:(context)=> MyApp()),
   );
 }
 
@@ -19,10 +19,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(Colors.black45);
 
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
 
     return LayoutBuilder(                           //return LayoutBuilder
         builder: (context, constraints) {
@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         //initialize SizerUtil()
         SizerUtil().init(constraints, orientation);
         return MaterialApp(
+          builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
       title: 'Dolovery',
       theme: ThemeData(
