@@ -859,7 +859,7 @@ class HomeScreenState extends State<HomeScreen> {
                       child: GestureDetector(
                         onTap: () {},
                         child: Image.asset("assets/images/fullfilldolovery.png",
-                            height: 2.7.h),
+                            height: 3.5.h),
                       ))
                 ],
               ),
@@ -1006,7 +1006,7 @@ class HomeScreenState extends State<HomeScreen> {
                   GestureDetector(
                       onTap: () {},
                       child: Image.asset("assets/images/fullfilldolovery.png",
-                          height: 23))
+                          height:  3.5.h))
                 ],
               ),
             ),
@@ -1087,7 +1087,7 @@ class HomeScreenState extends State<HomeScreen> {
                         () {};
                       },
                       child: Image.asset("assets/images/fullfilldolovery.png",
-                          height: 2.7.h))
+                          height:  3.5.h))
                 ],
               ),
             ),
@@ -1228,7 +1228,7 @@ class HomeScreenState extends State<HomeScreen> {
                   GestureDetector(
                       onTap: () {},
                       child: Image.asset("assets/images/fullfilldolovery.png",
-                          height: 2.7.h))
+                          height:  3.5.h))
                 ],
               ),
             ),

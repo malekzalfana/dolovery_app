@@ -20,6 +20,7 @@ import 'package:dolovery_app/widgets/recentorder.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:dolovery_app/widgets/signinpopup.dart' as signin;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 
 class ProfileMainScreen extends StatefulWidget {
   final Function() notifyParent;
@@ -480,14 +481,14 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           padding: const EdgeInsets.only(bottom: 28.0),
                           child: Image.asset(
                               "assets/images/profile_illustration.png",
-                              width: 330),
+                              width: 100.0.w),
                         ),
                         Text(
                           "Let's Get Started",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 23.0,
+                            fontSize: 16.0.sp,
                             fontFamily: 'Axiforma',
                             color: Colors.black,
                           ),
@@ -495,13 +496,13 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: SizedBox(
-                            width: 320,
+                            width:80.0.w,
                             child: Text(
                               "Create an account and get everything you need delivered to your doorstep!",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontWeight: FontWeight.normal,
-                                fontSize: 14.0,
+                                fontSize: 10.0.sp,
                                 fontFamily: 'Axiforma',
                                 color: Colors.grey[400],
                               ),
@@ -524,7 +525,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             },
                             color: Colors.redAccent[700],
                             textColor: Colors.white,
-                            minWidth: MediaQuery.of(context).size.width,
+                            minWidth: 80.0.w,
                             height: 0,
                             padding: EdgeInsets.only(
                                 left: 33, top: 10, right: 33, bottom: 10),
@@ -532,7 +533,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               "Get Started",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15.0,
+                                fontSize: 11.0.sp,
                                 fontFamily: 'Axiforma',
                               ),
                             ),
@@ -552,14 +553,14 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           padding: const EdgeInsets.only(bottom: 28.0),
                           child: Image.asset(
                               "assets/images/profile_illustration.png",
-                              width: 330),
+                              width: 100.0.w),
                         ),
                         Text(
                           "Let's Get Started",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 23.0,
+                            fontSize: 16.0.sp,
                             fontFamily: 'Axiforma',
                             color: Colors.black,
                           ),
@@ -567,13 +568,13 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: SizedBox(
-                            width: 320,
+                            width: 80.0.w,
                             child: Text(
                               "Create an account and get everything you need delivered to your doorstep!",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontWeight: FontWeight.normal,
-                                fontSize: 14.0,
+                                fontSize: 10.0.sp,
                                 fontFamily: 'Axiforma',
                                 color: Colors.grey[400],
                               ),
@@ -629,7 +630,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                   "Log Out",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 13.0,
+                                    fontSize: 11.0.sp,
                                     fontFamily: 'Axiforma',
                                     color: Colors.black38,
                                   ),
@@ -645,26 +646,28 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                   "Privacy Policy",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 13.0,
+                                    fontSize: 11.0.sp,
                                     fontFamily: 'Axiforma',
                                     color: Colors.black38,
                                   ),
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Terms()));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Text(
-                                    "Terms & Conditions",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13.0,
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.black38,
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => Terms()));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 15.0),
+                                    child: Text(
+                                      "Terms & Conditions",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 11.0.sp,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.black38,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -697,7 +700,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                           this_user.data['fullname'],
                                           style: TextStyle(
                                             fontWeight: FontWeight.w800,
-                                            fontSize: 32.0,
+                                            fontSize: 25.0.sp,
                                             height: 1.1,
                                             fontFamily: 'Axiforma',
                                             color: Colors.black,
@@ -708,11 +711,12 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                   ],
                                 ),
                               ),
+                              SizedBox(height: 5,),
                               Text(
                                 this_user.data['email'],
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 14.0,
+                                  fontSize: 11.0.sp,
                                   fontFamily: 'Axiforma',
                                   color: Colors.black45,
                                 ),
@@ -721,7 +725,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 this_user.data['number'],
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 14.0,
+                                  fontSize: 11.0.sp,
                                   letterSpacing: 1.1,
                                   fontFamily: 'Axiforma',
                                   color: Colors.black45,
@@ -743,7 +747,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                     "EDIT PROFILE",
                                     style: TextStyle(
                                       fontWeight: FontWeight.normal,
-                                      fontSize: 13.0,
+                                      fontSize: 11.0.sp,
                                       fontFamily: 'Axiforma',
                                       color: Colors.black38,
                                     ),
@@ -891,7 +895,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                     "My Addresses",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 13.0,
+                                      fontSize: 11.0.sp,
                                       fontFamily: 'Axiforma',
                                       color: Colors.black54,
                                     ),
@@ -1106,7 +1110,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               "Add New Address",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 13.0,
+                                fontSize: 11.0.sp,
                                 fontFamily: 'Axiforma',
                                 color: Colors.black,
                               ),
@@ -1132,7 +1136,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                       "Log Out",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 13.0,
+                                        fontSize: 11.0.sp,
                                         fontFamily: 'Axiforma',
                                         color: Colors.black38,
                                       ),
@@ -1149,28 +1153,30 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                       "Privacy Policy",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 13.0,
+                                        fontSize: 11.0.sp,
                                         fontFamily: 'Axiforma',
                                         color: Colors.black38,
                                       ),
                                     ),
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) => Terms()));
-                                    },
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 15.0),
-                                      child: Text(
-                                        "Terms & Conditions",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13.0,
-                                          fontFamily: 'Axiforma',
-                                          color: Colors.black38,
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) => Terms()));
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 15.0),
+                                        child: Text(
+                                          "Terms & Conditions",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11.0.sp,
+                                            fontFamily: 'Axiforma',
+                                            color: Colors.black38,
+                                          ),
                                         ),
                                       ),
                                     ),
