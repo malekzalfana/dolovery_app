@@ -1,15 +1,16 @@
 import 'dart:core';
+import 'package:device_preview/device_preview.dart';
 import 'package:dolovery_app/screens/myhomepage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter/services.dart';
+import 'package:sizer/sizer_util.dart';
 
 void main() {
   runApp(
-    Phoenix(
-      child: MyApp(),
-    ),
+    DevicePreview(enabled:false,builder:(context)=> MyApp()),
   );
 }
 
@@ -18,12 +19,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(Colors.black45);
 
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
 
-    return MaterialApp(
+    return LayoutBuilder(                           //return LayoutBuilder
+        builder: (context, constraints) {
+      return OrientationBuilder(                  //return OrientationBuilder
+          builder: (context, orientation) {
+        //initialize SizerUtil()
+        SizerUtil().init(constraints, orientation);
+        return MaterialApp(
+          builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
       title: 'Dolovery',
       theme: ThemeData(
@@ -32,6 +40,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: MyHomePage(title: 'Homepage'),
+        );
+          },
+      );
+        },
     );
   }
 }
