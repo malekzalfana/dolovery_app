@@ -8,7 +8,6 @@ import 'package:dolovery_app/widgets/product.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,9 +17,7 @@ import '../screens/profile.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
 import 'package:dolovery_app/widgets/product_popup.dart';
 import 'dart:async';
-import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
-import 'package:permission_handler/permission_handler.dart' as pm;
 
 class HomeScreen extends StatefulWidget {
   final Function() notifyParent;
@@ -57,53 +54,6 @@ class HomeScreenState extends State<HomeScreen> {
       if (!_serviceEnabled) {
         debugPrint('Location Denied once');
       }
-    }
-  }
-
-  getLocation() async {
-    LocationData myLocation;
-    String error;
-    Location location = new Location();
-    if (c_position != null && c_position.length > 0) {
-      return true;
-    }
-
-    try {
-      myLocation = await location.getLocation();
-      currentLocation = myLocation;
-
-      final coordinates =
-          new Coordinates(myLocation.latitude, myLocation.longitude);
-      var addresses =
-          await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      var first = addresses.first;
-      c_position = first.featureName;
-
-      if (acquiredlocation == false) {
-        setState(() {
-          acquiredlocation = true;
-        });
-      }
-
-      return c_position;
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        error = 'please grant permission';
-
-        Map<pm.Permission, pm.PermissionStatus> statuses = await [
-          pm.Permission.location,
-          pm.Permission.storage,
-        ].request();
-        print(error);
-        print(statuses);
-        gotLocation = false;
-      }
-      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
-        error = 'permission denied- please enable it from app settings';
-        print(error);
-        gotLocation = false;
-      }
-      myLocation = null;
     }
   }
 

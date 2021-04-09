@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:dolovery_app/screens/addadress.dart';
+import 'package:dolovery_app/screens/addaddress.dart';
 import 'package:dolovery_app/screens/allorders.dart';
-import 'package:dolovery_app/screens/editadress.dart';
+import 'package:dolovery_app/screens/editaddress.dart';
 import 'package:dolovery_app/screens/editprofile.dart';
 import 'package:dolovery_app/screens/orderpage.dart';
 import 'package:dolovery_app/static_screens/privacy.dart';
@@ -266,6 +266,13 @@ class ProfileScreenState extends State<ProfileMainScreen> {
               title: new Text("Are your sure you want to sign out?"),
               actions: <Widget>[
                 FlatButton(
+                  child: Text('Cancel'),
+                  textColor: Colors.grey,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
                   child: Text('Confirm'),
                   onPressed: () {
                     signOut();
@@ -435,9 +442,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
         prefs.setString('addresses', json.encode(this_user.data['address']));
         prefs.setString('address', this_user.data["chosen_address"]);
 
-        print('_________________________________________________________');
         print(prefs.getString('address'));
-        print('_________________________________________________________');
       } else {
         user_is_setup = false;
       }
