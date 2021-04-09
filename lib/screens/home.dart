@@ -13,7 +13,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/shoppage.dart';
 import '../screens/search.dart';
-import '../screens/profile.dart';
+import 'setup.dart';
 import 'package:dolovery_app/widgets/shopImage.dart';
 import 'package:dolovery_app/widgets/product_popup.dart';
 import 'dart:async';
@@ -258,7 +258,7 @@ class HomeScreenState extends State<HomeScreen> {
                           side: BorderSide(color: Colors.red)),
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ProfileScreen()));
+                            builder: (context) => SetupScreen()));
                       },
                       color: Colors.redAccent[700],
                       textColor: Colors.white,
@@ -852,7 +852,7 @@ class HomeScreenState extends State<HomeScreen> {
                   GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ProfileScreen()));
+                            builder: (context) => SetupScreen()));
                       },
                       child: GestureDetector(
                         onTap: () {},

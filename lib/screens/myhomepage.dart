@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dolovery_app/screens/cart.dart';
+import 'package:dolovery_app/screens/setup.dart';
 import 'package:dolovery_app/screens/profile.dart';
-import 'package:dolovery_app/screens/profilemain.dart';
 import 'package:dolovery_app/screens/salle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
       profilescreen = ProfileMainScreen();
       print('user NOT set up');
     } else {
-      profilescreen = ProfileScreen();
+      profilescreen = SetupScreen();
       print('user already set up');
     }
 

@@ -2,12 +2,11 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dolovery_app/screens/salleitem.dart';
+import 'package:dolovery_app/screens/setup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:dolovery_app/screens/profile.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -40,6 +39,12 @@ class _CartState extends State<Cart> {
         minimum = false;
         maximum = false;
       }
+      cartlocked = true;
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {
+        cartlocked = false;
+      });
     });
   }
 
@@ -58,6 +63,7 @@ class _CartState extends State<Cart> {
     });
   }
 
+  bool cartlocked = false;
   double items;
   double total;
   String type;
@@ -507,8 +513,7 @@ class _CartState extends State<Cart> {
                                 onPressed: () {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProfileScreen()))
+                                          builder: (context) => SetupScreen()))
                                       .then((_) {
                                     setState(() {});
                                   });
@@ -902,6 +907,7 @@ class _CartState extends State<Cart> {
                   ),
                 ),
               ),
+              Text(cartlocked.toString()),
               if (usercartmap_v2.keys.length > 0)
                 Column(
                   children: [
@@ -1333,8 +1339,7 @@ class _CartState extends State<Cart> {
                                 onPressed: () {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProfileScreen()))
+                                          builder: (context) => SetupScreen()))
                                       .then((_) {
                                     setupVerification();
                                     setState(() {});
@@ -1713,17 +1718,19 @@ class _CartState extends State<Cart> {
                         width: 25,
                         child: RawMaterialButton(
                           onPressed: () {
-                            _save(
-                              cartitemID,
-                              cartitem['rate'],
-                              cartitem['data']['shop'],
-                              cartitem['data']['type'],
-                              (int.parse(cartitem['data']['shop_price']
-                                      .toString()) *
-                                  cartitem['rate']),
-                              cartitem['data']['currency'],
-                              cartitem['data'],
-                            );
+                            if (cartlocked == false) {
+                              _save(
+                                cartitemID,
+                                cartitem['rate'],
+                                cartitem['data']['shop'],
+                                cartitem['data']['type'],
+                                (int.parse(cartitem['data']['shop_price']
+                                        .toString()) *
+                                    cartitem['rate']),
+                                cartitem['data']['currency'],
+                                cartitem['data'],
+                              );
+                            }
                           },
                           elevation: !maximum ? 2 : 0,
                           fillColor: !maximum

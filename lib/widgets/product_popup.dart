@@ -196,6 +196,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
   }
 
   bool showmessage = false;
+  bool cartlocked = false;
 
   Future<void> future = showModalBottomSheet<void>(
       shape: RoundedRectangleBorder(
@@ -215,6 +216,12 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                 maximum = false;
               }
               print(_n);
+              cartlocked = true;
+            });
+            Future.delayed(const Duration(milliseconds: 500), () {
+              mystate(() {
+                cartlocked = false;
+              });
             });
           }
 
@@ -589,8 +596,10 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                             ),
                             RawMaterialButton(
                               onPressed: () {
-                                _save(
-                                    productData, productData.documentID, rate);
+                                if (cartlocked == false) {
+                                  _save(productData, productData.documentID,
+                                      rate);
+                                }
                               },
                               elevation: !maximum ? 2 : 0,
                               fillColor: !maximum
