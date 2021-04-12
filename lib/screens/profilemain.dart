@@ -111,11 +111,11 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       if (newUser.exists) {
         print('USER EXISTSSSSSSSSSSSSSSSSSSSSSSS');
         notsetup = false;
-        welcomeheight = 350;
+        welcomeheight = Adaptive.h(50);
       } else {
         print('NOTTTTTTTTTT EXISTSSSSSSSSSSSSSSSSSSSSSSS');
         notsetup = true;
-        welcomeheight = 400;
+        welcomeheight = Adaptive.h(55);
       }
       Navigator.of(context).pop();
 
