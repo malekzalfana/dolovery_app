@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -72,8 +73,8 @@ class _ProductImageState extends State<ProductImage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  height: 180,
-                  width: 180,
+                  height: Adaptive.h(22.5),
+                  width: Adaptive.h(22.5),
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(

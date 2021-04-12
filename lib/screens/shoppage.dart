@@ -197,7 +197,7 @@ class _ShopPageState extends State<ShopPage> {
                                             widget.data['name'],
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 18,
+                                              fontSize: Adaptive.sp(14),
                                               height: 1.1,
                                               fontFamily: 'Axiforma',
                                               color: Colors.black,
@@ -231,7 +231,7 @@ class _ShopPageState extends State<ShopPage> {
                                                 style: TextStyle(
                                                   height: 1.1,
                                                   fontWeight: FontWeight.normal,
-                                                  fontSize: 11.5,
+                                                  fontSize: Adaptive.sp(8),
                                                   fontFamily: 'Axiforma',
                                                   color: Colors.grey[500],
                                                 ),
@@ -266,7 +266,7 @@ class _ShopPageState extends State<ShopPage> {
                                                 style: TextStyle(
                                                   height: 1.1,
                                                   fontWeight: FontWeight.normal,
-                                                  fontSize: 11.5,
+                                                  fontSize: Adaptive.sp(8),
                                                   fontFamily: 'Axiforma',
                                                   color: Colors.grey[500],
                                                 ),
@@ -473,6 +473,7 @@ class _ShopPageState extends State<ShopPage> {
                                       )),
                                 );
                           }
+                          return null;
                         },
                       ),
                       FutureBuilder(
@@ -885,6 +886,7 @@ class _ShopPageState extends State<ShopPage> {
                                   ],
                                 );
                           }
+                          return null;
                         },
                       ),
                     ],
