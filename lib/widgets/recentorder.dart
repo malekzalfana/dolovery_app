@@ -57,7 +57,7 @@ class _RecentOrderState extends State<RecentOrder> {
             // color: Colors.green,
             margin: new EdgeInsets.only(left: 30.0, right: 0),
             child: Container(
-                height: Adaptive.h(10),
+                height: Adaptive.h(12.5),
                 width: Adaptive.w(85),
                 decoration: BoxDecoration(
                   // image: DecorationImage(
@@ -139,7 +139,7 @@ class _RecentOrderState extends State<RecentOrder> {
                         children: <Widget>[
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
+                              padding: const EdgeInsets.only(left: 8.0,top: 5.0,),
                               child: Text(
                                 newOrderDate,
                                 // overflow: TextOverflow.ellipsis,

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolovery_app/screens/orderpage.dart';
 import 'package:dolovery_app/widgets/recentorder.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class Orders extends StatefulWidget {
   final String uid;
@@ -47,7 +48,7 @@ class _PrivacyState extends State<Orders> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
-                        fontSize: 16.0,
+                        fontSize: Adaptive.sp(13),
                         fontFamily: 'Axiforma',
                         color: Colors.black,
                       ),

@@ -869,7 +869,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                               "View All Orders",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 13.0,
+                                                fontSize: Adaptive.sp(10),
                                                 fontFamily: 'Axiforma',
                                                 color: Colors.black,
                                               ),
@@ -951,8 +951,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: <Widget>[
-                                            IconButton(
-                                                icon: Padding(
+                                            Padding(
                                                   padding:
                                                       const EdgeInsets.only(
                                                           left: 8.0),
@@ -967,7 +966,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                     size: 36,
                                                   ),
                                                 ),
-                                                onPressed: () {}),
                                             Container(
                                                 margin: new EdgeInsets.only(
                                                     left: 10.0, right: 0),
