@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dolovery_app/screens/cart.dart';
+import 'package:dolovery_app/screens/profilemain.dart';
 import 'package:dolovery_app/screens/setup.dart';
 import 'package:dolovery_app/screens/profile.dart';
 import 'package:dolovery_app/screens/salle.dart';

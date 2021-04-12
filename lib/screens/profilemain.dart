@@ -20,7 +20,7 @@ import 'package:dolovery_app/widgets/recentorder.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:dolovery_app/widgets/signinpopup.dart' as signin;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ProfileMainScreen extends StatefulWidget {
   final Function() notifyParent;

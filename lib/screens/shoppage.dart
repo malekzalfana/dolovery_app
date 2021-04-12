@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:dolovery_app/widgets/product.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ShopPage extends StatefulWidget {
   final dynamic data;
@@ -153,8 +154,8 @@ class _ShopPageState extends State<ShopPage> {
                               margin:
                                   new EdgeInsets.only(left: 12.0, right: 10),
                               child: Container(
-                                height: 90,
-                                width: 90,
+                                height: Adaptive.h(10),
+                                width: Adaptive.h(10),
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(

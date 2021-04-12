@@ -299,8 +299,8 @@ class SetupScreenState extends State<SetupScreen> {
   void onFieldChange() {
     var fields = <String>[
       _fullname,
-      _phone,
       _city,
+      _phone,
       _streetaddress,
       _landmark,
       _apartment
