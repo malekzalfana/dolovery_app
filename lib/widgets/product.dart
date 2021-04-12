@@ -93,7 +93,7 @@ class _ProductImageState extends State<ProductImage> {
                   ),
                   child: Center(
                       child: CachedNetworkImage(
-                    width: 120,
+                    width: Adaptive.w(35),
                     placeholder: (context, url) =>
                         Image.asset("assets/images/loading.gif", height: 30),
                     imageUrl: productImage == null ? "s" : productImage,
@@ -109,7 +109,7 @@ class _ProductImageState extends State<ProductImage> {
                   maxLines: 2,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 12.5,
+                    fontSize: 2,
                     fontFamily: 'Axiforma',
                     height: 1.2,
                     color: Colors.black,
