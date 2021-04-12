@@ -9,6 +9,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:dolovery_app/widgets/product.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_counter/flutter_counter.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -59,34 +60,19 @@ class _OrderPageState extends State<OrderPage> {
             child: Image.asset(
               'assets/images/check-mark.png',
               
-              width: 120.0,
+              width: Adaptive.w(50),
             ),
           ),
           Text(
             "Order Successful",
             style: TextStyle(
               fontWeight: FontWeight.w900,
-              fontSize: 25.0,
+              fontSize: Adaptive.sp(20),
               fontFamily: 'Axiforma',
               
             ),
           ),
           SizedBox(height: 10),
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
           SizedBox(
             height: 20,
           ),
@@ -119,7 +105,7 @@ class _OrderPageState extends State<OrderPage> {
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 17.0,
+                                  fontSize: Adaptive.sp(14),
                                   fontFamily: 'Axiforma',
                                   color: Colors.black),
                             ),
@@ -132,7 +118,7 @@ class _OrderPageState extends State<OrderPage> {
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 17.0,
+                                  fontSize: Adaptive.sp(13.5),
                                   fontFamily: 'Axiforma',
                                   color: Colors.black),
                             ),
@@ -151,7 +137,7 @@ class _OrderPageState extends State<OrderPage> {
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w800,
-                                        fontSize: 19.0,
+                                        fontSize: Adaptive.sp(15),
                                         fontFamily: 'Axiforma',
                                         color: Colors.black),
                                   ),
@@ -203,7 +189,7 @@ class _OrderPageState extends State<OrderPage> {
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 17.0,
+                                  fontSize: Adaptive.sp(14),
                                   fontFamily: 'Axiforma',
                                   color: Colors.black),
                             ),
@@ -216,7 +202,7 @@ class _OrderPageState extends State<OrderPage> {
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 25.0,
+                                  fontSize: Adaptive.sp(21),
                                   fontFamily: 'Axiforma',
                                   color: Colors.redAccent[700]),
                             ),

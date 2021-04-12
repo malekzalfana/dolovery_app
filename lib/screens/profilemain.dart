@@ -787,7 +787,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                 "Recent Orders",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 13.0,
+                                                  fontSize: Adaptive.sp(10),
                                                   fontFamily: 'Axiforma',
                                                   color: Colors.black54,
                                                 ),
@@ -866,7 +866,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                 right: 20,
                                                 bottom: 10),
                                             child: Text(
-                                              "View all orders",
+                                              "View All Orders",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 13.0,
