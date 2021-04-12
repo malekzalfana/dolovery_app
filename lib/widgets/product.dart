@@ -109,7 +109,7 @@ class _ProductImageState extends State<ProductImage> {
                   maxLines: 2,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: Adaptive.sp(10),
+                    fontSize: Adaptive.sp(11),
                     fontFamily: 'Axiforma',
                     height: 1.2,
                     color: Colors.black,
@@ -300,7 +300,7 @@ class _ProductImageState extends State<ProductImage> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
-                      fontSize: Adaptive.sp(9),
+                      fontSize: Adaptive.sp(10),
                       fontFamily: 'Axiforma',
                       color: Colors.black54,
                     ),
@@ -320,7 +320,7 @@ class _ProductImageState extends State<ProductImage> {
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: Adaptive.sp(9),
+                    fontSize: Adaptive.sp(10),
                     fontFamily: 'Axiforma',
                     color: Colors.black26,
                   ),

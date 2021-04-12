@@ -154,8 +154,8 @@ class _ShopPageState extends State<ShopPage> {
                               margin:
                                   new EdgeInsets.only(left: 12.0, right: 10),
                               child: Container(
-                                height: Adaptive.h(10),
-                                width: Adaptive.h(10),
+                                height: Adaptive.h(15),
+                                width: Adaptive.h(15),
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
@@ -197,7 +197,7 @@ class _ShopPageState extends State<ShopPage> {
                                             widget.data['name'],
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: Adaptive.sp(14),
+                                              fontSize: Adaptive.sp(15),
                                               height: 1.1,
                                               fontFamily: 'Axiforma',
                                               color: Colors.black,
@@ -231,7 +231,7 @@ class _ShopPageState extends State<ShopPage> {
                                                 style: TextStyle(
                                                   height: 1.1,
                                                   fontWeight: FontWeight.normal,
-                                                  fontSize: Adaptive.sp(8),
+                                                  fontSize: Adaptive.sp(10),
                                                   fontFamily: 'Axiforma',
                                                   color: Colors.grey[500],
                                                 ),
@@ -266,7 +266,7 @@ class _ShopPageState extends State<ShopPage> {
                                                 style: TextStyle(
                                                   height: 1.1,
                                                   fontWeight: FontWeight.normal,
-                                                  fontSize: Adaptive.sp(8),
+                                                  fontSize: Adaptive.sp(10),
                                                   fontFamily: 'Axiforma',
                                                   color: Colors.grey[500],
                                                 ),
