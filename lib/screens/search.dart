@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:dolovery_app/widgets/product.dart';
 import 'package:algolia/algolia.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class Search extends StatefulWidget {
   Search({Key key}) : super(key: key);
@@ -76,10 +77,11 @@ class _SearchState extends State<Search> {
                             Padding(
                               padding: const EdgeInsets.only(top: 18.0),
                               child: SizedBox(
-                                width: 200,
+                                width: Adaptive.w(55),
                                 height: 40,
                                 child: Container(
                                     child: TextField(
+
                                   controller: _searchText,
                                   onChanged: (text) {
                                     if ((text.length > 2) & !searchlock) {
