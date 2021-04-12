@@ -59,6 +59,7 @@ dependencies:
   flutter_statusbarcolor: ^0.2.3
   device_preview:
   responsive_sizer: ^1.1.0
+  font_awesome_flutter: ^9.0.0
   # flutter_advanced_networkimage: ^0.7.0
 
 

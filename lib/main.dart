@@ -12,7 +12,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 void main() {
   runApp(
-    DevicePreview(enabled:false,builder:(context)=> MyApp()),
+    DevicePreview(enabled:!kReleaseMode,builder:(context)=> MyApp()),
   );
 }
 

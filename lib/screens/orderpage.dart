@@ -52,22 +52,8 @@ class _OrderPageState extends State<OrderPage> {
             ),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-
-            
-            
             centerTitle: true,
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
           ),
-          
           Padding(
             padding: const EdgeInsets.only(top: 10.0, bottom: 20),
             child: Image.asset(

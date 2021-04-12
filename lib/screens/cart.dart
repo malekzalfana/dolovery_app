@@ -6,6 +6,8 @@ import 'package:dolovery_app/screens/setup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -900,7 +902,7 @@ class _CartState extends State<Cart> {
                     "Your Items",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 13.0,
+                      fontSize: Adaptive.sp(10),
                       fontFamily: 'Axiforma',
                       color: Colors.black54,
                     ),
@@ -929,7 +931,7 @@ class _CartState extends State<Cart> {
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w800,
-                                          fontSize: 23.0,
+                                          fontSize: Adaptive.sp(18),
                                           fontFamily: 'Axiforma',
                                           color: Colors.black),
                                     ),
@@ -966,7 +968,7 @@ class _CartState extends State<Cart> {
                         "Total",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 13.0,
+                          fontSize: Adaptive.sp(10),
                           fontFamily: 'Axiforma',
                           color: Colors.black54,
                         ),
@@ -982,7 +984,7 @@ class _CartState extends State<Cart> {
                         total.toInt().toString() + 'L.L.',
                         style: TextStyle(
                             fontWeight: FontWeight.w800,
-                            fontSize: 25.0,
+                            fontSize: Adaptive.sp(21),
                             fontFamily: 'Axiforma',
                             color: Colors.redAccent[700]),
                       ),
@@ -1002,7 +1004,7 @@ class _CartState extends State<Cart> {
                           "Delivering to",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 13.0,
+                            fontSize: Adaptive.sp(10),
                             fontFamily: 'Axiforma',
                             color: Colors.black54,
                           ),
@@ -1036,8 +1038,7 @@ class _CartState extends State<Cart> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                IconButton(
-                                    icon: Padding(
+                                Padding(
                                       padding: const EdgeInsets.only(left: 8.0),
                                       child: Icon(
                                         Icons.place,
@@ -1048,7 +1049,6 @@ class _CartState extends State<Cart> {
                                         size: 36,
                                       ),
                                     ),
-                                    onPressed: () {}),
                                 Container(
                                     margin: new EdgeInsets.only(
                                         left: 10.0, right: 0),
@@ -1073,7 +1073,7 @@ class _CartState extends State<Cart> {
                                                   addresses[index]["name"],
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
+                                                    fontSize: Adaptive.sp(12),
                                                     fontFamily: 'Axiforma',
                                                     color: chosen_address ==
                                                             addresses[index]
@@ -1099,10 +1099,7 @@ class _CartState extends State<Cart> {
                                                           left: 0.0, bottom: 8),
                                                   child: SizedBox(
                                                     width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width -
-                                                            145,
+                                                        Adaptive.w(50),
                                                     child: Text(
                                                       addresses[index]
                                                           ["street_address"],
@@ -1113,7 +1110,7 @@ class _CartState extends State<Cart> {
                                                         height: 1.1,
                                                         fontWeight:
                                                             FontWeight.normal,
-                                                        fontSize: 14.5,
+                                                        fontSize: Adaptive.sp(11),
                                                         fontFamily: 'Axiforma',
                                                         color: Colors.grey[500],
                                                       ),
@@ -1140,7 +1137,7 @@ class _CartState extends State<Cart> {
                           "Payment",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 13.0,
+                            fontSize: Adaptive.sp(10),
                             fontFamily: 'Axiforma',
                             color: Colors.black54,
                           ),
@@ -1170,7 +1167,7 @@ class _CartState extends State<Cart> {
                             children: <Widget>[
                               Padding(
                                   padding: const EdgeInsets.only(left: 15.0),
-                                  child: Icon(Icons.payment,
+                                  child: FaIcon(FontAwesomeIcons.moneyBill,
                                       size: 30, color: Colors.black)),
                               Container(
                                   margin: new EdgeInsets.only(
@@ -1196,7 +1193,7 @@ class _CartState extends State<Cart> {
                                                 'Cash On Delivery',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
+                                                  fontSize: Adaptive.sp(12),
                                                   fontFamily: 'Axiforma',
                                                   color: Colors.black,
                                                 ),
@@ -1212,16 +1209,19 @@ class _CartState extends State<Cart> {
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 8.0, bottom: 8),
-                                              child: Text(
-                                                'Pay when the delivery arrives',
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  height: 1.1,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 14.5,
-                                                  fontFamily: 'Axiforma',
-                                                  color: Colors.grey[500],
+                                              child: Expanded(
+                                                child: Text(
+                                                  'Pay when the delivery arrives',
+                                                  overflow: TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  softWrap: true,
+                                                  style: TextStyle(
+                                                    height: 1.1,
+                                                    fontWeight: FontWeight.normal,
+                                                    fontSize: Adaptive.sp(11),
+                                                    fontFamily: 'Axiforma',
+                                                    color: Colors.grey[500],
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -1271,7 +1271,7 @@ class _CartState extends State<Cart> {
                                 "No internet connection",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
+                                  fontSize: Adaptive.sp(12),
                                   fontFamily: 'Axiforma',
                                 ),
                               ),
@@ -1311,7 +1311,7 @@ class _CartState extends State<Cart> {
                                         "Confirm Order",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
+                                          fontSize: Adaptive.sp(12),
                                           fontFamily: 'Axiforma',
                                         ),
                                       ),
@@ -1538,7 +1538,7 @@ class _CartState extends State<Cart> {
                         maxLines: 2,
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
-                          fontSize: 13,
+                          fontSize: Adaptive.sp(10),
                           height: 1.1,
                           fontFamily: 'Axiforma',
                           color: Colors.black,
@@ -1571,7 +1571,7 @@ class _CartState extends State<Cart> {
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 13.5,
+                                  fontSize: Adaptive.sp(11.5),
                                   fontFamily: 'Axiforma',
                                   color: Colors.redAccent[700],
                                 ),
@@ -1592,7 +1592,7 @@ class _CartState extends State<Cart> {
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 13.5,
+                                  fontSize: Adaptive.sp(11.5),
                                   fontFamily: 'Axiforma',
                                   color: Colors.redAccent[700],
                                 ),
@@ -1614,7 +1614,7 @@ class _CartState extends State<Cart> {
                             style: TextStyle(
                               height: 1.1,
                               fontWeight: FontWeight.normal,
-                              fontSize: 13,
+                              fontSize: Adaptive.sp(10),
                               fontFamily: 'Axiforma',
                               color: Colors.grey[500],
                             ),
