@@ -71,9 +71,8 @@ class _SearchState extends State<Search> {
                       children: <Widget>[
                         Image.asset("assets/icons/searchicon.png",
                             height: Adaptive.h(2.5),),
-                        SizedBox(width: 16),
                         SizedBox(
-                          width: Adaptive.w(65),
+                          width: Adaptive.w(62.5),
                           child: Container(
                               child: TextField(
 
@@ -130,7 +129,7 @@ class _SearchState extends State<Search> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0, right: 10),
                   child: SizedBox(
-                    height: height - 200,
+                    height: height - 150,
                     child: _searching == true
                         ? Center(
                             child: CircularProgressIndicator(),
@@ -145,7 +144,7 @@ class _SearchState extends State<Search> {
                       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: Adaptive.w(50),
                         crossAxisSpacing: Adaptive.w(5),
-                        mainAxisExtent: Adaptive.h(35),
+                        mainAxisExtent: Adaptive.h(40),
                       ),
                                 itemCount: _results.length,
                                 itemBuilder: (BuildContext ctx, int index) {
