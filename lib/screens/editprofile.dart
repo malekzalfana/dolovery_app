@@ -306,6 +306,7 @@ class EditProfileState extends State<EditProfileScreen> {
   }
 
   String _name;
+  var _newnumber;
   var _number;
   PhoneNumber _numberparsed;
   var _code;
@@ -321,7 +322,7 @@ class EditProfileState extends State<EditProfileScreen> {
     if (usercollection.exists) {
       newuser = false;
       _name = usercollection.data['fullname'];
-      _number = usercollection.data['number'].substring(4);
+      _number = usercollection.data['number'];
       _code = usercollection.data['code'];
       String phoneNumber = _code + _number;
       this_number = await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber);
@@ -336,6 +337,8 @@ class EditProfileState extends State<EditProfileScreen> {
         onInputChanged: (PhoneNumber number) {
           print(number.phoneNumber);
           onTextChange("Phone", number.phoneNumber);
+          _newnumber =
+              number.toString().replaceAll(number.dialCode.toString(), '');
           onFieldChange();
         },
         onInputValidated: (bool value) {
@@ -349,7 +352,7 @@ class EditProfileState extends State<EditProfileScreen> {
         selectorTextStyle: TextStyle(color: Colors.black),
         initialValue: this_number,
         locale: 'LB',
-        hintText: _numberparsed.toString(),
+        hintText: 'Phone Number',
         textFieldController: controller,
         inputBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -485,7 +488,7 @@ class EditProfileState extends State<EditProfileScreen> {
                                         final uemail = user.email;
                                         Map<String, dynamic> thisuser = {
                                           "fullname": _fullname,
-                                          "number": _phone,
+                                          "number": _newnumber,
                                           "email": uemail,
                                         };
 
