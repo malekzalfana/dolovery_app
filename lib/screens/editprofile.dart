@@ -321,7 +321,7 @@ class EditProfileState extends State<EditProfileScreen> {
     if (usercollection.exists) {
       newuser = false;
       _name = usercollection.data['fullname'];
-      _number = usercollection.data['number'];
+      _number = usercollection.data['number'].substring(4);
       _code = usercollection.data['code'];
       String phoneNumber = _code + _number;
       this_number = await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber);
