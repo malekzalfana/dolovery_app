@@ -154,20 +154,16 @@ class _SearchState extends State<Search> {
                                     "assets/images/searchback.png",
                                   ),
                                 )
-                              : ListView.builder(
+                              : GridView.builder(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: Adaptive.w(50),
+                          crossAxisSpacing: Adaptive.w(5),
+                          mainAxisExtent: Adaptive.h(35),
+                        ),
                                   itemCount: _results.length,
                                   itemBuilder: (BuildContext ctx, int index) {
                                     AlgoliaObjectSnapshot snap =
                                         _results[index];
-                                    return GridView.count(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: .635,
-                                      controller: new ScrollController(
-                                          keepScrollOffset: false),
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.vertical,
-                                      children: List.generate(_results.length,
-                                          (index) {
                                         return GestureDetector(
                                             onTap: () {
                                               openProductPopUp(
@@ -216,8 +212,6 @@ class _SearchState extends State<Search> {
                                                       ['shop']
                                                   .toString(),
                                             ));
-                                      }).toList(),
-                                    );
                                   },
                                 ),
                     ),
