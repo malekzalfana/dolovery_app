@@ -66,69 +66,60 @@ class _SearchState extends State<Search> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Padding(
-                      padding:  EdgeInsets.only(top: 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Image.asset("assets/icons/searchicon.png",
-                              height: 16),
-                          SizedBox(width: 16),
-                          Padding(
-                            padding:  EdgeInsets.only(top: 5.0),
-                            child: SizedBox(
-                              width: Adaptive.w(65),
-                              child: Container(
-                                  child: TextField(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Image.asset("assets/icons/searchicon.png",
+                            height: Adaptive.h(2.5),),
+                        SizedBox(width: 16),
+                        SizedBox(
+                          width: Adaptive.w(65),
+                          child: Container(
+                              child: TextField(
 
-                                controller: _searchText,
-                                onSubmitted: (text) {
-                                  if ((text.length > 2) & !searchlock) {
-                                    _search();
+                            controller: _searchText,
+                            onSubmitted: (text) {
+                              if ((text.length > 2) & !searchlock) {
+                                _search();
 
 
-                                    if (searchlock = true) {
-                                      Future.delayed(Duration(seconds: 3),
-                                          () {
-                                        setState(() {
-                                          searchlock = false;
-                                        });
-                                        if (pendingSearch != "" &&
-                                            text.length > 2) {
-                                          _search();
-                                        }
-                                      });
+                                if (searchlock = true) {
+                                  Future.delayed(Duration(seconds: 3),
+                                      () {
+                                    setState(() {
+                                      searchlock = false;
+                                    });
+                                    if (pendingSearch != "" &&
+                                        text.length > 2) {
+                                      _search();
                                     }
-                                  } else if ((text.length > 2) &&
-                                      searchlock) {
-                                    pendingSearch = text;
-                                  } else if (text.length == 0) {
-                                    _results = null;
-                                  }
-                                },
-                                autofocus: true,
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Enter a search term'),
-                              )),
-                            ),
-                          )
-                        ],
-                      ),
+                                  });
+                                }
+                              } else if ((text.length > 2) &&
+                                  searchlock) {
+                                pendingSearch = text;
+                              } else if (text.length == 0) {
+                                _results = null;
+                              }
+                            },
+                            autofocus: true,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Enter a search term'),
+                          )),
+                        )
+                      ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.0),
-                    child: IconButton(
-                        icon: Icon(
-                          Icons.clear,
-                          color: Colors.grey,
-                          size: 30,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        }),
-                  ),
+                  IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        color: Colors.grey,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
                 ],
               ),
               // Text(searchlock.toString()),
