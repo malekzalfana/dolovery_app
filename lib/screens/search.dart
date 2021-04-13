@@ -83,9 +83,10 @@ class _SearchState extends State<Search> {
                                     child: TextField(
 
                                   controller: _searchText,
-                                  onChanged: (text) {
+                                  onSubmitted: (text) {
                                     if ((text.length > 2) & !searchlock) {
                                       _search();
+
 
                                       if (searchlock = true) {
                                         Future.delayed(Duration(seconds: 3),
@@ -158,7 +159,6 @@ class _SearchState extends State<Search> {
                                   itemBuilder: (BuildContext ctx, int index) {
                                     AlgoliaObjectSnapshot snap =
                                         _results[index];
-
                                     return GridView.count(
                                       crossAxisCount: 2,
                                       childAspectRatio: .635,
