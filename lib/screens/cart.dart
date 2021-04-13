@@ -1144,94 +1144,73 @@ class _CartState extends State<Cart> {
                         ),
                       ),
                     ),
-                    Opacity(
-                      opacity: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            right: 30.0, bottom: 20, left: 30, top: 12),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.1),
-                                  spreadRadius: 2.2,
-                                  blurRadius: 2.5,
-                                  offset: Offset(0, 4),
-                                ),
-                              ],
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(14))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: FaIcon(FontAwesomeIcons.moneyBill,
-                                      size: 30, color: Colors.black)),
-                              Container(
-                                  margin: new EdgeInsets.only(
-                                      left: 10.0, right: 0, bottom: 0),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.5),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10.0,
-                                                  left: 6,
-                                                  bottom: 5),
-                                              child: Text(
-                                                'Cash On Delivery',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: Adaptive.sp(12),
-                                                  fontFamily: 'Axiforma',
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0, bottom: 8),
-                                              child: Expanded(
-                                                child: Text(
-                                                  'Pay when the delivery arrives',
-                                                  overflow: TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.left,
-                                                  softWrap: true,
-                                                  style: TextStyle(
-                                                    height: 1.1,
-                                                    fontWeight: FontWeight.normal,
-                                                    fontSize: Adaptive.sp(11),
-                                                    fontFamily: 'Axiforma',
-                                                    color: Colors.grey[500],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  )),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          right: 30.0, bottom: 20, left: 30, top: 12),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                spreadRadius: 2.2,
+                                blurRadius: 2.5,
+                                offset: Offset(0, 4),
+                              ),
                             ],
-                          ),
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14),),),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children:[
+                            Padding(
+                                padding: const EdgeInsets.only(left: 15.0),
+                                child: FaIcon(FontAwesomeIcons.moneyBill,
+                                    size: 30, color: Colors.black)),
+                            Padding(
+                              padding: const EdgeInsets.all(8.5),
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                children:[
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10.0,
+                                        left: 6,
+                                        bottom: 5),
+                                    child: Text(
+                                      'Cash On Delivery',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Adaptive.sp(12),
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0, bottom: 8),
+                                    child: Text(
+                                      'Pay when the delivery arrives',
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.left,
+                                      softWrap: true,
+                                      style: TextStyle(
+                                        height: 1.1,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: Adaptive.sp(11),
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

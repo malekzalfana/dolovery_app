@@ -142,7 +142,7 @@ class _SearchState extends State<Search> {
                       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: Adaptive.w(50),
                         crossAxisSpacing: Adaptive.w(5),
-                        mainAxisExtent: Adaptive.h(40),
+                        mainAxisExtent: Adaptive.h(36),
                       ),
                                 itemCount: _results.length,
                                 itemBuilder: (BuildContext ctx, int index) {
