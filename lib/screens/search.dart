@@ -58,7 +58,6 @@ class _SearchState extends State<Search> {
               Row(
                 children: [
                   Container(
-                    margin: EdgeInsets.symmetric(vertical: 0),
                     padding:
                         EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     height: 90,
@@ -75,7 +74,6 @@ class _SearchState extends State<Search> {
                           width: Adaptive.w(62.5),
                           child: Container(
                               child: TextField(
-
                             controller: _searchText,
                             onSubmitted: (text) {
                               if ((text.length > 2) & !searchlock) {

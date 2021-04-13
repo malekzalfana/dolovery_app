@@ -57,7 +57,7 @@ class _RecentOrderState extends State<RecentOrder> {
             // color: Colors.green,
             margin: new EdgeInsets.only(left: 30.0, right: 0),
             child: Container(
-                height: Adaptive.h(12.5),
+                height: Adaptive.h(13.5),
                 width: Adaptive.w(85),
                 decoration: BoxDecoration(
                   // image: DecorationImage(
