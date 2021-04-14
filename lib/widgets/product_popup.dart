@@ -86,19 +86,17 @@ getRate(shopName) async {
     );
   } else {
     rate = json.decode(prefs.getString("cached_shops"))[shopName];
-    print(prefs.getString("cached_shops"));
     started = true;
   }
-  debugPrint("rate is:" + rate.toString());
   started = true;
 }
 
-void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
+void openProductPopUp(context, productData, index,
+    [productid, sendrefreshtohome]) {
   started = false;
   int _n = 0;
   bool minimum = true;
   bool maximum = false;
-  print(productData);
   var productCurrency = productData['currency'];
   var productPrice = productData['shop_price'];
   var shopName = productData['shop'];
@@ -119,7 +117,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
               children: [
                 if (oldPrice != null)
                   Visibility(
-                    visible: oldPrice.toString().length > 0,
+                    visible: oldPrice.toString().length > 1,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Text(
@@ -163,7 +161,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
         children: [
           if (oldPrice != null)
             Visibility(
-              visible: oldPrice.toString().length > 0,
+              visible: oldPrice.toString().length > 1,
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Text(oldPrice.toString() + "L.L.",
@@ -216,7 +214,6 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                 minimum = false;
                 maximum = false;
               }
-              print(_n);
               cartlocked = true;
             });
             Future.delayed(const Duration(milliseconds: 500), () {
@@ -236,11 +233,8 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
 
             if (usercartmap_v2 == null) {
               usercartmap_v2 = {};
-              print('made an empty map');
             } else {
               usercartmap_v2 = json.decode(usercartmap_v2);
-              print('found the map');
-              print(json.encode(usercartmap_v2));
             }
             if (usercartmap_v2.containsKey(shop_name)) {
               if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
@@ -271,17 +265,13 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                   .getDocuments()
                   .then(
                 (value) {
-                  print('thid id the value');
-                  print(value);
                   if (value.documents.length > 0) {
                     shopname = value.documents[0].data['name'];
                     usercartmap_v2[shop_name] = {
                       'products': {},
                       'data': {'name': shopname}
                     };
-                  } else {
-                    print('returbned none');
-                  }
+                  } else {}
                 },
               );
 
@@ -321,15 +311,11 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
               shops = [];
             }
 
-            print(shop_name);
-            print('shopaboive______________');
             if (!shops.contains(shop_name)) {
               shops.add(shop_name);
               prefs.setStringList("shops", shops);
             }
 
-            print(rate);
-            print('################');
             showmessage = true;
             Timer(Duration(seconds: 3), () {
               showmessage = false;
@@ -337,7 +323,6 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
           }
 
           void minus() {
-            print(_n);
             mystate(() {
               if (_n != 0) _n--;
               if (_n == 0)
@@ -358,11 +343,8 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
 
             if (usercartmap_v2 == null) {
               usercartmap_v2 = {};
-              print('made an empty map');
             } else {
               usercartmap_v2 = json.decode(usercartmap_v2);
-              print('found the map');
-              print(json.encode(usercartmap_v2));
             }
 
             if (usercartmap_v2.containsKey(shop_name)) {
@@ -407,8 +389,6 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
               shops = [];
             }
 
-            print(shop_name);
-            print('shopaboive______________');
             if (!shops.contains(shop_name)) {
               shops.remove(shop_name);
               prefs.setStringList("shops", shops);
@@ -416,10 +396,6 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
             if (usercartmap_v2[shop_name]['products'].keys.length == 0) {
               usercartmap_v2.remove(shop_name);
             }
-            print('saved $value');
-            print('saved $total');
-            print('saved $type');
-            print('saved $items');
             showmessage = true;
             Timer(Duration(seconds: 3), () {
               showmessage = false;

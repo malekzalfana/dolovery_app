@@ -58,8 +58,7 @@ class _SearchState extends State<Search> {
               Row(
                 children: [
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     height: 90,
                     width: width - 60,
                     decoration: BoxDecoration(
@@ -68,8 +67,10 @@ class _SearchState extends State<Search> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Image.asset("assets/icons/searchicon.png",
-                            height: Adaptive.h(2.5),),
+                        Image.asset(
+                          "assets/icons/searchicon.png",
+                          height: Adaptive.h(2.5),
+                        ),
                         SizedBox(
                           width: Adaptive.w(62.5),
                           child: Container(
@@ -79,10 +80,8 @@ class _SearchState extends State<Search> {
                               if ((text.length > 2) & !searchlock) {
                                 _search();
 
-
                                 if (searchlock = true) {
-                                  Future.delayed(Duration(seconds: 3),
-                                      () {
+                                  Future.delayed(Duration(seconds: 3), () {
                                     setState(() {
                                       searchlock = false;
                                     });
@@ -92,8 +91,7 @@ class _SearchState extends State<Search> {
                                     }
                                   });
                                 }
-                              } else if ((text.length > 2) &&
-                                  searchlock) {
+                              } else if ((text.length > 2) && searchlock) {
                                 pendingSearch = text;
                               } else if (text.length == 0) {
                                 _results = null;
@@ -139,63 +137,60 @@ class _SearchState extends State<Search> {
                                 ),
                               )
                             : GridView.builder(
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: Adaptive.w(50),
-                        crossAxisSpacing: Adaptive.w(5),
-                        mainAxisExtent: Adaptive.h(36),
-                      ),
+                                gridDelegate:
+                                    SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: Adaptive.w(50),
+                                  crossAxisSpacing: Adaptive.w(5),
+                                  mainAxisExtent: Adaptive.h(36),
+                                ),
                                 itemCount: _results.length,
                                 itemBuilder: (BuildContext ctx, int index) {
-                                  AlgoliaObjectSnapshot snap =
-                                      _results[index];
-                                      return GestureDetector(
-                                          onTap: () {
-                                            openProductPopUp(
-                                              context,
-                                              snap.data['data'],
-                                              index,
-                                            );
-                                          },
-                                          child: ProductImage(
-                                            productName: snap.data['data']
-                                                        ['name'] !=
-                                                    null
+                                  AlgoliaObjectSnapshot snap = _results[index];
+                                  //                                    openProductPopUp(context, productData, index,
+                                  // [sendrefreshtohome, productid])
+                                  return GestureDetector(
+                                      onTap: () {
+                                        openProductPopUp(
+                                          context,
+                                          snap.data['data'],
+                                          // null,
+                                          snap.data['data']['id'],
+                                          index,
+                                        );
+                                      },
+                                      child: ProductImage(
+                                        productName:
+                                            snap.data['data']['name'] != null
                                                 ? snap.data['data']['name']
                                                 : '',
-                                            productImage: snap.data['data']
-                                                        ['image'] !=
-                                                    null
+                                        productImage:
+                                            snap.data['data']['image'] != null
                                                 ? snap.data['data']['image']
                                                 : '',
-                                            productPrice: snap.data['data']
-                                                        ['shop_price'] !=
-                                                    null
-                                                ? snap.data['data']
-                                                        ['shop_price']
-                                                    .toString()
-                                                : '0',
-                                            oldPrice: snap.data['data']
-                                                        ['old_price'] !=
-                                                    null
-                                                ? snap.data['data']
-                                                        ['old_price']
-                                                    .toString()
-                                                : '',
-                                            productUnit: snap.data['data']
-                                                        ['unit'] !=
-                                                    null
+                                        productPrice: snap.data['data']
+                                                    ['shop_price'] !=
+                                                null
+                                            ? snap.data['data']['shop_price']
+                                                .toString()
+                                            : '0',
+                                        oldPrice: snap.data['data']
+                                                    ['old_price'] !=
+                                                null
+                                            ? snap.data['data']['old_price']
+                                                .toString()
+                                            : '',
+                                        productUnit:
+                                            snap.data['data']['unit'] != null
                                                 ? snap.data['data']['unit']
                                                 : '',
-                                            productCurrency: snap.data['data']
-                                                        ['currency'] !=
-                                                    null
-                                                ? snap.data['data']
-                                                    ['currency']
-                                                : '',
-                                            shopName: snap.data['data']
-                                                    ['shop']
-                                                .toString(),
-                                          ));
+                                        productCurrency: snap.data['data']
+                                                    ['currency'] !=
+                                                null
+                                            ? snap.data['data']['currency']
+                                            : '',
+                                        shopName: snap.data['data']['shop']
+                                            .toString(),
+                                      ));
                                 },
                               ),
                   ),

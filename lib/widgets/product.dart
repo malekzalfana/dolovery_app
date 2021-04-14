@@ -65,7 +65,6 @@ class _ProductImageState extends State<ProductImage> {
     if (productPrice == "") {
       productPrice = '1';
     }
-    print(oldPrice + 'is the old price');
 
     return Container(
         margin: new EdgeInsets.only(left: 4.0, right: 4),
@@ -273,7 +272,7 @@ class _ProductImageState extends State<ProductImage> {
           Row(
             children: [
               Visibility(
-                visible: oldPrice.length > 0,
+                visible: oldPrice.length > 1,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 7.0),
                   child: SizedBox(
