@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class ProductImage extends StatefulWidget {
   final String productName;
@@ -150,6 +151,7 @@ class _ProductImageState extends State<ProductImage> {
       cachedshops = {};
       skip = true;
     }
+
     if (!cachedshops.containsKey(shopName)) {
       shopinfo = Firestore.instance
           .collection('shops')
@@ -160,6 +162,7 @@ class _ProductImageState extends State<ProductImage> {
           if (value.documents.length > 0) {
             cachedshops[shopName] = value.documents[0].data['rate'];
             prefs.setString('cached_shops', json.encode(cachedshops));
+            prefs.setString('caching_date', DateTime.now().toString());
             return rate = value.documents[0].data['rate'];
           } else {
             return null;
@@ -167,10 +170,54 @@ class _ProductImageState extends State<ProductImage> {
         },
       );
     } else {
-      // if (  ) {
-      rate = json.decode(prefs.getString("cached_shops"))[shopName];
+      print('looking for time differnce');
+      var cacheDifference;
 
-      // }
+      final DateTime todaysDate = DateTime.now();
+      String date = prefs.getString("caching_date");
+
+      DateTime cachedDate = DateTime.parse(date);
+      print(cachedDate.toString());
+      cacheDifference = todaysDate.difference(cachedDate).inDays;
+      if (prefs.getString("cached_shops") != null &&
+          prefs.getString("caching_date") != null) {
+        print(cacheDifference);
+        if (cacheDifference == 0) {
+          print('rate existst');
+          rate = json.decode(prefs.getString("cached_shops"))[shopName];
+        } else {
+          print('got the rate again!!!!!');
+          shopinfo = Firestore.instance
+              .collection('shops')
+              .where('username', isEqualTo: shopName)
+              .getDocuments()
+              .then(
+            (value) {
+              if (value.documents.length > 0) {
+                cachedshops[shopName] = value.documents[0].data['rate'];
+                // print(value.documents[0].data['rate']);
+                prefs.setString('cached_shops', json.encode(cachedshops));
+                prefs.setString('caching_date', DateTime.now().toString());
+                print('new rate is ' +
+                    value.documents[0].data['rate'].toString());
+
+                print(rate);
+                print(prefs.getString('cached_shops'));
+                print(prefs.getString('caching_date'));
+                // new Future.delayed(new Duration(seconds: 3), () {
+                setState(() {});
+                return rate = value.documents[0].data['rate'];
+                // });
+              } else {
+                print('WHAT THE FUCK IS THIS????');
+                return null;
+              }
+            },
+          );
+        }
+        // print('returned RATE YA ASLE');
+
+      }
     }
     started = true;
   }
@@ -183,6 +230,10 @@ class _ProductImageState extends State<ProductImage> {
             future: getRate(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Text('waiting asdasdiasdiasdi');
+                case ConnectionState.none:
+                  return Text('..');
                 case ConnectionState.done:
                   if (snapshot.hasError)
                     return new Text('Error: ${snapshot.error}');
@@ -193,6 +244,7 @@ class _ProductImageState extends State<ProductImage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            // Text(rate.toString()),
                             Visibility(
                               visible: true,
                               child: Padding(
@@ -265,6 +317,7 @@ class _ProductImageState extends State<ProductImage> {
 
                 default:
                   return Text('...');
+                  return Text('//');
               }
             }),
       );

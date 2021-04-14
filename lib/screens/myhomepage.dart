@@ -35,20 +35,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   gotosalle() {
     setState(() {
-      print(_selectedItemIndex);
       _selectedItemIndex = 1;
     });
   }
 
   gotohome() {
     setState(() {
-      print(_selectedItemIndex);
       _selectedItemIndex = 0;
     });
   }
 
   refreshcart() {
-    print('refreshed');
     setState(() {});
   }
 
@@ -59,14 +56,10 @@ class _MyHomePageState extends State<MyHomePage> {
       try {
         InternetAddress.lookup('google.com').then((result) {
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-            print('connected');
-
             _getPrefs();
           } else {}
         }).catchError((error) {});
-      } on SocketException catch (_) {
-        print('not connected');
-      }
+      } on SocketException catch (_) {}
     });
   }
 
@@ -79,7 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
     prefs.remove('shops');
     prefs.remove('usercartmap');
 
-    print(prefs.getKeys());
     return true;
   }
 
@@ -90,10 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (newuser == false) {
       profilescreen = ProfileMainScreen();
-      print('user NOT set up');
     } else {
       profilescreen = SetupScreen();
-      print('user already set up');
     }
 
     pages = [
@@ -111,9 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void signOut() {
-    FirebaseAuth.instance.signOut().then((onValue) {
-      print("JUST LOGGED OUT");
-    });
+    FirebaseAuth.instance.signOut().then((onValue) {});
   }
 
   double items;
@@ -126,13 +114,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     profilestatus();
 
-    print(newuser.toString() + 'this is the new user');
     return Scaffold(
         bottomNavigationBar: FutureBuilder(
             future: _getPrefs(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                print(snapshot);
                 int cart_items = prefs.getDouble('items') != null
                     ? prefs.getDouble('items').toInt()
                     : 0;
@@ -141,7 +127,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     : 0;
                 cart_total = cart_total == null ? 0 : cart_total;
                 cart_total = cart_total == null ? 0 : cart_total;
-                print(cart_items.toString() + cart_total.toString());
 
                 if (_getPrefs() != null) {
                   return SafeArea(
@@ -261,7 +246,6 @@ class _MyHomePageState extends State<MyHomePage> {
       width: MediaQuery.of(context).size.width / 3,
       child: GestureDetector(
         onTap: () {
-          print('page changed');
           setState(() {
             _selectedItemIndex = index;
           });
@@ -296,12 +280,9 @@ class _MyHomePageState extends State<MyHomePage> {
         );
         final FirebaseUser user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
-        print('signed in ' + user.displayName);
         return user;
       }
-    } catch (e) {
-      print(e.message);
-    }
+    } catch (e) {}
   }
 
   Future<void> signUpWithMail() async {
@@ -317,7 +298,6 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           });
     } catch (e) {
-      print(e.message);
       showDialog(
           context: context,
           builder: (context) {

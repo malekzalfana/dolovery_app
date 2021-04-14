@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:dolovery_app/widgets/product.dart';
 import 'package:intl/intl.dart';
@@ -12,44 +11,34 @@ import 'package:flutter_counter/flutter_counter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class OrderPage extends StatefulWidget {
   final String orderid;
-  OrderPage(this.orderid, {Key key})
-      : super(key: key); 
+  OrderPage(this.orderid, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _OrderPageState();
 }
 
 class _OrderPageState extends State<OrderPage> {
-  
-  
-
   @override
   void initState() {
     super.initState();
-    
   }
 
   bool showChangeButton = false;
-
-  
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    
-    
     return new Scaffold(
       body: SingleChildScrollView(
           child: Column(
         children: <Widget>[
           AppBar(
             iconTheme: IconThemeData(
-              color: Colors.black, 
+              color: Colors.black,
             ),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
@@ -59,7 +48,6 @@ class _OrderPageState extends State<OrderPage> {
             padding: const EdgeInsets.only(top: 10.0, bottom: 20),
             child: Image.asset(
               'assets/images/check-mark.png',
-              
               width: Adaptive.w(50),
             ),
           ),
@@ -69,14 +57,12 @@ class _OrderPageState extends State<OrderPage> {
               fontWeight: FontWeight.w900,
               fontSize: Adaptive.sp(20),
               fontFamily: 'Axiforma',
-              
             ),
           ),
           SizedBox(height: 10),
           SizedBox(
             height: 20,
           ),
-
           StreamBuilder(
               stream: Firestore.instance
                   .collection('orders')
@@ -90,7 +76,6 @@ class _OrderPageState extends State<OrderPage> {
                 return SizedBox(
                   width: width - 50,
                   child: Container(
-                    
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
@@ -144,8 +129,6 @@ class _OrderPageState extends State<OrderPage> {
                                 ),
                                 for (var product in order
                                     .data['products'][shop]['products'].keys)
-                                  
-                                  
                                   buildCartItem(
                                     product,
                                     order.data['products'][shop]['products']
@@ -213,49 +196,13 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                 );
               }),
-
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
           SizedBox(height: 30),
-
-          
-          
-          
-          
-          
-          
         ],
       )),
     );
   }
 
   getShop(shop) async {
-    
     var document = await Firestore.instance
         .collection('shops')
         .where("username", isEqualTo: shop)
@@ -273,23 +220,18 @@ class _OrderPageState extends State<OrderPage> {
     String product_type,
     String arabic_name,
     String product_unit,
-    
   ) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     print(
         "$arabic_name and $count $product_discount $product_image $product_name $product_price $product_type $product_unit $productid ");
-    
-    
-    
-    
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 15, 5, 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            
             margin: new EdgeInsets.only(left: 0.0, right: 10),
             child: Container(
                 height: 70,
@@ -300,7 +242,7 @@ class _OrderPageState extends State<OrderPage> {
                       color: Colors.grey.withOpacity(0.07),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: Offset(0, 8), 
+                      offset: Offset(0, 8),
                     ),
                   ],
                   color: Colors.white,
@@ -320,9 +262,7 @@ class _OrderPageState extends State<OrderPage> {
                   imageUrl: product_image == null ? "s" : product_image,
                   errorWidget: (context, url, error) =>
                       Center(child: new Icon(Icons.error)),
-                )
-                    
-                    )),
+                ))),
           ),
           Padding(
             padding: const EdgeInsets.all(1.0),
@@ -337,7 +277,6 @@ class _OrderPageState extends State<OrderPage> {
                       width: width - 160,
                       child: Text(
                         product_name,
-                        
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
@@ -359,7 +298,6 @@ class _OrderPageState extends State<OrderPage> {
                       width: width - 200,
                       child: Text(
                         arabic_name != null ? arabic_name : '',
-                        
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
@@ -376,7 +314,6 @@ class _OrderPageState extends State<OrderPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 0),
                   child: Row(
-                    
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
@@ -388,10 +325,8 @@ class _OrderPageState extends State<OrderPage> {
                               visible: true,
                               child: Text(
                                 product_price + "L.L.",
-                                
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
-
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
@@ -407,7 +342,6 @@ class _OrderPageState extends State<OrderPage> {
                                 product_type == 'salle'
                                     ? ''
                                     : product_price + "L.L.",
-                                
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -432,7 +366,6 @@ class _OrderPageState extends State<OrderPage> {
                                   textColor: Colors.white,
                                   minWidth: 0,
                                   height: 0,
-                                  
                                   padding: EdgeInsets.only(
                                       left: 6, top: 2, right: 6, bottom: 1),
                                   child: Text(
@@ -454,16 +387,12 @@ class _OrderPageState extends State<OrderPage> {
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: Colors.redAccent[700],
-                                      
-                                      
-                                      
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(5))),
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: Text(
                                       "x$count",
-                                      
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         height: 1.1,
@@ -489,7 +418,6 @@ class _OrderPageState extends State<OrderPage> {
                     padding: const EdgeInsets.only(top: 7.0),
                     child: Text(
                       product_unit.toString(),
-                      
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         height: 1.1,
