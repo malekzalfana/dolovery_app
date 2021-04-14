@@ -1,4 +1,4 @@
-import 'package:dolovery_app/widgets/product_popup.dart';
+import 'package:dolovery_app/widgets/search_popup.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:dolovery_app/widgets/product.dart';
@@ -45,7 +45,6 @@ class _SearchState extends State<Search> {
 
       setState(() {
         searchlock = true;
-        print('searching for ${_searchText.text}');
         pendingSearch = '';
       });
     }
@@ -151,8 +150,7 @@ class _SearchState extends State<Search> {
                                   // [sendrefreshtohome, productid])
                                   return GestureDetector(
                                       onTap: () {
-                                        print(snap.data['data']['id']);
-                                        openProductPopUp(
+                                        openSearchProductPopUp(
                                           context,
                                           snap.data['data'],
                                           null,

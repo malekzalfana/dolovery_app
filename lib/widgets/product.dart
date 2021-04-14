@@ -167,7 +167,10 @@ class _ProductImageState extends State<ProductImage> {
         },
       );
     } else {
+      // if (  ) {
       rate = json.decode(prefs.getString("cached_shops"))[shopName];
+
+      // }
     }
     started = true;
   }

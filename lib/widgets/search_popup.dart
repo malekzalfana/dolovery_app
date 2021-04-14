@@ -91,7 +91,7 @@ getRate(shopName) async {
   started = true;
 }
 
-void openProductPopUp(context, productData, index,
+void openSearchProductPopUp(context, productData, index,
     [productid, sendrefreshtohome]) {
   started = false;
   int _n = 0;
@@ -250,18 +250,16 @@ void openProductPopUp(context, productData, index,
                             .toString()) +
                         1;
                 usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
-                usercartmap_v2[shop_name]['products'][itemid]['data'] =
-                    item.data;
+                usercartmap_v2[shop_name]['products'][itemid]['data'] = item;
                 usercartmap_v2[shop_name]['products'][itemid]['date'] =
-                    item.data['date'];
+                    item['date'];
               } else {
                 usercartmap_v2[shop_name]['products'][itemid] = {};
                 usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
                 usercartmap_v2[shop_name]['products'][itemid]['count'] = 1;
-                usercartmap_v2[shop_name]['products'][itemid]['data'] =
-                    item.data;
+                usercartmap_v2[shop_name]['products'][itemid]['data'] = item;
                 usercartmap_v2[shop_name]['products'][itemid]['date'] =
-                    item.data['date'];
+                    item['date'];
               }
             } else {
               var shopname;
@@ -290,9 +288,9 @@ void openProductPopUp(context, productData, index,
               usercartmap_v2[shop_name]['products'][itemid] = {};
               usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
               usercartmap_v2[shop_name]['products'][itemid]['count'] = 1;
-              usercartmap_v2[shop_name]['products'][itemid]['data'] = item.data;
+              usercartmap_v2[shop_name]['products'][itemid]['data'] = item;
               usercartmap_v2[shop_name]['products'][itemid]['date'] =
-                  item.data['date'];
+                  item['date'];
             }
             add();
             prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));

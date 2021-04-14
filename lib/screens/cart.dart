@@ -909,7 +909,6 @@ class _CartState extends State<Cart> {
                   ),
                 ),
               ),
-              Text(cartlocked.toString()),
               if (usercartmap_v2.keys.length > 0)
                 Column(
                   children: [
@@ -1039,16 +1038,16 @@ class _CartState extends State<Cart> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: Icon(
-                                        Icons.place,
-                                        color: chosen_address.toString() ==
-                                                addresses[index]["id"]
-                                            ? Colors.black
-                                            : Colors.grey[400],
-                                        size: 36,
-                                      ),
-                                    ),
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Icon(
+                                    Icons.place,
+                                    color: chosen_address.toString() ==
+                                            addresses[index]["id"]
+                                        ? Colors.black
+                                        : Colors.grey[400],
+                                    size: 36,
+                                  ),
+                                ),
                                 Container(
                                     margin: new EdgeInsets.only(
                                         left: 10.0, right: 0),
@@ -1098,8 +1097,7 @@ class _CartState extends State<Cart> {
                                                       const EdgeInsets.only(
                                                           left: 0.0, bottom: 8),
                                                   child: SizedBox(
-                                                    width:
-                                                        Adaptive.w(50),
+                                                    width: Adaptive.w(50),
                                                     child: Text(
                                                       addresses[index]
                                                           ["street_address"],
@@ -1110,7 +1108,8 @@ class _CartState extends State<Cart> {
                                                         height: 1.1,
                                                         fontWeight:
                                                             FontWeight.normal,
-                                                        fontSize: Adaptive.sp(11),
+                                                        fontSize:
+                                                            Adaptive.sp(11),
                                                         fontFamily: 'Axiforma',
                                                         color: Colors.grey[500],
                                                       ),
@@ -1149,20 +1148,22 @@ class _CartState extends State<Cart> {
                           right: 30.0, bottom: 20, left: 30, top: 12),
                       child: Container(
                         decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
-                                spreadRadius: 2.2,
-                                blurRadius: 2.5,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(14),),),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 2.2,
+                              blurRadius: 2.5,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(14),
+                          ),
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children:[
+                          children: [
                             Padding(
                                 padding: const EdgeInsets.only(left: 15.0),
                                 child: FaIcon(FontAwesomeIcons.moneyBill,
@@ -1170,16 +1171,12 @@ class _CartState extends State<Cart> {
                             Padding(
                               padding: const EdgeInsets.all(8.5),
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.start,
-                                children:[
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        top: 10.0,
-                                        left: 6,
-                                        bottom: 5),
+                                        top: 10.0, left: 6, bottom: 5),
                                     child: Text(
                                       'Cash On Delivery',
                                       style: TextStyle(
