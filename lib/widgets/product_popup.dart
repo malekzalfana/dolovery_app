@@ -104,6 +104,12 @@ void openProductPopUp(context, productData, index,
   if (oldPrice == null) {
     oldPrice = 0;
   }
+  var finalDocumentID;
+  if (productData.documentID == null) {
+    finalDocumentID = productid;
+  } else {
+    finalDocumentID = productData.documentID;
+  }
 
   Widget buildProductPrice() {
     if (productCurrency == "dollar") {
@@ -421,7 +427,7 @@ void openProductPopUp(context, productData, index,
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
             mystate(() {
-              _n = countOccurrencesUsingLoop(cart, productData.documentID);
+              _n = countOccurrencesUsingLoop(cart, finalDocumentID);
               if (_n > 0) {
                 minimum = false;
               }
@@ -548,8 +554,7 @@ void openProductPopUp(context, productData, index,
                           children: <Widget>[
                             RawMaterialButton(
                               onPressed: () {
-                                _remove(
-                                    productData, productData.documentID, rate);
+                                _remove(productData, finalDocumentID, rate);
                               },
                               elevation: !minimum ? 2 : 0,
                               fillColor: !minimum
@@ -572,8 +577,7 @@ void openProductPopUp(context, productData, index,
                             RawMaterialButton(
                               onPressed: () {
                                 if (cartlocked == false) {
-                                  _save(productData, productData.documentID,
-                                      rate);
+                                  _save(productData, finalDocumentID, rate);
                                 }
                               },
                               elevation: !maximum ? 2 : 0,

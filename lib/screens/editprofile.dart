@@ -279,7 +279,6 @@ class EditProfileState extends State<EditProfileScreen> {
   ];
 
   void onTextChange(String fieldname, String value) {
-    print("started phone");
     if (fieldname == "Address") {
       _streetaddress = value;
     } else if (fieldname == "Landmark") {
@@ -290,7 +289,6 @@ class EditProfileState extends State<EditProfileScreen> {
       _phone = value;
     } else if (fieldname == "Full Name") {
       _fullname = value;
-      print(_phone);
     }
   }
 
@@ -335,15 +333,12 @@ class EditProfileState extends State<EditProfileScreen> {
       padding: const EdgeInsets.only(top: 12, bottom: 12),
       child: InternationalPhoneNumberInput(
         onInputChanged: (PhoneNumber number) {
-          print(number.phoneNumber);
           onTextChange("Phone", number.phoneNumber);
           _newnumber =
               number.toString().replaceAll(number.dialCode.toString(), '');
           onFieldChange();
         },
-        onInputValidated: (bool value) {
-          print(value);
-        },
+        onInputValidated: (bool value) {},
         ignoreBlank: true,
         selectorType: PhoneInputSelectorType.DIALOG,
         countries: countries,
@@ -478,7 +473,6 @@ class EditProfileState extends State<EditProfileScreen> {
 
                                       _formKey.currentState.save();
 
-                                      print("adding profile");
                                       void inputData() async {
                                         final FirebaseUser user =
                                             await FirebaseAuth.instance

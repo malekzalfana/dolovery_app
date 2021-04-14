@@ -146,14 +146,16 @@ class _SearchState extends State<Search> {
                                 itemCount: _results.length,
                                 itemBuilder: (BuildContext ctx, int index) {
                                   AlgoliaObjectSnapshot snap = _results[index];
+
                                   //                                    openProductPopUp(context, productData, index,
                                   // [sendrefreshtohome, productid])
                                   return GestureDetector(
                                       onTap: () {
+                                        print(snap.data['data']['id']);
                                         openProductPopUp(
                                           context,
                                           snap.data['data'],
-                                          // null,
+                                          null,
                                           snap.data['data']['id'],
                                           index,
                                         );

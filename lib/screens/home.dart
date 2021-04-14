@@ -19,6 +19,7 @@ import 'package:dolovery_app/widgets/product_popup.dart';
 import 'dart:async';
 import 'package:location/location.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
 class HomeScreen extends StatefulWidget {
   final Function() notifyParent;
   final Function() notifyParent2;
@@ -51,9 +52,7 @@ class HomeScreenState extends State<HomeScreen> {
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        debugPrint('Location Denied once');
-      }
+      if (!_serviceEnabled) {}
     }
   }
 
@@ -66,7 +65,6 @@ class HomeScreenState extends State<HomeScreen> {
       all_addresses = json.decode(prefs.getString('addresses'));
     }
     chosen_address = prefs.getString('address');
-    print('the chsoen address is $chosen_address');
   }
 
   Future setupVerification() async {
@@ -88,9 +86,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   void signOut() {
-    FirebaseAuth.instance.signOut().then((onValue) {
-      print("Logout successful!");
-    });
+    FirebaseAuth.instance.signOut().then((onValue) {});
   }
 
   bool notsetup;
@@ -115,8 +111,6 @@ class HomeScreenState extends State<HomeScreen> {
       final FirebaseUser user =
           (await _auth.signInWithCredential(credential)).user;
 
-      print("signed in " + user.uid);
-
       final newUser =
           await Firestore.instance.collection("users").document(user.uid).get();
       if (newUser.exists) {
@@ -137,9 +131,7 @@ class HomeScreenState extends State<HomeScreen> {
       return user;
     } catch (e) {
       if (e.message ==
-          "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {
-        print("cateched");
-      }
+          "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {}
     }
   }
 
@@ -154,7 +146,6 @@ class HomeScreenState extends State<HomeScreen> {
         );
         final FirebaseUser user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
-        print('signed in ' + user.displayName);
         bool notsetup;
         double welcomeheight;
         final newUser = await Firestore.instance
@@ -162,7 +153,6 @@ class HomeScreenState extends State<HomeScreen> {
             .document(user.uid)
             .get();
         if (newUser.exists) {
-          print('USER EXISTSSSSSSSSSSSSSSSSSSSSSSS');
           final prefs = await SharedPreferences.getInstance();
           chosen_address = newUser.data["chosen_address"];
           prefs.setString('addresses', json.encode(newUser.data['address']));
@@ -170,7 +160,6 @@ class HomeScreenState extends State<HomeScreen> {
           notsetup = false;
           welcomeheight = 350;
         } else {
-          print('NOTTTTTTTTTT EXISTSSSSSSSSSSSSSSSSSSSSSSS');
           notsetup = true;
           welcomeheight = 400;
         }
@@ -369,7 +358,6 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   void hideSignIn() {
-    print("HIDEEEEEEEEEEEEEEEEEEEE");
     Navigator.pop(context);
     _signInPopUp(context);
     setState(() {
@@ -548,7 +536,6 @@ class HomeScreenState extends State<HomeScreen> {
                 slidingBeginOffset: const Offset(0.0, 0.15),
                 child: GestureDetector(
                   onTap: () {
-                    print('clicked');
                     widget.notifyParent();
                   },
                   child: Padding(
@@ -648,7 +635,7 @@ class HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         Padding(
-                          padding:  EdgeInsets.only(top: 4.5.h, left: 15),
+                          padding: EdgeInsets.only(top: 4.5.h, left: 15),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -724,7 +711,7 @@ class HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         Padding(
-                          padding:  EdgeInsets.only(top: 4.5.h, left: 15),
+                          padding: EdgeInsets.only(top: 4.5.h, left: 15),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -733,7 +720,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize:14.0.sp,
+                                  fontSize: 14.0.sp,
                                   fontFamily: 'Axiforma',
                                   color: Colors.black,
                                 ),
@@ -751,10 +738,7 @@ class HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        Image.asset(
-                          'assets/images/supsec.png',
-                          width: 30.0.w
-                        )
+                        Image.asset('assets/images/supsec.png', width: 30.0.w)
                       ],
                     ),
                   ),
@@ -800,7 +784,7 @@ class HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         Padding(
-                          padding:  EdgeInsets.only(top: 4.5.h, left: 15),
+                          padding: EdgeInsets.only(top: 4.5.h, left: 15),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -903,6 +887,7 @@ class HomeScreenState extends State<HomeScreen> {
                                           context,
                                           snapshot.data.documents[index],
                                           index,
+                                          null,
                                           refreshcart);
                                     },
                                     child: ProductImage(
@@ -1006,7 +991,7 @@ class HomeScreenState extends State<HomeScreen> {
                   GestureDetector(
                       onTap: () {},
                       child: Image.asset("assets/images/fullfilldolovery.png",
-                          height:  3.5.h))
+                          height: 3.5.h))
                 ],
               ),
             ),
@@ -1043,6 +1028,7 @@ class HomeScreenState extends State<HomeScreen> {
                                         context,
                                         snapshot.data.documents[index],
                                         index,
+                                        null,
                                         refreshcart);
                                   },
                                   child: Padding(
@@ -1087,7 +1073,7 @@ class HomeScreenState extends State<HomeScreen> {
                         () {};
                       },
                       child: Image.asset("assets/images/fullfilldolovery.png",
-                          height:  3.5.h))
+                          height: 3.5.h))
                 ],
               ),
             ),
@@ -1108,7 +1094,7 @@ class HomeScreenState extends State<HomeScreen> {
                             return Opacity(
                               opacity: 0.3,
                               child: SizedBox(
-                                  height:22.0.h,
+                                  height: 22.0.h,
                                   child:
                                       Center(child: Text('No items found.'))),
                             );
@@ -1228,7 +1214,7 @@ class HomeScreenState extends State<HomeScreen> {
                   GestureDetector(
                       onTap: () {},
                       child: Image.asset("assets/images/fullfilldolovery.png",
-                          height:  3.5.h))
+                          height: 3.5.h))
                 ],
               ),
             ),
@@ -1244,7 +1230,7 @@ class HomeScreenState extends State<HomeScreen> {
                     return Opacity(
                       opacity: 0.3,
                       child: SizedBox(
-                          height:22.0.h,
+                          height: 22.0.h,
                           child: Center(child: Text('No items found.'))),
                     );
                   }

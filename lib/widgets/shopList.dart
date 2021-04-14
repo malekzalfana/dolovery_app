@@ -114,23 +114,24 @@ class _ShopListState extends State<ShopList> {
                           size: 18.0,
                           semanticLabel: 'time for shop to deliver',
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              shopTime,
-                              // overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                height: 1.1,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 11.5,
-                                fontFamily: 'Axiforma',
-                                color: Colors.grey[500],
+                        if (shopTime != null)
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                shopTime,
+                                // overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  height: 1.1,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 11.5,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.grey[500],
+                                ),
                               ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -148,23 +149,24 @@ class _ShopListState extends State<ShopList> {
                             size: 16.0,
                           ),
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              shopAddress,
-                              // overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                height: 1.1,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 11.5,
-                                fontFamily: 'Axiforma',
-                                color: Colors.grey[500],
+                        if (shopAddress != null)
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                shopAddress,
+                                // overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  height: 1.1,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 11.5,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.grey[500],
+                                ),
                               ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),
