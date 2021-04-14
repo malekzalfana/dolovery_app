@@ -9,12 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-
-void main() {
-  runApp(
-    DevicePreview(enabled:!kReleaseMode,builder:(context)=> MyApp()),
-  );
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
@@ -26,18 +21,17 @@ class MyApp extends StatelessWidget {
     //   DeviceOrientation.portraitDown,
     // ]);
 
-        return ResponsiveSizer(
-          child: MaterialApp(
-            builder: DevicePreview.appBuilder,
-      debugShowCheckedModeBanner: false,
-      title: 'Dolovery',
-      theme: ThemeData(
+    return ResponsiveSizer(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Dolovery',
+        theme: ThemeData(
           bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.white),
           fontFamily: "Axiforma",
           primarySwatch: Colors.red,
+        ),
+        home: MyHomePage(title: 'Homepage'),
       ),
-      home: MyHomePage(title: 'Homepage'),
-          ),
-        );
+    );
   }
 }

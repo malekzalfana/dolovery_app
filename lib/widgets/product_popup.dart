@@ -517,16 +517,14 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                               height: 30),
                           imageUrl: productData['image'],
                           errorWidget: (context, url, error) => Center(
-                              child: Expanded(
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: Container(
-                                  width: 400,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.grey[100]),
-                                  child: new Icon(Icons.error)),
-                            ),
+                              child: AspectRatio(
+                            aspectRatio: 1,
+                            child: Container(
+                                width: 400,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.grey[100]),
+                                child: new Icon(Icons.error)),
                           )),
                         ))),
                   if (productData['name'] != null)
