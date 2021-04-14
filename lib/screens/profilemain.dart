@@ -20,7 +20,7 @@ import 'package:dolovery_app/widgets/recentorder.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:dolovery_app/widgets/signinpopup.dart' as signin;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ProfileMainScreen extends StatefulWidget {
   final Function() notifyParent;
@@ -111,11 +111,11 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       if (newUser.exists) {
         print('USER EXISTSSSSSSSSSSSSSSSSSSSSSSS');
         notsetup = false;
-        welcomeheight = 350;
+        welcomeheight = Adaptive.h(50);
       } else {
         print('NOTTTTTTTTTT EXISTSSSSSSSSSSSSSSSSSSSSSSS');
         notsetup = true;
-        welcomeheight = 400;
+        welcomeheight = Adaptive.h(55);
       }
       Navigator.of(context).pop();
 
@@ -787,7 +787,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                 "Recent Orders",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 13.0,
+                                                  fontSize: Adaptive.sp(10),
                                                   fontFamily: 'Axiforma',
                                                   color: Colors.black54,
                                                 ),
@@ -866,10 +866,10 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                 right: 20,
                                                 bottom: 10),
                                             child: Text(
-                                              "View all orders",
+                                              "View All Orders",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 13.0,
+                                                fontSize: Adaptive.sp(10),
                                                 fontFamily: 'Axiforma',
                                                 color: Colors.black,
                                               ),
@@ -951,8 +951,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: <Widget>[
-                                            IconButton(
-                                                icon: Padding(
+                                            Padding(
                                                   padding:
                                                       const EdgeInsets.only(
                                                           left: 8.0),
@@ -967,7 +966,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                     size: 36,
                                                   ),
                                                 ),
-                                                onPressed: () {}),
                                             Container(
                                                 margin: new EdgeInsets.only(
                                                     left: 10.0, right: 0),

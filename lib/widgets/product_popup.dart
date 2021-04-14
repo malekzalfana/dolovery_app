@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -131,7 +132,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                             decoration: TextDecoration.lineThrough,
                             decorationThickness: 2,
                             fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                            fontSize: Adaptive.sp(12),
                             fontFamily: 'Axiforma',
                             color: Colors.black54,
                           )),
@@ -146,7 +147,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
-                        fontSize: 15,
+                        fontSize: Adaptive.sp(12),
                         fontFamily: 'Axiforma',
                         color: Colors.black54,
                       )),
@@ -171,7 +172,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                       decoration: TextDecoration.lineThrough,
                       decorationThickness: 2,
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: Adaptive.sp(12),
                       fontFamily: 'Axiforma',
                       color: Colors.black54,
                     )),
@@ -185,7 +186,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 14.7,
+                    fontSize: Adaptive.sp(12),
                     fontFamily: 'Axiforma',
                     color: Colors.black54,
                   ),
@@ -456,9 +457,9 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
           double width = MediaQuery.of(context).size.width;
           var popUpHeight;
           if (productData['description'] != null) {
-            popUpHeight = MediaQuery.of(context).size.height * 0.75;
+            popUpHeight = Adaptive.h(80);
           } else {
-            popUpHeight = 500.00;
+            popUpHeight = Adaptive.h(75);
           }
 
           return Container(
@@ -486,7 +487,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                               productData['category'].toUpperCase(),
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 13.0,
+                                  fontSize: Adaptive.sp(11),
                                   letterSpacing: 1.1,
                                   fontFamily: 'Axiforma',
                                   color: Colors.grey[400]),
@@ -510,7 +511,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                         padding: const EdgeInsets.only(bottom: 20.0, top: 20),
                         child: Center(
                             child: CachedNetworkImage(
-                          width: 170,
+                          width: Adaptive.w(40),
                           placeholder: (context, url) => Image.asset(
                               "assets/images/loading.gif",
                               height: 30),
@@ -538,7 +539,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
+                              fontSize: Adaptive.sp(17),
                               fontFamily: 'Axiforma',
                               color: Colors.black),
                         ),
@@ -555,7 +556,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                               productData['unit'],
                               style: TextStyle(
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 14.0,
+                                  fontSize: Adaptive.sp(11),
                                   fontFamily: 'Axiforma',
                                   color: Colors.black38),
                             ),
@@ -633,7 +634,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                                 : 'Item removed from your cart!',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
+                              fontSize: Adaptive.sp(14),
                               fontFamily: 'Axiforma',
                               color: Colors.black54,
                             ),
@@ -641,7 +642,7 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                     ),
                   ),
                   Visibility(
-                    visible: productData['description'] != null ? true : false,
+                    visible: true,
                     child: Column(
                       children: [
                         Padding(
@@ -669,7 +670,24 @@ void openProductPopUp(context, productData, index, [sendrefreshtohome]) {
                               child: Text(
                                 productData['description'] != null
                                     ? productData['description']
-                                    : "",
+                                    : "No description found for this item.",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 13.0,
+                                  fontFamily: 'Axiforma',
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (productData['description'] == null)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 30.0, right: 30.0, top: 0, bottom: 30),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "No description found for this item.",
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: 13.0,

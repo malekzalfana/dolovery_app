@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 // ignore: unused_import
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class RecentOrder extends StatefulWidget {
   // final Widget child;
@@ -47,7 +48,6 @@ class _RecentOrderState extends State<RecentOrder> {
     String newOrderDate = DateFormat.yMMMMd().format(timestamp);
     print('thi s is the new image $orderImage');
 // double width = 200;
-    double width = MediaQuery.of(context).size.width - 22;
     return Padding(
       padding: const EdgeInsets.only(right: 0, bottom: 15),
       child: Row(
@@ -55,11 +55,10 @@ class _RecentOrderState extends State<RecentOrder> {
         children: <Widget>[
           Container(
             // color: Colors.green,
-            width: width - 30,
             margin: new EdgeInsets.only(left: 30.0, right: 0),
             child: Container(
-                height: 80,
-                width: width - 100,
+                height: Adaptive.h(12),
+                width: Adaptive.w(85),
                 decoration: BoxDecoration(
                   // image: DecorationImage(
                   //   image: NetworkImage(orderImage),
@@ -84,55 +83,44 @@ class _RecentOrderState extends State<RecentOrder> {
                   padding: const EdgeInsets.all(10.5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 0.0, left: 6, bottom: 5),
-                              child: Text(
-                                int.parse(orderCount.toString()).toString() +
-                                    " Items",
-                                // textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.black,
-                                ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 0.0, left: 6, bottom: 5),
+                            child: Text(
+                              int.parse(orderCount.toString()).toString() +
+                                  " Items",
+                              // textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Adaptive.sp(14),
+                                fontFamily: 'Axiforma',
+                                color: Colors.black,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 3),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8.0, bottom: 8),
-                                    child: Text(
-                                      orderPrice + " L.L.",
-                                      // overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        height: 1,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 16,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.grey[500],
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8.0, bottom: 8),
+                            child: Text(
+                              orderPrice + " L.L.",
+                              // overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                height: 1,
+                                fontWeight: FontWeight.normal,
+                                fontSize: Adaptive.sp(13),
+                                fontFamily: 'Axiforma',
+                                color: Colors.grey[500],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -140,7 +128,7 @@ class _RecentOrderState extends State<RecentOrder> {
                         children: <Widget>[
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
+                              padding: const EdgeInsets.only(left: 8.0,top: 5.0,),
                               child: Text(
                                 newOrderDate,
                                 // overflow: TextOverflow.ellipsis,
@@ -148,7 +136,7 @@ class _RecentOrderState extends State<RecentOrder> {
                                 style: TextStyle(
                                   height: 1,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 13.6,
+                                  fontSize: Adaptive.sp(10.5),
                                   fontFamily: 'Axiforma',
                                   color: Colors.grey[500],
                                 ),

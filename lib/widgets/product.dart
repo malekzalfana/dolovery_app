@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -72,8 +73,8 @@ class _ProductImageState extends State<ProductImage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  height: 180,
-                  width: 180,
+                  height: Adaptive.h(22.5),
+                  width: Adaptive.h(22.5),
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -92,7 +93,7 @@ class _ProductImageState extends State<ProductImage> {
                   ),
                   child: Center(
                       child: CachedNetworkImage(
-                    width: 120,
+                    width: Adaptive.w(35),
                     placeholder: (context, url) =>
                         Image.asset("assets/images/loading.gif", height: 30),
                     imageUrl: productImage == null ? "s" : productImage,
@@ -108,7 +109,7 @@ class _ProductImageState extends State<ProductImage> {
                   maxLines: 2,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 12.5,
+                    fontSize: Adaptive.sp(11),
                     fontFamily: 'Axiforma',
                     height: 1.2,
                     color: Colors.black,
@@ -299,7 +300,7 @@ class _ProductImageState extends State<ProductImage> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
-                      fontSize: 11.7,
+                      fontSize: Adaptive.sp(10),
                       fontFamily: 'Axiforma',
                       color: Colors.black54,
                     ),
@@ -319,7 +320,7 @@ class _ProductImageState extends State<ProductImage> {
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 11.7,
+                    fontSize: Adaptive.sp(10),
                     fontFamily: 'Axiforma',
                     color: Colors.black26,
                   ),

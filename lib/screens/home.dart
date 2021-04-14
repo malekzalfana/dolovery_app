@@ -18,7 +18,7 @@ import 'package:dolovery_app/widgets/shopImage.dart';
 import 'package:dolovery_app/widgets/product_popup.dart';
 import 'dart:async';
 import 'package:location/location.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 class HomeScreen extends StatefulWidget {
   final Function() notifyParent;
   final Function() notifyParent2;

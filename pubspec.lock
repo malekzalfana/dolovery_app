@@ -238,7 +238,7 @@ packages:
       name: device_preview
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.7"
+    version: "0.3.0+1"
   dropdownfield:
     dependency: "direct main"
     description:
@@ -444,19 +444,12 @@ packages:
     source: sdk
     version: "0.0.0"
   font_awesome_flutter:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: font_awesome_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "8.12.0"
-  freezed_annotation:
-    dependency: transitive
-    description:
-      name: freezed_annotation
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.11.0+1"
+    version: "9.0.0"
   geocoder:
     dependency: "direct main"
     description:
@@ -856,6 +849,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  responsive_sizer:
+    dependency: "direct main"
+    description:
+      name: responsive_sizer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   rxdart:
     dependency: transitive
     description:
@@ -898,13 +898,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.0"
-  sizer:
-    dependency: "direct main"
-    description:
-      name: sizer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.8"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1058,5 +1051,5 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
-  dart: ">=2.12.0-0.0 <3.0.0"
+  dart: ">=2.12.0 <3.0.0"
   flutter: ">=1.20.0"

@@ -2,7 +2,7 @@ import 'package:dolovery_app/screens/shoppage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolovery_app/widgets/shopList.dart';
-
+import 'package:responsive_sizer/responsive_sizer.dart';
 class ShopListing extends StatefulWidget {
   final String type;
 
@@ -53,7 +53,7 @@ class FormScreenState extends State<ShopListing> {
                                     : 'Lebanese',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 28.0,
+                              fontSize: 20.0.sp,
                               fontFamily: 'Axiforma',
                               color: Colors.black,
                             ),
