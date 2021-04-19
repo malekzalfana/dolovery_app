@@ -109,11 +109,8 @@ class _CartState extends State<Cart> {
 
     if (usercartmap_v2 == null) {
       usercartmap_v2 = {};
-      print('made an empty map');
     } else {
       usercartmap_v2 = json.decode(usercartmap_v2);
-      print('found the map');
-      print(json.encode(usercartmap_v2));
     }
 
     if (usercartmap_v2.containsKey(shop_name)) {
@@ -182,11 +179,8 @@ class _CartState extends State<Cart> {
 
     if (usercartmap_v2 == null) {
       usercartmap_v2 = {};
-      print('made an empty map');
     } else {
       usercartmap_v2 = json.decode(usercartmap_v2);
-      print('found the map');
-      print(json.encode(usercartmap_v2));
     }
 
     if (usercartmap_v2.containsKey(shop_name)) {
@@ -239,8 +233,6 @@ class _CartState extends State<Cart> {
 
     if (cart.length == 0) {
       reset();
-
-      return print('XXXXXXXXXXXXX');
     }
   }
 
@@ -331,7 +323,6 @@ class _CartState extends State<Cart> {
     usercartmap = prefs.getString("usercartmap");
     if (!alreadyChosenAddress) {
       chosen_address = prefs.getString('address');
-      print('JUST ADDED  AN ADDRESS');
     }
     if (usercartmap == null) {
       usercartmap = json.decode("{}");
@@ -346,12 +337,9 @@ class _CartState extends State<Cart> {
       usercartmap_v2 = json.decode(usercartmap_v2);
     }
 
-    print('the chose isa s address is $chosen_address');
-
-    print(usercartmap_v2);
-    print('this is the cart ');
     if (prefs.getString('addresses') != null) {
       addresses = json.decode(prefs.getString('addresses'));
+      // if () {}
     }
 
     if (torestart)
@@ -515,6 +503,7 @@ class _CartState extends State<Cart> {
                                     borderRadius: BorderRadius.circular(20.0),
                                     side: BorderSide(color: Colors.red)),
                                 onPressed: () {
+                                  Navigator.pop(context);
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(
                                           builder: (context) => SetupScreen()))
@@ -594,9 +583,7 @@ class _CartState extends State<Cart> {
       }
 
       return user;
-    } catch (e) {
-      print(e.message);
-    }
+    } catch (e) {}
   }
 
   Future<void> signUpWithFacebook() async {
@@ -610,16 +597,12 @@ class _CartState extends State<Cart> {
         );
         final FirebaseUser user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
-        print('signed in ' + user.displayName);
         return user;
       }
-    } catch (e) {
-      print(e.message);
-    }
+    } catch (e) {}
   }
 
   refresh() {
-    print('back to icart');
     loadcart();
     setupVerification();
     setState(() {
@@ -670,24 +653,18 @@ class _CartState extends State<Cart> {
                     setState(() {
                       ordered = true;
                     });
-                    print('STSRTEDDDDDDD');
                     getCartAddress() async {
                       final prefs = await SharedPreferences.getInstance();
 
                       var all_addresses =
                           json.decode(prefs.getString('addresses'));
-                      print(addresses);
-                      print('THIS ARE THE ADDRESSES ');
                       var addresstouse = {};
 
                       for (var address = 0;
                           address < all_addresses.length;
                           address++) {
-                        print(all_addresses[address]['id']);
-                        print(chosen_address);
                         if (all_addresses[address]['id'] == chosen_address) {
                           addresstouse = all_addresses[address];
-                          print('theyre the same');
                         }
                       }
 
@@ -701,14 +678,9 @@ class _CartState extends State<Cart> {
                             .where('username', isEqualTo: cartshop)
                             .getDocuments();
                         var rate = datashop.documents[0].data['rate'];
-                        print('the shop is $datashop');
                         if (rate == null) {
                           rate = 1;
-                          print('changed rate to ZERO');
                         }
-                        print(completeproducts);
-                        print(completeproducts[cartshop]);
-                        print('starting orderinggggggggggggggggggggggg');
                         var order_id = ">>" + UniqueKey().hashCode.toString();
                         Firestore.instance
                             .collection('shop_orders')
@@ -742,15 +714,12 @@ class _CartState extends State<Cart> {
                         "shop_list": fullorder_shops,
                         "order_list": fullorder
                       }).then((doc) {
-                        print(fullorder_id);
                         reset(false);
                         Navigator.pop(context);
 
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => OrderPage(fullorder_id)));
-                      }).catchError((error) {
-                        print(error);
-                      });
+                      }).catchError((error) {});
                     }
 
                     getCartAddress();
@@ -819,16 +788,19 @@ class _CartState extends State<Cart> {
       uemail = user.email;
 
       if (this_user.exists) {
-        if (!prefs.containsKey('address')) {
-          var counter = 0;
-          for (var useraddress in this_user.data['address']) {
-            if (useraddress['id'] == chosen_address) {
-              prefs.setString(
-                  'address', this_user.data['address'][counter].toString());
-            }
-            counter++;
-          }
-        }
+        chosen_address = this_user.data["chosen_address"];
+        prefs.setString('addresses', json.encode(this_user.data['address']));
+        prefs.setString('address', this_user.data["chosen_address"]);
+        // if (!prefs.containsKey('address')) {
+        //   var counter = 0;
+        //   for (var useraddress in this_user.data['address']) {
+        //     if (useraddress['id'] == chosen_address) {
+        //       prefs.setString(
+        //           'address', this_user.data['address'][counter].toString());
+        //     }
+        //     counter++;
+        //   }
+        // }
         notsetup = false;
       }
     } else {
@@ -1218,7 +1190,6 @@ class _CartState extends State<Cart> {
               FutureBuilder(
                   future: setupVerification(),
                   builder: (context, snapshot) {
-                    print(notsetup);
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
                         return Padding(
@@ -1349,7 +1320,6 @@ class _CartState extends State<Cart> {
                                 ),
                                 elevation: 0,
                                 onPressed: () {
-                                  print("xlicked");
                                   _signInPopUp(context);
                                 },
                                 color: Colors.redAccent[700],

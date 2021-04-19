@@ -78,14 +78,11 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   }
 
   void signOut() {
-    FirebaseAuth.instance.signOut().then((onValue) {
-      print("JUST LOGGED OUT");
-    });
+    FirebaseAuth.instance.signOut().then((onValue) {});
   }
 
   Future<void> _googleSignUp() async {
     try {
-      print("started signing in");
       final GoogleSignIn _googleSignIn = GoogleSignIn(
         scopes: ['email'],
       );
@@ -103,17 +100,13 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       final FirebaseUser user =
           (await _auth.signInWithCredential(credential)).user;
 
-      print("signed in " + user.uid);
-
       double welcomeheight;
       final newUser =
           await Firestore.instance.collection("users").document(user.uid).get();
       if (newUser.exists) {
-        print('USER EXISTSSSSSSSSSSSSSSSSSSSSSSS');
         notsetup = false;
         welcomeheight = Adaptive.h(50);
       } else {
-        print('NOTTTTTTTTTT EXISTSSSSSSSSSSSSSSSSSSSSSSS');
         notsetup = true;
         welcomeheight = Adaptive.h(55);
       }
@@ -123,17 +116,12 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       setState(() {
         _readtosignin = true;
       });
-      if (!newUser.exists) {
-        print("user exists");
-      }
+      if (!newUser.exists) {}
 
       return user;
     } catch (e) {
-      print(">>>>>>>>>>>>>");
       if (e.message ==
-          "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {
-        print("cateched");
-      }
+          "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {}
     }
   }
 
@@ -148,7 +136,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
         );
         final FirebaseUser user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
-        print('signed in ' + user.displayName);
 
         double welcomeheight;
         final newUser = await Firestore.instance
@@ -156,11 +143,9 @@ class ProfileScreenState extends State<ProfileMainScreen> {
             .document(user.uid)
             .get();
         if (newUser.exists) {
-          print('USER EXISTSSSSSSSSSSSSSSSSSSSSSSS');
           notsetup = false;
           welcomeheight = 350;
         } else {
-          print('NOTTTTTTTTTT EXISTSSSSSSSSSSSSSSSSSSSSSSS');
           notsetup = true;
           welcomeheight = 400;
         }
@@ -325,8 +310,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: GestureDetector(
-                      child:
-                          Image.asset('assets/images/fblogin.jpg', width:75.0.w),
+                      child: Image.asset('assets/images/fblogin.jpg',
+                          width: 75.0.w),
                       onTap: () {
                         hideSignIn();
                         signUpWithFacebook();
@@ -337,8 +322,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                 Visibility(
                   visible: _readtosignin,
                   child: GestureDetector(
-                      child:
-                          Image.asset('assets/images/glogin.jpg', width: 75.0.w),
+                      child: Image.asset('assets/images/glogin.jpg',
+                          width: 75.0.w),
                       onTap: () {
                         _readtosignin = false;
 
@@ -374,7 +359,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   }
 
   void hideSignIn() {
-    print("HIDEEEEEEEEEEEEEEEEEEEE");
     Navigator.pop(context);
     _signInPopUp(context);
     setState(() {
@@ -384,8 +368,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   }
 
   void showSignIn() {
-    print("SHOWWWWWWWWWW");
-
     setState(() {
       _readtosignin = true;
       showerrortextbool = false;
@@ -422,7 +404,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   bool user_is_setup = false;
 
   Future setupVerification() async {
-    print("USER BEING WATCHED");
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     if (user != null) {
       uid = user.uid;
@@ -432,18 +413,12 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       this_user =
           await Firestore.instance.collection("users").document(uid).get();
 
-      print('ss');
-
-      print('ss');
-
       if (this_user.exists) {
         user_is_setup = true;
         final prefs = await SharedPreferences.getInstance();
         chosen_address = this_user.data["chosen_address"];
         prefs.setString('addresses', json.encode(this_user.data['address']));
         prefs.setString('address', this_user.data["chosen_address"]);
-
-        print(prefs.getString('address'));
       } else {
         user_is_setup = false;
       }
@@ -496,7 +471,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: SizedBox(
-                            width:80.0.w,
+                            width: 80.0.w,
                             child: Text(
                               "Create an account and get everything you need delivered to your doorstep!",
                               textAlign: TextAlign.center,
@@ -655,8 +630,9 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) => Terms()));
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => Terms()));
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 15.0),
@@ -711,7 +687,9 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 5,),
+                              SizedBox(
+                                height: 5,
+                              ),
                               Text(
                                 this_user.data['email'],
                                 style: TextStyle(
@@ -765,7 +743,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                print(snapshot);
                                 return SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
                                     child: Column(
@@ -914,12 +891,9 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                         top: 12),
                                     child: GestureDetector(
                                       onTap: () {
-                                        print(this_user.data["address"]);
                                         bool isDefault = chosen_address ==
                                             this_user.data["address"][index]
                                                 ["id"];
-                                        print(isDefault);
-                                        print("______________________");
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
                                                 builder: (context) =>
@@ -952,20 +926,19 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                               MainAxisAlignment.start,
                                           children: <Widget>[
                                             Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 8.0),
-                                                  child: Icon(
-                                                    Icons.place,
-                                                    color: chosen_address ==
-                                                            this_user.data[
-                                                                    "address"]
-                                                                [index]["id"]
-                                                        ? Colors.black
-                                                        : Colors.grey[400],
-                                                    size: 36,
-                                                  ),
-                                                ),
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0),
+                                              child: Icon(
+                                                Icons.place,
+                                                color: chosen_address ==
+                                                        this_user
+                                                                .data["address"]
+                                                            [index]["id"]
+                                                    ? Colors.black
+                                                    : Colors.grey[400],
+                                                size: 36,
+                                              ),
+                                            ),
                                             Container(
                                                 margin: new EdgeInsets.only(
                                                     left: 10.0, right: 0),

@@ -76,7 +76,6 @@ getRate(shopName) async {
         if (value.documents.length > 0) {
           cachedshops[shopName] = value.documents[0].data['rate'];
           prefs.setString('cached_shops', json.encode(cachedshops));
-          print(value);
           started = true;
           return rate = value.documents[0].data['rate'];
         } else {

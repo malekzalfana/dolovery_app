@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SetupScreen extends StatefulWidget {
   @override
@@ -280,7 +281,6 @@ class SetupScreenState extends State<SetupScreen> {
   ];
 
   void onTextChange(String fieldname, String value, [code]) {
-    print("started phone");
     if (fieldname == "Address") {
       _streetaddress = value;
     } else if (fieldname == "Landmark") {
@@ -292,7 +292,6 @@ class SetupScreenState extends State<SetupScreen> {
       _code = code;
     } else if (fieldname == "Full Name") {
       _fullname = value;
-      print(_phone);
     }
   }
 
@@ -305,10 +304,8 @@ class SetupScreenState extends State<SetupScreen> {
       _landmark,
       _apartment
     ];
-    print(fields);
 
     if (fields.contains("") || fields.contains(null)) {
-      print(canSubmit);
       setState(() {
         canSubmit = false;
       });
@@ -358,9 +355,7 @@ class SetupScreenState extends State<SetupScreen> {
               number.dialCode);
           onFieldChange();
         },
-        onInputValidated: (bool value) {
-          print(value);
-        },
+        onInputValidated: (bool value) {},
         ignoreBlank: false,
         selectorType: PhoneInputSelectorType.DIALOG,
         countries: countries,
@@ -436,7 +431,6 @@ class SetupScreenState extends State<SetupScreen> {
                         currentSelectedValue = _city;
                       });
                       onFieldChange();
-                      print(currentSelectedValue);
                     },
                     items: deviceTypes.map((String value) {
                       return DropdownMenuItem<String>(
@@ -615,7 +609,6 @@ class SetupScreenState extends State<SetupScreen> {
 
                         _formKey.currentState.save();
 
-                        print("adding profile");
                         void addAddresstoCustomer() async {
                           final FirebaseUser user =
                               await FirebaseAuth.instance.currentUser();
@@ -641,6 +634,16 @@ class SetupScreenState extends State<SetupScreen> {
                             "chosen_address": chosenAddress
                           };
 
+                          // final prefs = await SharedPreferences.getInstance();
+                          // prefs.setString('address', chosenAddress);
+                          // prefs.setStringList('addresses', addresses);
+
+                          // ADDED THE ABOVE
+
+                          // chosen_address = this_user.data["chosen_address"];
+                          // prefs.setString('addresses', json.encode(this_user.data['address']));
+                          // prefs.setString('address', this_user.data["chosen_address"]);
+
                           Firestore.instance
                               .collection("users")
                               .document(uid)
@@ -648,6 +651,7 @@ class SetupScreenState extends State<SetupScreen> {
                         }
 
                         addAddresstoCustomer();
+
                         Navigator.of(context).pop();
                       },
                       color: Colors.redAccent[700],
