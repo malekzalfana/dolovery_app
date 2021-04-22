@@ -652,7 +652,8 @@ class SetupScreenState extends State<SetupScreen> {
 
                         addAddresstoCustomer();
 
-                        Navigator.of(context).pop();
+                        // Navigator.of(context).pop();
+                        Navigator.popUntil(context, ModalRoute.withName('/'));
                       },
                       color: Colors.redAccent[700],
                       textColor: Colors.white,

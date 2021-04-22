@@ -91,6 +91,17 @@ class _CartState extends State<Cart> {
     prefs.remove('usercartmap_v2');
     prefs.remove('cached_shops');
     prefs.remove('caching_date');
+    //
+    prefs.remove('type');
+    prefs.remove('total');
+    prefs.remove('items');
+    prefs.remove('cart');
+    prefs.remove('shops');
+    prefs.remove('usercartmap');
+    prefs.remove('usercartmap_v2');
+    prefs.remove('cached_shops');
+    prefs.remove('address');
+    prefs.remove('addresses');
 
     prefs.remove('address');
     if (pop != false) {
@@ -367,8 +378,6 @@ class _CartState extends State<Cart> {
 
   @override
   void initState() {
-    setupVerification();
-
     super.initState();
     loadcart();
   }
@@ -509,6 +518,8 @@ class _CartState extends State<Cart> {
                                           builder: (context) => SetupScreen()))
                                       .then((_) {
                                     setState(() {});
+                                    print(
+                                        'user has been setup and then as run');
                                   });
                                 },
                                 color: Colors.redAccent[700],
@@ -827,6 +838,7 @@ class _CartState extends State<Cart> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
     // if ( chosen_address != null ) {
 
     // }
@@ -1289,9 +1301,11 @@ class _CartState extends State<Cart> {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(
                                           builder: (context) => SetupScreen()))
-                                      .then((_) {
+                                      .then((context) {
+                                    // setState(() {});
                                     setupVerification();
-                                    setState(() {});
+                                    print('print the setup');
+                                    // setState(() {});
                                   });
                                 },
                                 color: Colors.redAccent[700],

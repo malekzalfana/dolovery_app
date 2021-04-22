@@ -264,7 +264,6 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                     signOut();
                     setupVerification();
                     resetEverything();
-
                     widget.notifyParent();
                     Navigator.of(context).pop();
                   },
@@ -412,7 +411,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
 
       this_user =
           await Firestore.instance.collection("users").document(uid).get();
-
+/* added to the page */
       if (this_user.exists) {
         user_is_setup = true;
         final prefs = await SharedPreferences.getInstance();
