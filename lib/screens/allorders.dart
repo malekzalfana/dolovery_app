@@ -63,7 +63,7 @@ class _PrivacyState extends State<Orders> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     StreamBuilder(
-                      stream: Firestore.instance
+                      stream: FirebaseFirestore.instance
                           .collection('orders')
                           .where('user', isEqualTo: widget.uid)
                           .orderBy('date', descending: true)
@@ -79,7 +79,7 @@ class _PrivacyState extends State<Orders> {
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: List<Widget>.generate(
-                                        snapshot.data.documents.length,
+                                        snapshot.data.docs.length,
                                         (int index) {
                                       return GestureDetector(
                                         onTap: () {

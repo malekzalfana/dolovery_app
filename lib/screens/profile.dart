@@ -322,11 +322,11 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   bool newuser = true;
   Future setupVerification() async {
-    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final User user = await FirebaseAuth.instance.currentUser;
     final uid = user.uid;
 
     var usercollection =
-        await Firestore.instance.collection("users").document(uid).get();
+        await FirebaseFirestore.instance.collection("users").doc(uid).get();
 
     if (usercollection.exists) {
       newuser = false;
@@ -618,8 +618,8 @@ class ProfileScreenState extends State<ProfileScreen> {
 
                         print("adding profile");
                         void addAddresstoCustomer() async {
-                          final FirebaseUser user =
-                              await FirebaseAuth.instance.currentUser();
+                          final User user =
+                              await FirebaseAuth.instance.currentUser;
                           final uid = user.uid;
                           final uemail = user.email;
                           String chosenAddress =
@@ -642,10 +642,10 @@ class ProfileScreenState extends State<ProfileScreen> {
                             "chosen_address": chosenAddress
                           };
 
-                          Firestore.instance
+                          FirebaseFirestore.instance
                               .collection("users")
-                              .document(uid)
-                              .setData(thisuser);
+                              .doc(uid)
+                              .set(thisuser);
                         }
 
                         addAddresstoCustomer();

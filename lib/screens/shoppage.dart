@@ -90,9 +90,9 @@ class _ShopPageState extends State<ShopPage> {
   dynamic type;
   Future getcategories() async {
     String shoptype = widget.data['type'];
-    type = await Firestore.instance
+    type = await FirebaseFirestore.instance
         .collection("types")
-        .document(shoptype.toLowerCase())
+        .doc(shoptype.toLowerCase())
         .get();
 
     print(
@@ -616,7 +616,7 @@ class _ShopPageState extends State<ShopPage> {
                                               top: 0,
                                               bottom: 0),
                                           child: StreamBuilder(
-                                            stream: Firestore.instance
+                                            stream: FirebaseFirestore.instance
                                                 .collection('products')
                                                 .where('shop',
                                                     isEqualTo:
@@ -630,7 +630,7 @@ class _ShopPageState extends State<ShopPage> {
                                             builder: (context, snapshot) {
                                               if (snapshot.hasData) {
                                                 if (snapshot
-                                                        .data.documents.length <
+                                                        .data.docs.length <
                                                     2) {
                                                   return Opacity(
                                                     opacity: 0.3,
@@ -708,7 +708,7 @@ class _ShopPageState extends State<ShopPage> {
                                               top: 0,
                                               bottom: 0),
                                           child: StreamBuilder(
-                                            stream: Firestore.instance
+                                            stream: FirebaseFirestore.instance
                                                 .collection('products')
                                                 .where('shop',
                                                     isEqualTo:
@@ -795,7 +795,7 @@ class _ShopPageState extends State<ShopPage> {
                                               top: 0,
                                               bottom: 0),
                                           child: StreamBuilder(
-                                            stream: Firestore.instance
+                                            stream: FirebaseFirestore.instance
                                                 .collection('products')
                                                 .where('shop',
                                                     isEqualTo:

@@ -66,13 +66,13 @@ class FormScreenState extends State<ShopListing> {
               Padding(
                 padding: const EdgeInsets.only(top: 0.0),
                 child: StreamBuilder(
-                  stream: Firestore.instance
+                  stream: FirebaseFirestore.instance
                       .collection('shops')
                       .where('type', isEqualTo: widget.type)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData &&
-                        snapshot.data.documents.length == 0) {
+                        snapshot.data.docs.length == 0) {
                       return Opacity(
                         opacity: 0.3,
                         child: SizedBox(
@@ -86,7 +86,7 @@ class FormScreenState extends State<ShopListing> {
                           scrollDirection: Axis.vertical,
                           child: Column(
                               children: List<Widget>.generate(
-                                  snapshot.data.documents.length, (int index) {
+                                  snapshot.data.docs.length, (int index) {
                             return GestureDetector(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(

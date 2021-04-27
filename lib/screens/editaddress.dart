@@ -70,11 +70,11 @@ class EditAddressState extends State<EditAddress> {
 
   bool newuser = true;
   Future setupVerification() async {
-    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final User user = await FirebaseAuth.instance.currentUser;
     final uid = user.uid;
 
     var usercollection =
-        await Firestore.instance.collection("users").document(uid).get();
+        await FirebaseFirestore.instance.collection("users").doc(uid).get();
 
     if (usercollection.exists) {
       newuser = false;
@@ -361,8 +361,8 @@ class EditAddressState extends State<EditAddress> {
 
                               print("adding profile");
                               void inputData() async {
-                                final FirebaseUser user =
-                                    await FirebaseAuth.instance.currentUser();
+                                final User user =
+                                    await FirebaseAuth.instance.currentUser;
                                 final uid = user.uid;
                                 final name = user.displayName;
                                 final uemail = user.email;
@@ -383,10 +383,10 @@ class EditAddressState extends State<EditAddress> {
                                     widget.addressCount + 1,
                                     [thisAddress]);
 
-                                Firestore.instance
+                                FirebaseFirestore.instance
                                     .collection('users')
-                                    .document(uid)
-                                    .updateData({
+                                    .doc(uid)
+                                    .update({
                                   "address": widget.addressArray
                                 }).then((result) {
                                   print("address edited");
@@ -395,10 +395,10 @@ class EditAddressState extends State<EditAddress> {
                                 });
 
                                 if (newIsDefault) {
-                                  Firestore.instance
+                                  FirebaseFirestore.instance
                                       .collection("users")
-                                      .document(uid)
-                                      .updateData({
+                                      .doc(uid)
+                                      .update({
                                     "chosen_address": addressID,
                                   });
                                 }

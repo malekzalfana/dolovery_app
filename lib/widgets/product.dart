@@ -153,17 +153,17 @@ class _ProductImageState extends State<ProductImage> {
     }
 
     if (!cachedshops.containsKey(shopName)) {
-      shopinfo = Firestore.instance
+      shopinfo = FirebaseFirestore.instance
           .collection('shops')
           .where('username', isEqualTo: shopName)
-          .getDocuments()
+          .get()
           .then(
         (value) {
-          if (value.documents.length > 0) {
-            cachedshops[shopName] = value.documents[0].data['rate'];
+          if (value.docs.length > 0) {
+            cachedshops[shopName] = value.docs[0].data()['rate'];
             prefs.setString('cached_shops', json.encode(cachedshops));
             prefs.setString('caching_date', DateTime.now().toString());
-            return rate = value.documents[0].data['rate'];
+            return rate = value.docs[0].data()['rate'];
           } else {
             return null;
           }
@@ -187,26 +187,26 @@ class _ProductImageState extends State<ProductImage> {
           rate = json.decode(prefs.getString("cached_shops"))[shopName];
         } else {
           print('got the rate again!!!!!');
-          shopinfo = Firestore.instance
+          shopinfo = FirebaseFirestore.instance
               .collection('shops')
               .where('username', isEqualTo: shopName)
-              .getDocuments()
+              .get()
               .then(
             (value) {
-              if (value.documents.length > 0) {
-                cachedshops[shopName] = value.documents[0].data['rate'];
+              if (value.docs.length > 0) {
+                cachedshops[shopName] = value.docs[0].data()['rate'];
                 // print(value.documents[0].data['rate']);
                 prefs.setString('cached_shops', json.encode(cachedshops));
                 prefs.setString('caching_date', DateTime.now().toString());
                 print('new rate is ' +
-                    value.documents[0].data['rate'].toString());
+                    value.docs[0].data()['rate'].toString());
 
                 print(rate);
                 print(prefs.getString('cached_shops'));
                 print(prefs.getString('caching_date'));
                 // new Future.delayed(new Duration(seconds: 3), () {
                 setState(() {});
-                return rate = value.documents[0].data['rate'];
+                return rate = value.docs[0].data()['rate'];
                 // });
               } else {
                 print('WHAT THE FUCK IS THIS????');
