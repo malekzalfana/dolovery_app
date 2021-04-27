@@ -312,16 +312,16 @@ class EditProfileState extends State<EditProfileScreen> {
 
   bool newuser = true;
   Future setupVerification() async {
-    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final User user = await FirebaseAuth.instance.currentUser;
     final uid = user.uid;
     var usercollection =
-        await Firestore.instance.collection("users").document(uid).get();
+        await FirebaseFirestore.instance.collection("users").doc(uid).get();
 
     if (usercollection.exists) {
       newuser = false;
-      _name = usercollection.data['fullname'];
-      _number = usercollection.data['number'];
-      _code = usercollection.data['code'];
+      _name = usercollection.data()['fullname'];
+      _number = usercollection.data()['number'];
+      _code = usercollection.data()['code'];
       String phoneNumber = _code + _number;
       this_number = await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNumber);
     }
@@ -474,9 +474,9 @@ class EditProfileState extends State<EditProfileScreen> {
                                       _formKey.currentState.save();
 
                                       void inputData() async {
-                                        final FirebaseUser user =
+                                        final User user =
                                             await FirebaseAuth.instance
-                                                .currentUser();
+                                                .currentUser;
                                         final uid = user.uid;
                                         final name = user.displayName;
                                         final uemail = user.email;
@@ -486,10 +486,10 @@ class EditProfileState extends State<EditProfileScreen> {
                                           "email": uemail,
                                         };
 
-                                        Firestore.instance
+                                        FirebaseFirestore.instance
                                             .collection("users")
-                                            .document(uid)
-                                            .updateData(thisuser);
+                                            .doc(uid)
+                                            .update(thisuser);
                                       }
 
                                       inputData();

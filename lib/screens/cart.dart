@@ -253,12 +253,12 @@ class _CartState extends State<Cart> {
   getcartmap() async {
     for (var cartshop in shops) {
       for (var cartitem in finalcart) {
-        Firestore.instance
+        FirebaseFirestore.instance
             .collection("products")
-            .document(cartitem)
+            .doc(cartitem)
             .get()
             .then((value) {
-          if (value.data['shop'] == cartshop.toString()) {
+          if (value.data()['shop'] == cartshop.toString()) {
             if (!cartshopsproductsmap.containsKey(cartitem)) {
               cartshopsproductsmap[cartitem] = 1;
 
@@ -300,12 +300,12 @@ class _CartState extends State<Cart> {
         for (var cartshop in shops) {
           Map cartshopsproductsmap = {};
           for (var cartitem in cart) {
-            Firestore.instance
+            FirebaseFirestore.instance
                 .collection("products")
-                .document(cartitem)
+                .doc(cartitem)
                 .get()
                 .then((value) {
-              if (value.data['shop'] == cartshop.toString()) {
+              if (value.data()['shop'] == cartshop.toString()) {
                 if (!cartshopsproductsmap.containsKey(cartitem)) {
                   cartshopsproductsmap[cartitem] = 1;
 
@@ -569,12 +569,12 @@ class _CartState extends State<Cart> {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
+      final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
       bool hasprofile = false;
-      final FirebaseUser user =
+      final User user =
           (await _auth.signInWithCredential(credential)).user;
       final snackBar = SnackBar(
         content: Text('Welcome to Dolovery!'),
@@ -588,7 +588,7 @@ class _CartState extends State<Cart> {
       _welcomePopUp(context, user.displayName);
 
       final notsetup =
-          await Firestore.instance.collection("users").document(user.uid).get();
+          await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
       if (!notsetup.exists) {
         hasprofile = true;
       }
@@ -603,10 +603,10 @@ class _CartState extends State<Cart> {
       var result = await facebookLogin.logIn(['email']);
 
       if (result.status == FacebookLoginStatus.loggedIn) {
-        final AuthCredential credential = FacebookAuthProvider.getCredential(
-          accessToken: result.accessToken.token,
+        final AuthCredential credential = FacebookAuthProvider.credential(
+           result.accessToken.token,
         );
-        final FirebaseUser user =
+        final User user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
         return user;
       }
@@ -684,19 +684,19 @@ class _CartState extends State<Cart> {
                       var completeproducts = {};
                       for (var cartshop in usercartmap_v2.keys) {
                         completeproducts[cartshop] = {};
-                        var datashop = await Firestore.instance
+                        var datashop = await FirebaseFirestore.instance
                             .collection("shops")
                             .where('username', isEqualTo: cartshop)
-                            .getDocuments();
-                        var rate = datashop.documents[0].data['rate'];
+                            .get();
+                        var rate = datashop.docs[0].data()['rate'];
                         if (rate == null) {
                           rate = 1;
                         }
                         var order_id = ">>" + UniqueKey().hashCode.toString();
-                        Firestore.instance
+                        FirebaseFirestore.instance
                             .collection('shop_orders')
-                            .document(order_id)
-                            .setData({
+                            .doc(order_id)
+                            .set({
                           "address": addresstouse,
                           "total": total.toInt(),
                           "count": usercartmap_v2[cartshop].length,
@@ -711,10 +711,10 @@ class _CartState extends State<Cart> {
                       }
 
                       var fullorder_id = UniqueKey().hashCode.toString();
-                      Firestore.instance
+                      FirebaseFirestore.instance
                           .collection('orders')
-                          .document(fullorder_id)
-                          .setData({
+                          .doc(fullorder_id)
+                          .set({
                         "address": addresstouse,
                         "total": total.toInt(),
                         "count": items,
@@ -788,10 +788,10 @@ class _CartState extends State<Cart> {
   bool loadedthepage = false;
 
   Future setupVerification() async {
-    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final User user = await FirebaseAuth.instance.currentUser;
     final prefs = await SharedPreferences.getInstance();
     this_user =
-        await Firestore.instance.collection("users").document(uid).get();
+        await FirebaseFirestore.instance.collection("users").doc(uid).get();
 
     if (user != null) {
       uid = user.uid;
@@ -1402,11 +1402,11 @@ class _CartState extends State<Cart> {
   }
 
   getShop(shop) async {
-    var document = await Firestore.instance
+    var document = await FirebaseFirestore.instance
         .collection('shops')
         .where("username", isEqualTo: shop)
-        .getDocuments();
-    return document.documents[0];
+        .get();
+    return document.docs[0];
   }
 
   var rateArray = [];
@@ -1918,7 +1918,7 @@ class _CartState extends State<Cart> {
                         child: RawMaterialButton(
                           onPressed: () {
                             _remove(
-                                cartitem.documentID,
+                                cartitem.id,
                                 rate,
                                 cartitem['shop'],
                                 cartitem['type'],
@@ -1947,7 +1947,7 @@ class _CartState extends State<Cart> {
                         child: RawMaterialButton(
                           onPressed: () {
                             _save(
-                                cartitem.documentID,
+                                cartitem.id,
                                 rate,
                                 cartitem['shop'],
                                 cartitem['type'],

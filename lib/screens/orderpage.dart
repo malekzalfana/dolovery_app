@@ -64,9 +64,9 @@ class _OrderPageState extends State<OrderPage> {
             height: 20,
           ),
           StreamBuilder(
-              stream: Firestore.instance
+              stream: FirebaseFirestore.instance
                   .collection('orders')
-                  .document(widget.orderid.toString())
+                  .doc(widget.orderid.toString())
                   .snapshots(),
               builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (!snapshot.hasData) {
@@ -99,7 +99,7 @@ class _OrderPageState extends State<OrderPage> {
                             padding:
                                 const EdgeInsets.only(top: 7.0, bottom: 10),
                             child: Text(
-                              "${order.data['address']['city'].toString()}, ${order.data['address']['street_address'].toString()}, ${order.data['address']['landmark'].toString()}, ${order.data['address']['apartment'].toString()}",
+                              "${order.data()['address']['city'].toString()}, ${order.data()['address']['street_address'].toString()}, ${order.data()['address']['landmark'].toString()}, ${order.data()['address']['apartment'].toString()}",
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontWeight: FontWeight.normal,
@@ -108,7 +108,7 @@ class _OrderPageState extends State<OrderPage> {
                                   color: Colors.black),
                             ),
                           ),
-                          for (var shop in order.data['products'].keys)
+                          for (var shop in order.data()['products'].keys)
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +117,7 @@ class _OrderPageState extends State<OrderPage> {
                                   padding: const EdgeInsets.only(
                                       top: 10.0, bottom: 10),
                                   child: Text(
-                                    order.data['products'][shop]['data']
+                                    order.data()['products'][shop]['data']
                                         ['name'],
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
@@ -128,36 +128,36 @@ class _OrderPageState extends State<OrderPage> {
                                   ),
                                 ),
                                 for (var product in order
-                                    .data['products'][shop]['products'].keys)
+                                    .data()['products'][shop]['products'].keys)
                                   buildCartItem(
                                     product,
-                                    order.data['products'][shop]['products']
+                                    order.data()['products'][shop]['products']
                                         [product]['count'],
-                                    order.data['products'][shop]['products']
+                                    order.data()['products'][shop]['products']
                                         [product]['data']['name'],
-                                    order.data['products'][shop]['products']
+                                    order.data()['products'][shop]['products']
                                         [product]['data']['image'],
-                                    order.data['products'][shop]['products']
+                                    order.data()['products'][shop]['products']
                                         [product]['data']['shop_discounted'],
-                                    order.data['products'][shop]['products']
+                                    order.data()['products'][shop]['products']
                                                 [product]['data']['type'] !=
                                             'salle'
-                                        ? (int.parse(order.data['products'][shop]['products'][product]['data']['shop_price'].toString()) *
-                                                (order.data['products'][shop]['products'][product]['rate'] != null
-                                                    ? order.data['products']
+                                        ? (int.parse(order.data()['products'][shop]['products'][product]['data']['shop_price'].toString()) *
+                                                (order.data()['products'][shop]['products'][product]['rate'] != null
+                                                    ? order.data()['products']
                                                             [shop]['products']
                                                         [product]['rate']
                                                     : 1))
                                             .toString()
-                                        : order.data['products'][shop]['products']
+                                        : order.data()['products'][shop]['products']
                                                 [product]['data']['serving_prices']
-                                                [order.data['products'][shop]['products'][product]['count']]
+                                                [order.data()['products'][shop]['products'][product]['count']]
                                             .toString(),
-                                    order.data['products'][shop]['products']
+                                    order.data()['products'][shop]['products']
                                         [product]['data']['type'],
-                                    order.data['products'][shop]['products']
+                                    order.data()['products'][shop]['products']
                                         [product]['data']['arabic_name'],
-                                    order.data['products'][shop]['products']
+                                    order.data()['products'][shop]['products']
                                             [product]['data']['unit']
                                         .toString(),
                                   )
@@ -181,7 +181,7 @@ class _OrderPageState extends State<OrderPage> {
                             padding:
                                 const EdgeInsets.only(top: 0.0, bottom: 10),
                             child: Text(
-                              order.data['total'].toString() + 'L.L.',
+                              order.data()['total'].toString() + 'L.L.',
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
@@ -203,11 +203,11 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   getShop(shop) async {
-    var document = await Firestore.instance
+    var document = await FirebaseFirestore.instance
         .collection('shops')
         .where("username", isEqualTo: shop)
-        .getDocuments();
-    return document.documents[0];
+        .get();
+    return document.docs[0];
   }
 
   Padding buildCartItem(

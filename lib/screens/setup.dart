@@ -318,11 +318,11 @@ class SetupScreenState extends State<SetupScreen> {
 
   bool newuser = true;
   Future setupVerification() async {
-    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final User user = await FirebaseAuth.instance.currentUser;
     final uid = user.uid;
 
     var usercollection =
-        await Firestore.instance.collection("users").document(uid).get();
+        await FirebaseFirestore.instance.collection("users").doc(uid).get();
 
     if (usercollection.exists) {
       newuser = false;
@@ -610,8 +610,8 @@ class SetupScreenState extends State<SetupScreen> {
                         _formKey.currentState.save();
 
                         void addAddresstoCustomer() async {
-                          final FirebaseUser user =
-                              await FirebaseAuth.instance.currentUser();
+                          final User user =
+                              await FirebaseAuth.instance.currentUser;
                           final uid = user.uid;
                           final uemail = user.email;
                           String chosenAddress =
@@ -644,10 +644,10 @@ class SetupScreenState extends State<SetupScreen> {
                           // prefs.setString('addresses', json.encode(this_user.data['address']));
                           // prefs.setString('address', this_user.data["chosen_address"]);
 
-                          Firestore.instance
+                          FirebaseFirestore.instance
                               .collection("users")
-                              .document(uid)
-                              .setData(thisuser);
+                              .doc(uid)
+                              .set(thisuser);
                         }
 
                         addAddresstoCustomer();

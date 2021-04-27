@@ -92,17 +92,17 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
+      final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final FirebaseUser user =
+      final User user =
           (await _auth.signInWithCredential(credential)).user;
 
       double welcomeheight;
       final newUser =
-          await Firestore.instance.collection("users").document(user.uid).get();
+          await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
       if (newUser.exists) {
         notsetup = false;
         welcomeheight = Adaptive.h(50);
@@ -131,16 +131,16 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       var result = await facebookLogin.logIn(['email']);
 
       if (result.status == FacebookLoginStatus.loggedIn) {
-        final AuthCredential credential = FacebookAuthProvider.getCredential(
-          accessToken: result.accessToken.token,
+        final AuthCredential credential = FacebookAuthProvider.credential(
+       result.accessToken.token,
         );
-        final FirebaseUser user =
+        final User user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
         double welcomeheight;
-        final newUser = await Firestore.instance
+        final newUser = await FirebaseFirestore.instance
             .collection("users")
-            .document(user.uid)
+            .doc(user.uid)
             .get();
         if (newUser.exists) {
           notsetup = false;
@@ -386,7 +386,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   }
 
   Future<void> _signInOut() async {
-    if (await FirebaseAuth.instance.currentUser() == null) {
+    if (await FirebaseAuth.instance.currentUser == null) {
       _signInPopUp(context);
     } else {
       signOut();
@@ -403,14 +403,14 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   bool user_is_setup = false;
 
   Future setupVerification() async {
-    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final User user = await FirebaseAuth.instance.currentUser;
     if (user != null) {
       uid = user.uid;
       name = user.displayName;
       uemail = user.email;
 
       this_user =
-          await Firestore.instance.collection("users").document(uid).get();
+          await FirebaseFirestore.instance.collection("users").doc(uid).get();
 /* added to the page */
       if (this_user.exists) {
         user_is_setup = true;
@@ -734,7 +734,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             ],
                           ),
                           StreamBuilder(
-                            stream: Firestore.instance
+                            stream: FirebaseFirestore.instance
                                 .collection('orders')
                                 .where('user', isEqualTo: uid)
                                 .orderBy('date', descending: true)
@@ -750,7 +750,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                       children: [
                                         Visibility(
                                           visible:
-                                              snapshot.data.documents.length >
+                                              snapshot.data.docs.length >
                                                   0,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
@@ -778,7 +778,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: List<Widget>.generate(
-                                                  snapshot.data.documents
+                                                  snapshot.data.docs
                                                       .length, (int index) {
                                                 return Visibility(
                                                   visible: index != 3,
@@ -789,26 +789,26 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                               builder: (context) =>
                                                                   OrderPage(snapshot
                                                                       .data
-                                                                      .documents[
+                                                                      .docs[
                                                                           index]
                                                                       .documentID)));
                                                     },
                                                     child: RecentOrder(
                                                         orderDate: snapshot.data
-                                                                .documents[index]
+                                                                .docs[index]
                                                             ['date'],
                                                         orderCount: snapshot
                                                             .data
-                                                            .documents[index]
+                                                            .docs[index]
                                                                 ['count']
                                                             .toInt(),
                                                         orderImage: snapshot
                                                                 .data
-                                                                .documents[index]
+                                                                .docs[index]
                                                             ['image'],
                                                         orderPrice: snapshot
                                                             .data
-                                                            .documents[index]
+                                                            .docs[index]
                                                                 ['total']
                                                             .toString()),
                                                   ),
@@ -817,7 +817,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                         ),
                                         Visibility(
                                           visible:
-                                              snapshot.data.documents.length >
+                                              snapshot.data.docs.length >
                                                   0,
                                           child: MaterialButton(
                                             shape: RoundedRectangleBorder(

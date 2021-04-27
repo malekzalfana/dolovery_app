@@ -90,9 +90,9 @@ class _ShopPageState extends State<ShopPage> {
   dynamic type;
   Future getcategories() async {
     String shoptype = widget.data['type'];
-    type = await Firestore.instance
+    type = await FirebaseFirestore.instance
         .collection("types")
-        .document(shoptype.toLowerCase())
+        .doc(shoptype.toLowerCase())
         .get();
 
     print(
@@ -616,7 +616,7 @@ class _ShopPageState extends State<ShopPage> {
                                               top: 0,
                                               bottom: 0),
                                           child: StreamBuilder(
-                                            stream: Firestore.instance
+                                            stream: FirebaseFirestore.instance
                                                 .collection('products')
                                                 .where('shop',
                                                     isEqualTo:
@@ -630,7 +630,7 @@ class _ShopPageState extends State<ShopPage> {
                                             builder: (context, snapshot) {
                                               if (snapshot.hasData) {
                                                 if (snapshot
-                                                        .data.documents.length <
+                                                        .data.docs.length <
                                                     2) {
                                                   return Opacity(
                                                     opacity: 0.3,
@@ -652,7 +652,7 @@ class _ShopPageState extends State<ShopPage> {
                                                   scrollDirection:
                                                       Axis.vertical,
                                                   children: List.generate(
-                                                      snapshot.data.documents
+                                                      snapshot.data.docs
                                                           .length, (index) {
                                                     return GestureDetector(
                                                       onTap: () {
@@ -664,24 +664,24 @@ class _ShopPageState extends State<ShopPage> {
                                                       child: ProductImage(
                                                           productName: snapshot
                                                                   .data
-                                                                  .documents[index]
+                                                                  .docs[index]
                                                               ['name'],
                                                           productImage: snapshot
                                                                   .data
-                                                                  .documents[index]
+                                                                  .docs[index]
                                                               ['image'],
                                                           productPrice: snapshot
                                                               .data
-                                                              .documents[index]
+                                                              .docs[index]
                                                                   ['shop_price']
                                                               .toString(),
-                                                          shopName: snapshot.data.documents[index]
+                                                          shopName: snapshot.data.docs[index]
                                                               ['shop'],
-                                                          productUnit: snapshot.data.documents[index]['unit'] != null
-                                                              ? snapshot.data.documents[index]['unit']
+                                                          productUnit: snapshot.data.docs[index]['unit'] != null
+                                                              ? snapshot.data.docs[index]['unit']
                                                               : '',
-                                                          oldPrice: snapshot.data.documents[index]['old_price'] == null ? "0" : snapshot.data.documents[index]['old_price'].toString(),
-                                                          productCurrency: snapshot.data.documents[index]['currency'] != null ? snapshot.data.documents[index]['currency'] : "lebanese"),
+                                                          oldPrice: snapshot.data.docs[index]['old_price'] == null ? "0" : snapshot.data.docs[index]['old_price'].toString(),
+                                                          productCurrency: snapshot.data.docs[index]['currency'] != null ? snapshot.data.docs[index]['currency'] : "lebanese"),
                                                     );
                                                   }).toList(),
                                                 );
@@ -708,7 +708,7 @@ class _ShopPageState extends State<ShopPage> {
                                               top: 0,
                                               bottom: 0),
                                           child: StreamBuilder(
-                                            stream: Firestore.instance
+                                            stream: FirebaseFirestore.instance
                                                 .collection('products')
                                                 .where('shop',
                                                     isEqualTo:
@@ -729,7 +729,7 @@ class _ShopPageState extends State<ShopPage> {
                                                   scrollDirection:
                                                       Axis.vertical,
                                                   children: List.generate(
-                                                      snapshot.data.documents
+                                                      snapshot.data.docs
                                                           .length, (index) {
                                                     return GestureDetector(
                                                       onTap: () {
@@ -739,27 +739,27 @@ class _ShopPageState extends State<ShopPage> {
                                                             index);
                                                       },
                                                       child: ProductImage(
-                                                          oldPrice: snapshot.data.documents[index]['old_price'] == null
+                                                          oldPrice: snapshot.data.docs[index]['old_price'] == null
                                                               ? "0"
-                                                              : snapshot.data.documents[index]['old_price']
+                                                              : snapshot.data.docs[index]['old_price']
                                                                   .toString(),
                                                           productName: snapshot
                                                                   .data
-                                                                  .documents[index]
+                                                                  .docs[index]
                                                               ['name'],
                                                           productImage:
-                                                              snapshot.data.documents[index]
+                                                              snapshot.data.docs[index]
                                                                   ['image'],
                                                           productPrice: snapshot
                                                               .data
-                                                              .documents[index]
+                                                              .docs[index]
                                                                   ['shop_price']
                                                               .toString(),
                                                           shopName: snapshot
                                                               .data
-                                                              .documents[index]['shop'],
-                                                          productUnit: snapshot.data.documents[index]['unit'] != null ? snapshot.data.documents[index]['unit'] : '',
-                                                          productCurrency: snapshot.data.documents[index]['currency'] != null ? snapshot.data.documents[index]['currency'] : "lebanese"),
+                                                              .docs[index]['shop'],
+                                                          productUnit: snapshot.data.docs[index]['unit'] != null ? snapshot.data.docs[index]['unit'] : '',
+                                                          productCurrency: snapshot.data.docs[index]['currency'] != null ? snapshot.data.docs[index]['currency'] : "lebanese"),
                                                     );
                                                   }).toList(),
                                                 );
@@ -795,7 +795,7 @@ class _ShopPageState extends State<ShopPage> {
                                               top: 0,
                                               bottom: 0),
                                           child: StreamBuilder(
-                                            stream: Firestore.instance
+                                            stream: FirebaseFirestore.instance
                                                 .collection('products')
                                                 .where('shop',
                                                     isEqualTo:
@@ -803,7 +803,7 @@ class _ShopPageState extends State<ShopPage> {
                                                 .snapshots(),
                                             builder: (context, snapshot) {
                                               if (snapshot.hasData &&
-                                                  snapshot.data.documents
+                                                  snapshot.data.docs
                                                           .length <
                                                       1) {
                                                 return Opacity(
@@ -827,41 +827,41 @@ class _ShopPageState extends State<ShopPage> {
                                                   scrollDirection:
                                                       Axis.vertical,
                                                   children: List.generate(
-                                                      snapshot.data.documents
+                                                      snapshot.data.docs
                                                           .length, (index) {
                                                     return GestureDetector(
                                                       onTap: () {
                                                         openProductPopUp(
                                                             context,
                                                             snapshot.data
-                                                                    .documents[
+                                                                    .docs[
                                                                 index],
                                                             index);
                                                       },
                                                       child: ProductImage(
-                                                          oldPrice: snapshot.data.documents[index]['old_price'] == null
+                                                          oldPrice: snapshot.data.docs[index]['old_price'] == null
                                                               ? "0"
-                                                              : snapshot.data.documents[index]['old_price']
+                                                              : snapshot.data.docs[index]['old_price']
                                                                   .toString(),
-                                                          productName: snapshot.data.documents[index]['name'] != null
+                                                          productName: snapshot.data.docs[index]['name'] != null
                                                               ? snapshot.data
-                                                                      .documents[index]
+                                                                      .docs[index]
                                                                   ['name']
                                                               : '[NO NAME]',
                                                           productImage: snapshot
                                                                   .data
-                                                                  .documents[index]
+                                                                  .docs[index]
                                                               ['image'],
-                                                          productPrice: snapshot.data.documents[index]['shop_price'].toString() != null
+                                                          productPrice: snapshot.data.docs[index]['shop_price'].toString() != null
                                                               ? snapshot
                                                                   .data
-                                                                  .documents[index]
+                                                                  .docs[index]
                                                                       ['shop_price']
                                                                   .toString()
                                                               : '[NO PRICE]',
-                                                          shopName: snapshot.data.documents[index]['shop'],
-                                                          productUnit: snapshot.data.documents[index]['unit'] != null ? snapshot.data.documents[index]['unit'] : '',
-                                                          productCurrency: snapshot.data.documents[index]['currency'] != null ? snapshot.data.documents[index]['currency'] : "lebanese"),
+                                                          shopName: snapshot.data.docs[index]['shop'],
+                                                          productUnit: snapshot.data.docs[index]['unit'] != null ? snapshot.data.docs[index]['unit'] : '',
+                                                          productCurrency: snapshot.data.docs[index]['currency'] != null ? snapshot.data.docs[index]['currency'] : "lebanese"),
                                                     );
                                                   }).toList(),
                                                 );
