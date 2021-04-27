@@ -91,17 +91,17 @@ class FormScreenState extends State<ShopListing> {
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => ShopPage(
-                                        snapshot.data.documents[index])));
+                                        snapshot.data.docs[index])));
                               },
                               child: ShopList(
-                                  shopName: snapshot.data.documents[index]
+                                  shopName: snapshot.data.docs[index]
                                       ['name'],
-                                  shopImage: snapshot.data.documents[index]
+                                  shopImage: snapshot.data.docs[index]
                                       ['image'],
                                   shopTime: snapshot
-                                      .data.documents[index]['time']
+                                      .data.docs[index]['time']
                                       .toString(),
-                                  shopAddress: snapshot.data.documents[index]
+                                  shopAddress: snapshot.data.docs[index]
                                       ['address']),
                             );
                           })));

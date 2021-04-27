@@ -88,19 +88,19 @@ class _PrivacyState extends State<Orders> {
                                                   builder: (context) =>
                                                       OrderPage(snapshot
                                                           .data
-                                                          .documents[index]
+                                                          .docs[index]
                                                           .documentID)));
                                         },
                                         child: RecentOrder(
                                             orderDate: snapshot
-                                                .data.documents[index]['date'],
+                                                .data.docs[index]['date'],
                                             orderCount: snapshot
-                                                .data.documents[index]['count']
+                                                .data.docs[index]['count']
                                                 .toInt(),
                                             orderImage: snapshot
-                                                .data.documents[index]['image'],
+                                                .data.docs[index]['image'],
                                             orderPrice: snapshot
-                                                .data.documents[index]['total']
+                                                .data.docs[index]['total']
                                                 .toString()),
                                       );
                                     })),

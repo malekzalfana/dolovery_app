@@ -778,7 +778,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: List<Widget>.generate(
-                                                  snapshot.data.documents
+                                                  snapshot.data.docs
                                                       .length, (int index) {
                                                 return Visibility(
                                                   visible: index != 3,
@@ -789,26 +789,26 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                               builder: (context) =>
                                                                   OrderPage(snapshot
                                                                       .data
-                                                                      .documents[
+                                                                      .docs[
                                                                           index]
                                                                       .documentID)));
                                                     },
                                                     child: RecentOrder(
                                                         orderDate: snapshot.data
-                                                                .documents[index]
+                                                                .docs[index]
                                                             ['date'],
                                                         orderCount: snapshot
                                                             .data
-                                                            .documents[index]
+                                                            .docs[index]
                                                                 ['count']
                                                             .toInt(),
                                                         orderImage: snapshot
                                                                 .data
-                                                                .documents[index]
+                                                                .docs[index]
                                                             ['image'],
                                                         orderPrice: snapshot
                                                             .data
-                                                            .documents[index]
+                                                            .docs[index]
                                                                 ['total']
                                                             .toString()),
                                                   ),
