@@ -91,17 +91,7 @@ class _CartState extends State<Cart> {
     prefs.remove('usercartmap_v2');
     prefs.remove('cached_shops');
     prefs.remove('caching_date');
-    //
-    prefs.remove('type');
-    prefs.remove('total');
-    prefs.remove('items');
-    prefs.remove('cart');
-    prefs.remove('shops');
-    prefs.remove('usercartmap');
-    prefs.remove('usercartmap_v2');
-    prefs.remove('cached_shops');
-    prefs.remove('address');
-    prefs.remove('addresses');
+
 
     prefs.remove('address');
     if (pop != false) {

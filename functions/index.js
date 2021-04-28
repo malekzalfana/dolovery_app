@@ -11,3 +11,13 @@ const after = snapshot.after.data();
 return admin.messaging().sendToTopic('user',{notification:{title:after.full_name,body: after.company,clickAction: 'FLUTTER_NOTIFICATION_CLICK',},
 });
 });
+
+exports.sendDevices = functions.firestore.document('users/{usersId}').onCreate((snapshot) => {
+
+const name = snapshot.get("full_name");
+const company = snapshot.get("company");
+const token = snapshot.get("token");
+
+return admin.messaging().sendToDevice(token,{notification:{title:"From" + name,body: "subject" + company,clickAction: 'FLUTTER_NOTIFICATION_CLICK',},
+});
+});

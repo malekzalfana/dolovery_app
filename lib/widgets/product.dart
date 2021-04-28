@@ -170,23 +170,23 @@ class _ProductImageState extends State<ProductImage> {
         },
       );
     } else {
-      print('looking for time differnce');
+      // print('looking for time differnce');
       var cacheDifference;
 
       final DateTime todaysDate = DateTime.now();
       String date = prefs.getString("caching_date");
 
       DateTime cachedDate = DateTime.parse(date);
-      print(cachedDate.toString());
+      // print(cachedDate.toString());
       cacheDifference = todaysDate.difference(cachedDate).inDays;
       if (prefs.getString("cached_shops") != null &&
           prefs.getString("caching_date") != null) {
-        print(cacheDifference);
+        // print(cacheDifference);
         if (cacheDifference == 0) {
-          print('rate existst');
+          // print('rate existst');
           rate = json.decode(prefs.getString("cached_shops"))[shopName];
         } else {
-          print('got the rate again!!!!!');
+          // print('got the rate again!!!!!');
           shopinfo = FirebaseFirestore.instance
               .collection('shops')
               .where('username', isEqualTo: shopName)
@@ -198,12 +198,12 @@ class _ProductImageState extends State<ProductImage> {
                 // print(value.documents[0].data['rate']);
                 prefs.setString('cached_shops', json.encode(cachedshops));
                 prefs.setString('caching_date', DateTime.now().toString());
-                print('new rate is ' +
-                    value.docs[0].data()['rate'].toString());
+                // print('new rate is ' +
+                    // value.docs[0].data()['rate'].toString());
 
-                print(rate);
-                print(prefs.getString('cached_shops'));
-                print(prefs.getString('caching_date'));
+                // print(rate);
+                // print(prefs.getString('cached_shops'));
+                // print(prefs.getString('caching_date'));
                 // new Future.delayed(new Duration(seconds: 3), () {
                 setState(() {});
                 return rate = value.docs[0].data()['rate'];

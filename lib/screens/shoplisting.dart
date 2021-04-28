@@ -70,7 +70,9 @@ class FormScreenState extends State<ShopListing> {
                       .collection('shops')
                       .where('type', isEqualTo: widget.type)
                       .snapshots(),
-                  builder: (context, snapshot) {
+                  builder: (context,snapshot) {
+                    // print('ALOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
+                    // print('WHAT IS THIS? ' + snapshot.hasData.toString());
                     if (snapshot.hasData &&
                         snapshot.data.docs.length == 0) {
                       return Opacity(
@@ -81,7 +83,7 @@ class FormScreenState extends State<ShopListing> {
                       );
                     }
                     if (snapshot.hasData) {
-                      print(snapshot);
+                      // print(snapshot);
                       return SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           child: Column(
@@ -91,7 +93,8 @@ class FormScreenState extends State<ShopListing> {
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => ShopPage(
-                                        snapshot.data.docs[index])));
+                                        snapshot.data.docs[index].data())));
+                                // print('Helloooo');
                               },
                               child: ShopList(
                                   shopName: snapshot.data.docs[index]
@@ -99,10 +102,8 @@ class FormScreenState extends State<ShopListing> {
                                   shopImage: snapshot.data.docs[index]
                                       ['image'],
                                   shopTime: snapshot
-                                      .data.docs[index]['time']
-                                      .toString(),
-                                  shopAddress: snapshot.data.docs[index]
-                                      ['address']),
+                                      .data.docs[index]['time'].toString(),
+                                  shopAddress: snapshot.data.docs[index]['address']),
                             );
                           })));
                     } else if (snapshot.hasError) {

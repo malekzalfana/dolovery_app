@@ -38,6 +38,8 @@ String c_position;
 String c2_position;
 
 class HomeScreenState extends State<HomeScreen> {
+
+
   @override
   void initState() {
     final fbm = FirebaseMessaging();
@@ -890,39 +892,39 @@ class HomeScreenState extends State<HomeScreen> {
                                     onTap: () {
                                       openProductPopUp(
                                           context,
-                                          snapshot.data.docs[index],
+                                          snapshot.data().docs[index],
                                           index,
                                           null,
                                           refreshcart);
                                     },
                                     child: ProductImage(
-                                      oldPrice: snapshot.data.docs[index]
+                                      oldPrice: snapshot.data().docs[index]
                                                   ['old_price'] ==
                                               null
                                           ? "0"
-                                          : snapshot.data
+                                          : snapshot.data()
                                               .docs[index]['old_price']
                                               .toString(),
                                       productName: snapshot
-                                          .data.docs[index]['name'],
+                                          .data().docs[index]['name'],
                                       productImage: snapshot
-                                          .data.docs[index]['image'],
+                                          .data().docs[index]['image'],
                                       productPrice: snapshot
-                                          .data.docs[index]['shop_price']
+                                          .data().docs[index]['shop_price']
                                           .toString(),
-                                      shopName: snapshot.data.docs[index]
+                                      shopName: snapshot.data().docs[index]
                                           ['shop'],
-                                      productUnit: snapshot.data
+                                      productUnit: snapshot.data()
                                                   .docs[index]['unit'] !=
                                               null
-                                          ? snapshot.data.docs[index]
+                                          ? snapshot.data().docs[index]
                                               ['unit']
                                           : '',
                                       productCurrency:
-                                          snapshot.data.docs[index]
+                                          snapshot.data().docs[index]
                                                       ['currency'] !=
                                                   null
-                                              ? snapshot.data.docs[0]
+                                              ? snapshot.data().docs[0]
                                                   ['currency']
                                               : "lebanese",
                                     ),
@@ -1025,13 +1027,13 @@ class HomeScreenState extends State<HomeScreen> {
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                   children: List<Widget>.generate(
-                                      snapshot.data.docs.length,
+                                      snapshot.data().docs.length,
                                       (int index) {
                                 return GestureDetector(
                                   onTap: () {
                                     openProductPopUp(
                                         context,
-                                        snapshot.data.docs[index],
+                                        snapshot.data().docs[index],
                                         index,
                                         null,
                                         refreshcart);
@@ -1039,15 +1041,15 @@ class HomeScreenState extends State<HomeScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 12),
                                     child: Bundle(
-                                      bundleName: snapshot.data.docs[index]
+                                      bundleName: snapshot.data().docs[index]
                                           ['name'],
                                       bundleDescription: snapshot
-                                          .data.docs[index]['description'],
+                                          .data().docs[index]['description'],
                                       bundleIndex: 0,
                                       bundlePrice: int.parse(snapshot
-                                          .data.docs[index]['shop_price']),
+                                          .data().docs[index]['shop_price']),
                                       bundleImage: snapshot
-                                          .data.docs[index]['image'],
+                                          .data().docs[index]['image'],
                                     ),
                                   ),
                                 );
@@ -1117,37 +1119,37 @@ class HomeScreenState extends State<HomeScreen> {
                                   onTap: () {
                                     openProductPopUp(
                                         context,
-                                        snapshot.data.docs[index],
+                                        snapshot.data().docs[index],
                                         index,
                                         refreshcart);
                                   },
                                   child: ProductImage(
-                                    productName: snapshot.data.docs[index]
+                                    productName: snapshot.data().docs[index]
                                         ['name'],
-                                    productImage: snapshot.data.docs[index]
+                                    productImage: snapshot.data().docs[index]
                                         ['image'],
                                     productPrice: snapshot
-                                        .data.docs[index]['shop_price']
+                                        .data().docs[index]['shop_price']
                                         .toString(),
-                                    shopName: snapshot.data.docs[index]
+                                    shopName: snapshot.data().docs[index]
                                         ['shop'],
-                                    productUnit: snapshot.data.docs[index]
+                                    productUnit: snapshot.data().docs[index]
                                                 ['unit'] !=
                                             null
-                                        ? snapshot.data.docs[index]['unit']
+                                        ? snapshot.data().docs[index]['unit']
                                         : '',
-                                    productCurrency: snapshot.data
+                                    productCurrency: snapshot.data()
                                                 .docs[index]['currency'] !=
                                             null
-                                        ? snapshot.data.docs[index]
+                                        ? snapshot.data().docs[index]
                                             ['currency']
                                         : "lebanese",
-                                    oldPrice: snapshot.data.docs[index]
+                                    oldPrice: snapshot.data().docs[index]
                                                 ['old_price'] ==
                                             null
                                         ? "0"
                                         : snapshot
-                                            .data.docs[index]['old_price']
+                                            .data().docs[index]['old_price']
                                             .toString(),
                                   ),
                                 );
@@ -1248,13 +1250,13 @@ class HomeScreenState extends State<HomeScreen> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      ShopPage(snapshot.data.docs[0])));
+                                      ShopPage(snapshot.data().docs[0])));
                             },
                             child: ShopImage(
-                                shopName: snapshot.data.docs[0]['name'],
+                                shopName: snapshot.data().docs[0]['name'],
                                 shopIndex: index,
-                                shopImage: snapshot.data.docs[0]['image'],
-                                shopTime: snapshot.data.docs[0]['time']
+                                shopImage: snapshot.data().docs[0]['image'],
+                                shopTime: snapshot.data().docs[0]['time']
                                     .toString()),
                           );
                         })));

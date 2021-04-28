@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -467,7 +468,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            labelText: 'Street Adress'),
+            labelText: 'Street Address'),
         maxLength: 100,
         style: new TextStyle(
           fontFamily: "Axiforma",
@@ -567,6 +568,19 @@ class ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  final fbm = FirebaseMessaging();
+  String deviceToken;
+  @override
+  void initState() {
+    fbm.getToken().then((token){
+      print('DEVICE TOKEN IS: $token');
+      deviceToken = token;
+    });
+    super.initState();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -639,7 +653,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                             "code": _code,
                             "email": uemail,
                             "address": addresses,
-                            "chosen_address": chosenAddress
+                            "chosen_address": chosenAddress,
+                            "token": deviceToken,
                           };
 
                           FirebaseFirestore.instance

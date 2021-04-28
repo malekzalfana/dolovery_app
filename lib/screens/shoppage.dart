@@ -17,7 +17,7 @@ class ShopPage extends StatefulWidget {
 }
 
 class _ShopPageState extends State<ShopPage> {
-  Completer<GoogleMapController> _controller = Completer();
+  Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
@@ -64,21 +64,24 @@ class _ShopPageState extends State<ShopPage> {
   }
 
   setCategory(cat) {
-    print('$chosenCategory is the chosen shub and new one is $cat');
+    // print('$chosenCategory is the chosen shub and new one is $cat');
 
     if (chosenCategory == cat) {
-      print('not change');
+      // print('not change');
       setState(() {
         chosenCategory = '';
         chosenSubcategory = '';
       });
     } else {
-      print('changed');
+      // print('changed');
       cancelCategory();
       Future.delayed(Duration(milliseconds: 100), () {
         setState(() {
           chosenCategory = cat;
           chosenSubcategory = '';
+
+
+
           hideeverything = false;
         });
       });
@@ -89,14 +92,18 @@ class _ShopPageState extends State<ShopPage> {
 
   dynamic type;
   Future getcategories() async {
+    // print('fffff');
     String shoptype = widget.data['type'];
+    // print(shoptype);
+    // print('XXXXXXXXXXXXXXX');
     type = await FirebaseFirestore.instance
         .collection("types")
         .doc(shoptype.toLowerCase())
         .get();
+    // print(type.toString() + 'DDDDDDDDDDDD');
 
-    print(
-        "loaded and chosen cat is $chosenCategory and sub $chosenSubcategory");
+    // print(
+    //     "loaded and chosen cat is $chosenCategory and sub $chosenSubcategory");
     return chosenCategory;
   }
 
@@ -107,8 +114,11 @@ class _ShopPageState extends State<ShopPage> {
   Widget build(BuildContext ctxt) {
     Set<Marker> markers = Set();
     if (widget.data['location'] != null) {
+      // print('searching for location');
       double lat = widget.data['location'].latitude;
       double lng = widget.data['location'].longitude;
+      // print('location print __________________');
+      // print(widget.data['location'].longitude);
 
       _shopCoordinates = new LatLng(lat, lng);
       markers.addAll([
@@ -172,7 +182,9 @@ class _ShopPageState extends State<ShopPage> {
                                       bottomLeft: Radius.circular(10),
                                       bottomRight: Radius.circular(10)),
                                 ),
-                                child: CachedNetworkImage(
+                                child:
+                                // REMOVED
+                                CachedNetworkImage(
                                   imageUrl: widget.data['image'],
                                   placeholder: (context, url) =>
                                       new CircularProgressIndicator(),
@@ -479,6 +491,8 @@ class _ShopPageState extends State<ShopPage> {
                       FutureBuilder(
                         future: getcategories(),
                         builder: (context, snapshot) {
+                          // print('printing this');
+                          // print(type['categories']);
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
                               return Padding(
@@ -493,6 +507,7 @@ class _ShopPageState extends State<ShopPage> {
                               else if (type != null &&
                                   snapshot.connectionState ==
                                       ConnectionState.done)
+                                // return Text(type['categories'].toString());
                                 return Column(
                                   children: [
                                     Column(
@@ -505,92 +520,97 @@ class _ShopPageState extends State<ShopPage> {
                                           child: null,
                                         );
                                       else
-                                        return Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10.0),
-                                              child: Row(
-                                                  children:
-                                                      List<Widget>.generate(
-                                                          type['categories']
-                                                                  [entry]
-                                                              .length,
-                                                          (int index) {
-                                                return Visibility(
-                                                  visible: entry ==
-                                                              chosenCategory &&
-                                                          widget.data[
-                                                                  'subcategories']
-                                                              .contains(type[
-                                                                      'categories']
-                                                                  [
-                                                                  entry][index])
-                                                      ? true
-                                                      : false,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 0.0,
-                                                            bottom: 10,
-                                                            top: 0,
-                                                            left: 0),
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        setSubCategory(
-                                                            type['categories']
-                                                                [entry][index]);
-                                                      },
-                                                      child: Container(
-                                                          height: 50,
-                                                          width: 110,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceAround,
-                                                            children: <Widget>[
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .all(
-                                                                        8.0),
-                                                                child: Text(
-                                                                  type['categories']
-                                                                          [
-                                                                          entry]
-                                                                      [index],
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                    fontSize:
-                                                                        12.0,
-                                                                    height: 1.3,
-                                                                    fontFamily:
-                                                                        'Axiforma',
-                                                                    color: type['categories'][entry][index] ==
-                                                                            chosenSubcategory
-                                                                        ? Colors
-                                                                            .red
-                                                                        : Colors
-                                                                            .grey,
+                                        return Column(
+                                          children: [
+                                            // Text('test'),
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      left: 10.0),
+                                                  child: Row(
+                                                      children:
+                                                          List<Widget>.generate(
+                                                              type['categories']
+                                                                      [entry]
+                                                                  .length,
+                                                              (int index) {
+                                                    return Visibility(
+                                                      visible: entry ==
+                                                                  chosenCategory &&
+                                                              widget.data[
+                                                                      'subcategories']
+                                                                  .contains(type[
+                                                                          'categories']
+                                                                      [
+                                                                      entry][index])
+                                                          ? true
+                                                          : false,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets.only(
+                                                                right: 0.0,
+                                                                bottom: 10,
+                                                                top: 0,
+                                                                left: 0),
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            setSubCategory(
+                                                                type['categories']
+                                                                    [entry][index]);
+                                                          },
+                                                          child: Container(
+                                                              height: 50,
+                                                              width: 110,
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceAround,
+                                                                children: <Widget>[
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                                .all(
+                                                                            8.0),
+                                                                    child: Text(
+                                                                      type['categories']
+                                                                              [
+                                                                              entry]
+                                                                          [index],
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w800,
+                                                                        fontSize:
+                                                                            12.0,
+                                                                        height: 1.3,
+                                                                        fontFamily:
+                                                                            'Axiforma',
+                                                                        color: type['categories'][entry][index] ==
+                                                                                chosenSubcategory
+                                                                            ? Colors
+                                                                                .red
+                                                                            : Colors
+                                                                                .grey,
+                                                                      ),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )),
-                                                    ),
-                                                  ),
-                                                );
-                                              })),
+                                                                ],
+                                                              )),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  })),
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         );
                                     }).toList()),
                                     Visibility(
@@ -628,7 +648,7 @@ class _ShopPageState extends State<ShopPage> {
                                                         chosenSubcategory)
                                                 .snapshots(),
                                             builder: (context, snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.hasData && snapshot.data.data != null) {
                                                 if (snapshot
                                                         .data.docs.length <
                                                     2) {
@@ -656,26 +676,27 @@ class _ShopPageState extends State<ShopPage> {
                                                           .length, (index) {
                                                     return GestureDetector(
                                                       onTap: () {
+                                                        // print('XXXXXXXXXXX');
+                                                        // print(snapshot.data.data().data());
                                                         openProductPopUp(
                                                             context,
-                                                            snapshot.data,
+                                                            snapshot.data.data(),
                                                             index);
                                                       },
                                                       child: ProductImage(
                                                           productName: snapshot
                                                                   .data
-                                                                  .docs[index]
-                                                              ['name'],
+                                                                  .docs[index].data()['name'],
                                                           productImage: snapshot
                                                                   .data
-                                                                  .docs[index]
+                                                                  .docs[index].data()
                                                               ['image'],
                                                           productPrice: snapshot
                                                               .data
-                                                              .docs[index]
+                                                              .docs[index].data()
                                                                   ['shop_price']
                                                               .toString(),
-                                                          shopName: snapshot.data.docs[index]
+                                                          shopName: snapshot.data.docs[index].data()
                                                               ['shop'],
                                                           productUnit: snapshot.data.docs[index]['unit'] != null
                                                               ? snapshot.data.docs[index]['unit']
@@ -717,7 +738,7 @@ class _ShopPageState extends State<ShopPage> {
                                                     isEqualTo: chosenCategory)
                                                 .snapshots(),
                                             builder: (context, snapshot) {
-                                              if (snapshot.hasData) {
+                                              if (snapshot.hasData && snapshot.data.data != null) {
                                                 return GridView.count(
                                                   crossAxisCount: 2,
                                                   childAspectRatio: 0.65,
@@ -735,7 +756,7 @@ class _ShopPageState extends State<ShopPage> {
                                                       onTap: () {
                                                         openProductPopUp(
                                                             context,
-                                                            snapshot.data,
+                                                            snapshot.data.data(),
                                                             index);
                                                       },
                                                       child: ProductImage(
@@ -815,7 +836,7 @@ class _ShopPageState extends State<ShopPage> {
                                                               'No items found.'))),
                                                 );
                                               }
-                                              if (snapshot.hasData) {
+                                              if (snapshot.hasData && snapshot.data != null) {
                                                 return GridView.count(
                                                   crossAxisCount: 2,
                                                   childAspectRatio: 0.65,
@@ -835,7 +856,7 @@ class _ShopPageState extends State<ShopPage> {
                                                             context,
                                                             snapshot.data
                                                                     .docs[
-                                                                index],
+                                                                index].data(),
                                                             index);
                                                       },
                                                       child: ProductImage(
@@ -885,6 +906,7 @@ class _ShopPageState extends State<ShopPage> {
                                     ),
                                   ],
                                 );
+
                           }
                           return null;
                         },

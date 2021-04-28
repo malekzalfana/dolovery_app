@@ -415,9 +415,9 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       if (this_user.exists) {
         user_is_setup = true;
         final prefs = await SharedPreferences.getInstance();
-        chosen_address = this_user.data["chosen_address"];
-        prefs.setString('addresses', json.encode(this_user.data['address']));
-        prefs.setString('address', this_user.data["chosen_address"]);
+        chosen_address = this_user.data()["chosen_address"];
+        prefs.setString('addresses', json.encode(this_user.data()['address']));
+        prefs.setString('address', this_user.data()["chosen_address"]);
       } else {
         user_is_setup = false;
       }
@@ -672,7 +672,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                       child: GestureDetector(
                                         onTap: () {},
                                         child: Text(
-                                          this_user.data['fullname'],
+                                          this_user.data()['fullname'],
                                           style: TextStyle(
                                             fontWeight: FontWeight.w800,
                                             fontSize: 25.0.sp,
@@ -690,7 +690,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 height: 5,
                               ),
                               Text(
-                                this_user.data['email'],
+                                this_user.data()['email'],
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 11.0.sp,
@@ -699,7 +699,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 ),
                               ),
                               Text(
-                                this_user.data['number'],
+                                this_user.data()['number'],
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 11.0.sp,
@@ -880,7 +880,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               ),
                               if (this_user != null)
                                 for (var index = 0;
-                                    index < this_user.data["address"].length;
+                                    index < this_user.data()["address"].length;
                                     index++)
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -891,14 +891,14 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                     child: GestureDetector(
                                       onTap: () {
                                         bool isDefault = chosen_address ==
-                                            this_user.data["address"][index]
+                                            this_user.data()["address"][index]
                                                 ["id"];
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
                                                 builder: (context) =>
                                                     EditAddress(
                                                         this_user
-                                                            .data["address"],
+                                                            .data()["address"],
                                                         index,
                                                         isDefault,
                                                         uid)))
@@ -931,7 +931,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                 Icons.place,
                                                 color: chosen_address ==
                                                         this_user
-                                                                .data["address"]
+                                                                .data()["address"]
                                                             [index]["id"]
                                                     ? Colors.black
                                                     : Colors.grey[400],
@@ -964,7 +964,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                                     left: 0,
                                                                     bottom: 5),
                                                             child: Text(
-                                                              this_user.data[
+                                                              this_user.data()[
                                                                       "address"]
                                                                   [
                                                                   index]["name"],
@@ -976,9 +976,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                                 fontFamily:
                                                                     'Axiforma',
                                                                 color: chosen_address ==
-                                                                        this_user.data["address"][index]
-                                                                            [
-                                                                            "id"]
+                                                                        this_user.data()["address"][index]
+                                                                            ["id"]
                                                                     ? Colors
                                                                         .black
                                                                     : Colors.grey[
@@ -1013,7 +1012,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                                         .width -
                                                                     145,
                                                                 child: Text(
-                                                                  this_user.data[
+                                                                  this_user.data()[
                                                                               "address"]
                                                                           [
                                                                           index]
@@ -1064,7 +1063,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               Navigator.of(context)
                                   .push(MaterialPageRoute(
                                       builder: (context) => AddAddress(
-                                          this_user.data["address"])))
+                                          this_user.data()["address"])))
                                   .then((_) {
                                 setState(() {});
                               });
