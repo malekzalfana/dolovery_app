@@ -125,7 +125,7 @@ class SalleScreenState extends State<SalleScreen> {
     return SafeArea(
       child: ListView(
         children: <Widget>[
-          SizedBox(height:50.0),
+          SizedBox(height: 50.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

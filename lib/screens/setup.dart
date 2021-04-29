@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class SetupScreen extends StatefulWidget {
   @override
@@ -11,7 +12,49 @@ class SetupScreen extends StatefulWidget {
   }
 }
 
+final Firestore _db = Firestore.instance;
+final FirebaseMessaging _fcm = FirebaseMessaging();
+String device_token;
+
 class SetupScreenState extends State<SetupScreen> {
+  @override
+  void initState() {
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(message['notification']['title']),
+              subtitle: Text(message['notification']['body']),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        // TODO optional
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        // TODO optional
+      },
+    );
+
+    super.initState();
+    _fcm.getToken().then((token) {
+      // print(token);
+      device_token = token;
+    });
+  }
+
   String _streetaddress = "";
   String _landmark = "";
 
@@ -625,13 +668,16 @@ class SetupScreenState extends State<SetupScreen> {
                             "id": chosenAddress,
                           };
                           List addresses = [thisAddress];
+                          print('-----------------------');
+                          print('this is the token bro$device_token');
                           Map<String, dynamic> thisuser = {
                             "fullname": _fullname,
                             "number": _phone,
                             "code": _code,
                             "email": uemail,
                             "address": addresses,
-                            "chosen_address": chosenAddress
+                            "chosen_address": chosenAddress,
+                            "token": device_token
                           };
 
                           // final prefs = await SharedPreferences.getInstance();

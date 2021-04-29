@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolovery_app/widgets/shopList.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
 class ShopListing extends StatefulWidget {
   final String type;
 

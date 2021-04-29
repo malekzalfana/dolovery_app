@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:delayed_display/delayed_display.dart';
 import 'package:dolovery_app/screens/search.dart';
 import 'package:dolovery_app/screens/shoplisting.dart';
 import 'package:dolovery_app/widgets/bundle.dart';
 import 'package:dolovery_app/widgets/product.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,14 +35,72 @@ class HomeScreen extends StatefulWidget {
   }
 }
 
+// class MessageHandler extends StatefulWidget {
+//   @override
+//   _MessageHandlerState createState() => _MessageHandlerState();
+// }
+
+// class _MessageHandlerState extends State<MessageHandler> {
+//   final Firestore _db = Firestore.instance;
+//   final FirebaseMessaging _fcm = FirebaseMessaging();
+
+//   // TODO...
+
+// }
+
 String c_position;
 String c2_position;
+StreamSubscription iosSubscription;
 
 class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(message['notification']['title']),
+              subtitle: Text(message['notification']['body']),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        // TODO optional
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        // TODO optional
+      },
+    );
+
+    super.initState();
+    _fcm.getToken().then((token) {
+      print(token);
+    });
+    if (Platform.isIOS) {
+      iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
+        // save the token  OR subscribe to a topic here
+      });
+
+      _fcm.requestNotificationPermissions(IosNotificationSettings());
+    }
+
     super.initState();
   }
+
+  final Firestore _db = Firestore.instance;
+  final FirebaseMessaging _fcm = FirebaseMessaging();
 
   var currentLocation;
   bool gotLocation = true;
