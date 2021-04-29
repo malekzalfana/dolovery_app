@@ -38,12 +38,19 @@ String c_position;
 String c2_position;
 
 class HomeScreenState extends State<HomeScreen> {
-
-
   @override
   void initState() {
     final fbm = FirebaseMessaging();
-    fbm.configure(onMessage: (msg){print(msg);return;},onLaunch: (msg){print(msg);return;},onResume: (msg){print(msg);return;});
+    fbm.configure(onMessage: (msg) {
+      print(msg);
+      return;
+    }, onLaunch: (msg) {
+      print(msg);
+      return;
+    }, onResume: (msg) {
+      print(msg);
+      return;
+    });
     fbm.subscribeToTopic('user');
     print('Subscribed to user');
     super.initState();
@@ -115,11 +122,12 @@ class HomeScreenState extends State<HomeScreen> {
         idToken: googleAuth.idToken,
       );
 
-      final User user =
-          (await _auth.signInWithCredential(credential)).user;
+      final User user = (await _auth.signInWithCredential(credential)).user;
 
-      final newUser =
-          await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
+      final newUser = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(user.uid)
+          .get();
       if (newUser.exists) {
         notsetup = false;
         welcomeheight = 350;
@@ -149,7 +157,7 @@ class HomeScreenState extends State<HomeScreen> {
 
       if (result.status == FacebookLoginStatus.loggedIn) {
         final AuthCredential credential = FacebookAuthProvider.credential(
-        result.accessToken.token,
+          result.accessToken.token,
         );
         final User user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
@@ -870,6 +878,7 @@ class HomeScreenState extends State<HomeScreen> {
                           case ConnectionState.waiting:
                             return Container(height: 20);
                           default:
+                            print(snapshot.data.docs[0].data()['name']);
                             if (snapshot.data.docs.length < 2) {
                               return Opacity(
                                 opacity: 0.3,
@@ -892,41 +901,44 @@ class HomeScreenState extends State<HomeScreen> {
                                     onTap: () {
                                       openProductPopUp(
                                           context,
-                                          snapshot.data().docs[index],
+                                          snapshot.data.docs[index].data(),
                                           index,
                                           null,
                                           refreshcart);
                                     },
                                     child: ProductImage(
-                                      oldPrice: snapshot.data().docs[index]
-                                                  ['old_price'] ==
+                                      oldPrice: snapshot.data.docs[index]
+                                                  .data()['old_price'] ==
                                               null
                                           ? "0"
-                                          : snapshot.data()
-                                              .docs[index]['old_price']
+                                          : snapshot.data.docs[index]
+                                              .data()['old_price']
                                               .toString(),
-                                      productName: snapshot
-                                          .data().docs[index]['name'],
-                                      productImage: snapshot
-                                          .data().docs[index]['image'],
+                                      productName: snapshot.data.docs[index]
+                                          .data()['name'],
+                                      productImage: snapshot.data.docs[index]
+                                          .data()['image'],
                                       productPrice: snapshot
-                                          .data().docs[index]['shop_price']
+                                          .data()
+                                          .docs[index]
+                                          .data()['shop_price']
                                           .toString(),
-                                      shopName: snapshot.data().docs[index]
-                                          ['shop'],
-                                      productUnit: snapshot.data()
-                                                  .docs[index]['unit'] !=
+                                      shopName: snapshot.data.docs[index]
+                                          .data()['shop'],
+                                      productUnit: snapshot.data.docs[index]
+                                                  .data()['unit'] !=
                                               null
-                                          ? snapshot.data().docs[index]
-                                              ['unit']
+                                          ? snapshot.data.docs[index]
+                                              .data()
+                                              .data()['unit']
                                           : '',
-                                      productCurrency:
-                                          snapshot.data().docs[index]
-                                                      ['currency'] !=
-                                                  null
-                                              ? snapshot.data().docs[0]
-                                                  ['currency']
-                                              : "lebanese",
+                                      productCurrency: snapshot
+                                                  .data()
+                                                  .docs[index]
+                                                  .data()['currency'] !=
+                                              null
+                                          ? snapshot.data.docs[0]['currency']
+                                          : "lebanese",
                                     ),
                                   );
                                 }).toList(),
@@ -1027,13 +1039,12 @@ class HomeScreenState extends State<HomeScreen> {
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                   children: List<Widget>.generate(
-                                      snapshot.data().docs.length,
-                                      (int index) {
+                                      snapshot.data.docs.length, (int index) {
                                 return GestureDetector(
                                   onTap: () {
                                     openProductPopUp(
                                         context,
-                                        snapshot.data().docs[index],
+                                        snapshot.data.docs[index].data(),
                                         index,
                                         null,
                                         refreshcart);
@@ -1041,15 +1052,19 @@ class HomeScreenState extends State<HomeScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 12),
                                     child: Bundle(
-                                      bundleName: snapshot.data().docs[index]
-                                          ['name'],
+                                      bundleName: snapshot.data.docs[index]
+                                          .data()['name'],
                                       bundleDescription: snapshot
-                                          .data().docs[index]['description'],
+                                          .data()
+                                          .docs[index]
+                                          .data()['description'],
                                       bundleIndex: 0,
                                       bundlePrice: int.parse(snapshot
-                                          .data().docs[index]['shop_price']),
-                                      bundleImage: snapshot
-                                          .data().docs[index]['image'],
+                                          .data()
+                                          .docs[index]
+                                          .data()['shop_price']),
+                                      bundleImage: snapshot.data.docs[index]
+                                          .data()['image'],
                                     ),
                                   ),
                                 );
@@ -1090,7 +1105,7 @@ class HomeScreenState extends State<HomeScreen> {
                 child: StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('products')
-                        .where('type', isEqualTo: 'Supplements')
+                        .where('type', isEqualTo: 'supplements')
                         .snapshots(),
                     builder: (context, snapshot) {
                       switch (snapshot.connectionState) {
@@ -1119,37 +1134,43 @@ class HomeScreenState extends State<HomeScreen> {
                                   onTap: () {
                                     openProductPopUp(
                                         context,
-                                        snapshot.data().docs[index],
+                                        snapshot.data.docs[index].data(),
                                         index,
                                         refreshcart);
                                   },
                                   child: ProductImage(
-                                    productName: snapshot.data().docs[index]
-                                        ['name'],
-                                    productImage: snapshot.data().docs[index]
-                                        ['image'],
+                                    productName: snapshot.data.docs[index]
+                                        .data()['name'],
+                                    productImage: snapshot.data.docs[index]
+                                        .data()['image'],
                                     productPrice: snapshot
-                                        .data().docs[index]['shop_price']
+                                        .data()
+                                        .docs[index]
+                                        .data()['shop_price']
                                         .toString(),
-                                    shopName: snapshot.data().docs[index]
-                                        ['shop'],
-                                    productUnit: snapshot.data().docs[index]
-                                                ['unit'] !=
+                                    shopName: snapshot.data.docs[index]
+                                        .data()['shop'],
+                                    productUnit: snapshot.data.docs[index]
+                                                .data()['unit'] !=
                                             null
-                                        ? snapshot.data().docs[index]['unit']
+                                        ? snapshot.data.docs[index]
+                                            .data()
+                                            .data()['unit']
                                         : '',
-                                    productCurrency: snapshot.data()
-                                                .docs[index]['currency'] !=
+                                    productCurrency: snapshot.data.docs[index]
+                                                .data()['currency'] !=
                                             null
-                                        ? snapshot.data().docs[index]
-                                            ['currency']
+                                        ? snapshot.data.docs[index]
+                                            .data()['currency']
                                         : "lebanese",
-                                    oldPrice: snapshot.data().docs[index]
-                                                ['old_price'] ==
+                                    oldPrice: snapshot.data.docs[index]
+                                                .data()['old_price'] ==
                                             null
                                         ? "0"
                                         : snapshot
-                                            .data().docs[index]['old_price']
+                                            .data()
+                                            .docs[index]
+                                            .data()['old_price']
                                             .toString(),
                                   ),
                                 );
@@ -1250,14 +1271,14 @@ class HomeScreenState extends State<HomeScreen> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      ShopPage(snapshot.data().docs[0])));
+                                      ShopPage(snapshot.data.docs[0])));
                             },
                             child: ShopImage(
-                                shopName: snapshot.data().docs[0]['name'],
+                                shopName: snapshot.data.docs[0]['name'],
                                 shopIndex: index,
-                                shopImage: snapshot.data().docs[0]['image'],
-                                shopTime: snapshot.data().docs[0]['time']
-                                    .toString()),
+                                shopImage: snapshot.data.docs[0]['image'],
+                                shopTime:
+                                    snapshot.data.docs[0]['time'].toString()),
                           );
                         })));
                   } else if (snapshot.hasError) {

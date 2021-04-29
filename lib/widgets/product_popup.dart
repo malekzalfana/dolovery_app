@@ -247,7 +247,6 @@ void openProductPopUp(context, productData, index,
           dynamic usercartmap_v2;
 
           _save(item, itemid, rate) async {
-
             // print('REST THE CART');
 
             final prefs = await SharedPreferences.getInstance();
@@ -266,7 +265,7 @@ void openProductPopUp(context, productData, index,
               usercartmap_v2 = json.decode(usercartmap_v2);
               // print(usercartmap_v2.runtimeType);
               print('---------------------------------');
-              print( usercartmap_v2[shop_name] );
+              print(usercartmap_v2[shop_name]);
               print('---------------------------------');
             }
             // print(1);
@@ -280,18 +279,15 @@ void openProductPopUp(context, productData, index,
                             .toString()) +
                         1;
                 usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
-                usercartmap_v2[shop_name]['products'][itemid]['data'] =
-                    item;
+                usercartmap_v2[shop_name]['products'][itemid]['data'] = item;
                 usercartmap_v2[shop_name]['products'][itemid]['date'] =
                     item['date'];
                 // print(2);
               } else {
-
                 usercartmap_v2[shop_name]['products'][itemid] = {};
                 usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
                 usercartmap_v2[shop_name]['products'][itemid]['count'] = 1;
-                usercartmap_v2[shop_name]['products'][itemid]['data'] =
-                    item;
+                usercartmap_v2[shop_name]['products'][itemid]['data'] = item;
                 usercartmap_v2[shop_name]['products'][itemid]['date'] =
                     item['date'];
                 // print(3);
@@ -313,7 +309,6 @@ void openProductPopUp(context, productData, index,
                       'data': {'name': shopname}
                     };
                     print('------------------------shop is saved in cart');
-
                   } else {
                     usercartmap_v2[shop_name] = {
                       'products': {},
@@ -337,12 +332,12 @@ void openProductPopUp(context, productData, index,
             // print(4);
             // print('this is the saved cart');
             // print(usercartmap_v2[shop_name].toString());
-            print( usercartmap_v2.runtimeType );
+            print(usercartmap_v2.runtimeType);
             var carttest = Map<String, dynamic>.from(usercartmap_v2);
             print('the following is the converted map');
-            print (carttest);
-            prefs.setString('usercartmap_v2', json.encode(carttest));
-            print( prefs.getString('usercartmap_v2') );
+            print(carttest);
+            prefs.setString('usercartmap_v2', json.encode(carttest.toString()));
+            print(prefs.getString('usercartmap_v2'));
             print('sssssssssssssssssssssssssss');
             // print('the following should be json');
             // print( usercartmap_v2[shop_name] );
@@ -637,8 +632,8 @@ void openProductPopUp(context, productData, index,
                                   // print(productData.data());
                                   // print(1);
 
-                                  _save(productData, finalDocumentID, rate);
-                                  // reset();
+                                  // _save(productData, finalDocumentID, rate);
+                                  reset();
                                 }
                               },
                               elevation: !maximum ? 2 : 0,

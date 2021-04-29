@@ -97,12 +97,13 @@ class ProfileScreenState extends State<ProfileMainScreen> {
         idToken: googleAuth.idToken,
       );
 
-      final User user =
-          (await _auth.signInWithCredential(credential)).user;
+      final User user = (await _auth.signInWithCredential(credential)).user;
 
       double welcomeheight;
-      final newUser =
-          await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
+      final newUser = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(user.uid)
+          .get();
       if (newUser.exists) {
         notsetup = false;
         welcomeheight = Adaptive.h(50);
@@ -132,7 +133,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
 
       if (result.status == FacebookLoginStatus.loggedIn) {
         final AuthCredential credential = FacebookAuthProvider.credential(
-       result.accessToken.token,
+          result.accessToken.token,
         );
         final User user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
@@ -750,8 +751,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                       children: [
                                         Visibility(
                                           visible:
-                                              snapshot.data.docs.length >
-                                                  0,
+                                              snapshot.data.docs.length > 0,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 30.0,
@@ -778,8 +778,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: List<Widget>.generate(
-                                                  snapshot.data.docs
-                                                      .length, (int index) {
+                                                  snapshot.data.docs.length,
+                                                  (int index) {
                                                 return Visibility(
                                                   visible: index != 3,
                                                   child: GestureDetector(
@@ -817,8 +817,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                         ),
                                         Visibility(
                                           visible:
-                                              snapshot.data.docs.length >
-                                                  0,
+                                              snapshot.data.docs.length > 0,
                                           child: MaterialButton(
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
@@ -930,8 +929,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                               child: Icon(
                                                 Icons.place,
                                                 color: chosen_address ==
-                                                        this_user
-                                                                .data()["address"]
+                                                        this_user.data()[
+                                                                "address"]
                                                             [index]["id"]
                                                     ? Colors.black
                                                     : Colors.grey[400],
@@ -977,7 +976,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                                     'Axiforma',
                                                                 color: chosen_address ==
                                                                         this_user.data()["address"][index]
-                                                                            ["id"]
+                                                                            [
+                                                                            "id"]
                                                                     ? Colors
                                                                         .black
                                                                     : Colors.grey[
