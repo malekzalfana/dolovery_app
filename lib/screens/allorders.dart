@@ -63,7 +63,7 @@ class _PrivacyState extends State<Orders> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     StreamBuilder(
-                      stream: FirebaseFirestore.instance
+                      stream: Firestore.instance
                           .collection('orders')
                           .where('user', isEqualTo: widget.uid)
                           .orderBy('date', descending: true)
@@ -79,7 +79,7 @@ class _PrivacyState extends State<Orders> {
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: List<Widget>.generate(
-                                        snapshot.data.docs.length,
+                                        snapshot.data.documents.length,
                                         (int index) {
                                       return GestureDetector(
                                         onTap: () {
@@ -88,19 +88,19 @@ class _PrivacyState extends State<Orders> {
                                                   builder: (context) =>
                                                       OrderPage(snapshot
                                                           .data
-                                                          .docs[index]
+                                                          .documents[index]
                                                           .documentID)));
                                         },
                                         child: RecentOrder(
                                             orderDate: snapshot
-                                                .data.docs[index]['date'],
+                                                .data.documents[index]['date'],
                                             orderCount: snapshot
-                                                .data.docs[index]['count']
+                                                .data.documents[index]['count']
                                                 .toInt(),
                                             orderImage: snapshot
-                                                .data.docs[index]['image'],
+                                                .data.documents[index]['image'],
                                             orderPrice: snapshot
-                                                .data.docs[index]['total']
+                                                .data.documents[index]['total']
                                                 .toString()),
                                       );
                                     })),

@@ -66,15 +66,13 @@ class FormScreenState extends State<ShopListing> {
               Padding(
                 padding: const EdgeInsets.only(top: 0.0),
                 child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
+                  stream: Firestore.instance
                       .collection('shops')
                       .where('type', isEqualTo: widget.type)
                       .snapshots(),
-                  builder: (context,snapshot) {
-                    // print('ALOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
-                    // print('WHAT IS THIS? ' + snapshot.hasData.toString());
+                  builder: (context, snapshot) {
                     if (snapshot.hasData &&
-                        snapshot.data.docs.length == 0) {
+                        snapshot.data.documents.length == 0) {
                       return Opacity(
                         opacity: 0.3,
                         child: SizedBox(
@@ -83,27 +81,28 @@ class FormScreenState extends State<ShopListing> {
                       );
                     }
                     if (snapshot.hasData) {
-                      // print(snapshot);
+                      print(snapshot);
                       return SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           child: Column(
                               children: List<Widget>.generate(
-                                  snapshot.data.docs.length, (int index) {
+                                  snapshot.data.documents.length, (int index) {
                             return GestureDetector(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => ShopPage(
-                                        snapshot.data.docs[index].data())));
-                                // print('Helloooo');
+                                        snapshot.data.documents[index])));
                               },
                               child: ShopList(
-                                  shopName: snapshot.data.docs[index]
+                                  shopName: snapshot.data.documents[index]
                                       ['name'],
-                                  shopImage: snapshot.data.docs[index]
+                                  shopImage: snapshot.data.documents[index]
                                       ['image'],
                                   shopTime: snapshot
-                                      .data.docs[index]['time'].toString(),
-                                  shopAddress: snapshot.data.docs[index]['address']),
+                                      .data.documents[index]['time']
+                                      .toString(),
+                                  shopAddress: snapshot.data.documents[index]
+                                      ['address']),
                             );
                           })));
                     } else if (snapshot.hasError) {

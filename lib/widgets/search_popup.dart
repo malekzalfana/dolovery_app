@@ -67,18 +67,18 @@ getRate(shopName) async {
     skip = true;
   }
   if (!cachedshops.containsKey(shopName)) {
-    shopinfo = FirebaseFirestore.instance
+    shopinfo = Firestore.instance
         .collection('shops')
         .where('username', isEqualTo: shopName)
-        .get()
+        .getDocuments()
         .then(
       (value) {
-        if (value.docs.length > 0) {
-          cachedshops[shopName] = value.docs[0].data()['rate'];
+        if (value.documents.length > 0) {
+          cachedshops[shopName] = value.documents[0].data['rate'];
           prefs.setString('cached_shops', json.encode(cachedshops));
           print(value);
           started = true;
-          return rate = value.docs[0].data()['rate'];
+          return rate = value.documents[0].data['rate'];
         } else {
           return null;
         }
@@ -263,14 +263,14 @@ void openSearchProductPopUp(context, productData, index,
               }
             } else {
               var shopname;
-              var shopinfo2 = await FirebaseFirestore.instance
+              var shopinfo2 = await Firestore.instance
                   .collection('shops')
                   .where('username', isEqualTo: shopName)
-                  .get()
+                  .getDocuments()
                   .then(
                 (value) {
-                  if (value.docs.length > 0) {
-                    shopname = value.docs[0].data()['name'];
+                  if (value.documents.length > 0) {
+                    shopname = value.documents[0].data['name'];
                     usercartmap_v2[shop_name] = {
                       'products': {},
                       'data': {'name': shopname}

@@ -67,18 +67,17 @@ getRate(shopName) async {
     skip = true;
   }
   if (!cachedshops.containsKey(shopName)) {
-    shopinfo = FirebaseFirestore.instance
+    shopinfo = Firestore.instance
         .collection('shops')
         .where('username', isEqualTo: shopName)
-        .get()
+        .getDocuments()
         .then(
       (value) {
-        print('shop has loaded');
-        if (value.docs.length > 0) {
-          cachedshops[shopName] = value.docs[0]['rate'];
+        if (value.documents.length > 0) {
+          cachedshops[shopName] = value.documents[0].data['rate'];
           prefs.setString('cached_shops', json.encode(cachedshops));
           started = true;
-          return rate = value.docs[0]['rate'];
+          return rate = value.documents[0].data['rate'];
         } else {
           return null;
         }
@@ -200,21 +199,6 @@ void openProductPopUp(context, productData, index,
     }
   }
 
-  Future<void> reset() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.remove('type');
-    prefs.remove('total');
-    prefs.remove('items');
-    prefs.remove('cart');
-    prefs.remove('shops');
-    prefs.remove('usercartmap');
-    prefs.remove('usercartmap_v2');
-    prefs.remove('cached_shops');
-    prefs.remove('caching_date');
-
-    return true;
-  }
-
   bool showmessage = false;
   bool cartlocked = false;
 
@@ -247,33 +231,18 @@ void openProductPopUp(context, productData, index,
           dynamic usercartmap_v2;
 
           _save(item, itemid, rate) async {
-
-            // print('REST THE CART');
-
             final prefs = await SharedPreferences.getInstance();
-
             List<String> cart = prefs.getStringList('cart');
             String shop_name = productData['shop'];
             usercartmap_v2 = prefs.getString("usercartmap_v2");
-            print('------------------------this is the initial cart');
-            print(usercartmap_v2);
+
             if (usercartmap_v2 == null) {
               usercartmap_v2 = {};
-              print('created an empty cart');
             } else {
-              print('cart is not null');
-              // print(usercartmap_v2);
               usercartmap_v2 = json.decode(usercartmap_v2);
-              // print(usercartmap_v2.runtimeType);
-              print('---------------------------------');
-              print( usercartmap_v2[shop_name] );
-              print('---------------------------------');
             }
-            // print(1);
             if (usercartmap_v2.containsKey(shop_name)) {
-              print('------------------------cart contains shop');
               if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
-                print('------------------------shop contains product');
                 usercartmap_v2[shop_name]['products'][itemid]['count'] =
                     int.parse(usercartmap_v2[shop_name]['products'][itemid]
                                 ['count']
@@ -281,72 +250,51 @@ void openProductPopUp(context, productData, index,
                         1;
                 usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
                 usercartmap_v2[shop_name]['products'][itemid]['data'] =
-                    item;
+                    item.data;
                 usercartmap_v2[shop_name]['products'][itemid]['date'] =
-                    item['date'];
-                // print(2);
+                    item.data['date'];
               } else {
-
                 usercartmap_v2[shop_name]['products'][itemid] = {};
                 usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
                 usercartmap_v2[shop_name]['products'][itemid]['count'] = 1;
                 usercartmap_v2[shop_name]['products'][itemid]['data'] =
-                    item;
+                    item.data;
                 usercartmap_v2[shop_name]['products'][itemid]['date'] =
-                    item['date'];
-                // print(3);
+                    item.data['date'];
               }
             } else {
-              // print('searched for the shop');
-              print('------------------------cart is starting new');
               var shopname;
-              var shopinfo2 = await FirebaseFirestore.instance
+              var shopinfo2 = await Firestore.instance
                   .collection('shops')
                   .where('username', isEqualTo: shopName)
-                  .get()
+                  .getDocuments()
                   .then(
                 (value) {
-                  if (value.docs.length > 0) {
-                    shopname = value.docs[0]['name'];
+                  if (value.documents.length > 0) {
+                    shopname = value.documents[0].data['name'];
                     usercartmap_v2[shop_name] = {
                       'products': {},
                       'data': {'name': shopname}
                     };
-                    print('------------------------shop is saved in cart');
-
                   } else {
                     usercartmap_v2[shop_name] = {
                       'products': {},
                       'data': {'name': shop_name}
                     };
-                    print('------------------------cart');
                   }
                 },
               );
-              // print(3);
 
               usercartmap_v2[shop_name]['products'] = {};
               usercartmap_v2[shop_name]['products'][itemid] = {};
               usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
               usercartmap_v2[shop_name]['products'][itemid]['count'] = 1;
-              usercartmap_v2[shop_name]['products'][itemid]['data'] = item;
+              usercartmap_v2[shop_name]['products'][itemid]['data'] = item.data;
               usercartmap_v2[shop_name]['products'][itemid]['date'] =
-                  item['date'];
+                  item.data['date'];
             }
             add();
-            // print(4);
-            // print('this is the saved cart');
-            // print(usercartmap_v2[shop_name].toString());
-            print( usercartmap_v2.runtimeType );
-            var carttest = Map<String, dynamic>.from(usercartmap_v2);
-            print('the following is the converted map');
-            print (carttest);
-            prefs.setString('usercartmap_v2', json.encode(carttest));
-            print( prefs.getString('usercartmap_v2') );
-            print('sssssssssssssssssssssssssss');
-            // print('the following should be json');
-            // print( usercartmap_v2[shop_name] );
-            // print(5);
+            prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
             String type = productData['type'];
             prefs.setString('type', type);
             if (prefs.getDouble('total') == null) {
@@ -633,12 +581,7 @@ void openProductPopUp(context, productData, index,
                             RawMaterialButton(
                               onPressed: () {
                                 if (cartlocked == false) {
-                                  // print('YYYYYuuuuuuYYY');
-                                  // print(productData.data());
-                                  // print(1);
-
                                   _save(productData, finalDocumentID, rate);
-                                  // reset();
                                 }
                               },
                               elevation: !maximum ? 2 : 0,

@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -323,11 +322,11 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   bool newuser = true;
   Future setupVerification() async {
-    final User user = await FirebaseAuth.instance.currentUser;
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final uid = user.uid;
 
     var usercollection =
-        await FirebaseFirestore.instance.collection("users").doc(uid).get();
+        await Firestore.instance.collection("users").document(uid).get();
 
     if (usercollection.exists) {
       newuser = false;
@@ -468,7 +467,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            labelText: 'Street Address'),
+            labelText: 'Street Adress'),
         maxLength: 100,
         style: new TextStyle(
           fontFamily: "Axiforma",
@@ -568,19 +567,6 @@ class ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  final fbm = FirebaseMessaging();
-  String deviceToken;
-  @override
-  void initState() {
-    fbm.getToken().then((token){
-      print('DEVICE TOKEN IS: $token');
-      deviceToken = token;
-    });
-    super.initState();
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -632,8 +618,8 @@ class ProfileScreenState extends State<ProfileScreen> {
 
                         print("adding profile");
                         void addAddresstoCustomer() async {
-                          final User user =
-                              await FirebaseAuth.instance.currentUser;
+                          final FirebaseUser user =
+                              await FirebaseAuth.instance.currentUser();
                           final uid = user.uid;
                           final uemail = user.email;
                           String chosenAddress =
@@ -653,14 +639,13 @@ class ProfileScreenState extends State<ProfileScreen> {
                             "code": _code,
                             "email": uemail,
                             "address": addresses,
-                            "chosen_address": chosenAddress,
-                            "token": deviceToken,
+                            "chosen_address": chosenAddress
                           };
 
-                          FirebaseFirestore.instance
+                          Firestore.instance
                               .collection("users")
-                              .doc(uid)
-                              .set(thisuser);
+                              .document(uid)
+                              .setData(thisuser);
                         }
 
                         addAddresstoCustomer();

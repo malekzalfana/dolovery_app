@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,7 +5,6 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SetupScreen extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
     return SetupScreenState();
@@ -14,7 +12,6 @@ class SetupScreen extends StatefulWidget {
 }
 
 class SetupScreenState extends State<SetupScreen> {
-
   String _streetaddress = "";
   String _landmark = "";
 
@@ -321,11 +318,11 @@ class SetupScreenState extends State<SetupScreen> {
 
   bool newuser = true;
   Future setupVerification() async {
-    final User user = await FirebaseAuth.instance.currentUser;
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final uid = user.uid;
 
     var usercollection =
-        await FirebaseFirestore.instance.collection("users").doc(uid).get();
+        await Firestore.instance.collection("users").document(uid).get();
 
     if (usercollection.exists) {
       newuser = false;
@@ -563,8 +560,6 @@ class SetupScreenState extends State<SetupScreen> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -615,8 +610,8 @@ class SetupScreenState extends State<SetupScreen> {
                         _formKey.currentState.save();
 
                         void addAddresstoCustomer() async {
-                          final User user =
-                              await FirebaseAuth.instance.currentUser;
+                          final FirebaseUser user =
+                              await FirebaseAuth.instance.currentUser();
                           final uid = user.uid;
                           final uemail = user.email;
                           String chosenAddress =
@@ -649,10 +644,10 @@ class SetupScreenState extends State<SetupScreen> {
                           // prefs.setString('addresses', json.encode(this_user.data['address']));
                           // prefs.setString('address', this_user.data["chosen_address"]);
 
-                          FirebaseFirestore.instance
+                          Firestore.instance
                               .collection("users")
-                              .doc(uid)
-                              .set(thisuser);
+                              .document(uid)
+                              .setData(thisuser);
                         }
 
                         addAddresstoCustomer();

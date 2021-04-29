@@ -1,7 +1,6 @@
 import 'dart:core';
 import 'package:device_preview/device_preview.dart';
 import 'package:dolovery_app/screens/myhomepage.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -9,19 +8,8 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:firebase_core/firebase_core.dart';
 
-
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  print('Initialized App');
-  runApp(MyApp());
-}
-
-
-
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override

@@ -63,11 +63,11 @@ class AddAddressState extends State<AddAddress> {
 
   bool newuser = true;
   Future setupVerification() async {
-    final User user = await FirebaseAuth.instance.currentUser;
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final uid = user.uid;
 
     var usercollection =
-        await FirebaseFirestore.instance.collection("users").doc(uid).get();
+        await Firestore.instance.collection("users").document(uid).get();
 
     if (usercollection.exists) {
       newuser = false;
@@ -316,8 +316,8 @@ class AddAddressState extends State<AddAddress> {
 
                         print("adding profile");
                         void inputData() async {
-                          final User user =
-                              await FirebaseAuth.instance.currentUser;
+                          final FirebaseUser user =
+                              await FirebaseAuth.instance.currentUser();
                           final uid = user.uid;
                           final name = user.displayName;
                           final uemail = user.email;
@@ -335,10 +335,10 @@ class AddAddressState extends State<AddAddress> {
 
                           widget.addressArray.add(thisAddress);
 
-                          FirebaseFirestore.instance
+                          Firestore.instance
                               .collection('users')
-                              .doc(uid)
-                              .update({
+                              .document(uid)
+                              .updateData({
                             "address": widget.addressArray
                           }).then((result) {
                             print("address added");

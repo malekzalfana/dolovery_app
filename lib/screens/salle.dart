@@ -87,7 +87,7 @@ setSalle() async {
     "Week 4": week,
   };
 
-  FirebaseFirestore.instance.collection('salle').doc('12-2020').set(week);
+  Firestore.instance.collection('salle').document('12-2020').setData(week);
 }
 
 var dato;
@@ -188,9 +188,9 @@ class SalleScreenState extends State<SalleScreen> {
                     child: Column(
                       children: <Widget>[
                         StreamBuilder(
-                          stream: FirebaseFirestore.instance
+                          stream: Firestore.instance
                               .collection('salle')
-                              .doc(formattedThisMonth)
+                              .document(formattedThisMonth)
                               .snapshots(),
                           builder: (context, sallesnapshot) {
                             if (snapshot.hasError) {
@@ -270,9 +270,9 @@ class SalleScreenState extends State<SalleScreen> {
         Opacity(
           opacity: numb == 1 ? 0.5 : 1,
           child: StreamBuilder(
-              stream: FirebaseFirestore.instance
+              stream: Firestore.instance
                   .collection('products')
-                  .doc(sallesnapshot.data[(dayindex).toString()])
+                  .document(sallesnapshot.data[(dayindex).toString()])
                   .snapshots(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {

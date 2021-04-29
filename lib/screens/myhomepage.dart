@@ -275,10 +275,10 @@ class _MyHomePageState extends State<MyHomePage> {
       var result = await facebookLogin.logIn(['email']);
 
       if (result.status == FacebookLoginStatus.loggedIn) {
-        final AuthCredential credential = FacebookAuthProvider.credential(
-        result.accessToken.token,
+        final AuthCredential credential = FacebookAuthProvider.getCredential(
+          accessToken: result.accessToken.token,
         );
-        final User user =
+        final FirebaseUser user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
         return user;
       }

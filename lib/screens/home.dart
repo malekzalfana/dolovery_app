@@ -5,7 +5,6 @@ import 'package:dolovery_app/screens/search.dart';
 import 'package:dolovery_app/screens/shoplisting.dart';
 import 'package:dolovery_app/widgets/bundle.dart';
 import 'package:dolovery_app/widgets/product.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -38,14 +37,8 @@ String c_position;
 String c2_position;
 
 class HomeScreenState extends State<HomeScreen> {
-
-
   @override
   void initState() {
-    final fbm = FirebaseMessaging();
-    fbm.configure(onMessage: (msg){print(msg);return;},onLaunch: (msg){print(msg);return;},onResume: (msg){print(msg);return;});
-    fbm.subscribeToTopic('user');
-    print('Subscribed to user');
     super.initState();
   }
 
@@ -75,12 +68,12 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Future setupVerification() async {
-    final User user = await FirebaseAuth.instance.currentUser;
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
 
     final uid = user.uid;
 
     var usercollection =
-        await FirebaseFirestore.instance.collection("users").doc(uid).get();
+        await Firestore.instance.collection("users").document(uid).get();
 
     if (usercollection.exists) {
       newuser = false;
@@ -110,16 +103,16 @@ class HomeScreenState extends State<HomeScreen> {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.credential(
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final User user =
+      final FirebaseUser user =
           (await _auth.signInWithCredential(credential)).user;
 
       final newUser =
-          await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
+          await Firestore.instance.collection("users").document(user.uid).get();
       if (newUser.exists) {
         notsetup = false;
         welcomeheight = 350;
@@ -148,22 +141,22 @@ class HomeScreenState extends State<HomeScreen> {
       var result = await facebookLogin.logIn(['email']);
 
       if (result.status == FacebookLoginStatus.loggedIn) {
-        final AuthCredential credential = FacebookAuthProvider.credential(
-        result.accessToken.token,
+        final AuthCredential credential = FacebookAuthProvider.getCredential(
+          accessToken: result.accessToken.token,
         );
-        final User user =
+        final FirebaseUser user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
         bool notsetup;
         double welcomeheight;
-        final newUser = await FirebaseFirestore.instance
+        final newUser = await Firestore.instance
             .collection("users")
-            .doc(user.uid)
+            .document(user.uid)
             .get();
         if (newUser.exists) {
           final prefs = await SharedPreferences.getInstance();
-          chosen_address = newUser.data()["chosen_address"];
-          prefs.setString('addresses', json.encode(newUser.data()['address']));
-          prefs.setString('address', newUser.data()["chosen_address"]);
+          chosen_address = newUser.data["chosen_address"];
+          prefs.setString('addresses', json.encode(newUser.data['address']));
+          prefs.setString('address', newUser.data["chosen_address"]);
           notsetup = false;
           welcomeheight = 350;
         } else {
@@ -390,7 +383,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _signInOut() async {
-    if (await FirebaseAuth.instance.currentUser == null) {
+    if (await FirebaseAuth.instance.currentUser() == null) {
       _signInPopUp(context);
     } else {
       signOut();
@@ -861,7 +854,7 @@ class HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(
                       left: 5.0, right: 5, top: 0, bottom: 0),
                   child: StreamBuilder(
-                      stream: FirebaseFirestore.instance
+                      stream: Firestore.instance
                           .collection('products')
                           .where('type', isEqualTo: 'lebanese')
                           .snapshots(),
@@ -870,7 +863,7 @@ class HomeScreenState extends State<HomeScreen> {
                           case ConnectionState.waiting:
                             return Container(height: 20);
                           default:
-                            if (snapshot.data.docs.length < 2) {
+                            if (snapshot.data.documents.length < 2) {
                               return Opacity(
                                 opacity: 0.3,
                                 child: SizedBox(
@@ -892,39 +885,39 @@ class HomeScreenState extends State<HomeScreen> {
                                     onTap: () {
                                       openProductPopUp(
                                           context,
-                                          snapshot.data().docs[index],
+                                          snapshot.data.documents[index],
                                           index,
                                           null,
                                           refreshcart);
                                     },
                                     child: ProductImage(
-                                      oldPrice: snapshot.data().docs[index]
+                                      oldPrice: snapshot.data.documents[index]
                                                   ['old_price'] ==
                                               null
                                           ? "0"
-                                          : snapshot.data()
-                                              .docs[index]['old_price']
+                                          : snapshot.data
+                                              .documents[index]['old_price']
                                               .toString(),
                                       productName: snapshot
-                                          .data().docs[index]['name'],
+                                          .data.documents[index]['name'],
                                       productImage: snapshot
-                                          .data().docs[index]['image'],
+                                          .data.documents[index]['image'],
                                       productPrice: snapshot
-                                          .data().docs[index]['shop_price']
+                                          .data.documents[index]['shop_price']
                                           .toString(),
-                                      shopName: snapshot.data().docs[index]
+                                      shopName: snapshot.data.documents[index]
                                           ['shop'],
-                                      productUnit: snapshot.data()
-                                                  .docs[index]['unit'] !=
+                                      productUnit: snapshot.data
+                                                  .documents[index]['unit'] !=
                                               null
-                                          ? snapshot.data().docs[index]
+                                          ? snapshot.data.documents[index]
                                               ['unit']
                                           : '',
                                       productCurrency:
-                                          snapshot.data().docs[index]
+                                          snapshot.data.documents[index]
                                                       ['currency'] !=
                                                   null
-                                              ? snapshot.data().docs[0]
+                                              ? snapshot.data.documents[0]
                                                   ['currency']
                                               : "lebanese",
                                     ),
@@ -1005,7 +998,7 @@ class HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
+                  stream: Firestore.instance
                       .collection('products')
                       .where('type', isEqualTo: 'bundle')
                       .snapshots(),
@@ -1014,7 +1007,7 @@ class HomeScreenState extends State<HomeScreen> {
                       case ConnectionState.waiting:
                         return Container(height: 20);
                       default:
-                        if (snapshot.data.docs.length < 2) {
+                        if (snapshot.data.documents.length < 2) {
                           return Opacity(
                             opacity: 0.3,
                             child: SizedBox(
@@ -1027,13 +1020,13 @@ class HomeScreenState extends State<HomeScreen> {
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                   children: List<Widget>.generate(
-                                      snapshot.data().docs.length,
+                                      snapshot.data.documents.length,
                                       (int index) {
                                 return GestureDetector(
                                   onTap: () {
                                     openProductPopUp(
                                         context,
-                                        snapshot.data().docs[index],
+                                        snapshot.data.documents[index],
                                         index,
                                         null,
                                         refreshcart);
@@ -1041,15 +1034,15 @@ class HomeScreenState extends State<HomeScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 12),
                                     child: Bundle(
-                                      bundleName: snapshot.data().docs[index]
+                                      bundleName: snapshot.data.documents[index]
                                           ['name'],
                                       bundleDescription: snapshot
-                                          .data().docs[index]['description'],
+                                          .data.documents[index]['description'],
                                       bundleIndex: 0,
                                       bundlePrice: int.parse(snapshot
-                                          .data().docs[index]['shop_price']),
+                                          .data.documents[index]['shop_price']),
                                       bundleImage: snapshot
-                                          .data().docs[index]['image'],
+                                          .data.documents[index]['image'],
                                     ),
                                   ),
                                 );
@@ -1088,7 +1081,7 @@ class HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.only(
                     left: 5.0, right: 5, top: 0, bottom: 0),
                 child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
+                    stream: Firestore.instance
                         .collection('products')
                         .where('type', isEqualTo: 'Supplements')
                         .snapshots(),
@@ -1097,7 +1090,7 @@ class HomeScreenState extends State<HomeScreen> {
                         case ConnectionState.waiting:
                           return Container(height: 20);
                         default:
-                          if (snapshot.data.docs.length < 2) {
+                          if (snapshot.data.documents.length < 2) {
                             return Opacity(
                               opacity: 0.3,
                               child: SizedBox(
@@ -1119,37 +1112,37 @@ class HomeScreenState extends State<HomeScreen> {
                                   onTap: () {
                                     openProductPopUp(
                                         context,
-                                        snapshot.data().docs[index],
+                                        snapshot.data.documents[index],
                                         index,
                                         refreshcart);
                                   },
                                   child: ProductImage(
-                                    productName: snapshot.data().docs[index]
+                                    productName: snapshot.data.documents[index]
                                         ['name'],
-                                    productImage: snapshot.data().docs[index]
+                                    productImage: snapshot.data.documents[index]
                                         ['image'],
                                     productPrice: snapshot
-                                        .data().docs[index]['shop_price']
+                                        .data.documents[index]['shop_price']
                                         .toString(),
-                                    shopName: snapshot.data().docs[index]
+                                    shopName: snapshot.data.documents[index]
                                         ['shop'],
-                                    productUnit: snapshot.data().docs[index]
+                                    productUnit: snapshot.data.documents[index]
                                                 ['unit'] !=
                                             null
-                                        ? snapshot.data().docs[index]['unit']
+                                        ? snapshot.data.documents[index]['unit']
                                         : '',
-                                    productCurrency: snapshot.data()
-                                                .docs[index]['currency'] !=
+                                    productCurrency: snapshot.data
+                                                .documents[index]['currency'] !=
                                             null
-                                        ? snapshot.data().docs[index]
+                                        ? snapshot.data.documents[index]
                                             ['currency']
                                         : "lebanese",
-                                    oldPrice: snapshot.data().docs[index]
+                                    oldPrice: snapshot.data.documents[index]
                                                 ['old_price'] ==
                                             null
                                         ? "0"
                                         : snapshot
-                                            .data().docs[index]['old_price']
+                                            .data.documents[index]['old_price']
                                             .toString(),
                                   ),
                                 );
@@ -1228,12 +1221,12 @@ class HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: StreamBuilder(
-                stream: FirebaseFirestore.instance
+                stream: Firestore.instance
                     .collection('shops')
                     .where('type', isEqualTo: 'pets')
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data.docs.length < 2) {
+                  if (snapshot.hasData && snapshot.data.documents.length < 2) {
                     return Opacity(
                       opacity: 0.3,
                       child: SizedBox(
@@ -1250,13 +1243,13 @@ class HomeScreenState extends State<HomeScreen> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      ShopPage(snapshot.data().docs[0])));
+                                      ShopPage(snapshot.data.documents[0])));
                             },
                             child: ShopImage(
-                                shopName: snapshot.data().docs[0]['name'],
+                                shopName: snapshot.data.documents[0]['name'],
                                 shopIndex: index,
-                                shopImage: snapshot.data().docs[0]['image'],
-                                shopTime: snapshot.data().docs[0]['time']
+                                shopImage: snapshot.data.documents[0]['image'],
+                                shopTime: snapshot.data.documents[0]['time']
                                     .toString()),
                           );
                         })));

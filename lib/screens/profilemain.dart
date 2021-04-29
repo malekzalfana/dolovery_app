@@ -92,17 +92,17 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.credential(
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final User user =
+      final FirebaseUser user =
           (await _auth.signInWithCredential(credential)).user;
 
       double welcomeheight;
       final newUser =
-          await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
+          await Firestore.instance.collection("users").document(user.uid).get();
       if (newUser.exists) {
         notsetup = false;
         welcomeheight = Adaptive.h(50);
@@ -131,16 +131,16 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       var result = await facebookLogin.logIn(['email']);
 
       if (result.status == FacebookLoginStatus.loggedIn) {
-        final AuthCredential credential = FacebookAuthProvider.credential(
-       result.accessToken.token,
+        final AuthCredential credential = FacebookAuthProvider.getCredential(
+          accessToken: result.accessToken.token,
         );
-        final User user =
+        final FirebaseUser user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
         double welcomeheight;
-        final newUser = await FirebaseFirestore.instance
+        final newUser = await Firestore.instance
             .collection("users")
-            .doc(user.uid)
+            .document(user.uid)
             .get();
         if (newUser.exists) {
           notsetup = false;
@@ -386,7 +386,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   }
 
   Future<void> _signInOut() async {
-    if (await FirebaseAuth.instance.currentUser == null) {
+    if (await FirebaseAuth.instance.currentUser() == null) {
       _signInPopUp(context);
     } else {
       signOut();
@@ -403,21 +403,21 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   bool user_is_setup = false;
 
   Future setupVerification() async {
-    final User user = await FirebaseAuth.instance.currentUser;
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     if (user != null) {
       uid = user.uid;
       name = user.displayName;
       uemail = user.email;
 
       this_user =
-          await FirebaseFirestore.instance.collection("users").doc(uid).get();
+          await Firestore.instance.collection("users").document(uid).get();
 /* added to the page */
       if (this_user.exists) {
         user_is_setup = true;
         final prefs = await SharedPreferences.getInstance();
-        chosen_address = this_user.data()["chosen_address"];
-        prefs.setString('addresses', json.encode(this_user.data()['address']));
-        prefs.setString('address', this_user.data()["chosen_address"]);
+        chosen_address = this_user.data["chosen_address"];
+        prefs.setString('addresses', json.encode(this_user.data['address']));
+        prefs.setString('address', this_user.data["chosen_address"]);
       } else {
         user_is_setup = false;
       }
@@ -672,7 +672,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                       child: GestureDetector(
                                         onTap: () {},
                                         child: Text(
-                                          this_user.data()['fullname'],
+                                          this_user.data['fullname'],
                                           style: TextStyle(
                                             fontWeight: FontWeight.w800,
                                             fontSize: 25.0.sp,
@@ -690,7 +690,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 height: 5,
                               ),
                               Text(
-                                this_user.data()['email'],
+                                this_user.data['email'],
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 11.0.sp,
@@ -699,7 +699,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 ),
                               ),
                               Text(
-                                this_user.data()['number'],
+                                this_user.data['number'],
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 11.0.sp,
@@ -734,7 +734,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             ],
                           ),
                           StreamBuilder(
-                            stream: FirebaseFirestore.instance
+                            stream: Firestore.instance
                                 .collection('orders')
                                 .where('user', isEqualTo: uid)
                                 .orderBy('date', descending: true)
@@ -750,7 +750,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                       children: [
                                         Visibility(
                                           visible:
-                                              snapshot.data.docs.length >
+                                              snapshot.data.documents.length >
                                                   0,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
@@ -778,7 +778,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: List<Widget>.generate(
-                                                  snapshot.data.docs
+                                                  snapshot.data.documents
                                                       .length, (int index) {
                                                 return Visibility(
                                                   visible: index != 3,
@@ -789,26 +789,26 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                               builder: (context) =>
                                                                   OrderPage(snapshot
                                                                       .data
-                                                                      .docs[
+                                                                      .documents[
                                                                           index]
                                                                       .documentID)));
                                                     },
                                                     child: RecentOrder(
                                                         orderDate: snapshot.data
-                                                                .docs[index]
+                                                                .documents[index]
                                                             ['date'],
                                                         orderCount: snapshot
                                                             .data
-                                                            .docs[index]
+                                                            .documents[index]
                                                                 ['count']
                                                             .toInt(),
                                                         orderImage: snapshot
                                                                 .data
-                                                                .docs[index]
+                                                                .documents[index]
                                                             ['image'],
                                                         orderPrice: snapshot
                                                             .data
-                                                            .docs[index]
+                                                            .documents[index]
                                                                 ['total']
                                                             .toString()),
                                                   ),
@@ -817,7 +817,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                         ),
                                         Visibility(
                                           visible:
-                                              snapshot.data.docs.length >
+                                              snapshot.data.documents.length >
                                                   0,
                                           child: MaterialButton(
                                             shape: RoundedRectangleBorder(
@@ -880,7 +880,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               ),
                               if (this_user != null)
                                 for (var index = 0;
-                                    index < this_user.data()["address"].length;
+                                    index < this_user.data["address"].length;
                                     index++)
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -891,14 +891,14 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                     child: GestureDetector(
                                       onTap: () {
                                         bool isDefault = chosen_address ==
-                                            this_user.data()["address"][index]
+                                            this_user.data["address"][index]
                                                 ["id"];
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
                                                 builder: (context) =>
                                                     EditAddress(
                                                         this_user
-                                                            .data()["address"],
+                                                            .data["address"],
                                                         index,
                                                         isDefault,
                                                         uid)))
@@ -931,7 +931,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                 Icons.place,
                                                 color: chosen_address ==
                                                         this_user
-                                                                .data()["address"]
+                                                                .data["address"]
                                                             [index]["id"]
                                                     ? Colors.black
                                                     : Colors.grey[400],
@@ -964,7 +964,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                                     left: 0,
                                                                     bottom: 5),
                                                             child: Text(
-                                                              this_user.data()[
+                                                              this_user.data[
                                                                       "address"]
                                                                   [
                                                                   index]["name"],
@@ -976,8 +976,9 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                                 fontFamily:
                                                                     'Axiforma',
                                                                 color: chosen_address ==
-                                                                        this_user.data()["address"][index]
-                                                                            ["id"]
+                                                                        this_user.data["address"][index]
+                                                                            [
+                                                                            "id"]
                                                                     ? Colors
                                                                         .black
                                                                     : Colors.grey[
@@ -1012,7 +1013,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                                         .width -
                                                                     145,
                                                                 child: Text(
-                                                                  this_user.data()[
+                                                                  this_user.data[
                                                                               "address"]
                                                                           [
                                                                           index]
@@ -1063,7 +1064,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               Navigator.of(context)
                                   .push(MaterialPageRoute(
                                       builder: (context) => AddAddress(
-                                          this_user.data()["address"])))
+                                          this_user.data["address"])))
                                   .then((_) {
                                 setState(() {});
                               });
