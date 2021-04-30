@@ -11,7 +11,16 @@ const algoliasearch = require('algoliasearch');
 
 
 
-// const admin = require('firebase-admin');
+
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./auth/dolovery-180c2-firebase-adminsdk-b872f-2e9948bbe4.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://dolovery-180c2.firebaseio.com"
+});
+
 
 const APP_ID = functions.config().algolia.app;
 const ADMIN_KEY = functions.config().algolia.key;
@@ -51,17 +60,17 @@ exports.deleteFromIndex = functions.firestore.document('products/{productId}')
         index.deleteObject(snapshot.id)
     );
 
-admin.initializeApp(functions.config().firebase);
-var msgData;
+// admin.initializeApp(functions.config().firebase);
+// var msgData;
 
 
-admin.initializeApp(functions.config().firebase);
+// admin.initializeApp(functions.config().firebase);
 
 const fcm = admin.messaging();
 
 exports.senddevices = functions.firestore
   .document("shop_orders/{id}")
-  .onCreate((snapshot) => {
+  .onUpdate((snapshot) => {
     const name = 'snapshot.get("name")';
     const subject = 'snapshot.get("subject")';
     const token = 'd8HunRNCXD0:APA91bGCcODt5AWlpioriHCfBGG6toHeZzbwh9RERLtYes-9y9VcpPvY21vhz_vCHAN9KHA46mqs-nAbwqDo59apX-DPKi8qsJor52CKsvRtX9TJs3c60TZqR32ubPveI-uor2XDuzmK';

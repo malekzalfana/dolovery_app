@@ -388,6 +388,7 @@ class _CartState extends State<Cart> {
   String uemail;
   bool notsetup = true;
   bool usersignedin = true;
+  String usertoken;
 
   void _signInPopUp(context) {
     showModalBottomSheet(
@@ -705,6 +706,7 @@ class _CartState extends State<Cart> {
                           "shop": cartshop,
                           "products": usercartmap_v2[cartshop],
                           "user": uid,
+                          "token": usertoken
                         });
                         fullorder.add(order_id);
                         fullorder_shops.add(cartshop);
@@ -797,6 +799,7 @@ class _CartState extends State<Cart> {
       uid = user.uid;
       name = user.displayName;
       uemail = user.email;
+      usertoken = this_user.data["token"];
 
       if (this_user.exists) {
         chosen_address = this_user.data["chosen_address"];
