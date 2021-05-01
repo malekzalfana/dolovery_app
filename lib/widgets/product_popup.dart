@@ -235,15 +235,21 @@ void openProductPopUp(context, productData, index,
             List<String> cart = prefs.getStringList('cart');
             String shop_name = productData['shop'];
             usercartmap_v2 = prefs.getString("usercartmap_v2");
-            print(usercartmap_v2 + "thia ia rg oeifil xEEEEEEEEE");
+            // print(usercartmap_v2 + "thia ia rg oeifil xEEEEEEEEE");
             if (usercartmap_v2 == null) {
-              usercartmap_v2 = Map;
+              usercartmap_v2 = {};
               print('cart is now an empty map');
             } else {
+              print('BEFORE PARSINGGGGGGG----------------');
+              print(usercartmap_v2.runtimeType.toString());
               usercartmap_v2 = json.decode(usercartmap_v2);
+              print('AFTER PARSINGGGGGGG------------------');
+              print(usercartmap_v2.runtimeType.toString());
+
+              print('cart map is noy emptyyyy');
             }
-            print('--------------------');
-            print(usercartmap_v2.toString());
+            // print('--------------------');
+
             if (usercartmap_v2.containsKey(shop_name)) {
               if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
                 usercartmap_v2[shop_name]['products'][itemid]['count'] =
@@ -691,5 +697,5 @@ void openProductPopUp(context, productData, index,
           );
         });
       });
-  // future.then((void value) => sendrefreshtohome());
+  future.then((void value) => sendrefreshtohome());
 }

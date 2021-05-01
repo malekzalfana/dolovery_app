@@ -71,13 +71,14 @@ const fcm = admin.messaging();
 exports.senddevices = functions.firestore
   .document("shop_orders/{id}")
   .onUpdate((snapshot) => {
-    const name = 'snapshot.get("name")';
+    const shop = snapshot.get("shop");
+    const status = snapshot.get("status");
     const subject = 'snapshot.get("subject")';
     const token = 'd8HunRNCXD0:APA91bGCcODt5AWlpioriHCfBGG6toHeZzbwh9RERLtYes-9y9VcpPvY21vhz_vCHAN9KHA46mqs-nAbwqDo59apX-DPKi8qsJor52CKsvRtX9TJs3c60TZqR32ubPveI-uor2XDuzmK';
 
     const payload = {
       notification: {
-        title: "from " + name,
+        title: shop + 'changed your order to' + status,
         body: "subject " + subject,
         sound: "default",
       },

@@ -263,6 +263,8 @@ class _CartState extends State<Cart> {
               cartshopsproductsmap[cartitem] = 1;
 
               cartshopsproductsmap[cartitem].toInt();
+              print(cartshopsproductsmap);
+              print(cartitem);
             } else {
               cartshopsproductsmap[cartitem] =
                   cartshopsproductsmap[cartitem].toInt() + 1;
@@ -704,9 +706,11 @@ class _CartState extends State<Cart> {
                           "payment": "cashondelivery",
                           "date": DateTime.now(),
                           "shop": cartshop,
+                          "shop_name": datashop.documents[0].data['name'],
                           "products": usercartmap_v2[cartshop],
                           "user": uid,
-                          "token": usertoken
+                          "token": usertoken,
+                          "status": "pending"
                         });
                         fullorder.add(order_id);
                         fullorder_shops.add(cartshop);

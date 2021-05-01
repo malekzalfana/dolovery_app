@@ -132,20 +132,18 @@ class SalleScreenState extends State<SalleScreen> {
               SizedBox(
                 width: 7,
               ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: GestureDetector(
-                    onTap: () {
-                      widget.notifyParent();
-                    },
-                    child: Visibility(
-                      visible: false,
-                      child: Icon(
-                        Icons.keyboard_arrow_left,
-                        color: Colors.black,
-                        size: 30.0,
-                      ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: GestureDetector(
+                  onTap: () {
+                    widget.notifyParent();
+                  },
+                  child: Visibility(
+                    visible: false,
+                    child: Icon(
+                      Icons.keyboard_arrow_left,
+                      color: Colors.black,
+                      size: 30.0,
                     ),
                   ),
                 ),
