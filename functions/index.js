@@ -71,18 +71,34 @@ const fcm = admin.messaging();
 exports.senddevices = functions.firestore
   .document("shop_orders/{id}")
   .onUpdate((snapshot) => {
-    const shop = snapshot.get("shop");
-    const status = snapshot.get("status");
-    const subject = 'snapshot.get("subject")';
-    const token = 'd8HunRNCXD0:APA91bGCcODt5AWlpioriHCfBGG6toHeZzbwh9RERLtYes-9y9VcpPvY21vhz_vCHAN9KHA46mqs-nAbwqDo59apX-DPKi8qsJor52CKsvRtX9TJs3c60TZqR32ubPveI-uor2XDuzmK';
-
+    
+    // console.log( snapshot );
+    
+    // console.log( snapshot.after.data['shop_name'] );
+    // console.log( snapshot.after.data()['shop_name'] );
+    
+    console.log('YYYYYYYYYYYYY');
+    const snap = snapshot.after.data();
+    const snapbefore = snapshot.before.data();
+    const shop = snap['shop_name'];
+    const status = snap['status'];
+    const subject = 'Order Update';
+    const token = snap['token'];//'d8HunRNCXD0:APA91bGCcODt5AWlpioriHCfBGG6toHeZzbwh9RERLtYes-9y9VcpPvY21vhz_vCHAN9KHA46mqs-nAbwqDo59apX-DPKi8qsJor52CKsvRtX9TJs3c60TZqR32ubPveI-uor2XDuzmK';
+    console.log(token);
     const payload = {
       notification: {
-        title: shop + 'changed your order to' + status,
-        body: "subject " + subject,
+        title: subject,
+        body: shop + ' changed your order to ' + status + '.',
         sound: "default",
       },
     };
-
-    return fcm.sendToDevice(token, payload);
+    // console.log('XXXXXXXXXXXX');
+    console.log(snap['status'] );
+    console.log(snapbefore['status']);
+    if ( snap['status'] !==  snapbefore['status']) {
+      return fcm.sendToDevice(token, payload);
+    }
+    else {
+      return null;
+    }
   }); 

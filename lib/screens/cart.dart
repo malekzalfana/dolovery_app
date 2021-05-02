@@ -695,7 +695,8 @@ class _CartState extends State<Cart> {
                         if (rate == null) {
                           rate = 1;
                         }
-                        var order_id = ">>" + UniqueKey().hashCode.toString();
+                        var order_id =
+                            "WWWWW" + UniqueKey().hashCode.toString();
                         Firestore.instance
                             .collection('shop_orders')
                             .document(order_id)
@@ -1215,152 +1216,122 @@ class _CartState extends State<Cart> {
                           padding: const EdgeInsets.only(top: 18.0),
                           child: Center(
                             child: Image.asset("assets/images/loading.gif",
-                                width: 30),
+                                width: 10),
                           ),
                         );
                       default:
-                        if ((snapshot.hasError)) {
+                        if (!notsetup) {
+                          return Column(
+                            children: [
+                              if (usersignedin & ordered == false)
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(25, 10, 25, 12),
+                                  child: MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    elevation: 0,
+                                    onPressed: notsetup || loadingorder
+                                        ? null
+                                        : () {
+                                            _confirmOrder();
+                                          },
+                                    color: Colors.redAccent[700],
+                                    disabledColor: Colors.grey[200],
+                                    textColor: Colors.white,
+                                    minWidth: MediaQuery.of(context).size.width,
+                                    height: 0,
+                                    padding: EdgeInsets.only(
+                                        left: 23,
+                                        top: 12,
+                                        right: 23,
+                                        bottom: 10),
+                                    child: Text(
+                                      "Confirm Order",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Adaptive.sp(12),
+                                        fontFamily: 'Axiforma',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              if (usersignedin & ordered)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 18.0),
+                                  child: Center(
+                                    child: Image.asset(
+                                        "assets/images/loading.gif",
+                                        width: 30),
+                                  ),
+                                ),
+                            ],
+                          );
+                        } else if (notsetup && usersignedin) {
                           return Padding(
-                            padding: const EdgeInsets.fromLTRB(25, 10, 25, 12),
+                            padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
                             child: MaterialButton(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
                               elevation: 0,
-                              onPressed: null,
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                        builder: (context) => SetupScreen()))
+                                    .then((context) {
+                                  // setState(() {});
+                                  setupVerification();
+                                  print('print the setup');
+                                  // setState(() {});
+                                });
+                              },
                               color: Colors.redAccent[700],
                               disabledColor: Colors.grey[200],
                               textColor: Colors.white,
                               minWidth: MediaQuery.of(context).size.width,
                               height: 0,
                               padding: EdgeInsets.only(
-                                  left: 23, top: 12, right: 23, bottom: 10),
+                                  left: 23, top: 10, right: 23, bottom: 10),
                               child: Text(
-                                "No internet connection",
+                                "Setup your profile to continue",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: Adaptive.sp(12),
+                                  fontSize: 15.0,
                                   fontFamily: 'Axiforma',
                                 ),
                               ),
                             ),
                           );
                         } else {
-                          if (!notsetup) {
-                            return Column(
-                              children: [
-                                if (usersignedin & ordered == false)
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        25, 10, 25, 12),
-                                    child: MaterialButton(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                      ),
-                                      elevation: 0,
-                                      onPressed: notsetup || loadingorder
-                                          ? null
-                                          : () {
-                                              _confirmOrder();
-                                            },
-                                      color: Colors.redAccent[700],
-                                      disabledColor: Colors.grey[200],
-                                      textColor: Colors.white,
-                                      minWidth:
-                                          MediaQuery.of(context).size.width,
-                                      height: 0,
-                                      padding: EdgeInsets.only(
-                                          left: 23,
-                                          top: 12,
-                                          right: 23,
-                                          bottom: 10),
-                                      child: Text(
-                                        "Confirm Order",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: Adaptive.sp(12),
-                                          fontFamily: 'Axiforma',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                if (usersignedin & ordered)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 18.0),
-                                    child: Center(
-                                      child: Image.asset(
-                                          "assets/images/loading.gif",
-                                          width: 30),
-                                    ),
-                                  ),
-                              ],
-                            );
-                          } else if (notsetup && usersignedin) {
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
-                              child: MaterialButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                elevation: 0,
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                          builder: (context) => SetupScreen()))
-                                      .then((context) {
-                                    // setState(() {});
-                                    setupVerification();
-                                    print('print the setup');
-                                    // setState(() {});
-                                  });
-                                },
-                                color: Colors.redAccent[700],
-                                disabledColor: Colors.grey[200],
-                                textColor: Colors.white,
-                                minWidth: MediaQuery.of(context).size.width,
-                                height: 0,
-                                padding: EdgeInsets.only(
-                                    left: 23, top: 10, right: 23, bottom: 10),
-                                child: Text(
-                                  "Setup your profile to continue",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15.0,
-                                    fontFamily: 'Axiforma',
-                                  ),
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              elevation: 0,
+                              onPressed: () {
+                                _signInPopUp(context);
+                              },
+                              color: Colors.redAccent[700],
+                              disabledColor: Colors.grey[200],
+                              textColor: Colors.white,
+                              minWidth: MediaQuery.of(context).size.width,
+                              height: 0,
+                              padding: EdgeInsets.only(
+                                  left: 23, top: 10, right: 23, bottom: 10),
+                              child: Text(
+                                "Sign in to continue",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  fontFamily: 'Axiforma',
                                 ),
                               ),
-                            );
-                          } else {
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
-                              child: MaterialButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                elevation: 0,
-                                onPressed: () {
-                                  _signInPopUp(context);
-                                },
-                                color: Colors.redAccent[700],
-                                disabledColor: Colors.grey[200],
-                                textColor: Colors.white,
-                                minWidth: MediaQuery.of(context).size.width,
-                                height: 0,
-                                padding: EdgeInsets.only(
-                                    left: 23, top: 10, right: 23, bottom: 10),
-                                child: Text(
-                                  "Sign in to continue",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15.0,
-                                    fontFamily: 'Axiforma',
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
+                            ),
+                          );
                         }
                     }
                   }),
@@ -1457,7 +1428,7 @@ class _CartState extends State<Cart> {
                     height: 60,
                     width: 60,
                     placeholder: (context, url) =>
-                        Image.asset("assets/images/loading.gif", height: 20),
+                        Image.asset("assets/images/loading.gif", height: 10),
                     imageUrl: cartitem['data']['image'] == null
                         ? "s"
                         : cartitem['data']['image'],

@@ -231,7 +231,7 @@ class _ProductImageState extends State<ProductImage> {
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return Text('waiting asdasdiasdiasdi');
+                  return Text('....');
                 case ConnectionState.none:
                   return Text('..');
                 case ConnectionState.done:
@@ -245,32 +245,34 @@ class _ProductImageState extends State<ProductImage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             // Text(rate.toString()),
-                            Visibility(
-                              visible: true,
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 7.0),
-                                child: SizedBox(
-                                  height: 20,
-                                  child: Text(
-                                    (int.parse(oldPrice.toString()) *
-                                                (rate != null
-                                                    ? int.parse(rate.toString())
-                                                    : 1))
-                                            .toString() +
-                                        "L.L.",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      decoration: TextDecoration.lineThrough,
-                                      decorationThickness: 2,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 11.7,
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.black54,
+                            if (oldPrice.toString().length > 1)
+                              Visibility(
+                                visible: true,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 7.0),
+                                  child: SizedBox(
+                                    height: 20,
+                                    child: Text(
+                                      (int.parse(oldPrice.toString()) *
+                                                  (rate != null
+                                                      ? int.parse(
+                                                          rate.toString())
+                                                      : 1))
+                                              .toString() +
+                                          "L.L.",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationThickness: 2,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 11.7,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.black54,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
                             if (productPrice != null)
                               SizedBox(
                                 height: 20,
@@ -328,7 +330,7 @@ class _ProductImageState extends State<ProductImage> {
           Row(
             children: [
               Visibility(
-                visible: oldPrice.length > 1,
+                visible: oldPrice.length > 2,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 7.0),
                   child: SizedBox(

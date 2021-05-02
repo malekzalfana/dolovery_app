@@ -805,82 +805,6 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            DelayedDisplay(
-              delay: Duration(milliseconds: 100),
-              fadingDuration: const Duration(milliseconds: 360),
-              slidingBeginOffset: const Offset(0.0, 0.15),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(
-                          builder: (context) => ShopListing(
-                                type: 'pets',
-                              )))
-                      .then((_) {
-                    refreshcart();
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 15.5.h,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 2.2,
-                          blurRadius: 2.5,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 4.5.h, left: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Pet Shops",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 14.0.sp,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Text(
-                                "20+ Shops ready to deliver",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10.0.sp,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.redAccent[700],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Image.asset(
-                          'assets/images/petsec.png',
-                          width: 30.0.w,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(14.0),
               child: Row(
@@ -973,13 +897,8 @@ class HomeScreenState extends State<HomeScreen> {
                                           ? snapshot.data.documents[index]
                                               ['unit']
                                           : '',
-                                      productCurrency:
-                                          snapshot.data.documents[index]
-                                                      ['currency'] !=
-                                                  null
-                                              ? snapshot.data.documents[0]
-                                                  ['currency']
-                                              : "lebanese",
+                                      productCurrency: snapshot
+                                          .data.documents[index]['currency'],
                                     ),
                                   );
                                 }).toList(),
@@ -1120,7 +1039,7 @@ class HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    "Supplements",
+                    "Cosmetics",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 26.0,
@@ -1143,7 +1062,7 @@ class HomeScreenState extends State<HomeScreen> {
                 child: StreamBuilder(
                     stream: Firestore.instance
                         .collection('products')
-                        .where('type', isEqualTo: 'Supplements')
+                        .where('type', isEqualTo: 'cosmetics')
                         .snapshots(),
                     builder: (context, snapshot) {
                       switch (snapshot.connectionState) {
@@ -1224,7 +1143,7 @@ class HomeScreenState extends State<HomeScreen> {
                   Navigator.of(context)
                       .push(MaterialPageRoute(
                           builder: (context) => ShopListing(
-                                type: 'supplements',
+                                type: 'cosmetics',
                               )))
                       .then((_) {
                     refreshcart();
@@ -1255,69 +1174,6 @@ class HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "Pet Shops",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.5.sp,
-                      fontFamily: 'Axiforma',
-                      color: Colors.black,
-                    ),
-                  ),
-                  GestureDetector(
-                      onTap: () {},
-                      child: Image.asset("assets/images/fullfilldolovery.png",
-                          height: 3.5.h))
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: StreamBuilder(
-                stream: Firestore.instance
-                    .collection('shops')
-                    .where('type', isEqualTo: 'pets')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data.documents.length < 2) {
-                    return Opacity(
-                      opacity: 0.3,
-                      child: SizedBox(
-                          height: 22.0.h,
-                          child: Center(child: Text('No items found.'))),
-                    );
-                  }
-                  if (snapshot.hasData) {
-                    return SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                            children: List<Widget>.generate(10, (int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      ShopPage(snapshot.data.documents[0])));
-                            },
-                            child: ShopImage(
-                                shopName: snapshot.data.documents[0]['name'],
-                                shopIndex: index,
-                                shopImage: snapshot.data.documents[0]['image'],
-                                shopTime: snapshot.data.documents[0]['time']
-                                    .toString()),
-                          );
-                        })));
-                  } else if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
               ),
             ),
           ],

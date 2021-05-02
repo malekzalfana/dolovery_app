@@ -681,7 +681,7 @@ class _ShopPageState extends State<ShopPage> {
                                                               ? snapshot.data.documents[index]['unit']
                                                               : '',
                                                           oldPrice: snapshot.data.documents[index]['old_price'] == null ? "0" : snapshot.data.documents[index]['old_price'].toString(),
-                                                          productCurrency: snapshot.data.documents[index]['currency'] != null ? snapshot.data.documents[index]['currency'] : "lebanese"),
+                                                          productCurrency: snapshot.data.documents[index]['currency']),
                                                     );
                                                   }).toList(),
                                                 );
