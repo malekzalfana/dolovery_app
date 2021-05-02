@@ -741,7 +741,7 @@ class HomeScreenState extends State<HomeScreen> {
                   Navigator.of(context)
                       .push(MaterialPageRoute(
                           builder: (context) => ShopListing(
-                                type: 'supplements',
+                                type: 'cosmetics',
                               )))
                       .then((_) {
                     refreshcart();
@@ -776,7 +776,7 @@ class HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                "Supplements",
+                                "Costmetics",
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
@@ -1159,7 +1159,7 @@ class HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "View All Supplements Shops".toUpperCase(),
+                      "View All Cosmetics Shops".toUpperCase(),
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 10.0.sp,

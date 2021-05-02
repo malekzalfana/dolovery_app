@@ -211,22 +211,26 @@ void openProductPopUp(context, productData, index,
       builder: (BuildContext context) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter mystate) {
-          add() {
-            mystate(() {
-              if (_n < 10) _n++;
-              if (_n == 10) {
-              } else {
-                minimum = false;
-                maximum = false;
-              }
+          Future.delayed(const Duration(milliseconds: 200), () {
+            add() {
               cartlocked = true;
-            });
-            Future.delayed(const Duration(milliseconds: 500), () {
               mystate(() {
-                cartlocked = false;
+                if (_n < 10) _n++;
+                if (_n == 10) {
+                } else {
+                  minimum = false;
+                  maximum = false;
+                }
               });
-            });
-          }
+              if (cartlocked == true) {
+                Future.delayed(const Duration(milliseconds: 400), () {
+                  mystate(() {
+                    cartlocked = false;
+                  });
+                });
+              }
+            }
+          });
 
           dynamic usercartmap_v2;
 
@@ -342,13 +346,22 @@ void openProductPopUp(context, productData, index,
           }
 
           void minus() {
-            mystate(() {
-              if (_n != 0) _n--;
-              if (_n == 0)
-                minimum = true;
-              else {
-                minimum = false;
-                maximum = false;
+            Future.delayed(const Duration(milliseconds: 200), () {
+              mystate(() {
+                if (_n != 0) _n--;
+                if (_n == 0)
+                  minimum = true;
+                else {
+                  minimum = false;
+                  maximum = false;
+                }
+              });
+              if (cartlocked == true) {
+                Future.delayed(const Duration(milliseconds: 400), () {
+                  mystate(() {
+                    cartlocked = false;
+                  });
+                });
               }
             });
           }
@@ -565,46 +578,54 @@ void openProductPopUp(context, productData, index,
                         child: new Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            RawMaterialButton(
-                              onPressed: () {
-                                _remove(productData, finalDocumentID, rate);
-                              },
-                              elevation: !minimum ? 2 : 0,
-                              fillColor: !minimum
-                                  ? Colors.redAccent[700]
-                                  : Colors.grey[200],
-                              child: Icon(
-                                Icons.remove,
-                                size: 18,
-                                color:
-                                    !minimum ? Colors.white : Colors.grey[800],
+                            IgnorePointer(
+                              ignoring: cartlocked,
+                              child: RawMaterialButton(
+                                onPressed: () async {
+                                  cartlocked = true;
+                                  _remove(productData, finalDocumentID, rate);
+                                },
+                                elevation: !minimum ? 2 : 0,
+                                fillColor: !minimum
+                                    ? Colors.redAccent[700]
+                                    : Colors.grey[200],
+                                child: Icon(
+                                  Icons.remove,
+                                  size: 18,
+                                  color: !minimum
+                                      ? Colors.white
+                                      : Colors.grey[800],
+                                ),
+                                padding: EdgeInsets.all(0.0),
+                                shape: CircleBorder(),
                               ),
-                              padding: EdgeInsets.all(0.0),
-                              shape: CircleBorder(),
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                               child: new Text('$_n',
                                   style: new TextStyle(fontSize: 20.0)),
                             ),
-                            RawMaterialButton(
-                              onPressed: () {
-                                if (cartlocked == false) {
+                            IgnorePointer(
+                              ignoring: cartlocked,
+                              child: RawMaterialButton(
+                                onPressed: () async {
+                                  cartlocked = true;
                                   _save(productData, finalDocumentID, rate);
-                                }
-                              },
-                              elevation: !maximum ? 2 : 0,
-                              fillColor: !maximum
-                                  ? Colors.redAccent[700]
-                                  : Colors.grey[200],
-                              child: Icon(
-                                Icons.add,
-                                size: 18,
-                                color:
-                                    !maximum ? Colors.white : Colors.grey[800],
+                                },
+                                elevation: !maximum ? 2 : 0,
+                                fillColor: !maximum
+                                    ? Colors.redAccent[700]
+                                    : Colors.grey[200],
+                                child: Icon(
+                                  Icons.add,
+                                  size: 18,
+                                  color: !maximum
+                                      ? Colors.white
+                                      : Colors.grey[800],
+                                ),
+                                padding: EdgeInsets.all(0.0),
+                                shape: CircleBorder(),
                               ),
-                              padding: EdgeInsets.all(0.0),
-                              shape: CircleBorder(),
                             ),
                           ],
                         ),

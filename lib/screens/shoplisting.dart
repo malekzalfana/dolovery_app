@@ -49,8 +49,8 @@ class FormScreenState extends State<ShopListing> {
                           Text(
                             widget.type == 'supplements'
                                 ? "Supplements"
-                                : widget.type == 'pets'
-                                    ? 'Pets'
+                                : widget.type == 'cosmetics'
+                                    ? 'Cosmetics'
                                     : 'Lebanese',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
