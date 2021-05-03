@@ -282,7 +282,10 @@ void openProductPopUp(context, productData, index,
                   } else {
                     usercartmap_v2[shop_name] = {
                       'products': {},
-                      'data': {'name': shop_name}
+                      'data': {
+                        'name': shop_name,
+                        'shop_name': productData['shop']
+                      }
                     };
                   }
                 },

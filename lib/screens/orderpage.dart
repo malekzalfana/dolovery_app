@@ -116,15 +116,44 @@ class _OrderPageState extends State<OrderPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       top: 10.0, bottom: 10),
-                                  child: Text(
-                                    order.data['products'][shop]['data']
-                                        ['name'],
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: Adaptive.sp(15),
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.black),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        order.data['products'][shop]
+                                            ['shop_name'],
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: Adaptive.sp(15),
+                                            fontFamily: 'Axiforma',
+                                            color: Colors.black),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      StreamBuilder(
+                                          stream: Firestore.instance
+                                              .collection('shop_orders')
+                                              .document(order.data['products']
+                                                  [shop]['order_id'])
+                                              .snapshots(),
+                                          builder: (context,
+                                              AsyncSnapshot<DocumentSnapshot>
+                                                  snapshot) {
+                                            print(order.data['products'][shop]
+                                                    ['order_id']
+                                                .toString());
+                                            // print(snapshot.data.data);
+                                            if (!snapshot.hasData) {
+                                              return Text("Loading");
+                                            } else {
+                                              return Text(snapshot
+                                                  .data['status']
+                                                  .toString()
+                                                  .toUpperCase());
+                                            }
+                                          })
+                                    ],
                                   ),
                                 ),
                                 for (var product in order

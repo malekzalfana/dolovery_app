@@ -673,6 +673,8 @@ class _CartState extends State<Cart> {
                             .collection("shops")
                             .where('username', isEqualTo: cartshop)
                             .getDocuments();
+                        usercartmap_v2[cartshop]['shop_name'] =
+                            datashop.documents[0].data['name'];
                         var rate = datashop.documents[0].data['rate'];
                         if (rate == null) {
                           rate = 1;
@@ -702,7 +704,10 @@ class _CartState extends State<Cart> {
                               productRate;
                           shoporderTotal = shoporderTotal + shoporderProduct;
                         }
-                        var orderId = "999" + UniqueKey().hashCode.toString();
+                        var singleShopOrder = UniqueKey().hashCode.toString();
+                        // cartmap['shop_name'] = singleShopOrder;
+                        var orderId = singleShopOrder;
+                        usercartmap_v2[cartshop]['order_id'] = singleShopOrder;
                         Firestore.instance
                             .collection('shop_orders')
                             .document(orderId)
