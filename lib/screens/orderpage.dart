@@ -257,8 +257,8 @@ class _OrderPageState extends State<OrderPage> {
                   width: 120,
                   placeholder: (context, url) => Image.asset(
                       "assets/images/loading.gif",
-                      height: 50,
-                      width: 50),
+                      height: 20,
+                      width: 20),
                   imageUrl: product_image == null ? "s" : product_image,
                   errorWidget: (context, url, error) =>
                       Center(child: new Icon(Icons.error)),
@@ -281,7 +281,7 @@ class _OrderPageState extends State<OrderPage> {
                         maxLines: 2,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 13,
+                          fontSize: 14,
                           height: 1.16,
                           fontFamily: 'Axiforma',
                           color: Colors.black,
@@ -330,7 +330,7 @@ class _OrderPageState extends State<OrderPage> {
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 13,
+                                  fontSize: 14,
                                   fontFamily: 'Axiforma',
                                   color: Colors.redAccent[700],
                                 ),

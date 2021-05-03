@@ -262,10 +262,7 @@ class _CartState extends State<Cart> {
           if (value.data['shop'] == cartshop.toString()) {
             if (!cartshopsproductsmap.containsKey(cartitem)) {
               cartshopsproductsmap[cartitem] = 1;
-              print('testin the int');
               cartshopsproductsmap[cartitem].toInt();
-              print(cartshopsproductsmap);
-              print(cartitem);
             } else {
               cartshopsproductsmap[cartitem] =
                   cartshopsproductsmap[cartitem].toInt() + 1;
@@ -669,9 +666,9 @@ class _CartState extends State<Cart> {
 
                       List<String> fullorder = [];
                       List<String> fullorder_shops = [];
-                      var completeproducts = {};
+                      // var completeproducts = {};
                       for (var cartshop in usercartmap_v2.keys) {
-                        completeproducts[cartshop] = {};
+                        // completeproducts[cartshop] = {};
                         var datashop = await Firestore.instance
                             .collection("shops")
                             .where('username', isEqualTo: cartshop)
@@ -680,14 +677,38 @@ class _CartState extends State<Cart> {
                         if (rate == null) {
                           rate = 1;
                         }
-                        var order_id =
-                            "WWWWW" + UniqueKey().hashCode.toString();
+                        int shoporderTotal = 0;
+                        print(usercartmap_v2[cartshop]['products']
+                            .keys
+                            .runtimeType
+                            .toString());
+                        // usercartmap_v2[cartshop]['products'].forEach((product) {
+                        // });
+                        for (var cartproduct
+                            in usercartmap_v2[cartshop]['products'].keys) {
+                          print(usercartmap_v2[cartshop]['products']
+                              [cartproduct]['rate']);
+                          var productRate = usercartmap_v2[cartshop]['products']
+                                      [cartproduct]['data']['currency'] ==
+                                  'dollar'
+                              ? usercartmap_v2[cartshop]['products']
+                                  [cartproduct]['rate']
+                              : 1;
+                          var shoporderProduct = usercartmap_v2[cartshop]
+                                      ['products'][cartproduct]['data']
+                                  ['shop_price'] *
+                              usercartmap_v2[cartshop]['products'][cartproduct]
+                                  ['count'] *
+                              productRate;
+                          shoporderTotal = shoporderTotal + shoporderProduct;
+                        }
+                        var orderId = "999" + UniqueKey().hashCode.toString();
                         Firestore.instance
                             .collection('shop_orders')
-                            .document(order_id)
+                            .document(orderId)
                             .setData({
                           "address": addresstouse,
-                          "total": total.toInt(),
+                          "total": shoporderTotal.toInt(),
                           "count": usercartmap_v2[cartshop].length,
                           "payment": "cashondelivery",
                           "date": DateTime.now(),
@@ -698,14 +719,14 @@ class _CartState extends State<Cart> {
                           "token": usertoken,
                           "status": "pending"
                         });
-                        fullorder.add(order_id);
+                        fullorder.add(orderId);
                         fullorder_shops.add(cartshop);
                       }
 
-                      var fullorder_id = UniqueKey().hashCode.toString();
+                      var fullorderId = UniqueKey().hashCode.toString();
                       Firestore.instance
                           .collection('orders')
-                          .document(fullorder_id)
+                          .document(fullorderId)
                           .setData({
                         "address": addresstouse,
                         "total": total.toInt(),
@@ -717,11 +738,11 @@ class _CartState extends State<Cart> {
                         "shop_list": fullorder_shops,
                         "order_list": fullorder
                       }).then((doc) {
-                        reset(false);
+                        // reset(false);
                         Navigator.pop(context);
 
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => OrderPage(fullorder_id)));
+                            builder: (context) => OrderPage(fullorderId)));
                       }).catchError((error) {});
                     }
 
@@ -948,41 +969,44 @@ class _CartState extends State<Cart> {
                       child: FutureBuilder(
                           future: getTotal(),
                           builder: (context, snapshot) {
-                            switch (snapshot.connectionState) {
-                              case ConnectionState.waiting:
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 18.0),
-                                  child: Center(
-                                    child: Image.asset(
-                                        "assets/images/loading.gif",
-                                        width: 10),
-                                  ),
-                                );
-                              case ConnectionState.done:
-                                return Text(
-                                  total.toInt().toString() + 'L.L.',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: Adaptive.sp(21),
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.redAccent[700]),
-                                );
-                              // default:
+                            if (snapshot != null)
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.waiting:
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 18.0),
+                                    child: Center(
+                                      child: Image.asset(
+                                          "assets/images/loading.gif",
+                                          width: 10),
+                                    ),
+                                  );
+                                case ConnectionState.done:
+                                  return Text(
+                                    total.toInt().toString() + 'L.L.',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: Adaptive.sp(21),
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.redAccent[700]),
+                                  );
+                                // default:
 
-                              case ConnectionState.none:
-                                // TODO: Handle this case.
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 18.0),
-                                  child: Center(
-                                    child: Text(
-                                        'No internet please refresh page.'),
-                                  ),
-                                );
-                                break;
-                              case ConnectionState.active:
-                                // TODO: Handle this case.
-                                break;
-                            }
+                                case ConnectionState.none:
+                                  // TODO: Handle this case.
+
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 18.0),
+                                    child: Center(
+                                      child: Text(
+                                          'No internet please refresh page.'),
+                                    ),
+                                  );
+                                  break;
+                                case ConnectionState.active:
+                                  // TODO: Handle this case.
+                                  return Container();
+                                  break;
+                              }
                           }),
                     ),
                   ),
@@ -1286,7 +1310,6 @@ class _CartState extends State<Cart> {
                                     .then((context) {
                                   // setState(() {});
                                   setupVerification();
-                                  print('print the setup');
                                   // setState(() {});
                                 });
                               },

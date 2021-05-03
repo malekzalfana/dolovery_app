@@ -237,20 +237,12 @@ void openProductPopUp(context, productData, index,
             List<String> cart = prefs.getStringList('cart');
             String shop_name = productData['shop'];
             usercartmap_v2 = prefs.getString("usercartmap_v2");
-            // print(usercartmap_v2 + "thia ia rg oeifil xEEEEEEEEE");
+
             if (usercartmap_v2 == null) {
               usercartmap_v2 = {};
-              print('cart is now an empty map');
             } else {
-              print('BEFORE PARSINGGGGGGG----------------');
-              print(usercartmap_v2.runtimeType.toString());
               usercartmap_v2 = json.decode(usercartmap_v2);
-              print('AFTER PARSINGGGGGGG------------------');
-              print(usercartmap_v2.runtimeType.toString());
-
-              print('cart map is noy emptyyyy');
             }
-            // print('--------------------');
 
             if (usercartmap_v2.containsKey(shop_name)) {
               if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
@@ -345,7 +337,6 @@ void openProductPopUp(context, productData, index,
           }
 
           void minus() {
-            // Future.delayed(const Duration(milliseconds: 100), () {
             mystate(() {
               if (_n != 0) _n--;
               if (_n == 0)
@@ -357,12 +348,9 @@ void openProductPopUp(context, productData, index,
             });
             if (cartlocked == true) {
               Future.delayed(const Duration(milliseconds: 250), () {
-                // mystate(() {
                 cartlocked = false;
-                // });
               });
             }
-            // });
           }
 
           _remove(item, itemid, rate) async {
