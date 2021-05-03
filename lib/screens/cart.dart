@@ -87,7 +87,7 @@ class _CartState extends State<Cart> {
     prefs.remove('items');
     prefs.remove('cart');
     prefs.remove('shops');
-    prefs.remove('usercartmap');
+    // prefs.remove('usercartmap');
     prefs.remove('usercartmap_v2');
     prefs.remove('cached_shops');
     prefs.remove('caching_date');
@@ -97,7 +97,7 @@ class _CartState extends State<Cart> {
     prefs.remove('items');
     prefs.remove('cart');
     prefs.remove('shops');
-    prefs.remove('usercartmap');
+    // prefs.remove('usercartmap');
     prefs.remove('usercartmap_v2');
     prefs.remove('cached_shops');
     prefs.remove('address');
@@ -111,7 +111,7 @@ class _CartState extends State<Cart> {
     return true;
   }
 
-  dynamic usercartmap;
+  // dynamic usercartmap;
 
   _save(itemid, rate, shop_name, type, shop_price, currency, item) async {
     final prefs = await SharedPreferences.getInstance();
@@ -163,7 +163,7 @@ class _CartState extends State<Cart> {
         ? 0
         : prefs.getDouble('total') + shop_price;
     prefs.setDouble('total', total);
-    add();
+
     if (cart == null) {
       cart = [];
     }
@@ -181,6 +181,7 @@ class _CartState extends State<Cart> {
       shops.add(shop_name);
       prefs.setStringList("shops", shops);
     }
+    add();
   }
 
   _remove(itemid, rate, shop_name, type, shop_price, currency, item) async {
@@ -333,14 +334,9 @@ class _CartState extends State<Cart> {
 
   Future<bool> loadcart() async {
     final prefs = await SharedPreferences.getInstance();
-    usercartmap = prefs.getString("usercartmap");
+    // usercartmap = prefs.getString("usercartmap");
     if (!alreadyChosenAddress) {
       chosen_address = prefs.getString('address');
-    }
-    if (usercartmap == null) {
-      usercartmap = json.decode("{}");
-    } else {
-      usercartmap = json.decode(usercartmap);
     }
 
     usercartmap_v2 = prefs.getString("usercartmap_v2");
@@ -767,19 +763,6 @@ class _CartState extends State<Cart> {
   }
 
   bool alreadyChosenAddress = false;
-
-  removeShopFromCart(shop) async {
-    final prefs = await SharedPreferences.getInstance();
-    usercartmap = prefs.getString("usercartmap");
-
-    if (usercartmap == null) {
-      usercartmap = {};
-    } else {
-      usercartmap = json.decode(usercartmap);
-    }
-    usercartmap.remove(shop);
-    prefs.setString('usercartmap', json.encode(usercartmap));
-  }
 
   bool loadedthepage = false;
 
@@ -1674,297 +1657,38 @@ class _CartState extends State<Cart> {
                         child: new Text(count.toString(),
                             style: new TextStyle(fontSize: 14.5)),
                       ),
-                      SizedBox(
-                        width: 25,
-                        child: RawMaterialButton(
-                          onPressed: () {
-                            if (cartlocked == false) {
-                              _save(
-                                cartitemID,
-                                cartitem['rate'],
-                                cartitem['data']['shop'],
-                                cartitem['data']['type'],
-                                (int.parse(cartitem['data']['shop_price']
-                                        .toString()) *
-                                    cartitem['rate']),
-                                cartitem['data']['currency'],
-                                cartitem['data'],
-                              );
-                            }
-                          },
-                          elevation: !maximum ? 2 : 0,
-                          fillColor: !maximum
-                              ? Colors.redAccent[700]
-                              : Colors.grey[200],
-                          child: Icon(
-                            Icons.add,
-                            size: 13,
-                            color: !maximum ? Colors.white : Colors.grey[800],
-                          ),
-                          padding: EdgeInsets.all(0.0),
-                          shape: CircleBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Padding buildCartItem(DocumentSnapshot cartitem, int count, int rate) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    var shopPrice = cartitem['shop_price'] != null ? cartitem['shop_price'] : 1;
-
-    if (cartitem['currency'] != "dollar") {
-      rate = 1;
-    }
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            margin: new EdgeInsets.only(left: 12.0, right: 10),
-            child: Container(
-                height: 90,
-                width: 90,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.07),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 8),
-                    ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
-                ),
-                child: Center(
-                  child:
-                      Image.network(cartitem['image'], height: 60, width: 60),
-                )),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      width: width - 150,
-                      child: Text(
-                        cartitem['name'],
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14.5,
-                          height: 1.16,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Visibility(
-                  visible: cartitem['type'] == 'salle' &&
-                      cartitem['arabic_name'] != null,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 3.0),
-                    child: SizedBox(
-                      width: width - 150,
-                      child: Text(
-                        cartitem['arabic_name'] != null
-                            ? cartitem['arabic_name']
-                            : '',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 13,
-                          height: 1.1,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 0.0),
-                        child: Row(
-                          children: [
-                            Visibility(
-                              visible:
-                                  cartitem['type'] == 'salle' ? false : true,
-                              child: Text(
-                                (int.parse(shopPrice.toString()) *
-                                            cartitem['rate'])
-                                        .toString() +
-                                    "L.L.",
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  height: 1.1,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 13.5,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.redAccent[700],
-                                ),
-                              ),
+                      IgnorePointer(
+                        ignoring: cartlocked,
+                        child: SizedBox(
+                          width: 25,
+                          child: RawMaterialButton(
+                            onPressed: () {
+                              if (cartlocked == false) {
+                                _save(
+                                  cartitemID,
+                                  cartitem['rate'],
+                                  cartitem['data']['shop'],
+                                  cartitem['data']['type'],
+                                  (int.parse(cartitem['data']['shop_price']
+                                          .toString()) *
+                                      cartitem['rate']),
+                                  cartitem['data']['currency'],
+                                  cartitem['data'],
+                                );
+                              }
+                            },
+                            elevation: !maximum ? 2 : 0,
+                            fillColor: !maximum
+                                ? Colors.redAccent[700]
+                                : Colors.grey[200],
+                            child: Icon(
+                              Icons.add,
+                              size: 13,
+                              color: !maximum ? Colors.white : Colors.grey[800],
                             ),
-                            Visibility(
-                              visible:
-                                  cartitem['type'] == 'salle' ? true : false,
-                              child: Text(
-                                cartitem['serving_prices'] != null
-                                    ? cartitem['serving_prices'][count]
-                                            .toString() +
-                                        "L.L."
-                                    : "",
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  height: 1.1,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 13.5,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.redAccent[700],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: cartitem['type'] == 'salle' ? false : true,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Text(
-                            cartitem['unit'] != null
-                                ? cartitem['unit'].toString()
-                                : '',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              height: 1.1,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 13,
-                              fontFamily: 'Axiforma',
-                              color: Colors.grey[500],
-                            ),
+                            padding: EdgeInsets.all(0.0),
+                            shape: CircleBorder(),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: cartitem['type'] == 'salle' ? true : false,
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(1, 0, 0, 0),
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      onPressed: () {},
-                      color: Colors.redAccent[700],
-                      textColor: Colors.white,
-                      minWidth: 0,
-                      height: 0,
-                      padding:
-                          EdgeInsets.only(left: 6, top: 2, right: 6, bottom: 1),
-                      child: Text(
-                        (count + 1).toString() + ' Servings',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13.0,
-                          fontFamily: 'Axiforma',
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: cartitem['type'] == 'salle' ? false : true,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        width: 25,
-                        child: RawMaterialButton(
-                          onPressed: () {
-                            _remove(
-                                cartitem.documentID,
-                                rate,
-                                cartitem['shop'],
-                                cartitem['type'],
-                                (int.parse(cartitem['shop_price'].toString()) *
-                                    cartitem['rate']),
-                                cartitem['currency'],
-                                cartitem['data']);
-                          },
-                          elevation: 2,
-                          fillColor: Colors.redAccent[700],
-                          child: Icon(
-                            Icons.remove,
-                            size: 13,
-                            color: Colors.white,
-                          ),
-                          shape: CircleBorder(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                        child: new Text(count.toString(),
-                            style: new TextStyle(fontSize: 14.5)),
-                      ),
-                      SizedBox(
-                        width: 25,
-                        child: RawMaterialButton(
-                          onPressed: () {
-                            _save(
-                                cartitem.documentID,
-                                rate,
-                                cartitem['shop'],
-                                cartitem['type'],
-                                (int.parse(cartitem['shop_price'].toString()) *
-                                    cartitem['rate']),
-                                cartitem['currency'],
-                                cartitem['data']);
-                          },
-                          elevation: !maximum ? 2 : 0,
-                          fillColor: !maximum
-                              ? Colors.redAccent[700]
-                              : Colors.grey[200],
-                          child: Icon(
-                            Icons.add,
-                            size: 13,
-                            color: !maximum ? Colors.white : Colors.grey[800],
-                          ),
-                          padding: EdgeInsets.all(0.0),
-                          shape: CircleBorder(),
                         ),
                       ),
                     ],

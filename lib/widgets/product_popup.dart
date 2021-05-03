@@ -222,7 +222,7 @@ void openProductPopUp(context, productData, index,
               }
             });
             if (cartlocked == true) {
-              Future.delayed(const Duration(milliseconds: 400), () {
+              Future.delayed(const Duration(milliseconds: 250), () {
                 mystate(() {
                   cartlocked = false;
                 });
@@ -304,7 +304,7 @@ void openProductPopUp(context, productData, index,
               usercartmap_v2[shop_name]['products'][itemid]['date'] =
                   item.data['date'];
             }
-            add();
+
             prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
             String type = productData['type'];
             prefs.setString('type', type);
@@ -323,6 +323,7 @@ void openProductPopUp(context, productData, index,
               cart = [];
             }
             cart.add(itemid);
+            add();
             final value = cart;
             final double items = cart.length.toDouble();
             prefs.setDouble('items', items);
@@ -344,24 +345,24 @@ void openProductPopUp(context, productData, index,
           }
 
           void minus() {
-            Future.delayed(const Duration(milliseconds: 200), () {
-              mystate(() {
-                if (_n != 0) _n--;
-                if (_n == 0)
-                  minimum = true;
-                else {
-                  minimum = false;
-                  maximum = false;
-                }
-              });
-              if (cartlocked == true) {
-                Future.delayed(const Duration(milliseconds: 400), () {
-                  mystate(() {
-                    cartlocked = false;
-                  });
-                });
+            // Future.delayed(const Duration(milliseconds: 100), () {
+            mystate(() {
+              if (_n != 0) _n--;
+              if (_n == 0)
+                minimum = true;
+              else {
+                minimum = false;
+                maximum = false;
               }
             });
+            if (cartlocked == true) {
+              Future.delayed(const Duration(milliseconds: 250), () {
+                // mystate(() {
+                cartlocked = false;
+                // });
+              });
+            }
+            // });
           }
 
           _remove(item, itemid, rate) async {
