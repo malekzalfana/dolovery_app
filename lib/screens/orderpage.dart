@@ -131,28 +131,38 @@ class _OrderPageState extends State<OrderPage> {
                                       SizedBox(
                                         width: 20,
                                       ),
-                                      StreamBuilder(
-                                          stream: Firestore.instance
-                                              .collection('shop_orders')
-                                              .document(order.data['products']
-                                                  [shop]['order_id'])
-                                              .snapshots(),
-                                          builder: (context,
-                                              AsyncSnapshot<DocumentSnapshot>
-                                                  snapshot) {
-                                            print(order.data['products'][shop]
-                                                    ['order_id']
-                                                .toString());
-                                            // print(snapshot.data.data);
-                                            if (!snapshot.hasData) {
-                                              return Text("Loading");
-                                            } else {
-                                              return Text(snapshot
-                                                  .data['status']
-                                                  .toString()
-                                                  .toUpperCase());
-                                            }
-                                          })
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5))),
+                                        child: StreamBuilder(
+                                            stream: Firestore.instance
+                                                .collection('shop_orders')
+                                                .document(order.data['products']
+                                                    [shop]['order_id'])
+                                                .snapshots(),
+                                            builder: (context,
+                                                AsyncSnapshot<DocumentSnapshot>
+                                                    snapshot) {
+                                              print(order.data['products'][shop]
+                                                      ['order_id']
+                                                  .toString());
+                                              // print(snapshot.data.data);
+                                              if (!snapshot.hasData) {
+                                                return Text("..");
+                                              } else {
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(5.0),
+                                                  child: Text(snapshot
+                                                      .data['status']
+                                                      .toString()
+                                                      .toUpperCase()),
+                                                );
+                                              }
+                                            }),
+                                      )
                                     ],
                                   ),
                                 ),
