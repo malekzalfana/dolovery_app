@@ -211,26 +211,24 @@ void openProductPopUp(context, productData, index,
       builder: (BuildContext context) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter mystate) {
-          Future.delayed(const Duration(milliseconds: 200), () {
-            add() {
-              cartlocked = true;
-              mystate(() {
-                if (_n < 10) _n++;
-                if (_n == 10) {
-                } else {
-                  minimum = false;
-                  maximum = false;
-                }
-              });
-              if (cartlocked == true) {
-                Future.delayed(const Duration(milliseconds: 400), () {
-                  mystate(() {
-                    cartlocked = false;
-                  });
-                });
+          add() {
+            cartlocked = true;
+            mystate(() {
+              if (_n < 10) _n++;
+              if (_n == 10) {
+              } else {
+                minimum = false;
+                maximum = false;
               }
+            });
+            if (cartlocked == true) {
+              Future.delayed(const Duration(milliseconds: 400), () {
+                mystate(() {
+                  cartlocked = false;
+                });
+              });
             }
-          });
+          }
 
           dynamic usercartmap_v2;
 

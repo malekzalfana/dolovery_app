@@ -261,7 +261,7 @@ class _CartState extends State<Cart> {
           if (value.data['shop'] == cartshop.toString()) {
             if (!cartshopsproductsmap.containsKey(cartitem)) {
               cartshopsproductsmap[cartitem] = 1;
-
+              print('testin the int');
               cartshopsproductsmap[cartitem].toInt();
               print(cartshopsproductsmap);
               print(cartitem);
@@ -576,27 +576,16 @@ class _CartState extends State<Cart> {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      bool hasprofile = false;
       final FirebaseUser user =
           (await _auth.signInWithCredential(credential)).user;
-      final snackBar = SnackBar(
-        content: Text('Welcome to Dolovery!'),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {},
-        ),
-      );
 
       Navigator.of(context).pop();
       _welcomePopUp(context, user.displayName);
 
       final notsetup =
           await Firestore.instance.collection("users").document(user.uid).get();
-      if (!notsetup.exists) {
-        hasprofile = true;
-      }
 
-      return user;
+      return notsetup;
     } catch (e) {}
   }
 
@@ -973,14 +962,45 @@ class _CartState extends State<Cart> {
                         const EdgeInsets.only(left: 30.0, top: 00, bottom: 10),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        total.toInt().toString() + 'L.L.',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: Adaptive.sp(21),
-                            fontFamily: 'Axiforma',
-                            color: Colors.redAccent[700]),
-                      ),
+                      child: FutureBuilder(
+                          future: getTotal(),
+                          builder: (context, snapshot) {
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.waiting:
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 18.0),
+                                  child: Center(
+                                    child: Image.asset(
+                                        "assets/images/loading.gif",
+                                        width: 10),
+                                  ),
+                                );
+                              case ConnectionState.done:
+                                return Text(
+                                  total.toInt().toString() + 'L.L.',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: Adaptive.sp(21),
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.redAccent[700]),
+                                );
+                              // default:
+
+                              case ConnectionState.none:
+                                // TODO: Handle this case.
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 18.0),
+                                  child: Center(
+                                    child: Text(
+                                        'No internet please refresh page.'),
+                                  ),
+                                );
+                                break;
+                              case ConnectionState.active:
+                                // TODO: Handle this case.
+                                break;
+                            }
+                          }),
                     ),
                   ),
                 ],
@@ -1216,11 +1236,11 @@ class _CartState extends State<Cart> {
                           padding: const EdgeInsets.only(top: 18.0),
                           child: Center(
                             child: Image.asset("assets/images/loading.gif",
-                                width: 10),
+                                width: 25),
                           ),
                         );
                       default:
-                        if (!notsetup) {
+                        if (this_user != null) {
                           return Column(
                             children: [
                               if (usersignedin & ordered == false)
@@ -1232,7 +1252,7 @@ class _CartState extends State<Cart> {
                                       borderRadius: BorderRadius.circular(15.0),
                                     ),
                                     elevation: 0,
-                                    onPressed: notsetup || loadingorder
+                                    onPressed: this_user == null || loadingorder
                                         ? null
                                         : () {
                                             _confirmOrder();
@@ -1268,7 +1288,7 @@ class _CartState extends State<Cart> {
                                 ),
                             ],
                           );
-                        } else if (notsetup && usersignedin) {
+                        } else if (this_user == null && usersignedin) {
                           return Padding(
                             padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
                             child: MaterialButton(
