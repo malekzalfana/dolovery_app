@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dolovery_app/screens/salleitem.dart';
 import 'package:dolovery_app/screens/setup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -371,9 +372,45 @@ class _CartState extends State<Cart> {
       });
   }
 
+  final Firestore _db = Firestore.instance;
+  final FirebaseMessaging _fcm = FirebaseMessaging();
+
   @override
   void initState() {
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(message['notification']['title']),
+              subtitle: Text(message['notification']['body']),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        // TODO optional
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        // TODO optional
+      },
+    );
+
     super.initState();
+    _fcm.getToken().then((token) {
+      print(token);
+      usertoken = token;
+    });
     loadcart();
   }
 
@@ -802,7 +839,7 @@ class _CartState extends State<Cart> {
       uid = user.uid;
       name = user.displayName;
       uemail = user.email;
-      usertoken = this_user.data["token"];
+      // usertoken = this_user.data["token"];
 
       if (this_user.exists) {
         chosen_address = this_user.data["chosen_address"];
