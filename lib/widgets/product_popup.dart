@@ -367,6 +367,9 @@ void openProductPopUp(context, productData, index,
           }
 
           _remove(item, itemid, int rate) async {
+            var newitem = Map<String, dynamic>.from(item.data);
+
+            newitem.remove('datetime');
             minus();
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
@@ -400,8 +403,7 @@ void openProductPopUp(context, productData, index,
             if (prefs.getDouble('total') == null) {
               prefs.setDouble('total', 0);
             }
-            var shop_price =
-                int.parse(productData['shop_price'].toString()).toDouble();
+            var shop_price = double.parse(productData['shop_price'].toString());
             double total = prefs.getDouble('total') == null
                 ? 0
                 : prefs.getDouble('total') -
