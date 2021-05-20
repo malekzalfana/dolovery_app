@@ -35,6 +35,34 @@ class HomeScreen extends StatefulWidget {
   }
 }
 
+Future<void> reset([bool pop]) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.remove('type');
+  prefs.remove('total');
+  prefs.remove('items');
+  prefs.remove('cart');
+  prefs.remove('shops');
+  // prefs.remove('usercartmap');
+  prefs.remove('usercartmap_v2');
+  prefs.remove('cached_shops');
+  prefs.remove('caching_date');
+  //
+  prefs.remove('type');
+  prefs.remove('total');
+  prefs.remove('items');
+  prefs.remove('cart');
+  prefs.remove('shops');
+  // prefs.remove('usercartmap');
+  prefs.remove('usercartmap_v2');
+  prefs.remove('cached_shops');
+  prefs.remove('address');
+  prefs.remove('addresses');
+
+  prefs.remove('address');
+
+  return true;
+}
+
 // class MessageHandler extends StatefulWidget {
 //   @override
 //   _MessageHandlerState createState() => _MessageHandlerState();
@@ -428,6 +456,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   refreshcart() {
     widget.notifyParent2();
+    print('NOTIFIED THE PARENT FOR REFRESH HOMEPAGE');
   }
 
   String showerrortext = "Error";
@@ -664,9 +693,8 @@ class HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(
-                          builder: (context) => ShopListing(
-                                type: 'lebanese',
-                              )))
+                          builder: (context) =>
+                              ShopListing(type: 'lebanese', arrow: true)))
                       .then((_) {
                     refreshcart();
                   });
@@ -699,14 +727,20 @@ class HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(
-                                "100% Lebanese",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 14.0.sp,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.black,
+                              GestureDetector(
+                                onTap: () {
+                                  reset();
+                                  print('reset the cart');
+                                },
+                                child: Text(
+                                  "100% Lebanese",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 14.0.sp,
+                                    fontFamily: 'Axiforma',
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
                               Text(
@@ -740,9 +774,8 @@ class HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(
-                          builder: (context) => ShopListing(
-                                type: 'cosmetics',
-                              )))
+                          builder: (context) =>
+                              ShopListing(type: 'cosmetics', arrow: true)))
                       .then((_) {
                     refreshcart();
                   });
@@ -776,7 +809,7 @@ class HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                "Costmetics",
+                                "Cosmetics",
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
@@ -919,9 +952,8 @@ class HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(
-                          builder: (context) => ShopListing(
-                                type: 'lebanese',
-                              )))
+                          builder: (context) =>
+                              ShopListing(type: 'lebanese', arrow: true)))
                       .then((_) {
                     refreshcart();
                   });
@@ -1143,6 +1175,7 @@ class HomeScreenState extends State<HomeScreen> {
                   Navigator.of(context)
                       .push(MaterialPageRoute(
                           builder: (context) => ShopListing(
+                                arrow: true,
                                 type: 'cosmetics',
                               )))
                       .then((_) {

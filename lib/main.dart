@@ -7,7 +7,6 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 void main() => runApp(MyApp());
 

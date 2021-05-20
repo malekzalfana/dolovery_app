@@ -6,8 +6,10 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ShopListing extends StatefulWidget {
   final String type;
+  final bool arrow;
 
-  const ShopListing({Key key, @required this.type}) : super(key: key);
+  const ShopListing({Key key, @required this.type, this.arrow})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -32,19 +34,20 @@ class FormScreenState extends State<ShopListing> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Icon(
-                                Icons.keyboard_arrow_left,
-                                color: Colors.black,
-                                size: 35.0,
+                          if (widget.arrow)
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Icon(
+                                  Icons.keyboard_arrow_left,
+                                  color: Colors.black,
+                                  size: 35.0,
+                                ),
                               ),
                             ),
-                          ),
                           SizedBox(width: 16),
                           Text(
                             widget.type == 'supplements'

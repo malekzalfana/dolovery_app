@@ -122,14 +122,10 @@ void openProductPopUp(context, productData, index,
               children: [
                 if (oldPrice != null)
                   Visibility(
-                    visible: oldPrice.toString().length > 1,
+                    visible: oldPrice.toInt().toString().length > 1,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: Text(
-                          (int.parse(oldPrice.toString()) *
-                                      int.parse(rate.toString()))
-                                  .toString() +
-                              "L.L.",
+                      child: Text((oldPrice * rate).toInt().toString() + "L.L.",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             decoration: TextDecoration.lineThrough,
@@ -142,11 +138,7 @@ void openProductPopUp(context, productData, index,
                     ),
                   ),
                 if (productPrice != null)
-                  Text(
-                      (int.parse(productPrice.toString()) *
-                                  int.parse(rate.toString()))
-                              .toString() +
-                          "L.L.",
+                  Text((productPrice * rate).toInt().toString() + "L.L.",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
@@ -154,6 +146,7 @@ void openProductPopUp(context, productData, index,
                         fontFamily: 'Axiforma',
                         color: Colors.black54,
                       )),
+                // Text('dd')
               ],
             ),
             whenNotDone: Center(child: Text('Loading...')),
@@ -169,7 +162,7 @@ void openProductPopUp(context, productData, index,
               visible: oldPrice.toString().length > 1,
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
-                child: Text(oldPrice.toString() + "L.L.",
+                child: Text(oldPrice.toInt().toString() + "L.L.",
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       decoration: TextDecoration.lineThrough,
@@ -185,7 +178,7 @@ void openProductPopUp(context, productData, index,
             Padding(
                 padding: const EdgeInsets.only(top: 0.0),
                 child: Text(
-                  productPrice.toString() + "L.L.",
+                  productPrice.toInt().toString() + "L.L.",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
@@ -233,6 +226,19 @@ void openProductPopUp(context, productData, index,
           dynamic usercartmap_v2;
 
           _save(item, itemid, rate) async {
+            var newitem = Map<String, dynamic>.from(item.data);
+
+            newitem.remove('datetime');
+            // print(newitem['datetime']);
+            // print(newitem['datetime']);
+            // print('============================');
+            // print(newnewitem['datetime'].toString().runtimeType);
+            // print('-----> date');
+            // if (newnewitem['datetime'] !=
+            //     null) //newnewitem.remove('datetime');
+            //   newnewitem['datetime'] = newnewitem['datetime'].toString();
+            // print(newitem['datetime'].runtimeType);
+            // print('-->>>>>>---> date');
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
             String shop_name = productData['shop'];
@@ -242,8 +248,9 @@ void openProductPopUp(context, productData, index,
               usercartmap_v2 = {};
             } else {
               usercartmap_v2 = json.decode(usercartmap_v2);
+              print('cart exists');
             }
-
+            usercartmap_v2 = {};
             if (usercartmap_v2.containsKey(shop_name)) {
               if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
                 usercartmap_v2[shop_name]['products'][itemid]['count'] =
@@ -252,22 +259,22 @@ void openProductPopUp(context, productData, index,
                             .toString()) +
                         1;
                 usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
-                usercartmap_v2[shop_name]['products'][itemid]['data'] =
-                    item.data;
-                usercartmap_v2[shop_name]['products'][itemid]['date'] =
-                    item.data['date'];
+                usercartmap_v2[shop_name]['products'][itemid]['data'] = newitem;
+                if (newitem['datetime'] != null)
+                  usercartmap_v2[shop_name]['products'][itemid]['date'] =
+                      newitem['datetime'].toString(); //.toString();
               } else {
                 usercartmap_v2[shop_name]['products'][itemid] = {};
                 usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
                 usercartmap_v2[shop_name]['products'][itemid]['count'] = 1;
-                usercartmap_v2[shop_name]['products'][itemid]['data'] =
-                    item.data;
-                usercartmap_v2[shop_name]['products'][itemid]['date'] =
-                    item.data['date'];
+                usercartmap_v2[shop_name]['products'][itemid]['data'] = newitem;
+                if (newitem['datetime'] != null)
+                  usercartmap_v2[shop_name]['products'][itemid]['date'] =
+                      newitem['datetime'].toString(); //.toString();
               }
             } else {
               var shopname;
-              var shopinfo2 = await Firestore.instance
+              await Firestore.instance
                   .collection('shops')
                   .where('username', isEqualTo: shopName)
                   .getDocuments()
@@ -295,10 +302,15 @@ void openProductPopUp(context, productData, index,
               usercartmap_v2[shop_name]['products'][itemid] = {};
               usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
               usercartmap_v2[shop_name]['products'][itemid]['count'] = 1;
-              usercartmap_v2[shop_name]['products'][itemid]['data'] = item.data;
-              usercartmap_v2[shop_name]['products'][itemid]['date'] =
-                  item.data['date'];
+              usercartmap_v2[shop_name]['products'][itemid]['data'] = newitem;
+              if (newitem['datetime'] != null)
+                usercartmap_v2[shop_name]['products'][itemid]['date'] =
+                    newitem['datetime'].toString(); //.toString();
+
             }
+            print(usercartmap_v2.toString());
+            print('--------------------------');
+            print(usercartmap_v2.runtimeType);
 
             prefs.setString('usercartmap_v2', json.encode(usercartmap_v2));
             String type = productData['type'];
@@ -306,13 +318,12 @@ void openProductPopUp(context, productData, index,
             if (prefs.getDouble('total') == null) {
               prefs.setDouble('total', 0);
             }
-            var shop_price =
-                int.parse(productData['shop_price'].toString()).toDouble();
+            var shop_price = double.parse(
+                productData['shop_price'].toString()); //.toDouble();
             double total = prefs.getDouble('total') == null
                 ? 0
                 : prefs.getDouble('total') +
-                    (double.parse(shop_price.toString()) *
-                        double.parse(rate.toString()));
+                    (double.parse(shop_price.toString()) * rate);
             prefs.setDouble('total', total);
             if (cart == null) {
               cart = [];
@@ -356,7 +367,7 @@ void openProductPopUp(context, productData, index,
             }
           }
 
-          _remove(item, itemid, rate) async {
+          _remove(item, itemid, int rate) async {
             minus();
             final prefs = await SharedPreferences.getInstance();
             List<String> cart = prefs.getStringList('cart');
@@ -395,8 +406,7 @@ void openProductPopUp(context, productData, index,
             double total = prefs.getDouble('total') == null
                 ? 0
                 : prefs.getDouble('total') -
-                    (double.parse(shop_price.toString()) *
-                        double.parse(rate.toString()));
+                    (double.parse(shop_price.toString()) * rate);
             prefs.setDouble('total', total);
             if (cart == null) {
               cart = [];
@@ -707,6 +717,8 @@ void openProductPopUp(context, productData, index,
             ),
           );
         });
-      });
-  future.then((void value) => sendrefreshtohome());
+      }).whenComplete(() {
+    sendrefreshtohome();
+  });
+  // future.then((void value) => sendrefreshtohome());
 }

@@ -6,6 +6,7 @@ import 'package:dolovery_app/screens/profilemain.dart';
 import 'package:dolovery_app/screens/setup.dart';
 import 'package:dolovery_app/screens/profile.dart';
 import 'package:dolovery_app/screens/salle.dart';
+import 'package:dolovery_app/screens/shoplisting.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -33,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final passwordTextController = TextEditingController();
   int _selectedItemIndex = 0;
 
-  gotosalle() {
+  gotolebanon() {
     setState(() {
       _selectedItemIndex = 1;
     });
@@ -47,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   refreshcart() {
     setState(() {});
+    print('REFERESHED THE HOMEPAGE');
   }
 
   @override
@@ -87,8 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     pages = [
-      HomeScreen(notifyParent: gotosalle, notifyParent2: refreshcart),
-      SalleScreen(notifyParent: gotohome, notifyParent2: refreshcart),
+      HomeScreen(notifyParent: gotolebanon, notifyParent2: refreshcart),
+      // SalleScreen(notifyParent: gotohome, notifyParent2: refreshcart),
+      ShopListing(type: 'lebanese', arrow: false),
       ProfileMainScreen(notifyParent: gotohome),
     ];
   }
@@ -219,7 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Row(
                                 children: <Widget>[
                                   buildNavItem(context, 'home', true, 0),
-                                  buildNavItem(context, 'salle', false, 1),
+                                  buildNavItem(context, 'lebanese', false, 1),
                                   buildNavItem(context, 'profile', false, 2)
                                 ],
                               ),
