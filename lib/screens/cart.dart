@@ -116,6 +116,7 @@ class _CartState extends State<Cart> {
 
   _save(itemid, rate, shop_name, type, shop_price, currency, item) async {
     final prefs = await SharedPreferences.getInstance();
+
     List<String> cart = prefs.getStringList('cart');
     usercartmap_v2 = prefs.getString("usercartmap_v2");
 
@@ -142,6 +143,7 @@ class _CartState extends State<Cart> {
         usercartmap_v2[shop_name]['products'][itemid]['date'] = item['date'];
       }
     } else {
+      print('ADDED THE PRODUCT NEWLY WITHOUT SHOP');
       usercartmap_v2[shop_name] = {};
       usercartmap_v2[shop_name]['products'] = {};
       usercartmap_v2[shop_name]['products'][itemid] = {};
@@ -198,7 +200,7 @@ class _CartState extends State<Cart> {
 
     if (usercartmap_v2.containsKey(shop_name)) {
       if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
-        usercartmap_v2[shop_name]['products'][itemid]['count'] = int.parse(
+        usercartmap_v2[shop_name]['products'][itemid]['count'] = double.parse(
                 usercartmap_v2[shop_name]['products'][itemid]['count']
                     .toString()) -
             1;
@@ -739,7 +741,8 @@ class _CartState extends State<Cart> {
                               usercartmap_v2[cartshop]['products'][cartproduct]
                                   ['count'] *
                               productRate;
-                          shoporderTotal = shoporderTotal + shoporderProduct;
+                          shoporderTotal =
+                              shoporderTotal + shoporderProduct.toInt();
                         }
                         var singleShopOrder = UniqueKey().hashCode.toString();
                         // cartmap['shop_name'] = singleShopOrder;
@@ -974,7 +977,8 @@ class _CartState extends State<Cart> {
                                           usercartmap_v2[shop]['products']
                                               [product],
                                           usercartmap_v2[shop]['products']
-                                              [product]['count'],
+                                                  [product]['count']
+                                              .toInt(),
                                           product)
                                   ],
                                 )
@@ -1570,8 +1574,9 @@ class _CartState extends State<Cart> {
                                   ? false
                                   : true,
                               child: Text(
-                                (int.parse(shopPrice.toString()) *
+                                (double.parse(shopPrice.toString()) *
                                             (cartitem['rate']))
+                                        .toInt()
                                         .toString() +
                                     "L.L.",
                                 textAlign: TextAlign.left,
@@ -1592,6 +1597,7 @@ class _CartState extends State<Cart> {
                               child: Text(
                                 cartitem['data']['serving_prices'] != null
                                     ? cartitem['data']['serving_prices'][count]
+                                            .toInt()
                                             .toString() +
                                         "L.L."
                                     : "",
@@ -1689,7 +1695,7 @@ class _CartState extends State<Cart> {
                                   cartitem['rate'],
                                   cartitem['data']['shop'],
                                   cartitem['data']['type'],
-                                  (int.parse(cartitem['data']['shop_price']
+                                  (double.parse(cartitem['data']['shop_price']
                                           .toString()) *
                                       cartitem['rate']),
                                   cartitem['data']['currency'],
@@ -1700,7 +1706,7 @@ class _CartState extends State<Cart> {
                                   cartitem['rate'],
                                   cartitem['data']['shop'],
                                   cartitem['data']['type'],
-                                  (int.parse(cartitem['data']['shop_price']
+                                  (double.parse(cartitem['data']['shop_price']
                                           .toString()) *
                                       cartitem['rate']),
                                   cartitem['data']['currency'],
@@ -1734,7 +1740,8 @@ class _CartState extends State<Cart> {
                                   cartitem['rate'],
                                   cartitem['data']['shop'],
                                   cartitem['data']['type'],
-                                  (int.parse(cartitem['data']['shop_price']
+                                  (double.parse(cartitem['data']['shop_price']
+                                          .toInt()
                                           .toString()) *
                                       cartitem['rate']),
                                   cartitem['data']['currency'],

@@ -181,7 +181,7 @@ class _OrderPageState extends State<OrderPage> {
                                     order.data['products'][shop]['products']
                                                 [product]['data']['type'] !=
                                             'salle'
-                                        ? (int.parse(order.data['products'][shop]['products'][product]['data']['shop_price'].toString()) *
+                                        ? (double.parse(order.data['products'][shop]['products'][product]['data']['shop_price'].toString()).toInt() *
                                                 (order.data['products'][shop]['products'][product]['rate'] != null
                                                     ? order.data['products']
                                                             [shop]['products']

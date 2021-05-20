@@ -250,7 +250,6 @@ void openProductPopUp(context, productData, index,
               usercartmap_v2 = json.decode(usercartmap_v2);
               print('cart exists');
             }
-            usercartmap_v2 = {};
             if (usercartmap_v2.containsKey(shop_name)) {
               if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
                 usercartmap_v2[shop_name]['products'][itemid]['count'] =
