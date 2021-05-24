@@ -379,6 +379,36 @@ class _CartState extends State<Cart> {
 
   @override
   void initState() {
+    String chosen_address;
+    bool user_is_signed_in = false;
+    bool user_is_setup = false;
+    Future setupVerification() async {
+      final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      if (user != null) {
+        uid = user.uid;
+        name = user.displayName;
+        uemail = user.email;
+
+        this_user =
+            await Firestore.instance.collection("users").document(uid).get();
+/* added to the page */
+        if (this_user.exists) {
+          user_is_setup = true;
+          final prefs = await SharedPreferences.getInstance();
+          chosen_address = this_user.data["chosen_address"];
+          prefs.setString('addresses', json.encode(this_user.data['address']));
+          prefs.setString('address', this_user.data["chosen_address"]);
+        } else {
+          user_is_setup = false;
+        }
+        user_is_signed_in = true;
+      } else {
+        user_is_signed_in = false;
+      }
+    }
+
+    setupVerification().then((value) => loadcart());
+
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
@@ -413,7 +443,6 @@ class _CartState extends State<Cart> {
       print(token);
       usertoken = token;
     });
-    loadcart();
   }
 
   var this_user;

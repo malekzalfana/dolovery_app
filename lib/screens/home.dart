@@ -83,52 +83,52 @@ StreamSubscription iosSubscription;
 class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    _fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            content: ListTile(
-              title: Text(message['notification']['title']),
-              subtitle: Text(message['notification']['body']),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Ok'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          ),
-        );
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        // TODO optional
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        // TODO optional
-      },
-    );
+    // _fcm.configure(
+    //   onMessage: (Map<String, dynamic> message) async {
+    //     print("onMessage: $message");
+    //     showDialog(
+    //       context: context,
+    //       builder: (context) => AlertDialog(
+    //         content: ListTile(
+    //           title: Text(message['notification']['title']),
+    //           subtitle: Text(message['notification']['body']),
+    //         ),
+    //         actions: <Widget>[
+    //           FlatButton(
+    //             child: Text('Ok'),
+    //             onPressed: () => Navigator.of(context).pop(),
+    //           ),
+    //         ],
+    //       ),
+    //     );
+    //   },
+    //   onLaunch: (Map<String, dynamic> message) async {
+    //     print("onLaunch: $message");
+    //     // TODO optional
+    //   },
+    //   onResume: (Map<String, dynamic> message) async {
+    //     print("onResume: $message");
+    //     // TODO optional
+    //   },
+    // );
 
-    super.initState();
-    _fcm.getToken().then((token) {
-      print(token);
-    });
-    if (Platform.isIOS) {
-      iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
-        // save the token  OR subscribe to a topic here
-      });
+    // super.initState();
+    // _fcm.getToken().then((token) {
+    //   print(token);
+    // });
+    // if (Platform.isIOS) {
+    //   iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
+    //     // save the token  OR subscribe to a topic here
+    //   });
 
-      _fcm.requestNotificationPermissions(IosNotificationSettings());
-    }
+    //   _fcm.requestNotificationPermissions(IosNotificationSettings());
+    // }
 
     super.initState();
   }
 
-  final Firestore _db = Firestore.instance;
-  final FirebaseMessaging _fcm = FirebaseMessaging();
+  // final Firestore _db = Firestore.instance;
+  // final FirebaseMessaging _fcm = FirebaseMessaging();
 
   var currentLocation;
   bool gotLocation = true;
@@ -480,400 +480,555 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
 /************************************************************************************************** */
+  final _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
-    return Scaffold(
+    return new Scaffold(
+        key: _scaffoldKey,
         body: SingleChildScrollView(
-      child: SafeArea(
-        child: Column(
-          children: <Widget>[
-            FutureBuilder(
-                future: setupAddress(),
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Container(height: 20);
-                    default:
-                      if (snapshot.hasError)
-                        return Text('Error: ${snapshot.error}');
-                      else if (chosen_address != null) {
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 15.0, top: 10),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 5.0),
-                                  child: Icon(
-                                    Icons.near_me,
-                                    color: Colors.redAccent[700],
-                                    size: 20.0,
-                                  ),
-                                ),
-                                Text(
-                                  "Delivering to your",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12.0.sp,
-                                    fontFamily: 'Axiforma',
-                                    color: Colors.redAccent[700],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 1.9.h),
-                                  height: 8.0.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(7),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      for (var address = 0;
-                                          address < all_addresses.length;
-                                          address++)
-                                        if (all_addresses[address]['id'] ==
-                                            chosen_address)
-                                          Expanded(
-                                            child: Text(
-                                              all_addresses[address]['name'],
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15.0.sp,
-                                                fontFamily: 'Axiforma',
-                                                color: Colors.redAccent[700],
+          physics: ClampingScrollPhysics(),
+          child: SafeArea(
+            child: Column(
+              children: <Widget>[
+                FutureBuilder(
+                    future: setupAddress(),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return Container(height: 20);
+                        default:
+                          if (snapshot.hasError)
+                            return Text('Error: ${snapshot.error}');
+                          else if (chosen_address != null) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 15.0, top: 10),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 5.0),
+                                      child: Icon(
+                                        Icons.near_me,
+                                        color: Colors.redAccent[700],
+                                        size: 20.0,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Delivering to your",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12.0.sp,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.redAccent[700],
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 1.9.h),
+                                      height: 8.0.h,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(7),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          for (var address = 0;
+                                              address < all_addresses.length;
+                                              address++)
+                                            if (all_addresses[address]['id'] ==
+                                                chosen_address)
+                                              Expanded(
+                                                child: Text(
+                                                  all_addresses[address]
+                                                      ['name'],
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15.0.sp,
+                                                    fontFamily: 'Axiforma',
+                                                    color:
+                                                        Colors.redAccent[700],
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                    ],
-                                  ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      } else
-                        return Container();
-                  }
-                }),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20.0, right: 10.0, top: 10.0, bottom: 0.0),
-              child: Row(
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      "What are you looking for?",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.0.sp,
-                        fontFamily: 'Axiforma',
-                        color: Colors.black,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => Search()))
-                    .then((_) {
-                  refreshcart();
-                });
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(left: 0, right: 10),
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 0),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                  height: 55,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                              ),
+                            );
+                          } else
+                            return Container();
+                      }
+                    }),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20.0, right: 10.0, top: 10.0, bottom: 0.0),
                   child: Row(
                     children: <Widget>[
-                      Image.asset("assets/icons/searchicon.png", height: 16),
-                      SizedBox(width: 16),
-                      Container(
+                      GestureDetector(
+                        onTap: () {},
                         child: Text(
-                          "Search for anything",
+                          "What are you looking for?",
                           style: TextStyle(
-                            fontSize: 12.0.sp,
-                            fontFamily: "Axiforma",
-                            color: Colors.black26,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.0.sp,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black,
                           ),
                         ),
                       )
                     ],
                   ),
                 ),
-              ),
-            ),
-            Visibility(
-              visible: false,
-              child: DelayedDisplay(
-                delay: Duration(milliseconds: 100),
-                fadingDuration: const Duration(milliseconds: 100),
-                slidingBeginOffset: const Offset(0.0, 0.15),
-                child: GestureDetector(
+                GestureDetector(
                   onTap: () {
-                    widget.notifyParent();
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) => Search()))
+                        .then((_) {
+                      refreshcart();
+                    });
                   },
                   child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.only(left: 0, right: 10),
                     child: Container(
-                      height: 135,
+                      margin: EdgeInsets.symmetric(vertical: 0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      height: 55,
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 2.2,
-                            blurRadius: 2.5,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 40.0, left: 15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "Meal Basket",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 20.0,
-                                    fontFamily: 'Axiforma',
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Text(
-                                  "Everyday a new recipe!",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13.0,
-                                    fontFamily: 'Axiforma',
-                                    color: Colors.redAccent[700],
-                                  ),
-                                ),
-                              ],
+                          Image.asset("assets/icons/searchicon.png",
+                              height: 16),
+                          SizedBox(width: 16),
+                          Container(
+                            child: Text(
+                              "Search for anything",
+                              style: TextStyle(
+                                fontSize: 12.0.sp,
+                                fontFamily: "Axiforma",
+                                color: Colors.black26,
+                              ),
                             ),
-                          ),
-                          Image.asset(
-                            'assets/images/salle.png',
-                            width: 120,
                           )
                         ],
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            DelayedDisplay(
-              delay: Duration(milliseconds: 200),
-              fadingDuration: const Duration(milliseconds: 100),
-              slidingBeginOffset: const Offset(0.0, 0.15),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(
-                          builder: (context) =>
-                              ShopListing(type: 'lebanese', arrow: true)))
-                      .then((_) {
-                    refreshcart();
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 15.5.h,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 2.2,
-                          blurRadius: 2.5,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 4.5.h, left: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  reset();
-                                  print('reset the cart');
-                                },
-                                child: Text(
-                                  "100% Lebanese",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 14.0.sp,
-                                    fontFamily: 'Axiforma',
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "20+ Shops ready to deliver",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10.0.sp,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.redAccent[700],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Image.asset(
-                          'assets/images/lebsec.jpg',
-                          width: 30.0.w,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            DelayedDisplay(
-              delay: Duration(milliseconds: 100),
-              fadingDuration: const Duration(milliseconds: 280),
-              slidingBeginOffset: const Offset(0.0, 0.15),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(
-                          builder: (context) =>
-                              ShopListing(type: 'cosmetics', arrow: true)))
-                      .then((_) {
-                    refreshcart();
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 15.5.h,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 2.2,
-                          blurRadius: 2.5,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 4.5.h, left: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Cosmetics",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 14.0.sp,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Text(
-                                "20+ Shops ready to deliver",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10.0.sp,
-                                  fontFamily: 'Axiforma',
-                                  color: Colors.redAccent[700],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Image.asset('assets/images/supsec.png', width: 30.0.w)
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "100% Lebanese",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.5.sp,
-                      fontFamily: 'Axiforma',
-                      color: Colors.black,
-                    ),
-                  ),
-                  GestureDetector(
+                Visibility(
+                  visible: false,
+                  child: DelayedDisplay(
+                    delay: Duration(milliseconds: 100),
+                    fadingDuration: const Duration(milliseconds: 100),
+                    slidingBeginOffset: const Offset(0.0, 0.15),
+                    child: GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SetupScreen()));
+                        widget.notifyParent();
                       },
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Image.asset("assets/images/fullfilldolovery.png",
-                            height: 3.5.h),
-                      ))
-                ],
-              ),
-            ),
-            Visibility(
-              visible: true,
-              child: Padding(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          height: 135,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                spreadRadius: 2.2,
+                                blurRadius: 2.5,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 40.0, left: 15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      "Meal Basket",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 20.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Everyday a new recipe!",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.0,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.redAccent[700],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Image.asset(
+                                'assets/images/salle.png',
+                                width: 120,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                DelayedDisplay(
+                  delay: Duration(milliseconds: 200),
+                  fadingDuration: const Duration(milliseconds: 100),
+                  slidingBeginOffset: const Offset(0.0, 0.15),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) =>
+                                  ShopListing(type: 'lebanese', arrow: true)))
+                          .then((_) {
+                        refreshcart();
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        height: 15.5.h,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 2.2,
+                              blurRadius: 2.5,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 4.5.h, left: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () {
+                                      reset();
+                                      print('reset the cart');
+                                    },
+                                    child: Text(
+                                      "100% Lebanese",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 14.0.sp,
+                                        fontFamily: 'Axiforma',
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "20+ Shops ready to deliver",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10.0.sp,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.redAccent[700],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Image.asset(
+                              'assets/images/lebsec.jpg',
+                              width: 30.0.w,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                DelayedDisplay(
+                  delay: Duration(milliseconds: 100),
+                  fadingDuration: const Duration(milliseconds: 280),
+                  slidingBeginOffset: const Offset(0.0, 0.15),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) =>
+                                  ShopListing(type: 'cosmetics', arrow: true)))
+                          .then((_) {
+                        refreshcart();
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        height: 15.5.h,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 2.2,
+                              blurRadius: 2.5,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 4.5.h, left: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "Cosmetics",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 14.0.sp,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    "20+ Shops ready to deliver",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10.0.sp,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.redAccent[700],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Image.asset('assets/images/supsec.png',
+                                width: 30.0.w)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "100% Lebanese",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.5.sp,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
+                        ),
+                      ),
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => SetupScreen()));
+                          },
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Image.asset(
+                                "assets/images/fullfilldolovery.png",
+                                height: 3.5.h),
+                          ))
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: true,
+                  child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 5.0, right: 5, top: 0, bottom: 0),
+                      child: StreamBuilder(
+                          stream: Firestore.instance
+                              .collection('products')
+                              .where('type', isEqualTo: 'lebanese')
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.waiting:
+                                return Container(height: 20);
+                              default:
+                                if (snapshot.data.documents.length < 2) {
+                                  return Opacity(
+                                    opacity: 0.3,
+                                    child: SizedBox(
+                                        height: 22.0.h,
+                                        child: Center(
+                                            child: Text('No items found.'))),
+                                  );
+                                }
+                                if (snapshot.hasData) {
+                                  return GridView.count(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 0.65,
+                                    controller: new ScrollController(
+                                        keepScrollOffset: false),
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    children: List.generate(2, (index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          openProductPopUp(
+                                              context,
+                                              snapshot.data.documents[index],
+                                              index,
+                                              null,
+                                              refreshcart);
+                                        },
+                                        child: ProductImage(
+                                          oldPrice: snapshot
+                                                          .data.documents[index]
+                                                      ['old_price'] ==
+                                                  null
+                                              ? "0"
+                                              : snapshot.data
+                                                  .documents[index]['old_price']
+                                                  .toString(),
+                                          productName: snapshot
+                                              .data.documents[index]['name'],
+                                          productImage: snapshot
+                                              .data.documents[index]['image'],
+                                          productPrice: snapshot.data
+                                              .documents[index]['shop_price']
+                                              .toString(),
+                                          shopName: snapshot
+                                              .data.documents[index]['shop'],
+                                          productUnit: snapshot
+                                                          .data.documents[index]
+                                                      ['unit'] !=
+                                                  null
+                                              ? snapshot.data.documents[index]
+                                                  ['unit']
+                                              : '',
+                                          productCurrency: snapshot.data
+                                              .documents[index]['currency'],
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Text(snapshot.error.toString());
+                                }
+                                return Center(
+                                    child: CircularProgressIndicator());
+                            }
+                          })),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(
-                      left: 5.0, right: 5, top: 0, bottom: 0),
+                      left: 10.0, right: 10.0, bottom: 20),
+                  child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(8)),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) =>
+                                  ShopListing(type: 'lebanese', arrow: true)))
+                          .then((_) {
+                        refreshcart();
+                      });
+                    },
+                    elevation: 0,
+                    color: Colors.grey[100],
+                    minWidth: MediaQuery.of(context).size.width - 20,
+                    height: 0,
+                    padding:
+                        EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "View All Lebanese Shops".toUpperCase(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 10.0.sp,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black38,
+                          ),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Colors.black38,
+                          size: 20.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Monthly Bundle",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.5.sp,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
+                        ),
+                      ),
+                      GestureDetector(
+                          onTap: () {},
+                          child: Image.asset(
+                              "assets/images/fullfilldolovery.png",
+                              height: 3.5.h))
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
                   child: StreamBuilder(
                       stream: Firestore.instance
                           .collection('products')
-                          .where('type', isEqualTo: 'lebanese')
+                          .where('type', isEqualTo: 'bundle')
                           .snapshots(),
                       builder: (context, snapshot) {
                         switch (snapshot.connectionState) {
@@ -890,329 +1045,196 @@ class HomeScreenState extends State<HomeScreen> {
                               );
                             }
                             if (snapshot.hasData) {
-                              return GridView.count(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.65,
-                                controller: new ScrollController(
-                                    keepScrollOffset: false),
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                children: List.generate(2, (index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      openProductPopUp(
-                                          context,
-                                          snapshot.data.documents[index],
-                                          index,
-                                          null,
-                                          refreshcart);
-                                    },
-                                    child: ProductImage(
-                                      oldPrice: snapshot.data.documents[index]
-                                                  ['old_price'] ==
-                                              null
-                                          ? "0"
-                                          : snapshot.data
-                                              .documents[index]['old_price']
-                                              .toString(),
-                                      productName: snapshot
-                                          .data.documents[index]['name'],
-                                      productImage: snapshot
-                                          .data.documents[index]['image'],
-                                      productPrice: snapshot
-                                          .data.documents[index]['shop_price']
-                                          .toString(),
-                                      shopName: snapshot.data.documents[index]
-                                          ['shop'],
-                                      productUnit: snapshot.data
-                                                  .documents[index]['unit'] !=
-                                              null
-                                          ? snapshot.data.documents[index]
-                                              ['unit']
-                                          : '',
-                                      productCurrency: snapshot
-                                          .data.documents[index]['currency'],
-                                    ),
-                                  );
-                                }).toList(),
-                              );
+                              return SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                      children: List<Widget>.generate(
+                                          snapshot.data.documents.length,
+                                          (int index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        openProductPopUp(
+                                            context,
+                                            snapshot.data.documents[index],
+                                            index,
+                                            null,
+                                            refreshcart);
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 12),
+                                        child: Bundle(
+                                          bundleName: snapshot
+                                              .data.documents[index]['name'],
+                                          bundleDescription: snapshot.data
+                                              .documents[index]['description'],
+                                          bundleIndex: 0,
+                                          bundlePrice: int.parse(snapshot.data
+                                              .documents[index]['shop_price']),
+                                          bundleImage: snapshot
+                                              .data.documents[index]['image'],
+                                        ),
+                                      ),
+                                    );
+                                  })));
                             } else if (snapshot.hasError) {
                               return Text(snapshot.error.toString());
                             }
                             return Center(child: CircularProgressIndicator());
                         }
-                      })),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20),
-              child: MaterialButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(8)),
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(
-                          builder: (context) =>
-                              ShopListing(type: 'lebanese', arrow: true)))
-                      .then((_) {
-                    refreshcart();
-                  });
-                },
-                elevation: 0,
-                color: Colors.grey[100],
-                minWidth: MediaQuery.of(context).size.width - 20,
-                height: 0,
-                padding:
-                    EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "View All Lebanese Shops".toUpperCase(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 10.0.sp,
-                        fontFamily: 'Axiforma',
-                        color: Colors.black38,
-                      ),
-                    ),
-                    Icon(
-                      Icons.keyboard_arrow_right,
-                      color: Colors.black38,
-                      size: 20.0,
-                    ),
-                  ],
+                      }),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "Monthly Bundle",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.5.sp,
-                      fontFamily: 'Axiforma',
-                      color: Colors.black,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Cosmetics",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 26.0,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
+                        ),
+                      ),
+                      GestureDetector(
+                          onTap: () {
+                            () {};
+                          },
+                          child: Image.asset(
+                              "assets/images/fullfilldolovery.png",
+                              height: 3.5.h))
+                    ],
                   ),
-                  GestureDetector(
-                      onTap: () {},
-                      child: Image.asset("assets/images/fullfilldolovery.png",
-                          height: 3.5.h))
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: StreamBuilder(
-                  stream: Firestore.instance
-                      .collection('products')
-                      .where('type', isEqualTo: 'bundle')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return Container(height: 20);
-                      default:
-                        if (snapshot.data.documents.length < 2) {
-                          return Opacity(
-                            opacity: 0.3,
-                            child: SizedBox(
-                                height: 22.0.h,
-                                child: Center(child: Text('No items found.'))),
-                          );
-                        }
-                        if (snapshot.hasData) {
-                          return SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                  children: List<Widget>.generate(
-                                      snapshot.data.documents.length,
-                                      (int index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    openProductPopUp(
-                                        context,
-                                        snapshot.data.documents[index],
-                                        index,
-                                        null,
-                                        refreshcart);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 12),
-                                    child: Bundle(
-                                      bundleName: snapshot.data.documents[index]
-                                          ['name'],
-                                      bundleDescription: snapshot
-                                          .data.documents[index]['description'],
-                                      bundleIndex: 0,
-                                      bundlePrice: int.parse(snapshot
-                                          .data.documents[index]['shop_price']),
-                                      bundleImage: snapshot
-                                          .data.documents[index]['image'],
-                                    ),
-                                  ),
+                ),
+                Padding(
+                    padding: const EdgeInsets.only(
+                        left: 5.0, right: 5, top: 0, bottom: 0),
+                    child: StreamBuilder(
+                        stream: Firestore.instance
+                            .collection('products')
+                            .where('type', isEqualTo: 'cosmetics')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return Container(height: 20);
+                            default:
+                              if (snapshot.data.documents.length < 2) {
+                                return Opacity(
+                                  opacity: 0.3,
+                                  child: SizedBox(
+                                      height: 22.0.h,
+                                      child: Center(
+                                          child: Text('No items found.'))),
                                 );
-                              })));
-                        } else if (snapshot.hasError) {
-                          return Text(snapshot.error.toString());
-                        }
-                        return Center(child: CircularProgressIndicator());
-                    }
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "Cosmetics",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26.0,
-                      fontFamily: 'Axiforma',
-                      color: Colors.black,
-                    ),
-                  ),
-                  GestureDetector(
-                      onTap: () {
-                        () {};
-                      },
-                      child: Image.asset("assets/images/fullfilldolovery.png",
-                          height: 3.5.h))
-                ],
-              ),
-            ),
-            Padding(
-                padding: const EdgeInsets.only(
-                    left: 5.0, right: 5, top: 0, bottom: 0),
-                child: StreamBuilder(
-                    stream: Firestore.instance
-                        .collection('products')
-                        .where('type', isEqualTo: 'cosmetics')
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return Container(height: 20);
-                        default:
-                          if (snapshot.data.documents.length < 2) {
-                            return Opacity(
-                              opacity: 0.3,
-                              child: SizedBox(
-                                  height: 22.0.h,
-                                  child:
-                                      Center(child: Text('No items found.'))),
-                            );
-                          }
-                          if (snapshot.hasData) {
-                            return GridView.count(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.65,
-                              controller:
-                                  new ScrollController(keepScrollOffset: false),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              children: List.generate(8, (index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    openProductPopUp(
-                                        context,
-                                        snapshot.data.documents[index],
-                                        index,
-                                        null,
-                                        refreshcart);
-                                  },
-                                  child: ProductImage(
-                                    productName: snapshot.data.documents[index]
-                                        ['name'],
-                                    productImage: snapshot.data.documents[index]
-                                        ['image'],
-                                    productPrice: snapshot
-                                        .data.documents[index]['shop_price']
-                                        .toString(),
-                                    shopName: snapshot.data.documents[index]
-                                        ['shop'],
-                                    productUnit: snapshot.data.documents[index]
-                                                ['unit'] !=
-                                            null
-                                        ? snapshot.data.documents[index]['unit']
-                                        : '',
-                                    productCurrency: snapshot.data
-                                                .documents[index]['currency'] !=
-                                            null
-                                        ? snapshot.data.documents[index]
-                                            ['currency']
-                                        : "lebanese",
-                                    oldPrice: snapshot.data.documents[index]
-                                                ['old_price'] ==
-                                            null
-                                        ? "0"
-                                        : snapshot
-                                            .data.documents[index]['old_price']
+                              }
+                              if (snapshot.hasData) {
+                                return GridView.count(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.65,
+                                  controller: new ScrollController(
+                                      keepScrollOffset: false),
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  children: List.generate(8, (index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        openProductPopUp(
+                                            context,
+                                            snapshot.data.documents[index],
+                                            index,
+                                            null,
+                                            refreshcart);
+                                      },
+                                      child: ProductImage(
+                                        productName: snapshot
+                                            .data.documents[index]['name'],
+                                        productImage: snapshot
+                                            .data.documents[index]['image'],
+                                        productPrice: snapshot
+                                            .data.documents[index]['shop_price']
                                             .toString(),
-                                  ),
+                                        shopName: snapshot.data.documents[index]
+                                            ['shop'],
+                                        productUnit: snapshot.data
+                                                    .documents[index]['unit'] !=
+                                                null
+                                            ? snapshot.data.documents[index]
+                                                ['unit']
+                                            : '',
+                                        productCurrency:
+                                            snapshot.data.documents[index]
+                                                        ['currency'] !=
+                                                    null
+                                                ? snapshot.data.documents[index]
+                                                    ['currency']
+                                                : "lebanese",
+                                        oldPrice: snapshot.data.documents[index]
+                                                    ['old_price'] ==
+                                                null
+                                            ? "0"
+                                            : snapshot.data
+                                                .documents[index]['old_price']
+                                                .toString(),
+                                      ),
+                                    );
+                                  }).toList(),
                                 );
-                              }).toList(),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Text(snapshot.error.toString());
+                              } else if (snapshot.hasError) {
+                                return Text(snapshot.error.toString());
+                              }
+                              return Center(child: CircularProgressIndicator());
                           }
-                          return Center(child: CircularProgressIndicator());
-                      }
-                    })),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20),
-              child: MaterialButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(8)),
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(
-                          builder: (context) => ShopListing(
-                                arrow: true,
-                                type: 'cosmetics',
-                              )))
-                      .then((_) {
-                    refreshcart();
-                  });
-                },
-                elevation: 0,
-                color: Colors.grey[100],
-                minWidth: MediaQuery.of(context).size.width - 20,
-                height: 0,
-                padding:
-                    EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "View All Cosmetics Shops".toUpperCase(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 10.0.sp,
-                        fontFamily: 'Axiforma',
-                        color: Colors.black38,
-                      ),
+                        })),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 10.0, right: 10.0, bottom: 20),
+                  child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(8)),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) => ShopListing(
+                                    arrow: true,
+                                    type: 'cosmetics',
+                                  )))
+                          .then((_) {
+                        refreshcart();
+                      });
+                    },
+                    elevation: 0,
+                    color: Colors.grey[100],
+                    minWidth: MediaQuery.of(context).size.width - 20,
+                    height: 0,
+                    padding:
+                        EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "View All Cosmetics Shops".toUpperCase(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 10.0.sp,
+                            fontFamily: 'Axiforma',
+                            color: Colors.black38,
+                          ),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Colors.black38,
+                          size: 20.0,
+                        ),
+                      ],
                     ),
-                    Icon(
-                      Icons.keyboard_arrow_right,
-                      color: Colors.black38,
-                      size: 20.0,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
-    ));
+          ),
+        ));
   }
 }

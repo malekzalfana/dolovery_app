@@ -73,9 +73,9 @@ class ProfileScreenState extends State<ProfileMainScreen> {
     });
   }
 
-  void runsetupVerification() {
-    setupVerification().then((value) => null);
-  }
+  // void runsetupVerification() {
+  //   setupVerification().then((value) => null);
+  // }
 
   void signOut() {
     FirebaseAuth.instance.signOut().then((onValue) {});

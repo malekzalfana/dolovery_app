@@ -36,6 +36,8 @@
 	<string>608921953082511</string>
 	<key>FacebookDisplayName</key>
 	<string>Dolovery</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -74,6 +76,12 @@
 	<string>Dolovery might prompt to use your gallery.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Dolovery might prompt to use your microphone.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolovery_app/screens/cart.dart';
 import 'package:dolovery_app/screens/profilemain.dart';
 import 'package:dolovery_app/screens/setup.dart';
@@ -8,6 +9,7 @@ import 'package:dolovery_app/screens/profile.dart';
 import 'package:dolovery_app/screens/salle.dart';
 import 'package:dolovery_app/screens/shoplisting.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,7 +55,49 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    final Firestore _db = Firestore.instance;
+    final FirebaseMessaging _fcm = FirebaseMessaging();
+
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(message['notification']['title']),
+              subtitle: Text(message['notification']['body']),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        // TODO optional
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        // TODO optional
+      },
+    );
+
     super.initState();
+    _fcm.getToken().then((token) {
+      print(token);
+    });
+    if (Platform.isIOS) {
+      iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
+        // save the token  OR subscribe to a topic here
+      });
+
+      _fcm.requestNotificationPermissions(IosNotificationSettings());
+    }
     Timer.run(() {
       try {
         InternetAddress.lookup('google.com').then((result) {
@@ -63,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }).catchError((error) {});
       } on SocketException catch (_) {}
     });
+    super.initState();
   }
 
   Future<void> reset() async {
