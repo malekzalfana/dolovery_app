@@ -532,7 +532,7 @@ class HomeScreenState extends State<HomeScreen> {
                                     ),
                                     Container(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 1.9.h),
+                                          horizontal: 5, vertical: 23),
                                       height: 8.0.h,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(7),
@@ -550,7 +550,7 @@ class HomeScreenState extends State<HomeScreen> {
                                                       ['name'],
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 15.0.sp,
+                                                    fontSize: 12.0.sp,
                                                     fontFamily: 'Axiforma',
                                                     color:
                                                         Colors.redAccent[700],

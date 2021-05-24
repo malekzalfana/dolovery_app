@@ -783,7 +783,7 @@ class _CartState extends State<Cart> {
                             .setData({
                           "address": addresstouse,
                           "total": shoporderTotal.toInt(),
-                          "count": usercartmap_v2[cartshop].length,
+                          "count": usercartmap_v2[cartshop]['products'].length,
                           "payment": "cashondelivery",
                           "date": DateTime.now(),
                           "shop": cartshop,
