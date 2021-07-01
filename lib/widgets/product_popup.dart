@@ -1,11 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPopUp extends StatefulWidget {
@@ -67,11 +68,8 @@ getRate(shopName) async {
     skip = true;
   }
   if (!cachedshops.containsKey(shopName)) {
-    shopinfo = Firestore.instance
-        .collection('shops')
-        .where('username', isEqualTo: shopName)
-        .getDocuments()
-        .then(
+    shopinfo =
+        Firestore.instance.collection('shops').where('username', isEqualTo: shopName).getDocuments().then(
       (value) {
         if (value.documents.length > 0) {
           cachedshops[shopName] = value.documents[0].data['rate'];
@@ -90,8 +88,7 @@ getRate(shopName) async {
   started = true;
 }
 
-void openProductPopUp(context, productData, index,
-    [productid, sendrefreshtohome]) {
+void openProductPopUp(context, productData, index, [productid, sendrefreshtohome]) {
   started = false;
   int _n = 0;
   bool minimum = true;
@@ -202,8 +199,7 @@ void openProductPopUp(context, productData, index,
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter mystate) {
+        return StatefulBuilder(builder: (BuildContext context, StateSetter mystate) {
           add() {
             cartlocked = true;
             mystate(() {
@@ -253,10 +249,7 @@ void openProductPopUp(context, productData, index,
             if (usercartmap_v2.containsKey(shop_name)) {
               if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
                 usercartmap_v2[shop_name]['products'][itemid]['count'] =
-                    int.parse(usercartmap_v2[shop_name]['products'][itemid]
-                                ['count']
-                            .toString()) +
-                        1;
+                    int.parse(usercartmap_v2[shop_name]['products'][itemid]['count'].toString()) + 1;
                 usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
                 usercartmap_v2[shop_name]['products'][itemid]['data'] = newitem;
                 if (newitem['datetime'] != null)
@@ -288,10 +281,7 @@ void openProductPopUp(context, productData, index,
                   } else {
                     usercartmap_v2[shop_name] = {
                       'products': {},
-                      'data': {
-                        'name': shop_name,
-                        'shop_name': productData['shop']
-                      }
+                      'data': {'name': shop_name, 'shop_name': productData['shop']}
                     };
                   }
                 },
@@ -317,12 +307,10 @@ void openProductPopUp(context, productData, index,
             if (prefs.getDouble('total') == null) {
               prefs.setDouble('total', 0);
             }
-            var shop_price = double.parse(
-                productData['shop_price'].toString()); //.toDouble();
+            var shop_price = double.parse(productData['shop_price'].toString()); //.toDouble();
             double total = prefs.getDouble('total') == null
                 ? 0
-                : prefs.getDouble('total') +
-                    (double.parse(shop_price.toString()) * rate);
+                : prefs.getDouble('total') + (double.parse(shop_price.toString()) * rate);
             prefs.setDouble('total', total);
             if (cart == null) {
               cart = [];
@@ -385,12 +373,8 @@ void openProductPopUp(context, productData, index,
             if (usercartmap_v2.containsKey(shop_name)) {
               if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
                 usercartmap_v2[shop_name]['products'][itemid]['count'] =
-                    int.parse(usercartmap_v2[shop_name]['products'][itemid]
-                                ['count']
-                            .toString()) -
-                        1;
-                if (usercartmap_v2[shop_name]['products'][itemid]['count'] ==
-                    0) {
+                    int.parse(usercartmap_v2[shop_name]['products'][itemid]['count'].toString()) - 1;
+                if (usercartmap_v2[shop_name]['products'][itemid]['count'] == 0) {
                   usercartmap_v2[shop_name]['products'].remove(itemid);
                 }
               }
@@ -406,8 +390,7 @@ void openProductPopUp(context, productData, index,
             var shop_price = double.parse(productData['shop_price'].toString());
             double total = prefs.getDouble('total') == null
                 ? 0
-                : prefs.getDouble('total') -
-                    (double.parse(shop_price.toString()) * rate);
+                : prefs.getDouble('total') - (double.parse(shop_price.toString()) * rate);
             prefs.setDouble('total', total);
             if (cart == null) {
               cart = [];
@@ -507,7 +490,7 @@ void openProductPopUp(context, productData, index,
                             icon: Icon(
                               Icons.clear,
                               color: Colors.grey,
-                              size: 30,
+                              size: 40.0,
                             ),
                             onPressed: () {
                               Navigator.of(context).pop();
@@ -521,9 +504,7 @@ void openProductPopUp(context, productData, index,
                         child: Center(
                             child: CachedNetworkImage(
                           width: Adaptive.w(40),
-                          placeholder: (context, url) => Image.asset(
-                              "assets/images/loading.gif",
-                              height: 30),
+                          placeholder: (context, url) => Image.asset("assets/images/loading.gif", height: 30),
                           imageUrl: productData['image'],
                           errorWidget: (context, url, error) => Center(
                               child: AspectRatio(
@@ -531,9 +512,11 @@ void openProductPopUp(context, productData, index,
                             child: Container(
                                 width: 400,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.grey[100]),
-                                child: new Icon(Icons.error)),
+                                    borderRadius: BorderRadius.circular(10), color: Colors.grey[100]),
+                                child: new Icon(
+                                  Icons.error,
+                                  size: Adaptive.h(8),
+                                )),
                           )),
                         ))),
                   if (productData['name'] != null)
@@ -587,15 +570,11 @@ void openProductPopUp(context, productData, index,
                                   _remove(productData, finalDocumentID, rate);
                                 },
                                 elevation: !minimum ? 2 : 0,
-                                fillColor: !minimum
-                                    ? Colors.redAccent[700]
-                                    : Colors.grey[200],
+                                fillColor: !minimum ? Colors.redAccent[700] : Colors.grey[200],
                                 child: Icon(
                                   Icons.remove,
-                                  size: 18,
-                                  color: !minimum
-                                      ? Colors.white
-                                      : Colors.grey[800],
+                                  size: Adaptive.h(4),
+                                  color: !minimum ? Colors.white : Colors.grey[800],
                                 ),
                                 padding: EdgeInsets.all(0.0),
                                 shape: CircleBorder(),
@@ -603,8 +582,7 @@ void openProductPopUp(context, productData, index,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: new Text('$_n',
-                                  style: new TextStyle(fontSize: 20.0)),
+                              child: new Text('$_n', style: new TextStyle(fontSize: Adaptive.sp(12))),
                             ),
                             IgnorePointer(
                               ignoring: cartlocked,
@@ -614,15 +592,11 @@ void openProductPopUp(context, productData, index,
                                   _save(productData, finalDocumentID, rate);
                                 },
                                 elevation: !maximum ? 2 : 0,
-                                fillColor: !maximum
-                                    ? Colors.redAccent[700]
-                                    : Colors.grey[200],
+                                fillColor: !maximum ? Colors.redAccent[700] : Colors.grey[200],
                                 child: Icon(
                                   Icons.add,
-                                  size: 18,
-                                  color: !maximum
-                                      ? Colors.white
-                                      : Colors.grey[800],
+                                  size: Adaptive.h(4),
+                                  color: !maximum ? Colors.white : Colors.grey[800],
                                 ),
                                 padding: EdgeInsets.all(0.0),
                                 shape: CircleBorder(),
@@ -642,9 +616,7 @@ void openProductPopUp(context, productData, index,
                           fadingDuration: const Duration(milliseconds: 300),
                           slidingBeginOffset: const Offset(0.0, 0.15),
                           child: Text(
-                            _n > 0
-                                ? 'You have ${_n} items in your cart!'
-                                : 'Item removed from your cart!',
+                            _n > 0 ? 'You have ${_n} items in your cart!' : 'Item removed from your cart!',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: Adaptive.sp(14),
@@ -659,15 +631,14 @@ void openProductPopUp(context, productData, index,
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 30.0, top: 30, bottom: 10),
+                          padding: const EdgeInsets.only(left: 30.0, top: 30, bottom: 10),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
                               "Description",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 13.0,
+                                fontSize: Adaptive.sp(15),
                                 fontFamily: 'Axiforma',
                                 color: Colors.black54,
                               ),
@@ -676,8 +647,7 @@ void openProductPopUp(context, productData, index,
                         ),
                         if (productData['description'] != null)
                           Padding(
-                            padding: const EdgeInsets.only(
-                                left: 30.0, right: 30.0, top: 0, bottom: 30),
+                            padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 0, bottom: 30),
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
@@ -686,7 +656,7 @@ void openProductPopUp(context, productData, index,
                                     : "No description found for this item.",
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 13.0,
+                                  fontSize: Adaptive.sp(13),
                                   fontFamily: 'Axiforma',
                                   color: Colors.black,
                                 ),
@@ -695,15 +665,14 @@ void openProductPopUp(context, productData, index,
                           ),
                         if (productData['description'] == null)
                           Padding(
-                            padding: const EdgeInsets.only(
-                                left: 30.0, right: 30.0, top: 0, bottom: 30),
+                            padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 0, bottom: 30),
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 "No description found for this item.",
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 13.0,
+                                  fontSize: Adaptive.sp(11),
                                   fontFamily: 'Axiforma',
                                   color: Colors.black,
                                 ),

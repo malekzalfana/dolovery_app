@@ -5,8 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolovery_app/screens/cart.dart';
 import 'package:dolovery_app/screens/profilemain.dart';
 import 'package:dolovery_app/screens/setup.dart';
-import 'package:dolovery_app/screens/profile.dart';
-import 'package:dolovery_app/screens/salle.dart';
 import 'package:dolovery_app/screens/shoplisting.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -167,12 +165,8 @@ class _MyHomePageState extends State<MyHomePage> {
             future: _getPrefs(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                int cart_items = prefs.getDouble('items') != null
-                    ? prefs.getDouble('items').toInt()
-                    : 0;
-                int cart_total = prefs.getDouble('total') != null
-                    ? prefs.getDouble('total').toInt()
-                    : 0;
+                int cart_items = prefs.getDouble('items') != null ? prefs.getDouble('items').toInt() : 0;
+                int cart_total = prefs.getDouble('total') != null ? prefs.getDouble('total').toInt() : 0;
                 cart_total = cart_total == null ? 0 : cart_total;
                 cart_total = cart_total == null ? 0 : cart_total;
 
@@ -189,8 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Visibility(
                               visible: cart_items > 0 ? true : false,
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(13, 4, 10, 0),
+                                padding: const EdgeInsets.fromLTRB(13, 4, 10, 0),
                                 child: Row(
                                   children: [
                                     Text(
@@ -218,16 +211,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                     Spacer(),
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 4.0),
+                                      padding: const EdgeInsets.only(bottom: 4.0),
                                       child: Align(
                                         alignment: Alignment.centerRight,
                                         child: MaterialButton(
                                           onPressed: () {
                                             Navigator.of(context)
-                                                .push(MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Cart(newuser)))
+                                                .push(MaterialPageRoute(builder: (context) => Cart(newuser)))
                                                 .then((_) {
                                               refreshcart();
                                             });
@@ -240,11 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           minWidth: 0,
                                           height: 0,
                                           elevation: 0,
-                                          padding: EdgeInsets.only(
-                                              left: 9,
-                                              top: 6,
-                                              right: 9,
-                                              bottom: 4),
+                                          padding: EdgeInsets.only(left: 9, top: 6, right: 9, bottom: 4),
                                           child: Text(
                                             "OPEN CART",
                                             textAlign: TextAlign.center,
@@ -265,10 +251,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             Container(
                               color: Colors.white,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  buildNavItem(context, 'home', true, 0),
-                                  buildNavItem(context, 'lebanese', false, 1),
-                                  buildNavItem(context, 'profile', false, 2)
+                                  Expanded(child: buildNavItem(context, 'home', true, 0)),
+                                  Expanded(child: buildNavItem(context, 'lebanese', false, 1)),
+                                  Expanded(child: buildNavItem(context, 'profile', false, 2))
                                 ],
                               ),
                             ),
@@ -281,14 +268,12 @@ class _MyHomePageState extends State<MyHomePage> {
               } else if (snapshot.hasError) {
                 Text("there is an error");
               } else {}
-              return Center(
-                  child: Image.asset("assets/images/loading.gif", height: 30));
+              return Center(child: Image.asset("assets/images/loading.gif", height: 30));
             }),
         body: pages[_selectedItemIndex]);
   }
 
-  Container buildNavItem(
-      BuildContext context, String iconname, bool isActive, int index) {
+  Container buildNavItem(BuildContext context, String iconname, bool isActive, int index) {
     return Container(
       height: 50,
       width: MediaQuery.of(context).size.width / 3,
@@ -326,8 +311,7 @@ class _MyHomePageState extends State<MyHomePage> {
         final AuthCredential credential = FacebookAuthProvider.getCredential(
           accessToken: result.accessToken.token,
         );
-        final FirebaseUser user =
-            (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+        final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
         return user;
       }
     } catch (e) {}
@@ -336,8 +320,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> signUpWithMail() async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailTextController.text,
-          password: passwordTextController.text);
+          email: emailTextController.text, password: passwordTextController.text);
       showDialog(
           context: context,
           builder: (context) {

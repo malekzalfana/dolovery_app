@@ -1,17 +1,17 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolovery_app/screens/salleitem.dart';
 import 'package:dolovery_app/screens/setup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import 'orderpage.dart';
 
@@ -128,10 +128,8 @@ class _CartState extends State<Cart> {
 
     if (usercartmap_v2.containsKey(shop_name)) {
       if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
-        usercartmap_v2[shop_name]['products'][itemid]['count'] = int.parse(
-                usercartmap_v2[shop_name]['products'][itemid]['count']
-                    .toString()) +
-            1;
+        usercartmap_v2[shop_name]['products'][itemid]['count'] =
+            int.parse(usercartmap_v2[shop_name]['products'][itemid]['count'].toString()) + 1;
         usercartmap_v2[shop_name]['products'][itemid]['rate'] = rate;
         usercartmap_v2[shop_name]['products'][itemid]['data'] = item;
         usercartmap_v2[shop_name]['products'][itemid]['date'] = item['date'];
@@ -162,9 +160,7 @@ class _CartState extends State<Cart> {
     if (currency == 'dollar') {
       rate = 1;
     }
-    double total = prefs.getDouble('total') == null
-        ? 0
-        : prefs.getDouble('total') + shop_price;
+    double total = prefs.getDouble('total') == null ? 0 : prefs.getDouble('total') + shop_price;
     prefs.setDouble('total', total);
 
     if (cart == null) {
@@ -200,10 +196,8 @@ class _CartState extends State<Cart> {
 
     if (usercartmap_v2.containsKey(shop_name)) {
       if (usercartmap_v2[shop_name]['products'].containsKey(itemid)) {
-        usercartmap_v2[shop_name]['products'][itemid]['count'] = double.parse(
-                usercartmap_v2[shop_name]['products'][itemid]['count']
-                    .toString()) -
-            1;
+        usercartmap_v2[shop_name]['products'][itemid]['count'] =
+            double.parse(usercartmap_v2[shop_name]['products'][itemid]['count'].toString()) - 1;
         if (usercartmap_v2[shop_name]['products'][itemid]['count'] == 0) {
           usercartmap_v2[shop_name]['products'].remove(itemid);
         }
@@ -223,9 +217,7 @@ class _CartState extends State<Cart> {
     if (currency == 'dollar') {
       rate = 1;
     }
-    double total = prefs.getDouble('total') == null
-        ? 0
-        : prefs.getDouble('total') - shop_price;
+    double total = prefs.getDouble('total') == null ? 0 : prefs.getDouble('total') - shop_price;
     minus();
     prefs.setDouble('total', total);
     if (cart == null) {
@@ -257,18 +249,13 @@ class _CartState extends State<Cart> {
   getcartmap() async {
     for (var cartshop in shops) {
       for (var cartitem in finalcart) {
-        Firestore.instance
-            .collection("products")
-            .document(cartitem)
-            .get()
-            .then((value) {
+        Firestore.instance.collection("products").document(cartitem).get().then((value) {
           if (value.data['shop'] == cartshop.toString()) {
             if (!cartshopsproductsmap.containsKey(cartitem)) {
               cartshopsproductsmap[cartitem] = 1;
               cartshopsproductsmap[cartitem].toInt();
             } else {
-              cartshopsproductsmap[cartitem] =
-                  cartshopsproductsmap[cartitem].toInt() + 1;
+              cartshopsproductsmap[cartitem] = cartshopsproductsmap[cartitem].toInt() + 1;
             }
 
             cartshopsmap[cartshop.toString()] = cartshopsproductsmap;
@@ -303,19 +290,14 @@ class _CartState extends State<Cart> {
         for (var cartshop in shops) {
           Map cartshopsproductsmap = {};
           for (var cartitem in cart) {
-            Firestore.instance
-                .collection("products")
-                .document(cartitem)
-                .get()
-                .then((value) {
+            Firestore.instance.collection("products").document(cartitem).get().then((value) {
               if (value.data['shop'] == cartshop.toString()) {
                 if (!cartshopsproductsmap.containsKey(cartitem)) {
                   cartshopsproductsmap[cartitem] = 1;
 
                   finalcart.add(cartshopsproductsmap[cartitem].toString());
                 } else {
-                  cartshopsproductsmap[cartitem] =
-                      cartshopsproductsmap[cartitem].toInt() + 1;
+                  cartshopsproductsmap[cartitem] = cartshopsproductsmap[cartitem].toInt() + 1;
                 }
 
                 cartshopsmap[cartshop.toString()] = cartshopsproductsmap;
@@ -389,8 +371,7 @@ class _CartState extends State<Cart> {
         name = user.displayName;
         uemail = user.email;
 
-        this_user =
-            await Firestore.instance.collection("users").document(uid).get();
+        this_user = await Firestore.instance.collection("users").document(uid).get();
 /* added to the page */
         if (this_user.exists) {
           user_is_setup = true;
@@ -578,20 +559,17 @@ class _CartState extends State<Cart> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                   Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                          builder: (context) => SetupScreen()))
+                                      .push(MaterialPageRoute(builder: (context) => SetupScreen()))
                                       .then((_) {
                                     setState(() {});
-                                    print(
-                                        'user has been setup and then as run');
+                                    print('user has been setup and then as run');
                                   });
                                 },
                                 color: Colors.redAccent[700],
                                 textColor: Colors.white,
                                 minWidth: 0,
                                 height: 0,
-                                padding: EdgeInsets.only(
-                                    left: 20, top: 10, right: 20, bottom: 10),
+                                padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 10),
                                 child: Text(
                                   "Setup your profile",
                                   style: TextStyle(
@@ -630,21 +608,18 @@ class _CartState extends State<Cart> {
       final FirebaseAuth _auth = FirebaseAuth.instance;
 
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      final FirebaseUser user =
-          (await _auth.signInWithCredential(credential)).user;
+      final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
 
       Navigator.of(context).pop();
       _welcomePopUp(context, user.displayName);
 
-      final notsetup =
-          await Firestore.instance.collection("users").document(user.uid).get();
+      final notsetup = await Firestore.instance.collection("users").document(user.uid).get();
 
       return notsetup;
     } catch (e) {}
@@ -659,8 +634,7 @@ class _CartState extends State<Cart> {
         final AuthCredential credential = FacebookAuthProvider.getCredential(
           accessToken: result.accessToken.token,
         );
-        final FirebaseUser user =
-            (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+        final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
         return user;
       }
     } catch (e) {}
@@ -678,17 +652,23 @@ class _CartState extends State<Cart> {
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-              title: new Text("Delete all cart items?"),
+              title: new Text("Delete all cart items?", style: TextStyle(fontSize: Adaptive.sp(12))),
               actions: <Widget>[
                 FlatButton(
-                  child: Text('Cancel'),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(fontSize: Adaptive.sp(9)),
+                  ),
                   textColor: Colors.grey,
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 FlatButton(
-                  child: Text('Confirm'),
+                  child: Text(
+                    'Confirm',
+                    style: TextStyle(fontSize: Adaptive.sp(9)),
+                  ),
                   onPressed: () {
                     reset();
                     Navigator.of(context).pop();
@@ -702,17 +682,23 @@ class _CartState extends State<Cart> {
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-              title: new Text("Confirm your order?"),
+              title: new Text(
+                "Confirm your order?",
+                style: TextStyle(fontSize: Adaptive.sp(12)),
+              ),
               actions: <Widget>[
                 FlatButton(
-                  child: Text('Cancel'),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(fontSize: Adaptive.sp(9)),
+                  ),
                   textColor: Colors.grey,
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 FlatButton(
-                  child: Text('Confirm'),
+                  child: Text('Confirm', style: TextStyle(fontSize: Adaptive.sp(9))),
                   onPressed: () {
                     setState(() {
                       ordered = true;
@@ -720,13 +706,10 @@ class _CartState extends State<Cart> {
                     getCartAddress() async {
                       final prefs = await SharedPreferences.getInstance();
 
-                      var all_addresses =
-                          json.decode(prefs.getString('addresses'));
+                      var all_addresses = json.decode(prefs.getString('addresses'));
                       var addresstouse = {};
 
-                      for (var address = 0;
-                          address < all_addresses.length;
-                          address++) {
+                      for (var address = 0; address < all_addresses.length; address++) {
                         if (all_addresses[address]['id'] == chosen_address) {
                           addresstouse = all_addresses[address];
                         }
@@ -741,46 +724,33 @@ class _CartState extends State<Cart> {
                             .collection("shops")
                             .where('username', isEqualTo: cartshop)
                             .getDocuments();
-                        usercartmap_v2[cartshop]['shop_name'] =
-                            datashop.documents[0].data['name'];
+                        usercartmap_v2[cartshop]['shop_name'] = datashop.documents[0].data['name'];
                         var rate = datashop.documents[0].data['rate'];
                         if (rate == null) {
                           rate = 1;
                         }
                         int shoporderTotal = 0;
-                        print(usercartmap_v2[cartshop]['products']
-                            .keys
-                            .runtimeType
-                            .toString());
+                        print(usercartmap_v2[cartshop]['products'].keys.runtimeType.toString());
                         // usercartmap_v2[cartshop]['products'].forEach((product) {
                         // });
-                        for (var cartproduct
-                            in usercartmap_v2[cartshop]['products'].keys) {
-                          print(usercartmap_v2[cartshop]['products']
-                              [cartproduct]['rate']);
-                          var productRate = usercartmap_v2[cartshop]['products']
-                                      [cartproduct]['data']['currency'] ==
+                        for (var cartproduct in usercartmap_v2[cartshop]['products'].keys) {
+                          print(usercartmap_v2[cartshop]['products'][cartproduct]['rate']);
+                          var productRate = usercartmap_v2[cartshop]['products'][cartproduct]['data']
+                                      ['currency'] ==
                                   'dollar'
-                              ? usercartmap_v2[cartshop]['products']
-                                  [cartproduct]['rate']
+                              ? usercartmap_v2[cartshop]['products'][cartproduct]['rate']
                               : 1;
-                          var shoporderProduct = usercartmap_v2[cartshop]
-                                      ['products'][cartproduct]['data']
+                          var shoporderProduct = usercartmap_v2[cartshop]['products'][cartproduct]['data']
                                   ['shop_price'] *
-                              usercartmap_v2[cartshop]['products'][cartproduct]
-                                  ['count'] *
+                              usercartmap_v2[cartshop]['products'][cartproduct]['count'] *
                               productRate;
-                          shoporderTotal =
-                              shoporderTotal + shoporderProduct.toInt();
+                          shoporderTotal = shoporderTotal + shoporderProduct.toInt();
                         }
                         var singleShopOrder = UniqueKey().hashCode.toString();
                         // cartmap['shop_name'] = singleShopOrder;
                         var orderId = singleShopOrder;
                         usercartmap_v2[cartshop]['order_id'] = singleShopOrder;
-                        Firestore.instance
-                            .collection('shop_orders')
-                            .document(orderId)
-                            .setData({
+                        Firestore.instance.collection('shop_orders').document(orderId).setData({
                           "address": addresstouse,
                           "total": shoporderTotal.toInt(),
                           "count": usercartmap_v2[cartshop]['products'].length,
@@ -798,10 +768,7 @@ class _CartState extends State<Cart> {
                       }
 
                       var fullorderId = UniqueKey().hashCode.toString();
-                      Firestore.instance
-                          .collection('orders')
-                          .document(fullorderId)
-                          .setData({
+                      Firestore.instance.collection('orders').document(fullorderId).setData({
                         "address": addresstouse,
                         "total": total.toInt(),
                         "count": items,
@@ -815,8 +782,8 @@ class _CartState extends State<Cart> {
                         // reset(false);
                         Navigator.pop(context);
 
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => OrderPage(fullorderId)));
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) => OrderPage(fullorderId)));
                       }).catchError((error) {});
                     }
 
@@ -833,8 +800,7 @@ class _CartState extends State<Cart> {
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-              title:
-                  new Text("Do you want to remove this item from your cart?"),
+              title: new Text("Do you want to remove this item from your cart?"),
               actions: <Widget>[
                 FlatButton(
                   child: Text('Cancel'),
@@ -864,8 +830,7 @@ class _CartState extends State<Cart> {
   Future setupVerification() async {
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final prefs = await SharedPreferences.getInstance();
-    this_user =
-        await Firestore.instance.collection("users").document(uid).get();
+    this_user = await Firestore.instance.collection("users").document(uid).get();
 
     if (user != null) {
       uid = user.uid;
@@ -930,6 +895,13 @@ class _CartState extends State<Cart> {
                 iconTheme: IconThemeData(
                   color: Colors.black,
                 ),
+                leading: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(
+                    Icons.arrow_back,
+                    size: Adaptive.h(4),
+                  ),
+                ),
                 backgroundColor: Colors.transparent,
                 elevation: 0.0,
                 centerTitle: true,
@@ -938,7 +910,7 @@ class _CartState extends State<Cart> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
-                    fontSize: 16.0,
+                    fontSize: Adaptive.sp(15),
                     fontFamily: 'Axiforma',
                     color: Colors.black,
                   ),
@@ -950,7 +922,10 @@ class _CartState extends State<Cart> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(right: 20.0),
-                      child: Icon(Icons.delete),
+                      child: Icon(
+                        Icons.delete,
+                        size: Adaptive.h(4),
+                      ),
                     ),
                   ),
                 ],
@@ -999,16 +974,9 @@ class _CartState extends State<Cart> {
                                 ),
                                 Column(
                                   children: [
-                                    for (var product in usercartmap_v2[shop]
-                                            ['products']
-                                        .keys)
-                                      buildCartItem_v2(
-                                          usercartmap_v2[shop]['products']
-                                              [product],
-                                          usercartmap_v2[shop]['products']
-                                                  [product]['count']
-                                              .toInt(),
-                                          product)
+                                    for (var product in usercartmap_v2[shop]['products'].keys)
+                                      buildCartItem_v2(usercartmap_v2[shop]['products'][product],
+                                          usercartmap_v2[shop]['products'][product]['count'].toInt(), product)
                                   ],
                                 )
                               ],
@@ -1021,8 +989,7 @@ class _CartState extends State<Cart> {
               Column(
                 children: [
                   Padding(
-                    padding:
-                        const EdgeInsets.only(left: 30.0, top: 20, bottom: 10),
+                    padding: const EdgeInsets.only(left: 30.0, top: 20, bottom: 10),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -1037,8 +1004,7 @@ class _CartState extends State<Cart> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.only(left: 30.0, top: 00, bottom: 10),
+                    padding: const EdgeInsets.only(left: 30.0, top: 00, bottom: 10),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: FutureBuilder(
@@ -1050,9 +1016,7 @@ class _CartState extends State<Cart> {
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 18.0),
                                     child: Center(
-                                      child: Image.asset(
-                                          "assets/images/loading.gif",
-                                          width: 10),
+                                      child: Image.asset("assets/images/loading.gif", width: 10),
                                     ),
                                   );
                                 case ConnectionState.done:
@@ -1072,8 +1036,7 @@ class _CartState extends State<Cart> {
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 18.0),
                                     child: Center(
-                                      child: Text(
-                                          'No internet please refresh page.'),
+                                      child: Text('No internet please refresh page.'),
                                     ),
                                   );
                                   break;
@@ -1091,8 +1054,7 @@ class _CartState extends State<Cart> {
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 30.0, top: 10, bottom: 10),
+                      padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -1108,8 +1070,7 @@ class _CartState extends State<Cart> {
                     ),
                     for (var index = 0; index < addresses.length; index++)
                       Padding(
-                        padding: const EdgeInsets.only(
-                            right: 30.0, bottom: 10, left: 30, top: 12),
+                        padding: const EdgeInsets.only(right: 30.0, bottom: 10, left: 30, top: 12),
                         child: GestureDetector(
                           onTap: () {
                             if (addresses.length > 1) {
@@ -1118,18 +1079,14 @@ class _CartState extends State<Cart> {
                             }
                           },
                           child: Container(
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    spreadRadius: 2.2,
-                                    blurRadius: 2.5,
-                                    offset: Offset(0, 4),
-                                  ),
-                                ],
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
+                            decoration: BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                spreadRadius: 2.2,
+                                blurRadius: 2.5,
+                                offset: Offset(0, 4),
+                              ),
+                            ], color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
@@ -1137,42 +1094,32 @@ class _CartState extends State<Cart> {
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: Icon(
                                     Icons.place,
-                                    color: chosen_address.toString() ==
-                                            addresses[index]["id"]
+                                    color: chosen_address.toString() == addresses[index]["id"]
                                         ? Colors.black
                                         : Colors.grey[400],
                                     size: 36,
                                   ),
                                 ),
                                 Container(
-                                    margin: new EdgeInsets.only(
-                                        left: 10.0, right: 0),
+                                    margin: new EdgeInsets.only(left: 10.0, right: 0),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.5),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: <Widget>[
                                           Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.start,
                                             children: <Widget>[
                                               Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10.0,
-                                                    left: 0,
-                                                    bottom: 5),
+                                                padding: const EdgeInsets.only(top: 10.0, left: 0, bottom: 5),
                                                 child: Text(
                                                   addresses[index]["name"],
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: Adaptive.sp(12),
                                                     fontFamily: 'Axiforma',
-                                                    color: chosen_address ==
-                                                            addresses[index]
-                                                                ["id"]
+                                                    color: chosen_address == addresses[index]["id"]
                                                         ? Colors.black
                                                         : Colors.grey[500],
                                                   ),
@@ -1181,31 +1128,23 @@ class _CartState extends State<Cart> {
                                             ],
                                           ),
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 0),
+                                            padding: const EdgeInsets.only(top: 0),
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.start,
                                               children: <Widget>[
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 0.0, bottom: 8),
+                                                  padding: const EdgeInsets.only(left: 0.0, bottom: 8),
                                                   child: SizedBox(
                                                     width: Adaptive.w(50),
                                                     child: Text(
-                                                      addresses[index]
-                                                          ["street_address"],
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                                      addresses[index]["street_address"],
+                                                      overflow: TextOverflow.ellipsis,
                                                       textAlign: TextAlign.left,
                                                       style: TextStyle(
                                                         height: 1.1,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        fontSize:
-                                                            Adaptive.sp(11),
+                                                        fontWeight: FontWeight.normal,
+                                                        fontSize: Adaptive.sp(11),
                                                         fontFamily: 'Axiforma',
                                                         color: Colors.grey[500],
                                                       ),
@@ -1224,8 +1163,7 @@ class _CartState extends State<Cart> {
                         ),
                       ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 30.0, top: 10, bottom: 10),
+                      padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -1240,8 +1178,7 @@ class _CartState extends State<Cart> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          right: 30.0, bottom: 20, left: 30, top: 12),
+                      padding: const EdgeInsets.only(right: 30.0, bottom: 20, left: 30, top: 12),
                       child: Container(
                         decoration: BoxDecoration(
                           boxShadow: [
@@ -1262,8 +1199,7 @@ class _CartState extends State<Cart> {
                           children: [
                             Padding(
                                 padding: const EdgeInsets.only(left: 15.0),
-                                child: FaIcon(FontAwesomeIcons.moneyBill,
-                                    size: 30, color: Colors.black)),
+                                child: FaIcon(FontAwesomeIcons.moneyBill, size: 30, color: Colors.black)),
                             Padding(
                               padding: const EdgeInsets.all(8.5),
                               child: Column(
@@ -1271,8 +1207,7 @@ class _CartState extends State<Cart> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 10.0, left: 6, bottom: 5),
+                                    padding: const EdgeInsets.only(top: 10.0, left: 6, bottom: 5),
                                     child: Text(
                                       'Cash On Delivery',
                                       style: TextStyle(
@@ -1284,8 +1219,7 @@ class _CartState extends State<Cart> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8.0, bottom: 8),
+                                    padding: const EdgeInsets.only(left: 8.0, bottom: 8),
                                     child: Text(
                                       'Pay when the delivery arrives',
                                       overflow: TextOverflow.ellipsis,
@@ -1317,8 +1251,7 @@ class _CartState extends State<Cart> {
                         return Padding(
                           padding: const EdgeInsets.only(top: 18.0),
                           child: Center(
-                            child: Image.asset("assets/images/loading.gif",
-                                width: 25),
+                            child: Image.asset("assets/images/loading.gif", width: 25),
                           ),
                         );
                       default:
@@ -1327,8 +1260,7 @@ class _CartState extends State<Cart> {
                             children: [
                               if (usersignedin & ordered == false)
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(25, 10, 25, 12),
+                                  padding: const EdgeInsets.fromLTRB(25, 10, 25, 12),
                                   child: MaterialButton(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15.0),
@@ -1344,11 +1276,7 @@ class _CartState extends State<Cart> {
                                     textColor: Colors.white,
                                     minWidth: MediaQuery.of(context).size.width,
                                     height: 0,
-                                    padding: EdgeInsets.only(
-                                        left: 23,
-                                        top: 12,
-                                        right: 23,
-                                        bottom: 10),
+                                    padding: EdgeInsets.only(left: 23, top: 12, right: 23, bottom: 10),
                                     child: Text(
                                       "Confirm Order",
                                       style: TextStyle(
@@ -1363,9 +1291,7 @@ class _CartState extends State<Cart> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 18.0),
                                   child: Center(
-                                    child: Image.asset(
-                                        "assets/images/loading.gif",
-                                        width: 30),
+                                    child: Image.asset("assets/images/loading.gif", width: 30),
                                   ),
                                 ),
                             ],
@@ -1380,8 +1306,7 @@ class _CartState extends State<Cart> {
                               elevation: 0,
                               onPressed: () {
                                 Navigator.of(context)
-                                    .push(MaterialPageRoute(
-                                        builder: (context) => SetupScreen()))
+                                    .push(MaterialPageRoute(builder: (context) => SetupScreen()))
                                     .then((context) {
                                   // setState(() {});
                                   setupVerification();
@@ -1393,8 +1318,7 @@ class _CartState extends State<Cart> {
                               textColor: Colors.white,
                               minWidth: MediaQuery.of(context).size.width,
                               height: 0,
-                              padding: EdgeInsets.only(
-                                  left: 23, top: 10, right: 23, bottom: 10),
+                              padding: EdgeInsets.only(left: 23, top: 10, right: 23, bottom: 10),
                               child: Text(
                                 "Setup your profile to continue",
                                 style: TextStyle(
@@ -1421,8 +1345,7 @@ class _CartState extends State<Cart> {
                               textColor: Colors.white,
                               minWidth: MediaQuery.of(context).size.width,
                               height: 0,
-                              padding: EdgeInsets.only(
-                                  left: 23, top: 10, right: 23, bottom: 10),
+                              padding: EdgeInsets.only(left: 23, top: 10, right: 23, bottom: 10),
                               child: Text(
                                 "Sign in to continue",
                                 style: TextStyle(
@@ -1481,10 +1404,8 @@ class _CartState extends State<Cart> {
   }
 
   getShop(shop) async {
-    var document = await Firestore.instance
-        .collection('shops')
-        .where("username", isEqualTo: shop)
-        .getDocuments();
+    var document =
+        await Firestore.instance.collection('shops').where("username", isEqualTo: shop).getDocuments();
     return document.documents[0];
   }
 
@@ -1493,9 +1414,7 @@ class _CartState extends State<Cart> {
   Padding buildCartItem_v2(dynamic cartitem, int count, String cartitemID) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    var shopPrice = cartitem['data']['shop_price'] != null
-        ? cartitem['data']['shop_price']
-        : 1;
+    var shopPrice = cartitem['data']['shop_price'] != null ? cartitem['data']['shop_price'] : 1;
 
     rate = cartitem['rate'];
     return Padding(
@@ -1504,42 +1423,39 @@ class _CartState extends State<Cart> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            margin: new EdgeInsets.only(left: 12.0, right: 10),
-            child: Container(
-                height: 90,
-                width: 90,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.07),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 8),
-                    ),
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
-                ),
-                child: Center(
-                  child: CachedNetworkImage(
-                    height: 60,
-                    width: 60,
-                    placeholder: (context, url) =>
-                        Image.asset("assets/images/loading.gif", height: 10),
-                    imageUrl: cartitem['data']['image'] == null
-                        ? "s"
-                        : cartitem['data']['image'],
-                    errorWidget: (context, url, error) =>
-                        Center(child: new Icon(Icons.error)),
+              height: Adaptive.h(15),
+              width: Adaptive.h(15),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.07),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 8),
                   ),
-                )),
-          ),
+                ],
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
+              ),
+              child: Center(
+                child: CachedNetworkImage(
+                  height: 60,
+                  width: 60,
+                  placeholder: (context, url) => Image.asset("assets/images/loading.gif", height: 10),
+                  imageUrl: cartitem['data']['image'] == null ? "s" : cartitem['data']['image'],
+                  errorWidget: (context, url, error) => Center(
+                      child: new Icon(
+                    Icons.error,
+                    size: Adaptive.h(3),
+                  )),
+                ),
+              )),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -1555,7 +1471,7 @@ class _CartState extends State<Cart> {
                         maxLines: 2,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 14.5,
+                          fontSize: Adaptive.sp(12),
                           height: 1.16,
                           fontFamily: 'Axiforma',
                           color: Colors.black,
@@ -1565,16 +1481,13 @@ class _CartState extends State<Cart> {
                   ],
                 ),
                 Visibility(
-                  visible: cartitem['data']['type'] == 'salle' &&
-                      cartitem['data']['arabic_name'] != null,
+                  visible: cartitem['data']['type'] == 'salle' && cartitem['data']['arabic_name'] != null,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 3.0),
                     child: SizedBox(
                       width: width - 150,
                       child: Text(
-                        cartitem['date-words'] != null
-                            ? cartitem['date-words']
-                            : '',
+                        cartitem['date-words'] != null ? cartitem['date-words'] : '',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
@@ -1599,14 +1512,9 @@ class _CartState extends State<Cart> {
                         child: Row(
                           children: [
                             Visibility(
-                              visible: cartitem['data']['type'] == 'salle'
-                                  ? false
-                                  : true,
+                              visible: cartitem['data']['type'] == 'salle' ? false : true,
                               child: Text(
-                                (double.parse(shopPrice.toString()) *
-                                            (cartitem['rate']))
-                                        .toInt()
-                                        .toString() +
+                                (double.parse(shopPrice.toString()) * (cartitem['rate'])).toInt().toString() +
                                     "L.L.",
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
@@ -1620,15 +1528,10 @@ class _CartState extends State<Cart> {
                               ),
                             ),
                             Visibility(
-                              visible: cartitem['data']['type'] == 'salle'
-                                  ? true
-                                  : false,
+                              visible: cartitem['data']['type'] == 'salle' ? true : false,
                               child: Text(
                                 cartitem['data']['serving_prices'] != null
-                                    ? cartitem['data']['serving_prices'][count]
-                                            .toInt()
-                                            .toString() +
-                                        "L.L."
+                                    ? cartitem['data']['serving_prices'][count].toInt().toString() + "L.L."
                                     : "",
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
@@ -1645,14 +1548,11 @@ class _CartState extends State<Cart> {
                         ),
                       ),
                       Visibility(
-                        visible:
-                            cartitem['data']['type'] == 'salle' ? false : true,
+                        visible: cartitem['data']['type'] == 'salle' ? false : true,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10.0),
                           child: Text(
-                            cartitem['data']['unit'] != null
-                                ? cartitem['data']['unit'].toString()
-                                : '',
+                            cartitem['data']['unit'] != null ? cartitem['data']['unit'].toString() : '',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               height: 1.1,
@@ -1695,8 +1595,7 @@ class _CartState extends State<Cart> {
                       textColor: Colors.white,
                       minWidth: 0,
                       height: 0,
-                      padding:
-                          EdgeInsets.only(left: 6, top: 2, right: 6, bottom: 1),
+                      padding: EdgeInsets.only(left: 6, top: 2, right: 6, bottom: 1),
                       child: Text(
                         (count + 1).toString() + ' Servings',
                         style: TextStyle(
@@ -1714,82 +1613,69 @@ class _CartState extends State<Cart> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(
-                        width: 25,
-                        child: RawMaterialButton(
-                          onPressed: () {
-                            if (count == 1) {
-                              _askToRemoveProduct(
-                                  cartitemID,
-                                  cartitem['rate'],
-                                  cartitem['data']['shop'],
-                                  cartitem['data']['type'],
-                                  (double.parse(cartitem['data']['shop_price']
-                                          .toString()) *
-                                      cartitem['rate']),
-                                  cartitem['data']['currency'],
-                                  cartitem['data']);
-                            } else {
-                              _remove(
-                                  cartitemID,
-                                  cartitem['rate'],
-                                  cartitem['data']['shop'],
-                                  cartitem['data']['type'],
-                                  (double.parse(cartitem['data']['shop_price']
-                                          .toString()) *
-                                      cartitem['rate']),
-                                  cartitem['data']['currency'],
-                                  cartitem['data']);
-                            }
-                          },
-                          elevation: 2,
-                          fillColor: Colors.redAccent[700],
-                          child: Icon(
-                            Icons.remove,
-                            size: 13,
-                            color: Colors.white,
-                          ),
-                          shape: CircleBorder(),
+                      RawMaterialButton(
+                        onPressed: () {
+                          if (count == 1) {
+                            _askToRemoveProduct(
+                                cartitemID,
+                                cartitem['rate'],
+                                cartitem['data']['shop'],
+                                cartitem['data']['type'],
+                                (double.parse(cartitem['data']['shop_price'].toString()) * cartitem['rate']),
+                                cartitem['data']['currency'],
+                                cartitem['data']);
+                          } else {
+                            _remove(
+                                cartitemID,
+                                cartitem['rate'],
+                                cartitem['data']['shop'],
+                                cartitem['data']['type'],
+                                (double.parse(cartitem['data']['shop_price'].toString()) * cartitem['rate']),
+                                cartitem['data']['currency'],
+                                cartitem['data']);
+                          }
+                        },
+                        elevation: 2,
+                        constraints: BoxConstraints(maxHeight: Adaptive.h(3)),
+                        fillColor: Colors.redAccent[700],
+                        child: Icon(
+                          Icons.remove,
+                          size: Adaptive.h(3),
+                          color: Colors.white,
                         ),
+                        shape: CircleBorder(),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                        child: new Text(count.toString(),
-                            style: new TextStyle(fontSize: 14.5)),
+                        child: new Text(count.toString(), style: new TextStyle(fontSize: Adaptive.sp(12))),
                       ),
                       IgnorePointer(
                         ignoring: cartlocked,
-                        child: SizedBox(
-                          width: 25,
-                          child: RawMaterialButton(
-                            onPressed: () {
-                              if (cartlocked == false) {
-                                _save(
-                                  cartitemID,
-                                  cartitem['rate'],
-                                  cartitem['data']['shop'],
-                                  cartitem['data']['type'],
-                                  (double.parse(cartitem['data']['shop_price']
-                                          .toInt()
-                                          .toString()) *
-                                      cartitem['rate']),
-                                  cartitem['data']['currency'],
-                                  cartitem['data'],
-                                );
-                              }
-                            },
-                            elevation: !maximum ? 2 : 0,
-                            fillColor: !maximum
-                                ? Colors.redAccent[700]
-                                : Colors.grey[200],
-                            child: Icon(
-                              Icons.add,
-                              size: 13,
-                              color: !maximum ? Colors.white : Colors.grey[800],
-                            ),
-                            padding: EdgeInsets.all(0.0),
-                            shape: CircleBorder(),
+                        child: RawMaterialButton(
+                          onPressed: () {
+                            if (cartlocked == false) {
+                              _save(
+                                cartitemID,
+                                cartitem['rate'],
+                                cartitem['data']['shop'],
+                                cartitem['data']['type'],
+                                (double.parse(cartitem['data']['shop_price'].toInt().toString()) *
+                                    cartitem['rate']),
+                                cartitem['data']['currency'],
+                                cartitem['data'],
+                              );
+                            }
+                          },
+                          elevation: !maximum ? 2 : 0,
+                          constraints: BoxConstraints(maxHeight: Adaptive.h(3)),
+                          fillColor: !maximum ? Colors.redAccent[700] : Colors.grey[200],
+                          child: Icon(
+                            Icons.add,
+                            size: Adaptive.h(3),
+                            color: !maximum ? Colors.white : Colors.grey[800],
                           ),
+                          padding: EdgeInsets.all(0.0),
+                          shape: CircleBorder(),
                         ),
                       ),
                     ],

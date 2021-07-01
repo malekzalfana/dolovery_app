@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 //import 'package:flutter_svg/svg.dart';
 // ignore: unused_import
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ShopList extends StatefulWidget {
   // final Widget child;
@@ -15,13 +16,11 @@ class ShopList extends StatefulWidget {
 
   final String shopAddress;
 
-  ShopList(
-      {Key key, this.shopName, this.shopTime, this.shopImage, this.shopAddress})
-      : super(key: key);
+  ShopList({Key key, this.shopName, this.shopTime, this.shopImage, this.shopAddress}) : super(key: key);
 
   @override
-  _ShopListState createState() => _ShopListState(
-      this.shopImage, this.shopName, this.shopTime, this.shopAddress);
+  _ShopListState createState() =>
+      _ShopListState(this.shopImage, this.shopName, this.shopTime, this.shopAddress);
 }
 
 class _ShopListState extends State<ShopList> {
@@ -30,8 +29,7 @@ class _ShopListState extends State<ShopList> {
   String shopTime;
   String shopAddress;
 
-  _ShopListState(
-      this.shopImage, this.shopName, this.shopTime, this.shopAddress);
+  _ShopListState(this.shopImage, this.shopName, this.shopTime, this.shopAddress);
   // _shopImageState(this.shopImage);
   @override
   Widget build(BuildContext context) {
@@ -45,8 +43,8 @@ class _ShopListState extends State<ShopList> {
             // color: Colors.green,
             margin: new EdgeInsets.only(left: 12.0, right: 10),
             child: Container(
-                height: 90,
-                width: 90,
+                height: Adaptive.h(15),
+                width: Adaptive.h(15),
                 decoration: BoxDecoration(
                   //   image: DecorationImage(
                   //     image: NetworkImage(shopImage),
@@ -69,11 +67,10 @@ class _ShopListState extends State<ShopList> {
                 ),
                 child: Center(
                   child: CachedNetworkImage(
-                    placeholder: (context, url) =>
-                        Image.asset("assets/images/loading.gif", height: 30),
+                    placeholder: (context, url) => Image.asset("assets/images/loading.gif", height: 30),
                     imageUrl: shopImage,
                     errorWidget: (context, url, error) =>
-                        Center(child: new Icon(Icons.error)),
+                        Center(child: new Icon(Icons.error, size: Adaptive.h(5))),
                   ),
                 )),
           ),
@@ -93,7 +90,7 @@ class _ShopListState extends State<ShopList> {
                           // textAlign: TextAlign.left,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: Adaptive.sp(12),
                             height: 1.1,
                             fontFamily: 'Axiforma',
                             color: Colors.black,
@@ -111,7 +108,7 @@ class _ShopListState extends State<ShopList> {
                         Icon(
                           Icons.timer,
                           color: Colors.grey[500],
-                          size: 18.0,
+                          size: Adaptive.h(2),
                           semanticLabel: 'time for shop to deliver',
                         ),
                         if (shopTime != null)
@@ -125,7 +122,7 @@ class _ShopListState extends State<ShopList> {
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 11.5,
+                                  fontSize: Adaptive.sp(9),
                                   fontFamily: 'Axiforma',
                                   color: Colors.grey[500],
                                 ),
@@ -146,7 +143,7 @@ class _ShopListState extends State<ShopList> {
                           child: Icon(
                             Icons.location_on,
                             color: Colors.grey[500],
-                            size: 16.0,
+                            size: Adaptive.h(2),
                           ),
                         ),
                         if (shopAddress != null)
@@ -160,7 +157,7 @@ class _ShopListState extends State<ShopList> {
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 11.5,
+                                  fontSize: Adaptive.sp(9),
                                   fontFamily: 'Axiforma',
                                   color: Colors.grey[500],
                                 ),

@@ -1,8 +1,9 @@
+import 'dart:async';
+
+import 'package:algolia/algolia.dart';
+import 'package:dolovery_app/widgets/product.dart';
 import 'package:dolovery_app/widgets/search_popup.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:dolovery_app/widgets/product.dart';
-import 'package:algolia/algolia.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class Search extends StatefulWidget {
@@ -57,63 +58,74 @@ class _SearchState extends State<Search> {
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    height: 90,
-                    width: width - 60,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    height: Adaptive.h(10),
+                    width: Adaptive.w(90),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Image.asset(
                           "assets/icons/searchicon.png",
                           height: Adaptive.h(2.5),
                         ),
-                        SizedBox(
-                          width: Adaptive.w(62.5),
-                          child: Container(
-                              child: TextField(
-                            controller: _searchText,
-                            onSubmitted: (text) {
-                              if ((text.length > 2) & !searchlock) {
-                                _search();
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: SizedBox(
+                            width: Adaptive.w(80),
+                            child: Container(
+                                child: TextField(
+                              controller: _searchText,
+                              onSubmitted: (text) {
+                                if ((text.length > 2) & !searchlock) {
+                                  _search();
 
-                                if (searchlock = true) {
-                                  Future.delayed(Duration(seconds: 3), () {
-                                    setState(() {
-                                      searchlock = false;
+                                  if (searchlock = true) {
+                                    Future.delayed(Duration(seconds: 3), () {
+                                      setState(() {
+                                        searchlock = false;
+                                      });
+                                      if (pendingSearch != "" && text.length > 2) {
+                                        _search();
+                                      }
                                     });
-                                    if (pendingSearch != "" &&
-                                        text.length > 2) {
-                                      _search();
-                                    }
-                                  });
+                                  }
+                                } else if ((text.length > 2) && searchlock) {
+                                  pendingSearch = text;
+                                } else if (text.length == 0) {
+                                  _results = null;
                                 }
-                              } else if ((text.length > 2) && searchlock) {
-                                pendingSearch = text;
-                              } else if (text.length == 0) {
-                                _results = null;
-                              }
-                            },
-                            autofocus: true,
-                            decoration: InputDecoration(
+                              },
+                              autofocus: true,
+                              style: TextStyle(
+                                fontSize: Adaptive.sp(10),
+                              ),
+                              decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: 'Enter a search term'),
-                          )),
+                                hintText: 'Enter a search term',
+                                hintStyle: TextStyle(
+                                  fontSize: Adaptive.sp(10),
+                                ),
+                              ),
+                            )),
+                          ),
                         )
                       ],
                     ),
                   ),
-                  IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.grey,
-                        size: 30,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
+                  Expanded(
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.clear,
+                          color: Colors.grey,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        }),
+                  ),
                 ],
               ),
               // Text(searchlock.toString()),
@@ -136,8 +148,7 @@ class _SearchState extends State<Search> {
                                 ),
                               )
                             : GridView.builder(
-                                gridDelegate:
-                                    SliverGridDelegateWithMaxCrossAxisExtent(
+                                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                                   maxCrossAxisExtent: Adaptive.w(50),
                                   crossAxisSpacing: Adaptive.w(5),
                                   mainAxisExtent: Adaptive.h(36),
@@ -159,37 +170,25 @@ class _SearchState extends State<Search> {
                                         );
                                       },
                                       child: ProductImage(
-                                        productName:
-                                            snap.data['data']['name'] != null
-                                                ? snap.data['data']['name']
-                                                : '',
-                                        productImage:
-                                            snap.data['data']['image'] != null
-                                                ? snap.data['data']['image']
-                                                : '',
-                                        productPrice: snap.data['data']
-                                                    ['shop_price'] !=
-                                                null
-                                            ? snap.data['data']['shop_price']
-                                                .toString()
-                                            : '0',
-                                        oldPrice: snap.data['data']
-                                                    ['old_price'] !=
-                                                null
-                                            ? snap.data['data']['old_price']
-                                                .toString()
+                                        productName: snap.data['data']['name'] != null
+                                            ? snap.data['data']['name']
                                             : '',
-                                        productUnit:
-                                            snap.data['data']['unit'] != null
-                                                ? snap.data['data']['unit']
-                                                : '',
-                                        productCurrency: snap.data['data']
-                                                    ['currency'] !=
-                                                null
+                                        productImage: snap.data['data']['image'] != null
+                                            ? snap.data['data']['image']
+                                            : '',
+                                        productPrice: snap.data['data']['shop_price'] != null
+                                            ? snap.data['data']['shop_price'].toString()
+                                            : '0',
+                                        oldPrice: snap.data['data']['old_price'] != null
+                                            ? snap.data['data']['old_price'].toString()
+                                            : '',
+                                        productUnit: snap.data['data']['unit'] != null
+                                            ? snap.data['data']['unit']
+                                            : '',
+                                        productCurrency: snap.data['data']['currency'] != null
                                             ? snap.data['data']['currency']
                                             : '',
-                                        shopName: snap.data['data']['shop']
-                                            .toString(),
+                                        shopName: snap.data['data']['shop'].toString(),
                                       ));
                                 },
                               ),

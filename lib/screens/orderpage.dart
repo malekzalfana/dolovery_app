@@ -1,15 +1,9 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:country_code_picker/country_code_picker.dart';
-import 'package:dolovery_app/widgets/product.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter_counter/flutter_counter.dart';
+import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'home.dart';
 
 class OrderPage extends StatefulWidget {
   final String orderid;
@@ -22,6 +16,7 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
   @override
   void initState() {
+    reset();
     super.initState();
   }
 
@@ -37,9 +32,7 @@ class _OrderPageState extends State<OrderPage> {
           child: Column(
         children: <Widget>[
           AppBar(
-            iconTheme: IconThemeData(
-              color: Colors.black,
-            ),
+            leading: GestureDetector(onTap:() => Navigator.pop(context),child: Icon(Icons.arrow_back,size:Adaptive.h(5),color: Colors.black,)),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             centerTitle: true,
@@ -64,17 +57,14 @@ class _OrderPageState extends State<OrderPage> {
             height: 20,
           ),
           StreamBuilder(
-              stream: Firestore.instance
-                  .collection('orders')
-                  .document(widget.orderid.toString())
-                  .snapshots(),
+              stream: Firestore.instance.collection('orders').document(widget.orderid.toString()).snapshots(),
               builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (!snapshot.hasData) {
                   return Text("Loading");
                 }
                 var order = snapshot.data;
-                return SizedBox(
-                  width: width - 50,
+                return Padding(
+                  padding:  EdgeInsets.only(left:Adaptive.w(10)),
                   child: Container(
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -83,8 +73,7 @@ class _OrderPageState extends State<OrderPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsets.only(top: 10.0, bottom: 0),
+                            padding: const EdgeInsets.only(top: 10.0, bottom: 0),
                             child: Text(
                               'Address',
                               textAlign: TextAlign.left,
@@ -96,8 +85,7 @@ class _OrderPageState extends State<OrderPage> {
                             ),
                           ),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(top: 7.0, bottom: 10),
+                            padding: const EdgeInsets.only(top: 7.0, bottom: 10),
                             child: Text(
                               "${order.data['address']['city'].toString()}, ${order.data['address']['street_address'].toString()}, ${order.data['address']['landmark'].toString()}, ${order.data['address']['apartment'].toString()}",
                               textAlign: TextAlign.left,
@@ -114,13 +102,11 @@ class _OrderPageState extends State<OrderPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10.0, bottom: 10),
+                                  padding: const EdgeInsets.only(top: 10.0, bottom: 10),
                                   child: Row(
                                     children: [
                                       Text(
-                                        order.data['products'][shop]
-                                            ['shop_name'],
+                                        order.data['products'][shop]['shop_name'],
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w800,
@@ -134,31 +120,21 @@ class _OrderPageState extends State<OrderPage> {
                                       Container(
                                         decoration: BoxDecoration(
                                             color: Colors.grey[300],
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5))),
+                                            borderRadius: BorderRadius.all(Radius.circular(5))),
                                         child: StreamBuilder(
                                             stream: Firestore.instance
                                                 .collection('shop_orders')
-                                                .document(order.data['products']
-                                                    [shop]['order_id'])
+                                                .document(order.data['products'][shop]['order_id'])
                                                 .snapshots(),
-                                            builder: (context,
-                                                AsyncSnapshot<DocumentSnapshot>
-                                                    snapshot) {
-                                              print(order.data['products'][shop]
-                                                      ['order_id']
-                                                  .toString());
+                                            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                              print(order.data['products'][shop]['order_id'].toString());
                                               // print(snapshot.data.data);
                                               if (!snapshot.hasData) {
                                                 return Text("..");
                                               } else {
                                                 return Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
-                                                  child: Text(snapshot
-                                                      .data['status']
-                                                      .toString()
-                                                      .toUpperCase()),
+                                                  padding: const EdgeInsets.all(5.0),
+                                                  child: Text(snapshot.data['status'].toString().toUpperCase(),style: TextStyle(fontSize: Adaptive.sp(10)),),
                                                 );
                                               }
                                             }),
@@ -166,46 +142,38 @@ class _OrderPageState extends State<OrderPage> {
                                     ],
                                   ),
                                 ),
-                                for (var product in order
-                                    .data['products'][shop]['products'].keys)
+                                for (var product in order.data['products'][shop]['products'].keys)
                                   buildCartItem(
                                     product,
-                                    order.data['products'][shop]['products']
-                                        [product]['count'],
-                                    order.data['products'][shop]['products']
-                                        [product]['data']['name'],
-                                    order.data['products'][shop]['products']
-                                        [product]['data']['image'],
-                                    order.data['products'][shop]['products']
-                                        [product]['data']['shop_discounted'],
-                                    order.data['products'][shop]['products']
-                                                [product]['data']['type'] !=
-                                            'salle'
-                                        ? (double.parse(order.data['products'][shop]['products'][product]['data']['shop_price'].toString()).toInt() *
-                                                (order.data['products'][shop]['products'][product]['rate'] != null
-                                                    ? order.data['products']
-                                                            [shop]['products']
-                                                        [product]['rate']
+                                    order.data['products'][shop]['products'][product]['count'],
+                                    order.data['products'][shop]['products'][product]['data']['name'],
+                                    order.data['products'][shop]['products'][product]['data']['image'],
+                                    order.data['products'][shop]['products'][product]['data']
+                                        ['shop_discounted'],
+                                    order.data['products'][shop]['products'][product]['data']['type'] != 'salle'
+                                        ? (double.parse(order.data['products'][shop]['products'][product]
+                                                            ['data']['shop_price']
+                                                        .toString())
+                                                    .toInt() *
+                                                (order.data['products'][shop]['products'][product]['rate'] !=
+                                                        null
+                                                    ? order.data['products'][shop]['products'][product]['rate']
                                                     : 1))
                                             .toString()
-                                        : order.data['products'][shop]['products']
-                                                [product]['data']['serving_prices']
+                                        : order.data['products'][shop]['products'][product]['data']
+                                                ['serving_prices']
                                                 [order.data['products'][shop]['products'][product]['count']]
                                             .toString(),
-                                    order.data['products'][shop]['products']
-                                        [product]['data']['type'],
-                                    order.data['products'][shop]['products']
-                                        [product]['data']['arabic_name'],
-                                    order.data['products'][shop]['products']
-                                            [product]['data']['unit']
+                                    order.data['products'][shop]['products'][product]['data']['type'],
+                                    order.data['products'][shop]['products'][product]['data']['arabic_name'],
+                                    order.data['products'][shop]['products'][product]['data']['unit']
                                         .toString(),
                                   )
                               ],
                             ),
                           SizedBox(height: 10),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(top: 10.0, bottom: 0),
+                            padding: const EdgeInsets.only(top: 10.0, bottom: 0),
                             child: Text(
                               'Total Price:',
                               textAlign: TextAlign.left,
@@ -217,8 +185,7 @@ class _OrderPageState extends State<OrderPage> {
                             ),
                           ),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(top: 0.0, bottom: 10),
+                            padding: const EdgeInsets.only(top: 0.0, bottom: 10),
                             child: Text(
                               order.data['total'].toString() + 'L.L.',
                               textAlign: TextAlign.left,
@@ -242,10 +209,8 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   getShop(shop) async {
-    var document = await Firestore.instance
-        .collection('shops')
-        .where("username", isEqualTo: shop)
-        .getDocuments();
+    var document =
+        await Firestore.instance.collection('shops').where("username", isEqualTo: shop).getDocuments();
     return document.documents[0];
   }
 
@@ -273,8 +238,8 @@ class _OrderPageState extends State<OrderPage> {
           Container(
             margin: new EdgeInsets.only(left: 0.0, right: 10),
             child: Container(
-                height: 70,
-                width: 70,
+                height:Adaptive.h(15),
+                width: Adaptive.h(15),
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -294,13 +259,10 @@ class _OrderPageState extends State<OrderPage> {
                 child: Center(
                     child: CachedNetworkImage(
                   width: 120,
-                  placeholder: (context, url) => Image.asset(
-                      "assets/images/loading.gif",
-                      height: 20,
-                      width: 20),
+                  placeholder: (context, url) =>
+                      Image.asset("assets/images/loading.gif", height: 20, width: 20),
                   imageUrl: product_image == null ? "s" : product_image,
-                  errorWidget: (context, url, error) =>
-                      Center(child: new Icon(Icons.error)),
+                  errorWidget: (context, url, error) => Center(child: new Icon(Icons.error,size: Adaptive.h(5),)),
                 ))),
           ),
           Padding(
@@ -312,19 +274,16 @@ class _OrderPageState extends State<OrderPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(
-                      width: width - 160,
-                      child: Text(
-                        product_name,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          height: 1.16,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black,
-                        ),
+                    Text(
+                      product_name,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Adaptive.sp(12),
+                        height: 1.16,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -341,7 +300,7 @@ class _OrderPageState extends State<OrderPage> {
                         maxLines: 2,
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
-                          fontSize: 15,
+                          fontSize: Adaptive.sp(12),
                           height: 1.1,
                           fontFamily: 'Axiforma',
                           color: Colors.black,
@@ -369,7 +328,7 @@ class _OrderPageState extends State<OrderPage> {
                                 style: TextStyle(
                                   height: 1.1,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 14,
+                                  fontSize: Adaptive.sp(12),
                                   fontFamily: 'Axiforma',
                                   color: Colors.redAccent[700],
                                 ),
@@ -378,9 +337,7 @@ class _OrderPageState extends State<OrderPage> {
                             Visibility(
                               visible: product_type == 'salle' ? true : false,
                               child: Text(
-                                product_type == 'salle'
-                                    ? ''
-                                    : product_price + "L.L.",
+                                product_type == 'salle' ? '' : product_price + "L.L.",
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -405,8 +362,7 @@ class _OrderPageState extends State<OrderPage> {
                                   textColor: Colors.white,
                                   minWidth: 0,
                                   height: 0,
-                                  padding: EdgeInsets.only(
-                                      left: 6, top: 2, right: 6, bottom: 1),
+                                  padding: EdgeInsets.only(left: 6, top: 2, right: 6, bottom: 1),
                                   child: Text(
                                     (count + 1).toString() + ' Servings',
                                     style: TextStyle(
@@ -426,8 +382,7 @@ class _OrderPageState extends State<OrderPage> {
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: Colors.redAccent[700],
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5))),
+                                      borderRadius: BorderRadius.all(Radius.circular(5))),
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: Text(
@@ -436,7 +391,7 @@ class _OrderPageState extends State<OrderPage> {
                                       style: TextStyle(
                                         height: 1.1,
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 13,
+                                        fontSize: Adaptive.sp(11),
                                         fontFamily: 'Axiforma',
                                         color: Colors.white,
                                       ),

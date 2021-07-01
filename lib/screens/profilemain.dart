@@ -1,26 +1,22 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolovery_app/screens/addaddress.dart';
 import 'package:dolovery_app/screens/allorders.dart';
 import 'package:dolovery_app/screens/editaddress.dart';
 import 'package:dolovery_app/screens/editprofile.dart';
 import 'package:dolovery_app/screens/orderpage.dart';
-import 'package:dolovery_app/static_screens/privacy.dart';
 import 'package:dolovery_app/screens/profile.dart';
+import 'package:dolovery_app/static_screens/privacy.dart';
 import 'package:dolovery_app/static_screens/terms.dart';
-import 'package:flutter/material.dart';
+import 'package:dolovery_app/widgets/recentorder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
-import 'package:dolovery_app/widgets/recentorder.dart';
-import 'package:jiffy/jiffy.dart';
-import 'package:dolovery_app/widgets/signinpopup.dart' as signin;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileMainScreen extends StatefulWidget {
   final Function() notifyParent;
@@ -89,20 +85,17 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       final FirebaseAuth _auth = FirebaseAuth.instance;
 
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final FirebaseUser user =
-          (await _auth.signInWithCredential(credential)).user;
+      final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
 
       double welcomeheight;
-      final newUser =
-          await Firestore.instance.collection("users").document(user.uid).get();
+      final newUser = await Firestore.instance.collection("users").document(user.uid).get();
       if (newUser.exists) {
         notsetup = false;
         welcomeheight = Adaptive.h(50);
@@ -134,14 +127,10 @@ class ProfileScreenState extends State<ProfileMainScreen> {
         final AuthCredential credential = FacebookAuthProvider.getCredential(
           accessToken: result.accessToken.token,
         );
-        final FirebaseUser user =
-            (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+        final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
         double welcomeheight;
-        final newUser = await Firestore.instance
-            .collection("users")
-            .document(user.uid)
-            .get();
+        final newUser = await Firestore.instance.collection("users").document(user.uid).get();
         if (newUser.exists) {
           notsetup = false;
           welcomeheight = 350;
@@ -160,8 +149,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
     } catch (e) {
       if (e.message ==
           "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {
-        showError(
-            "An account already exists with the same email address, try using Google to sign in.");
+        showError("An account already exists with the same email address, try using Google to sign in.");
       }
       setState(() {
         showerrortextbool = true;
@@ -249,17 +237,26 @@ class ProfileScreenState extends State<ProfileMainScreen> {
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-              title: new Text("Are your sure you want to sign out?"),
+              title: new Text(
+                "Are your sure you want to sign out?",
+                style: TextStyle(fontSize: Adaptive.sp(15)),
+              ),
               actions: <Widget>[
                 FlatButton(
-                  child: Text('Cancel'),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(fontSize: Adaptive.sp(12)),
+                  ),
                   textColor: Colors.grey,
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 FlatButton(
-                  child: Text('Confirm'),
+                  child: Text(
+                    'Confirm',
+                    style: TextStyle(fontSize: Adaptive.sp(12)),
+                  ),
                   onPressed: () {
                     signOut();
                     setupVerification();
@@ -281,7 +278,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
         context: context,
         builder: (BuildContext bc) {
           return Container(
-            height: 450,
+            height: Adaptive.h(80),
             child: Column(
               children: <Widget>[
                 Align(
@@ -309,8 +306,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: GestureDetector(
-                      child: Image.asset('assets/images/fblogin.jpg',
-                          width: 75.0.w),
+                      child: Image.asset('assets/images/fblogin.jpg', width: 75.0.w),
                       onTap: () {
                         hideSignIn();
                         signUpWithFacebook();
@@ -321,8 +317,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                 Visibility(
                   visible: _readtosignin,
                   child: GestureDetector(
-                      child: Image.asset('assets/images/glogin.jpg',
-                          width: 75.0.w),
+                      child: Image.asset('assets/images/glogin.jpg', width: 75.0.w),
                       onTap: () {
                         _readtosignin = false;
 
@@ -340,8 +335,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                 Visibility(
                     visible: showerrortextbool,
                     child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 15.0, left: 20, right: 20),
+                        padding: const EdgeInsets.only(top: 15.0, left: 20, right: 20),
                         child: Text(
                           showerrortext,
                           style: TextStyle(
@@ -409,8 +403,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       name = user.displayName;
       uemail = user.email;
 
-      this_user =
-          await Firestore.instance.collection("users").document(uid).get();
+      this_user = await Firestore.instance.collection("users").document(uid).get();
 /* added to the page */
       if (this_user.exists) {
         user_is_setup = true;
@@ -432,298 +425,204 @@ class ProfileScreenState extends State<ProfileMainScreen> {
     double width = MediaQuery.of(context).size.width;
 
     setState(() {});
-    return SafeArea(
-      child: FutureBuilder(
-        future: setupVerification(),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(
-                child: Image.asset("assets/images/loading.gif", width: 30),
-              );
-            default:
-              if ((snapshot.hasError)) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                if (user_is_signed_in == false) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 28.0),
-                          child: Image.asset(
-                              "assets/images/profile_illustration.png",
-                              width: 100.0.w),
+    return FutureBuilder(
+      future: setupVerification(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Center(
+              child: Image.asset("assets/images/loading.gif", width: 30),
+            );
+          default:
+            if ((snapshot.hasError)) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              if (user_is_signed_in == false) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 28.0),
+                        child: Image.asset("assets/images/profile_illustration.png", width: 100.0.w),
+                      ),
+                      Text(
+                        "Let's Get Started",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0.sp,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
                         ),
-                        Text(
-                          "Let's Get Started",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0.sp,
-                            fontFamily: 'Axiforma',
-                            color: Colors.black,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: SizedBox(
-                            width: 80.0.w,
-                            child: Text(
-                              "Create an account and get everything you need delivered to your doorstep!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 10.0.sp,
-                                fontFamily: 'Axiforma',
-                                color: Colors.grey[400],
-                              ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: SizedBox(
+                          width: 80.0.w,
+                          child: Text(
+                            "Create an account and get everything you need delivered to your doorstep!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 10.0.sp,
+                              fontFamily: 'Axiforma',
+                              color: Colors.grey[400],
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(38, 32, 38, 12),
-                          child: MaterialButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            elevation: 0,
-                            onPressed: () {
-                              setState(() {
-                                _readtosignin = true;
-                              });
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(38, 32, 38, 12),
+                        child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          elevation: 0,
+                          onPressed: () {
+                            setState(() {
+                              _readtosignin = true;
+                            });
 
-                              _signInPopUp(context);
-                            },
-                            color: Colors.redAccent[700],
-                            textColor: Colors.white,
-                            minWidth: 80.0.w,
-                            height: 0,
-                            padding: EdgeInsets.only(
-                                left: 33, top: 10, right: 33, bottom: 10),
-                            child: Text(
-                              "Get Started",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11.0.sp,
-                                fontFamily: 'Axiforma',
-                              ),
+                            _signInPopUp(context);
+                          },
+                          color: Colors.redAccent[700],
+                          textColor: Colors.white,
+                          minWidth: 80.0.w,
+                          height: 0,
+                          padding: EdgeInsets.only(left: 33, top: 10, right: 33, bottom: 10),
+                          child: Text(
+                            "Get Started",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11.0.sp,
+                              fontFamily: 'Axiforma',
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  );
-                } else if (!user_is_setup && user_is_signed_in) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 28.0),
-                          child: Image.asset(
-                              "assets/images/profile_illustration.png",
-                              width: 100.0.w),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (!user_is_setup && user_is_signed_in) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 28.0),
+                        child: Image.asset("assets/images/profile_illustration.png", width: 100.0.w),
+                      ),
+                      Text(
+                        "Let's Get Started",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0.sp,
+                          fontFamily: 'Axiforma',
+                          color: Colors.black,
                         ),
-                        Text(
-                          "Let's Get Started",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0.sp,
-                            fontFamily: 'Axiforma',
-                            color: Colors.black,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: SizedBox(
-                            width: 80.0.w,
-                            child: Text(
-                              "Create an account and get everything you need delivered to your doorstep!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 10.0.sp,
-                                fontFamily: 'Axiforma',
-                                color: Colors.grey[400],
-                              ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: SizedBox(
+                          width: 80.0.w,
+                          child: Text(
+                            "Create an account and get everything you need delivered to your doorstep!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 10.0.sp,
+                              fontFamily: 'Axiforma',
+                              color: Colors.grey[400],
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(38, 32, 38, 12),
-                          child: MaterialButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            elevation: 0,
-                            onPressed: () {
-                              setState(() {
-                                _readtosignin = true;
-                              });
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(38, 32, 38, 12),
+                        child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          elevation: 0,
+                          onPressed: () {
+                            setState(() {
+                              _readtosignin = true;
+                            });
 
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(
-                                      builder: (context) => ProfileScreen()))
-                                  .then((_) {
-                                setState(() {});
-                              });
-                            },
-                            color: Colors.redAccent[700],
-                            textColor: Colors.white,
-                            minWidth: 80.0.w,
-                            height: 0,
-                            padding: EdgeInsets.only(
-                                left: 33, top: 10, right: 33, bottom: 10),
-                            child: Text(
-                              "Setup your profile",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11.0.sp,
-                                fontFamily: 'Axiforma',
-                              ),
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) => ProfileScreen()))
+                                .then((_) {
+                              setState(() {});
+                            });
+                          },
+                          color: Colors.redAccent[700],
+                          textColor: Colors.white,
+                          minWidth: 80.0.w,
+                          height: 0,
+                          padding: EdgeInsets.only(left: 33, top: 10, right: 33, bottom: 10),
+                          child: Text(
+                            "Setup your profile",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11.0.sp,
+                              fontFamily: 'Axiforma',
                             ),
                           ),
                         ),
-                        Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(25, 15, 22, 30),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  _showLogoutDialog();
-                                },
-                                child: Text(
-                                  "Log Out",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 11.0.sp,
-                                    fontFamily: 'Axiforma',
-                                    color: Colors.black38,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 20),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Privacy()));
-                                },
-                                child: Text(
-                                  "Privacy Policy",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 11.0.sp,
-                                    fontFamily: 'Axiforma',
-                                    color: Colors.black38,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => Terms()));
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 15.0),
-                                    child: Text(
-                                      "Terms & Conditions",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11.0.sp,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.black38,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  return Scaffold(
-                    body: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(top: 60.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Center(
-                                      child: GestureDetector(
-                                        onTap: () {},
-                                        child: Text(
-                                          this_user.data['fullname'],
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 25.0.sp,
-                                            height: 1.1,
-                                            fontFamily: 'Axiforma',
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                this_user.data['email'],
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(25, 15, 22, 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                _showLogoutDialog();
+                              },
+                              child: Text(
+                                "Log Out",
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 11.0.sp,
                                   fontFamily: 'Axiforma',
-                                  color: Colors.black45,
+                                  color: Colors.black38,
                                 ),
                               ),
-                              Text(
-                                this_user.data['number'],
+                            ),
+                            SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) => Privacy()));
+                              },
+                              child: Text(
+                                "Privacy Policy",
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 11.0.sp,
-                                  letterSpacing: 1.1,
                                   fontFamily: 'Axiforma',
-                                  color: Colors.black45,
+                                  color: Colors.black38,
                                 ),
                               ),
-                              GestureDetector(
+                            ),
+                            Expanded(
+                              child: GestureDetector(
                                 onTap: () {
                                   Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              EditProfileScreen()))
-                                      .then((_) {
-                                    setState(() {});
-                                  });
+                                      .push(MaterialPageRoute(builder: (context) => Terms()));
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.only(top: 18.0),
+                                  padding: const EdgeInsets.only(left: 15.0),
                                   child: Text(
-                                    "EDIT PROFILE",
+                                    "Terms & Conditions",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 11.0.sp,
                                       fontFamily: 'Axiforma',
                                       color: Colors.black38,
@@ -731,422 +630,39 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                          StreamBuilder(
-                            stream: Firestore.instance
-                                .collection('orders')
-                                .where('user', isEqualTo: uid)
-                                .orderBy('date', descending: true)
-                                .limit(4)
-                                .snapshots(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return SingleChildScrollView(
-                                    scrollDirection: Axis.vertical,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Visibility(
-                                          visible:
-                                              snapshot.data.documents.length >
-                                                  0,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 30.0,
-                                                top: 30,
-                                                bottom: 15),
-                                            child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                "Recent Orders",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: Adaptive.sp(10),
-                                                  fontFamily: 'Axiforma',
-                                                  color: Colors.black54,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: List<Widget>.generate(
-                                                  snapshot.data.documents
-                                                      .length, (int index) {
-                                                return Visibility(
-                                                  visible: index != 3,
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.of(context).push(
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  OrderPage(snapshot
-                                                                      .data
-                                                                      .documents[
-                                                                          index]
-                                                                      .documentID)));
-                                                    },
-                                                    child: RecentOrder(
-                                                        orderDate: snapshot.data
-                                                                .documents[index]
-                                                            ['date'],
-                                                        orderCount: snapshot
-                                                            .data
-                                                            .documents[index]
-                                                                ['count']
-                                                            .toInt(),
-                                                        orderImage: snapshot
-                                                                .data
-                                                                .documents[index]
-                                                            ['image'],
-                                                        orderPrice: snapshot
-                                                            .data
-                                                            .documents[index]
-                                                                ['total']
-                                                            .toString()),
-                                                  ),
-                                                );
-                                              })),
-                                        ),
-                                        Visibility(
-                                          visible:
-                                              snapshot.data.documents.length >
-                                                  0,
-                                          child: MaterialButton(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                                side: BorderSide(
-                                                    color: Colors.grey[200])),
-                                            onPressed: () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Orders(uid: uid)));
-                                            },
-                                            color: Colors.grey[200],
-                                            elevation: 0,
-                                            textColor: Colors.white,
-                                            minWidth: 0,
-                                            height: 0,
-                                            padding: EdgeInsets.only(
-                                                left: 20,
-                                                top: 10,
-                                                right: 20,
-                                                bottom: 10),
-                                            child: Text(
-                                              "View All Orders",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: Adaptive.sp(10),
-                                                fontFamily: 'Axiforma',
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ));
-                              } else if (snapshot.hasError) {
-                                return Text(snapshot.error.toString());
-                              }
-                              return Center(child: Container());
-                            },
-                          ),
-                          Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 30.0, top: 10, bottom: 10),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "My Addresses",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 11.0.sp,
-                                      fontFamily: 'Axiforma',
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              if (this_user != null)
-                                for (var index = 0;
-                                    index < this_user.data["address"].length;
-                                    index++)
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 30.0,
-                                        bottom: 10,
-                                        left: 30,
-                                        top: 12),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        bool isDefault = chosen_address ==
-                                            this_user.data["address"][index]
-                                                ["id"];
-                                        Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EditAddress(
-                                                        this_user
-                                                            .data["address"],
-                                                        index,
-                                                        isDefault,
-                                                        uid)))
-                                            .then((_) {
-                                          setState(() {});
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.1),
-                                                spreadRadius: 2.2,
-                                                blurRadius: 2.5,
-                                                offset: Offset(0, 4),
-                                              ),
-                                            ],
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(15))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0),
-                                              child: Icon(
-                                                Icons.place,
-                                                color: chosen_address ==
-                                                        this_user
-                                                                .data["address"]
-                                                            [index]["id"]
-                                                    ? Colors.black
-                                                    : Colors.grey[400],
-                                                size: 36,
-                                              ),
-                                            ),
-                                            Container(
-                                                margin: new EdgeInsets.only(
-                                                    left: 10.0, right: 0),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.5),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: <Widget>[
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: <Widget>[
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 10.0,
-                                                                    left: 0,
-                                                                    bottom: 5),
-                                                            child: Text(
-                                                              this_user.data[
-                                                                      "address"]
-                                                                  [
-                                                                  index]["name"],
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 16,
-                                                                fontFamily:
-                                                                    'Axiforma',
-                                                                color: chosen_address ==
-                                                                        this_user.data["address"][index]
-                                                                            [
-                                                                            "id"]
-                                                                    ? Colors
-                                                                        .black
-                                                                    : Colors.grey[
-                                                                        500],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(top: 0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: <Widget>[
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 0.0,
-                                                                      bottom:
-                                                                          8),
-                                                              child: SizedBox(
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width -
-                                                                    145,
-                                                                child: Text(
-                                                                  this_user.data[
-                                                                              "address"]
-                                                                          [
-                                                                          index]
-                                                                      [
-                                                                      "street_address"],
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .left,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    height: 1.1,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal,
-                                                                    fontSize:
-                                                                        14.5,
-                                                                    fontFamily:
-                                                                        'Axiforma',
-                                                                    color: Colors
-                                                                            .grey[
-                                                                        500],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ))
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          MaterialButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: Colors.grey[200])),
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(
-                                      builder: (context) => AddAddress(
-                                          this_user.data["address"])))
-                                  .then((_) {
-                                setState(() {});
-                              });
-                            },
-                            color: Colors.grey[200],
-                            elevation: 0,
-                            textColor: Colors.white,
-                            minWidth: 0,
-                            height: 0,
-                            padding: EdgeInsets.only(
-                                left: 20, top: 10, right: 20, bottom: 10),
-                            child: Text(
-                              "Add New Address",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11.0.sp,
-                                fontFamily: 'Axiforma',
-                                color: Colors.black,
-                              ),
                             ),
-                          ),
-                          // Spacer(),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(25, 15, 22, 30),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return Scaffold(
+                  body: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(top: 60.0),
                               child: Row(
+                                mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      _showLogoutDialog();
-                                    },
-                                    child: Text(
-                                      "Log Out",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11.0.sp,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.black38,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 20),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) => Privacy()));
-                                    },
-                                    child: Text(
-                                      "Privacy Policy",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11.0.sp,
-                                        fontFamily: 'Axiforma',
-                                        color: Colors.black38,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
+                                children: <Widget>[
+                                  Center(
                                     child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) => Terms()));
-                                      },
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 15.0),
-                                        child: Text(
-                                          "Terms & Conditions",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 11.0.sp,
-                                            fontFamily: 'Axiforma',
-                                            color: Colors.black38,
-                                          ),
+                                      onTap: () {},
+                                      child: Text(
+                                        this_user.data['fullname'],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 25.0.sp,
+                                          height: 1.1,
+                                          fontFamily: 'Axiforma',
+                                          color: Colors.black,
                                         ),
                                       ),
                                     ),
@@ -1154,16 +670,365 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 ],
                               ),
                             ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              this_user.data['email'],
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 11.0.sp,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black45,
+                              ),
+                            ),
+                            Text(
+                              this_user.data['number'],
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 11.0.sp,
+                                letterSpacing: 1.1,
+                                fontFamily: 'Axiforma',
+                                color: Colors.black45,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) => EditProfileScreen()))
+                                    .then((_) {
+                                  setState(() {});
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 18.0),
+                                child: Text(
+                                  "EDIT PROFILE",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 11.0.sp,
+                                    fontFamily: 'Axiforma',
+                                    color: Colors.black38,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        StreamBuilder(
+                          stream: Firestore.instance
+                              .collection('orders')
+                              .where('user', isEqualTo: uid)
+                              .orderBy('date', descending: true)
+                              .limit(4)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Visibility(
+                                        visible: snapshot.data.documents.length > 0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 30.0, top: 30, bottom: 15),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              "Recent Orders",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: Adaptive.sp(10),
+                                                fontFamily: 'Axiforma',
+                                                color: Colors.black54,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 8.0),
+                                        child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: List<Widget>.generate(snapshot.data.documents.length,
+                                                (int index) {
+                                              return Visibility(
+                                                visible: index != 3,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.of(context).push(MaterialPageRoute(
+                                                        builder: (context) => OrderPage(
+                                                            snapshot.data.documents[index].documentID)));
+                                                  },
+                                                  child: RecentOrder(
+                                                      orderDate: snapshot.data.documents[index]['date'],
+                                                      orderCount:
+                                                          snapshot.data.documents[index]['count'].toInt(),
+                                                      orderImage: snapshot.data.documents[index]['image'],
+                                                      orderPrice:
+                                                          snapshot.data.documents[index]['total'].toString()),
+                                                ),
+                                              );
+                                            })),
+                                      ),
+                                      Visibility(
+                                        visible: snapshot.data.documents.length > 0,
+                                        child: MaterialButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                              side: BorderSide(color: Colors.grey[200])),
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(builder: (context) => Orders(uid: uid)));
+                                          },
+                                          color: Colors.grey[200],
+                                          elevation: 0,
+                                          textColor: Colors.white,
+                                          minWidth: 0,
+                                          height: 0,
+                                          padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 10),
+                                          child: Text(
+                                            "View All Orders",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: Adaptive.sp(10),
+                                              fontFamily: 'Axiforma',
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ));
+                            } else if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            }
+                            return Center(child: Container());
+                          },
+                        ),
+                        Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "My Addresses",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11.0.sp,
+                                    fontFamily: 'Axiforma',
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (this_user != null)
+                              for (var index = 0; index < this_user.data["address"].length; index++)
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 30.0, bottom: 10, left: 30, top: 12),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      bool isDefault =
+                                          chosen_address == this_user.data["address"][index]["id"];
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (context) => EditAddress(
+                                                  this_user.data["address"], index, isDefault, uid)))
+                                          .then((_) {
+                                        setState(() {});
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.withOpacity(0.1),
+                                              spreadRadius: 2.2,
+                                              blurRadius: 2.5,
+                                              offset: Offset(0, 4),
+                                            ),
+                                          ],
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(Radius.circular(15))),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 8.0),
+                                            child: Icon(
+                                              Icons.place,
+                                              color: chosen_address == this_user.data["address"][index]["id"]
+                                                  ? Colors.black
+                                                  : Colors.grey[400],
+                                              size: 36,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.5),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(
+                                                          top: 10.0, left: 0, bottom: 5),
+                                                      child: Expanded(
+                                                        child: Text(
+                                                          this_user.data["address"][index]["name"],
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: Adaptive.sp(13),
+                                                            fontFamily: 'Axiforma',
+                                                            color: chosen_address ==
+                                                                    this_user.data["address"][index]["id"]
+                                                                ? Colors.black
+                                                                : Colors.grey[500],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 0.0, bottom: 8),
+                                                      child: Expanded(
+                                                        child: Text(
+                                                          this_user.data["address"][index]["street_address"],
+                                                          overflow: TextOverflow.ellipsis,
+                                                          textAlign: TextAlign.left,
+                                                          style: TextStyle(
+                                                            height: 1.1,
+                                                            fontWeight: FontWeight.normal,
+                                                            fontSize: Adaptive.sp(13),
+                                                            fontFamily: 'Axiforma',
+                                                            color: Colors.grey[500],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        MaterialButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(color: Colors.grey[200])),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (context) => AddAddress(this_user.data["address"])))
+                                .then((_) {
+                              setState(() {});
+                            });
+                          },
+                          color: Colors.grey[200],
+                          elevation: 0,
+                          textColor: Colors.white,
+                          minWidth: 0,
+                          height: 0,
+                          padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 10),
+                          child: Text(
+                            "Add New Address",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11.0.sp,
+                              fontFamily: 'Axiforma',
+                              color: Colors.black,
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                        // Spacer(),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(25, 15, 22, 30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    _showLogoutDialog();
+                                  },
+                                  child: Text(
+                                    "Log Out",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11.0.sp,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.black38,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 20),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (context) => Privacy()));
+                                  },
+                                  child: Text(
+                                    "Privacy Policy",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11.0.sp,
+                                      fontFamily: 'Axiforma',
+                                      color: Colors.black38,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(builder: (context) => Terms()));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 15.0),
+                                      child: Text(
+                                        "Terms & Conditions",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 11.0.sp,
+                                          fontFamily: 'Axiforma',
+                                          color: Colors.black38,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                }
+                  ),
+                );
               }
-          }
-        },
-      ),
+            }
+        }
+      },
     );
   }
 }

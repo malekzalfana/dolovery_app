@@ -1,34 +1,29 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:dolovery_app/screens/search.dart';
 import 'package:dolovery_app/screens/shoplisting.dart';
 import 'package:dolovery_app/widgets/bundle.dart';
 import 'package:dolovery_app/widgets/product.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+import 'package:dolovery_app/widgets/product_popup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../screens/shoppage.dart';
-import '../screens/search.dart';
-import 'setup.dart';
-import 'package:dolovery_app/widgets/shopImage.dart';
-import 'package:dolovery_app/widgets/product_popup.dart';
-import 'dart:async';
 import 'package:location/location.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../screens/search.dart';
+import 'setup.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function() notifyParent;
   final Function() notifyParent2;
 
-  HomeScreen(
-      {Key key, @required this.notifyParent, @required this.notifyParent2})
-      : super(key: key);
+  HomeScreen({Key key, @required this.notifyParent, @required this.notifyParent2}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return HomeScreenState();
@@ -160,8 +155,7 @@ class HomeScreenState extends State<HomeScreen> {
 
     final uid = user.uid;
 
-    var usercollection =
-        await Firestore.instance.collection("users").document(uid).get();
+    var usercollection = await Firestore.instance.collection("users").document(uid).get();
 
     if (usercollection.exists) {
       newuser = false;
@@ -188,19 +182,16 @@ class HomeScreenState extends State<HomeScreen> {
       final FirebaseAuth _auth = FirebaseAuth.instance;
 
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final FirebaseUser user =
-          (await _auth.signInWithCredential(credential)).user;
+      final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
 
-      final newUser =
-          await Firestore.instance.collection("users").document(user.uid).get();
+      final newUser = await Firestore.instance.collection("users").document(user.uid).get();
       if (newUser.exists) {
         notsetup = false;
         welcomeheight = 350;
@@ -232,14 +223,10 @@ class HomeScreenState extends State<HomeScreen> {
         final AuthCredential credential = FacebookAuthProvider.getCredential(
           accessToken: result.accessToken.token,
         );
-        final FirebaseUser user =
-            (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+        final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
         bool notsetup;
         double welcomeheight;
-        final newUser = await Firestore.instance
-            .collection("users")
-            .document(user.uid)
-            .get();
+        final newUser = await Firestore.instance.collection("users").document(user.uid).get();
         if (newUser.exists) {
           final prefs = await SharedPreferences.getInstance();
           chosen_address = newUser.data["chosen_address"];
@@ -262,8 +249,7 @@ class HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       if (e.message ==
           "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {
-        showError(
-            "An account already exists with the same email address, try using Google to sign in.");
+        showError("An account already exists with the same email address, try using Google to sign in.");
       }
       setState(() {
         showerrortextbool = true;
@@ -331,18 +317,15 @@ class HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: MaterialButton(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          side: BorderSide(color: Colors.red)),
+                          borderRadius: BorderRadius.circular(20.0), side: BorderSide(color: Colors.red)),
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SetupScreen()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SetupScreen()));
                       },
                       color: Colors.redAccent[700],
                       textColor: Colors.white,
                       minWidth: 0,
                       height: 0,
-                      padding: EdgeInsets.only(
-                          left: 20, top: 10, right: 20, bottom: 10),
+                      padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 10),
                       child: Text(
                         "Setup your profile",
                         style: TextStyle(
@@ -397,8 +380,7 @@ class HomeScreenState extends State<HomeScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: GestureDetector(
-                      child:
-                          Image.asset('assets/images/fblogin.jpg', width: 300),
+                      child: Image.asset('assets/images/fblogin.jpg', width: 300),
                       onTap: () {
                         hideSignIn();
                         signUpWithFacebook();
@@ -409,8 +391,7 @@ class HomeScreenState extends State<HomeScreen> {
                 Visibility(
                   visible: _readtosignin,
                   child: GestureDetector(
-                      child:
-                          Image.asset('assets/images/glogin.jpg', width: 300),
+                      child: Image.asset('assets/images/glogin.jpg', width: 300),
                       onTap: () {
                         _readtosignin = false;
 
@@ -428,8 +409,7 @@ class HomeScreenState extends State<HomeScreen> {
                 Visibility(
                     visible: showerrortextbool,
                     child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 15.0, left: 20, right: 20),
+                        padding: const EdgeInsets.only(top: 15.0, left: 20, right: 20),
                         child: Text(
                           showerrortext,
                           style: TextStyle(
@@ -506,19 +486,17 @@ class HomeScreenState extends State<HomeScreen> {
                             return Text('Error: ${snapshot.error}');
                           else if (chosen_address != null) {
                             return Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 15.0, top: 10),
+                              padding: const EdgeInsets.only(left: 15.0, top: 10),
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Row(
                                   children: [
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 5.0),
+                                      padding: const EdgeInsets.only(right: 5.0),
                                       child: Icon(
                                         Icons.near_me,
                                         color: Colors.redAccent[700],
-                                        size: 20.0,
+                                        size: Adaptive.h(3),
                                       ),
                                     ),
                                     Text(
@@ -531,29 +509,23 @@ class HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 23),
+                                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: Adaptive.h(2)),
                                       height: 8.0.h,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(7),
                                       ),
                                       child: Column(
                                         children: [
-                                          for (var address = 0;
-                                              address < all_addresses.length;
-                                              address++)
-                                            if (all_addresses[address]['id'] ==
-                                                chosen_address)
+                                          for (var address = 0; address < all_addresses.length; address++)
+                                            if (all_addresses[address]['id'] == chosen_address)
                                               Expanded(
                                                 child: Text(
-                                                  all_addresses[address]
-                                                      ['name'],
+                                                  all_addresses[address]['name'],
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 12.0.sp,
                                                     fontFamily: 'Axiforma',
-                                                    color:
-                                                        Colors.redAccent[700],
+                                                    color: Colors.redAccent[700],
                                                   ),
                                                 ),
                                               ),
@@ -569,8 +541,7 @@ class HomeScreenState extends State<HomeScreen> {
                       }
                     }),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 20.0, right: 10.0, top: 10.0, bottom: 0.0),
+                  padding: const EdgeInsets.only(left: 20.0, right: 10.0, top: 10.0, bottom: 0.0),
                   child: Row(
                     children: <Widget>[
                       GestureDetector(
@@ -590,9 +561,7 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) => Search()))
-                        .then((_) {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Search())).then((_) {
                       refreshcart();
                     });
                   },
@@ -600,17 +569,15 @@ class HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(left: 0, right: 10),
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 0),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                      height: 55,
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      height: Adaptive.h(8),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
                         children: <Widget>[
-                          Image.asset("assets/icons/searchicon.png",
-                              height: 16),
+                          Image.asset("assets/icons/searchicon.png", height: Adaptive.h(3)),
                           SizedBox(width: 16),
                           Container(
                             child: Text(
@@ -657,8 +624,7 @@ class HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 40.0, left: 15),
+                                padding: const EdgeInsets.only(top: 40.0, left: 15),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
@@ -704,8 +670,7 @@ class HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(
-                              builder: (context) =>
-                                  ShopListing(type: 'lebanese', arrow: true)))
+                              builder: (context) => ShopListing(type: 'lebanese', arrow: true)))
                           .then((_) {
                         refreshcart();
                       });
@@ -785,8 +750,7 @@ class HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(
-                              builder: (context) =>
-                                  ShopListing(type: 'cosmetics', arrow: true)))
+                              builder: (context) => ShopListing(type: 'cosmetics', arrow: true)))
                           .then((_) {
                         refreshcart();
                       });
@@ -842,8 +806,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                             ),
-                            Image.asset('assets/images/supsec.png',
-                                width: 30.0.w)
+                            Image.asset('assets/images/supsec.png', width: 30.0.w)
                           ],
                         ),
                       ),
@@ -866,14 +829,12 @@ class HomeScreenState extends State<HomeScreen> {
                       ),
                       GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => SetupScreen()));
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) => SetupScreen()));
                           },
                           child: GestureDetector(
                             onTap: () {},
-                            child: Image.asset(
-                                "assets/images/fullfilldolovery.png",
-                                height: 3.5.h),
+                            child: Image.asset("assets/images/fullfilldolovery.png", height: 5.0.h),
                           ))
                     ],
                   ),
@@ -881,8 +842,7 @@ class HomeScreenState extends State<HomeScreen> {
                 Visibility(
                   visible: true,
                   child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 5.0, right: 5, top: 0, bottom: 0),
+                      padding: const EdgeInsets.only(left: 5.0, right: 5, top: 0, bottom: 0),
                       child: StreamBuilder(
                           stream: Firestore.instance
                               .collection('products')
@@ -899,54 +859,38 @@ class HomeScreenState extends State<HomeScreen> {
                                     child: SizedBox(
                                         height: 22.0.h,
                                         child: Center(
-                                            child: Text('No items found.'))),
+                                            child: Text(
+                                          'No items found.',
+                                          style: TextStyle(fontSize: Adaptive.sp(12)),
+                                        ))),
                                   );
                                 }
                                 if (snapshot.hasData) {
                                   return GridView.count(
                                     crossAxisCount: 2,
-                                    childAspectRatio: 0.65,
-                                    controller: new ScrollController(
-                                        keepScrollOffset: false),
+                                    childAspectRatio: 0.75,
+                                    controller: new ScrollController(keepScrollOffset: false),
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
                                     children: List.generate(2, (index) {
                                       return GestureDetector(
                                         onTap: () {
-                                          openProductPopUp(
-                                              context,
-                                              snapshot.data.documents[index],
-                                              index,
-                                              null,
-                                              refreshcart);
+                                          openProductPopUp(context, snapshot.data.documents[index], index,
+                                              null, refreshcart);
                                         },
                                         child: ProductImage(
-                                          oldPrice: snapshot
-                                                          .data.documents[index]
-                                                      ['old_price'] ==
-                                                  null
+                                          oldPrice: snapshot.data.documents[index]['old_price'] == null
                                               ? "0"
-                                              : snapshot.data
-                                                  .documents[index]['old_price']
-                                                  .toString(),
-                                          productName: snapshot
-                                              .data.documents[index]['name'],
-                                          productImage: snapshot
-                                              .data.documents[index]['image'],
-                                          productPrice: snapshot.data
-                                              .documents[index]['shop_price']
-                                              .toString(),
-                                          shopName: snapshot
-                                              .data.documents[index]['shop'],
-                                          productUnit: snapshot
-                                                          .data.documents[index]
-                                                      ['unit'] !=
-                                                  null
-                                              ? snapshot.data.documents[index]
-                                                  ['unit']
+                                              : snapshot.data.documents[index]['old_price'].toString(),
+                                          productName: snapshot.data.documents[index]['name'],
+                                          productImage: snapshot.data.documents[index]['image'],
+                                          productPrice:
+                                              snapshot.data.documents[index]['shop_price'].toString(),
+                                          shopName: snapshot.data.documents[index]['shop'],
+                                          productUnit: snapshot.data.documents[index]['unit'] != null
+                                              ? snapshot.data.documents[index]['unit']
                                               : '',
-                                          productCurrency: snapshot.data
-                                              .documents[index]['currency'],
+                                          productCurrency: snapshot.data.documents[index]['currency'],
                                         ),
                                       );
                                     }).toList(),
@@ -954,22 +898,18 @@ class HomeScreenState extends State<HomeScreen> {
                                 } else if (snapshot.hasError) {
                                   return Text(snapshot.error.toString());
                                 }
-                                return Center(
-                                    child: CircularProgressIndicator());
+                                return Center(child: CircularProgressIndicator());
                             }
                           })),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10.0, right: 10.0, bottom: 20),
+                  padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20),
                   child: MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
                     onPressed: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(
-                              builder: (context) =>
-                                  ShopListing(type: 'lebanese', arrow: true)))
+                              builder: (context) => ShopListing(type: 'lebanese', arrow: true)))
                           .then((_) {
                         refreshcart();
                       });
@@ -978,8 +918,7 @@ class HomeScreenState extends State<HomeScreen> {
                     color: Colors.grey[100],
                     minWidth: MediaQuery.of(context).size.width - 20,
                     height: 0,
-                    padding:
-                        EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
+                    padding: EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -995,7 +934,7 @@ class HomeScreenState extends State<HomeScreen> {
                         Icon(
                           Icons.keyboard_arrow_right,
                           color: Colors.black38,
-                          size: 20.0,
+                          size: Adaptive.h(5),
                         ),
                       ],
                     ),
@@ -1017,9 +956,7 @@ class HomeScreenState extends State<HomeScreen> {
                       ),
                       GestureDetector(
                           onTap: () {},
-                          child: Image.asset(
-                              "assets/images/fullfilldolovery.png",
-                              height: 3.5.h))
+                          child: Image.asset("assets/images/fullfilldolovery.png", height: 5.0.h))
                     ],
                   ),
                 ),
@@ -1040,39 +977,33 @@ class HomeScreenState extends State<HomeScreen> {
                                 opacity: 0.3,
                                 child: SizedBox(
                                     height: 22.0.h,
-                                    child:
-                                        Center(child: Text('No items found.'))),
+                                    child: Center(
+                                        child: Text(
+                                      'No items found.',
+                                      style: TextStyle(fontSize: Adaptive.sp(12)),
+                                    ))),
                               );
                             }
                             if (snapshot.hasData) {
                               return SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
-                                      children: List<Widget>.generate(
-                                          snapshot.data.documents.length,
-                                          (int index) {
+                                      children:
+                                          List<Widget>.generate(snapshot.data.documents.length, (int index) {
                                     return GestureDetector(
                                       onTap: () {
-                                        openProductPopUp(
-                                            context,
-                                            snapshot.data.documents[index],
-                                            index,
-                                            null,
+                                        openProductPopUp(context, snapshot.data.documents[index], index, null,
                                             refreshcart);
                                       },
                                       child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 12),
+                                        padding: const EdgeInsets.only(left: 12),
                                         child: Bundle(
-                                          bundleName: snapshot
-                                              .data.documents[index]['name'],
-                                          bundleDescription: snapshot.data
-                                              .documents[index]['description'],
+                                          bundleName: snapshot.data.documents[index]['name'],
+                                          bundleDescription: snapshot.data.documents[index]['description'],
                                           bundleIndex: 0,
-                                          bundlePrice: int.parse(snapshot.data
-                                              .documents[index]['shop_price']),
-                                          bundleImage: snapshot
-                                              .data.documents[index]['image'],
+                                          bundlePrice:
+                                              int.parse(snapshot.data.documents[index]['shop_price']),
+                                          bundleImage: snapshot.data.documents[index]['image'],
                                         ),
                                       ),
                                     );
@@ -1093,7 +1024,7 @@ class HomeScreenState extends State<HomeScreen> {
                         "Cosmetics",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 26.0,
+                          fontSize: 18.5.sp,
                           fontFamily: 'Axiforma',
                           color: Colors.black,
                         ),
@@ -1102,15 +1033,12 @@ class HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             () {};
                           },
-                          child: Image.asset(
-                              "assets/images/fullfilldolovery.png",
-                              height: 3.5.h))
+                          child: Image.asset("assets/images/fullfilldolovery.png", height: 5.0.h))
                     ],
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.only(
-                        left: 5.0, right: 5, top: 0, bottom: 0),
+                    padding: const EdgeInsets.only(left: 5.0, right: 5, top: 0, bottom: 0),
                     child: StreamBuilder(
                         stream: Firestore.instance
                             .collection('products')
@@ -1127,57 +1055,40 @@ class HomeScreenState extends State<HomeScreen> {
                                   child: SizedBox(
                                       height: 22.0.h,
                                       child: Center(
-                                          child: Text('No items found.'))),
+                                          child: Text(
+                                        'No items found.',
+                                        style: TextStyle(fontSize: Adaptive.sp(12)),
+                                      ))),
                                 );
                               }
                               if (snapshot.hasData) {
                                 return GridView.count(
+                                  // padding: EdgeInsets.only(left: Adaptive.w(12)),
                                   crossAxisCount: 2,
-                                  childAspectRatio: 0.65,
-                                  controller: new ScrollController(
-                                      keepScrollOffset: false),
+                                  childAspectRatio: 0.75,
+                                  controller: new ScrollController(keepScrollOffset: false),
                                   shrinkWrap: true,
                                   scrollDirection: Axis.vertical,
                                   children: List.generate(8, (index) {
                                     return GestureDetector(
                                       onTap: () {
-                                        openProductPopUp(
-                                            context,
-                                            snapshot.data.documents[index],
-                                            index,
-                                            null,
+                                        openProductPopUp(context, snapshot.data.documents[index], index, null,
                                             refreshcart);
                                       },
                                       child: ProductImage(
-                                        productName: snapshot
-                                            .data.documents[index]['name'],
-                                        productImage: snapshot
-                                            .data.documents[index]['image'],
-                                        productPrice: snapshot
-                                            .data.documents[index]['shop_price']
-                                            .toString(),
-                                        shopName: snapshot.data.documents[index]
-                                            ['shop'],
-                                        productUnit: snapshot.data
-                                                    .documents[index]['unit'] !=
-                                                null
-                                            ? snapshot.data.documents[index]
-                                                ['unit']
+                                        productName: snapshot.data.documents[index]['name'],
+                                        productImage: snapshot.data.documents[index]['image'],
+                                        productPrice: snapshot.data.documents[index]['shop_price'].toString(),
+                                        shopName: snapshot.data.documents[index]['shop'],
+                                        productUnit: snapshot.data.documents[index]['unit'] != null
+                                            ? snapshot.data.documents[index]['unit']
                                             : '',
-                                        productCurrency:
-                                            snapshot.data.documents[index]
-                                                        ['currency'] !=
-                                                    null
-                                                ? snapshot.data.documents[index]
-                                                    ['currency']
-                                                : "lebanese",
-                                        oldPrice: snapshot.data.documents[index]
-                                                    ['old_price'] ==
-                                                null
+                                        productCurrency: snapshot.data.documents[index]['currency'] != null
+                                            ? snapshot.data.documents[index]['currency']
+                                            : "lebanese",
+                                        oldPrice: snapshot.data.documents[index]['old_price'] == null
                                             ? "0"
-                                            : snapshot.data
-                                                .documents[index]['old_price']
-                                                .toString(),
+                                            : snapshot.data.documents[index]['old_price'].toString(),
                                       ),
                                     );
                                   }).toList(),
@@ -1189,11 +1100,9 @@ class HomeScreenState extends State<HomeScreen> {
                           }
                         })),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10.0, right: 10.0, bottom: 20),
+                  padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20),
                   child: MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
                     onPressed: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(
@@ -1209,8 +1118,7 @@ class HomeScreenState extends State<HomeScreen> {
                     color: Colors.grey[100],
                     minWidth: MediaQuery.of(context).size.width - 20,
                     height: 0,
-                    padding:
-                        EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
+                    padding: EdgeInsets.only(left: 6, top: 10, right: 6, bottom: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -1226,7 +1134,7 @@ class HomeScreenState extends State<HomeScreen> {
                         Icon(
                           Icons.keyboard_arrow_right,
                           color: Colors.black38,
-                          size: 20.0,
+                          size: Adaptive.h(5),
                         ),
                       ],
                     ),
