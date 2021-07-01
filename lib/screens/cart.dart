@@ -1463,19 +1463,16 @@ class _CartState extends State<Cart> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(
-                      width: width - 150,
-                      child: Text(
-                        cartitem['data']['name'],
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: Adaptive.sp(12),
-                          height: 1.16,
-                          fontFamily: 'Axiforma',
-                          color: Colors.black,
-                        ),
+                    Text(
+                      cartitem['data']['name'],
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Adaptive.sp(12),
+                        height: 1.16,
+                        fontFamily: 'Axiforma',
+                        color: Colors.black,
                       ),
                     ),
                   ],
