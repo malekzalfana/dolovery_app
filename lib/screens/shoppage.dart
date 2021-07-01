@@ -141,7 +141,9 @@ class _ShopPageState extends State<ShopPage> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.all(0.0),
+                      padding: (Device.screenType != ScreenType.tablet)
+                    ? EdgeInsets.zero
+                    : EdgeInsets.only(left: Adaptive.w(12)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
@@ -528,39 +530,46 @@ class _ShopPageState extends State<ShopPage> {
                                                       child: Center(child: Text('No items found.'))),
                                                 );
                                               }
-                                              return GridView.count(
-                                                crossAxisCount: 2,
-                                                childAspectRatio: 0.65,
-                                                controller: new ScrollController(keepScrollOffset: false),
-                                                shrinkWrap: true,
-                                                scrollDirection: Axis.vertical,
-                                                children:
-                                                    List.generate(snapshot.data.documents.length, (index) {
-                                                  return GestureDetector(
-                                                    onTap: () {
-                                                      openProductPopUp(context, snapshot.data, index);
-                                                    },
-                                                    child: ProductImage(
-                                                        productName: snapshot.data.documents[index]['name'],
-                                                        productImage: snapshot.data.documents[index]['image'],
-                                                        productPrice: snapshot
-                                                            .data.documents[index]['shop_price']
-                                                            .toString(),
-                                                        shopName: snapshot.data.documents[index]['shop'],
-                                                        productUnit:
-                                                            snapshot.data.documents[index]['unit'] != null
-                                                                ? snapshot.data.documents[index]['unit']
-                                                                : '',
-                                                        oldPrice: snapshot.data.documents[index]
-                                                                    ['old_price'] ==
-                                                                null
-                                                            ? "0"
-                                                            : snapshot.data.documents[index]['old_price']
-                                                                .toString(),
-                                                        productCurrency: snapshot.data.documents[index]
-                                                            ['currency']),
-                                                  );
-                                                }).toList(),
+                                              return Padding(
+                                                padding: (Device.screenType != ScreenType.tablet)
+                                                    ? EdgeInsets.zero
+                                                    : EdgeInsets.only(left: Adaptive.w(12)),
+                                                child: GridView.count(
+                                                  crossAxisCount: 2,
+                                                  childAspectRatio:
+                                                      (Device.screenType != ScreenType.tablet) ? 0.65 : 0.75,
+                                                  controller: new ScrollController(keepScrollOffset: false),
+                                                  shrinkWrap: true,
+                                                  scrollDirection: Axis.vertical,
+                                                  children:
+                                                      List.generate(snapshot.data.documents.length, (index) {
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        openProductPopUp(context, snapshot.data, index);
+                                                      },
+                                                      child: ProductImage(
+                                                          productName: snapshot.data.documents[index]['name'],
+                                                          productImage: snapshot.data.documents[index]
+                                                              ['image'],
+                                                          productPrice: snapshot
+                                                              .data.documents[index]['shop_price']
+                                                              .toString(),
+                                                          shopName: snapshot.data.documents[index]['shop'],
+                                                          productUnit:
+                                                              snapshot.data.documents[index]['unit'] != null
+                                                                  ? snapshot.data.documents[index]['unit']
+                                                                  : '',
+                                                          oldPrice: snapshot.data.documents[index]
+                                                                      ['old_price'] ==
+                                                                  null
+                                                              ? "0"
+                                                              : snapshot.data.documents[index]['old_price']
+                                                                  .toString(),
+                                                          productCurrency: snapshot.data.documents[index]
+                                                              ['currency']),
+                                                    );
+                                                  }).toList(),
+                                                ),
                                               );
                                             } else if (snapshot.hasError) {
                                               return Text(snapshot.error.toString());
@@ -585,41 +594,47 @@ class _ShopPageState extends State<ShopPage> {
                                               .snapshots(),
                                           builder: (context, snapshot) {
                                             if (snapshot.hasData) {
-                                              return GridView.count(
-                                                crossAxisCount: 2,
-                                                childAspectRatio: 0.65,
-                                                controller: new ScrollController(keepScrollOffset: false),
-                                                shrinkWrap: true,
-                                                scrollDirection: Axis.vertical,
-                                                children:
-                                                    List.generate(snapshot.data.documents.length, (index) {
-                                                  return GestureDetector(
-                                                    onTap: () {
-                                                      openProductPopUp(context, snapshot.data, index);
-                                                    },
-                                                    child: ProductImage(
-                                                        oldPrice: snapshot.data.documents[index]
-                                                                    ['old_price'] ==
-                                                                null
-                                                            ? "0"
-                                                            : snapshot.data.documents[index]['old_price']
-                                                                .toString(),
-                                                        productName: snapshot.data.documents[index]['name'],
-                                                        productImage: snapshot.data.documents[index]['image'],
-                                                        productPrice: snapshot
-                                                            .data.documents[index]['shop_price']
-                                                            .toString(),
-                                                        shopName: snapshot.data.documents[index]['shop'],
-                                                        productUnit:
-                                                            snapshot.data.documents[index]['unit'] != null
-                                                                ? snapshot.data.documents[index]['unit']
-                                                                : '',
-                                                        productCurrency:
-                                                            snapshot.data.documents[index]['currency'] != null
-                                                                ? snapshot.data.documents[index]['currency']
-                                                                : "lebanese"),
-                                                  );
-                                                }).toList(),
+                                              return Padding(
+                                                padding: (Device.screenType != ScreenType.tablet)
+                                                  ? EdgeInsets.zero
+                                                  : EdgeInsets.only(left: Adaptive.w(12)),
+                                                child: GridView.count(
+                                                  crossAxisCount: 2,
+                                                  childAspectRatio:
+                                                  (Device.screenType != ScreenType.tablet) ? 0.65 : 0.75,
+                                                  controller: new ScrollController(keepScrollOffset: false),
+                                                  shrinkWrap: true,
+                                                  scrollDirection: Axis.vertical,
+                                                  children:
+                                                      List.generate(snapshot.data.documents.length, (index) {
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        openProductPopUp(context, snapshot.data, index);
+                                                      },
+                                                      child: ProductImage(
+                                                          oldPrice: snapshot.data.documents[index]
+                                                                      ['old_price'] ==
+                                                                  null
+                                                              ? "0"
+                                                              : snapshot.data.documents[index]['old_price']
+                                                                  .toString(),
+                                                          productName: snapshot.data.documents[index]['name'],
+                                                          productImage: snapshot.data.documents[index]['image'],
+                                                          productPrice: snapshot
+                                                              .data.documents[index]['shop_price']
+                                                              .toString(),
+                                                          shopName: snapshot.data.documents[index]['shop'],
+                                                          productUnit:
+                                                              snapshot.data.documents[index]['unit'] != null
+                                                                  ? snapshot.data.documents[index]['unit']
+                                                                  : '',
+                                                          productCurrency:
+                                                              snapshot.data.documents[index]['currency'] != null
+                                                                  ? snapshot.data.documents[index]['currency']
+                                                                  : "lebanese"),
+                                                    );
+                                                  }).toList(),
+                                                ),
                                               );
                                             } else if (snapshot.hasError) {
                                               return Text(snapshot.error.toString());
@@ -658,47 +673,53 @@ class _ShopPageState extends State<ShopPage> {
                                               );
                                             }
                                             if (snapshot.hasData) {
-                                              return GridView.count(
-                                                crossAxisCount: 2,
-                                                childAspectRatio: 0.75,
-                                                controller: new ScrollController(keepScrollOffset: false),
-                                                shrinkWrap: true,
-                                                scrollDirection: Axis.vertical,
-                                                children:
-                                                    List.generate(snapshot.data.documents.length, (index) {
-                                                  return GestureDetector(
-                                                    onTap: () {
-                                                      openProductPopUp(
-                                                          context, snapshot.data.documents[index], index);
-                                                    },
-                                                    child: ProductImage(
-                                                        oldPrice:
-                                                            snapshot.data.documents[index]['old_price'] == null
-                                                                ? "0"
-                                                                : snapshot.data.documents[index]['old_price']
-                                                                    .toString(),
-                                                        productName:
-                                                            snapshot.data.documents[index]['name'] != null
-                                                                ? snapshot.data.documents[index]['name']
-                                                                : '[NO NAME]',
-                                                        productImage: snapshot.data.documents[index]['image'],
-                                                        productPrice: snapshot.data.documents[index]['shop_price']
-                                                                    .toString() !=
-                                                                null
-                                                            ? snapshot.data.documents[index]['shop_price']
-                                                                .toString()
-                                                            : '[NO PRICE]',
-                                                        shopName: snapshot.data.documents[index]['shop'],
-                                                        productUnit:
-                                                            snapshot.data.documents[index]['unit'] != null
-                                                                ? snapshot.data.documents[index]['unit']
-                                                                : '',
-                                                        productCurrency:
-                                                            snapshot.data.documents[index]['currency'] != null
-                                                                ? snapshot.data.documents[index]['currency']
-                                                                : "lebanese"),
-                                                  );
-                                                }).toList(),
+                                              return Padding(
+                                                padding: (Device.screenType != ScreenType.tablet)
+                                                  ? EdgeInsets.zero
+                                                  : EdgeInsets.only(left: Adaptive.w(12)),
+                                                child: GridView.count(
+                                                  crossAxisCount: 2,
+                                                  childAspectRatio:
+                                                  (Device.screenType != ScreenType.tablet) ? 0.65 : 0.75,
+                                                  controller: new ScrollController(keepScrollOffset: false),
+                                                  shrinkWrap: true,
+                                                  scrollDirection: Axis.vertical,
+                                                  children:
+                                                      List.generate(snapshot.data.documents.length, (index) {
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        openProductPopUp(
+                                                            context, snapshot.data.documents[index], index);
+                                                      },
+                                                      child: ProductImage(
+                                                          oldPrice:
+                                                              snapshot.data.documents[index]['old_price'] == null
+                                                                  ? "0"
+                                                                  : snapshot.data.documents[index]['old_price']
+                                                                      .toString(),
+                                                          productName:
+                                                              snapshot.data.documents[index]['name'] != null
+                                                                  ? snapshot.data.documents[index]['name']
+                                                                  : '[NO NAME]',
+                                                          productImage: snapshot.data.documents[index]['image'],
+                                                          productPrice: snapshot.data.documents[index]['shop_price']
+                                                                      .toString() !=
+                                                                  null
+                                                              ? snapshot.data.documents[index]['shop_price']
+                                                                  .toString()
+                                                              : '[NO PRICE]',
+                                                          shopName: snapshot.data.documents[index]['shop'],
+                                                          productUnit:
+                                                              snapshot.data.documents[index]['unit'] != null
+                                                                  ? snapshot.data.documents[index]['unit']
+                                                                  : '',
+                                                          productCurrency:
+                                                              snapshot.data.documents[index]['currency'] != null
+                                                                  ? snapshot.data.documents[index]['currency']
+                                                                  : "lebanese"),
+                                                    );
+                                                  }).toList(),
+                                                ),
                                               );
                                             } else if (snapshot.hasError) {
                                               return Text(snapshot.error.toString());

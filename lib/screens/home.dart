@@ -866,34 +866,40 @@ class HomeScreenState extends State<HomeScreen> {
                                   );
                                 }
                                 if (snapshot.hasData) {
-                                  return GridView.count(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 0.75,
-                                    controller: new ScrollController(keepScrollOffset: false),
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    children: List.generate(2, (index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          openProductPopUp(context, snapshot.data.documents[index], index,
-                                              null, refreshcart);
-                                        },
-                                        child: ProductImage(
-                                          oldPrice: snapshot.data.documents[index]['old_price'] == null
-                                              ? "0"
-                                              : snapshot.data.documents[index]['old_price'].toString(),
-                                          productName: snapshot.data.documents[index]['name'],
-                                          productImage: snapshot.data.documents[index]['image'],
-                                          productPrice:
-                                              snapshot.data.documents[index]['shop_price'].toString(),
-                                          shopName: snapshot.data.documents[index]['shop'],
-                                          productUnit: snapshot.data.documents[index]['unit'] != null
-                                              ? snapshot.data.documents[index]['unit']
-                                              : '',
-                                          productCurrency: snapshot.data.documents[index]['currency'],
-                                        ),
-                                      );
-                                    }).toList(),
+                                  return Padding(
+                                    padding: (Device.screenType != ScreenType.tablet)
+                                        ? EdgeInsets.zero
+                                        : EdgeInsets.only(left: Adaptive.w(12)),
+                                    child: GridView.count(
+                                      crossAxisCount: 2,
+                                      childAspectRatio:
+                                          (Device.screenType != ScreenType.tablet) ? 0.65 : 0.75,
+                                      controller: new ScrollController(keepScrollOffset: false),
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      children: List.generate(2, (index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            openProductPopUp(context, snapshot.data.documents[index], index,
+                                                null, refreshcart);
+                                          },
+                                          child: ProductImage(
+                                            oldPrice: snapshot.data.documents[index]['old_price'] == null
+                                                ? "0"
+                                                : snapshot.data.documents[index]['old_price'].toString(),
+                                            productName: snapshot.data.documents[index]['name'],
+                                            productImage: snapshot.data.documents[index]['image'],
+                                            productPrice:
+                                                snapshot.data.documents[index]['shop_price'].toString(),
+                                            shopName: snapshot.data.documents[index]['shop'],
+                                            productUnit: snapshot.data.documents[index]['unit'] != null
+                                                ? snapshot.data.documents[index]['unit']
+                                                : '',
+                                            productCurrency: snapshot.data.documents[index]['currency'],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
                                   );
                                 } else if (snapshot.hasError) {
                                   return Text(snapshot.error.toString());
@@ -1063,9 +1069,11 @@ class HomeScreenState extends State<HomeScreen> {
                               }
                               if (snapshot.hasData) {
                                 return GridView.count(
-                                  // padding: EdgeInsets.only(left: Adaptive.w(12)),
+                                  padding: (Device.screenType != ScreenType.tablet)
+                                      ? EdgeInsets.zero
+                                      : EdgeInsets.only(left: Adaptive.w(12)),
                                   crossAxisCount: 2,
-                                  childAspectRatio: 0.75,
+                                  childAspectRatio: (Device.screenType != ScreenType.tablet) ? 0.65 : 0.75,
                                   controller: new ScrollController(keepScrollOffset: false),
                                   shrinkWrap: true,
                                   scrollDirection: Axis.vertical,
