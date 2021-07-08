@@ -366,6 +366,8 @@ class _CartState extends State<Cart> {
     bool user_is_setup = false;
     Future setupVerification() async {
       final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      print("USERRRRRRRRRRR ISSSSSSSSSSSSSSSS $user");
+      print(this_user);
       if (user != null) {
         uid = user.uid;
         name = user.displayName;
@@ -384,7 +386,7 @@ class _CartState extends State<Cart> {
         }
         user_is_signed_in = true;
       } else {
-        user_is_signed_in = false;
+        usersignedin= false;
       }
     }
 
@@ -830,12 +832,13 @@ class _CartState extends State<Cart> {
   Future setupVerification() async {
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final prefs = await SharedPreferences.getInstance();
-    this_user = await Firestore.instance.collection("users").document(uid).get();
+    
 
     if (user != null) {
       uid = user.uid;
       name = user.displayName;
       uemail = user.email;
+      this_user = await Firestore.instance.collection("users").document(uid).get();
       // usertoken = this_user.data["token"];
 
       if (this_user.exists) {
@@ -1256,6 +1259,9 @@ class _CartState extends State<Cart> {
                         );
                       default:
                         if (this_user != null) {
+                          print('THIS USER ISSSSSSSSSSSSSS ${this_user.toString()}');
+                          print(this_user == null);
+                          print(usersignedin);
                           return Column(
                             children: [
                               if (usersignedin & ordered == false)
@@ -1287,7 +1293,7 @@ class _CartState extends State<Cart> {
                                     ),
                                   ),
                                 ),
-                              if (usersignedin & ordered)
+                              if (usersignedin && ordered)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 18.0),
                                   child: Center(

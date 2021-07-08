@@ -389,6 +389,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
 
   @override
   void initState() {
+    print(this_user);
+    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     super.initState();
   }
 
@@ -646,6 +648,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
+                            SizedBox(height:20),
                             Padding(
                               padding: const EdgeInsets.only(top: 60.0),
                               child: Row(
@@ -877,18 +880,16 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                     Padding(
                                                       padding: const EdgeInsets.only(
                                                           top: 10.0, left: 0, bottom: 5),
-                                                      child: Expanded(
-                                                        child: Text(
-                                                          this_user.data["address"][index]["name"],
-                                                          style: TextStyle(
-                                                            fontWeight: FontWeight.bold,
-                                                            fontSize: Adaptive.sp(13),
-                                                            fontFamily: 'Axiforma',
-                                                            color: chosen_address ==
-                                                                    this_user.data["address"][index]["id"]
-                                                                ? Colors.black
-                                                                : Colors.grey[500],
-                                                          ),
+                                                      child: Text(
+                                                        this_user.data["address"][index]["name"],
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: Adaptive.sp(13),
+                                                          fontFamily: 'Axiforma',
+                                                          color: chosen_address ==
+                                                                  this_user.data["address"][index]["id"]
+                                                              ? Colors.black
+                                                              : Colors.grey[500],
                                                         ),
                                                       ),
                                                     ),
@@ -900,18 +901,16 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                   children: <Widget>[
                                                     Padding(
                                                       padding: const EdgeInsets.only(left: 0.0, bottom: 8),
-                                                      child: Expanded(
-                                                        child: Text(
-                                                          this_user.data["address"][index]["street_address"],
-                                                          overflow: TextOverflow.ellipsis,
-                                                          textAlign: TextAlign.left,
-                                                          style: TextStyle(
-                                                            height: 1.1,
-                                                            fontWeight: FontWeight.normal,
-                                                            fontSize: Adaptive.sp(13),
-                                                            fontFamily: 'Axiforma',
-                                                            color: Colors.grey[500],
-                                                          ),
+                                                      child: Text(
+                                                        this_user.data["address"][index]["street_address"],
+                                                        overflow: TextOverflow.ellipsis,
+                                                        textAlign: TextAlign.left,
+                                                        style: TextStyle(
+                                                          height: 1.1,
+                                                          fontWeight: FontWeight.normal,
+                                                          fontSize: Adaptive.sp(13),
+                                                          fontFamily: 'Axiforma',
+                                                          color: Colors.grey[500],
                                                         ),
                                                       ),
                                                     ),

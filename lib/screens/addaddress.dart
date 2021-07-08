@@ -164,8 +164,8 @@ class AddAddressState extends State<AddAddress> {
               borderSide: BorderSide(color: Colors.grey[300], width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            labelText: 'Street Adress'),
-        maxLength: 100,
+            labelText: 'Street Address'),
+        maxLength: 20,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
@@ -193,7 +193,7 @@ class AddAddressState extends State<AddAddress> {
               borderRadius: BorderRadius.circular(10.0),
             ),
             labelText: 'Landmark'),
-        maxLength: 50,
+        maxLength: 20,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
@@ -221,7 +221,7 @@ class AddAddressState extends State<AddAddress> {
               borderRadius: BorderRadius.circular(10.0),
             ),
             labelText: 'Address Name'),
-        maxLength: 50,
+        maxLength: 20,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
@@ -249,7 +249,7 @@ class AddAddressState extends State<AddAddress> {
               borderRadius: BorderRadius.circular(10.0),
             ),
             labelText: 'Apartment / Floor'),
-        maxLength: 50,
+        maxLength: 20,
         style: new TextStyle(
           fontFamily: "Axiforma",
         ),
