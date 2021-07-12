@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -81,11 +82,9 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   }
 
   String generateNonce([int length = 32]) {
-    final charset =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
     final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
-        .join();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
   }
 
   String sha256ofString(String input) {
@@ -125,11 +124,9 @@ class ProfileScreenState extends State<ProfileMainScreen> {
     // Sign in the user with Firebase. If the nonce we generated earlier does
     // not match the nonce in `appleCredential.identityToken`, sign in will fail.
 
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(oauthCredential)).user;
+    final FirebaseUser user = (await _auth.signInWithCredential(oauthCredential)).user;
     double welcomeheight;
-    final newUser =
-        await Firestore.instance.collection("users").document(user.uid).get();
+    final newUser = await Firestore.instance.collection("users").document(user.uid).get();
     if (newUser.exists) {
       notsetup = false;
       welcomeheight = Adaptive.h(50);
@@ -139,8 +136,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
     }
     Navigator.of(context).pop();
 
-    String displayName =
-        appleCredential.givenName + " " + appleCredential.familyName;
+    String displayName = appleCredential.givenName + " " + appleCredential.familyName;
 
     _welcomePopUp(context, displayName, notsetup, welcomeheight);
     setState(() {
@@ -159,20 +155,17 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       final FirebaseAuth _auth = FirebaseAuth.instance;
 
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final FirebaseUser user =
-          (await _auth.signInWithCredential(credential)).user;
+      final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
 
       double welcomeheight;
-      final newUser =
-          await Firestore.instance.collection("users").document(user.uid).get();
+      final newUser = await Firestore.instance.collection("users").document(user.uid).get();
       if (newUser.exists) {
         notsetup = false;
         welcomeheight = Adaptive.h(50);
@@ -204,14 +197,10 @@ class ProfileScreenState extends State<ProfileMainScreen> {
         final AuthCredential credential = FacebookAuthProvider.getCredential(
           accessToken: result.accessToken.token,
         );
-        final FirebaseUser user =
-            (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+        final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
         double welcomeheight;
-        final newUser = await Firestore.instance
-            .collection("users")
-            .document(user.uid)
-            .get();
+        final newUser = await Firestore.instance.collection("users").document(user.uid).get();
         if (newUser.exists) {
           notsetup = false;
           welcomeheight = 350;
@@ -230,8 +219,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
     } catch (e) {
       if (e.message ==
           "An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.") {
-        showError(
-            "An account already exists with the same email address, try using Google to sign in.");
+        showError("An account already exists with the same email address, try using Google to sign in.");
       }
       setState(() {
         showerrortextbool = true;
@@ -388,8 +376,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: GestureDetector(
-                      child: Image.asset('assets/images/fblogin.jpg',
-                          width: 75.0.w),
+                      child: Image.asset('assets/images/fblogin.jpg', width: 75.0.w),
                       onTap: () {
                         hideSignIn();
                         signUpWithFacebook();
@@ -400,8 +387,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                 Visibility(
                   visible: _readtosignin,
                   child: GestureDetector(
-                      child: Image.asset('assets/images/glogin.jpg',
-                          width: 75.0.w),
+                      child: Image.asset('assets/images/glogin.jpg', width: 75.0.w),
                       onTap: () {
                         _readtosignin = false;
 
@@ -409,18 +395,19 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                         _googleSignUp();
                       }),
                 ),
-                Visibility(
-                  visible: _readtosignin,
-                  child: GestureDetector(
-                      child: Image.asset('assets/images/applesignin.png',
-                          width: 75.0.w),
-                      onTap: () {
-                        _readtosignin = false;
+                (Platform.isIOS)
+                    ? Visibility(
+                        visible: _readtosignin,
+                        child: GestureDetector(
+                            child: Image.asset('assets/images/applesignin.png', width: 75.0.w),
+                            onTap: () {
+                              _readtosignin = false;
 
-                        hideSignIn();
-                        signInWithApple();
-                      }),
-                ),
+                              hideSignIn();
+                              signInWithApple();
+                            }),
+                      )
+                    : Container(),
                 Visibility(
                   visible: !_readtosignin,
                   child: Padding(
@@ -431,8 +418,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                 Visibility(
                     visible: showerrortextbool,
                     child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 15.0, left: 20, right: 20),
+                        padding: const EdgeInsets.only(top: 15.0, left: 20, right: 20),
                         child: Text(
                           showerrortext,
                           style: TextStyle(
@@ -487,8 +473,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
   @override
   void initState() {
     print(this_user);
-    print(
-        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     super.initState();
   }
 
@@ -503,8 +488,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
       name = user.displayName;
       uemail = user.email;
 
-      this_user =
-          await Firestore.instance.collection("users").document(uid).get();
+      this_user = await Firestore.instance.collection("users").document(uid).get();
 /* added to the page */
       if (this_user.exists) {
         user_is_setup = true;
@@ -546,9 +530,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(bottom: 28.0),
-                        child: Image.asset(
-                            "assets/images/profile_illustration.png",
-                            width: 100.0.w),
+                        child: Image.asset("assets/images/profile_illustration.png", width: 100.0.w),
                       ),
                       Text(
                         "Let's Get Started",
@@ -594,8 +576,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           textColor: Colors.white,
                           minWidth: 80.0.w,
                           height: 0,
-                          padding: EdgeInsets.only(
-                              left: 33, top: 10, right: 33, bottom: 10),
+                          padding: EdgeInsets.only(left: 33, top: 10, right: 33, bottom: 10),
                           child: Text(
                             "Get Started",
                             style: TextStyle(
@@ -618,9 +599,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                       Spacer(),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 28.0),
-                        child: Image.asset(
-                            "assets/images/profile_illustration.png",
-                            width: 100.0.w),
+                        child: Image.asset("assets/images/profile_illustration.png", width: 100.0.w),
                       ),
                       Text(
                         "Let's Get Started",
@@ -661,8 +640,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             });
 
                             Navigator.of(context)
-                                .push(MaterialPageRoute(
-                                    builder: (context) => ProfileScreen()))
+                                .push(MaterialPageRoute(builder: (context) => ProfileScreen()))
                                 .then((_) {
                               setState(() {});
                             });
@@ -671,8 +649,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           textColor: Colors.white,
                           minWidth: 80.0.w,
                           height: 0,
-                          padding: EdgeInsets.only(
-                              left: 33, top: 10, right: 33, bottom: 10),
+                          padding: EdgeInsets.only(left: 33, top: 10, right: 33, bottom: 10),
                           child: Text(
                             "Setup your profile",
                             style: TextStyle(
@@ -706,8 +683,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             SizedBox(width: 20),
                             GestureDetector(
                               onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => Privacy()));
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) => Privacy()));
                               },
                               child: Text(
                                 "Privacy Policy",
@@ -722,8 +699,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Terms()));
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute(builder: (context) => Terms()));
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 15.0),
@@ -804,9 +781,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                             GestureDetector(
                               onTap: () {
                                 Navigator.of(context)
-                                    .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditProfileScreen()))
+                                    .push(MaterialPageRoute(builder: (context) => EditProfileScreen()))
                                     .then((_) {
                                   setState(() {});
                                 });
@@ -841,11 +816,9 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Visibility(
-                                        visible:
-                                            snapshot.data.documents.length > 0,
+                                        visible: snapshot.data.documents.length > 0,
                                         child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 30.0, top: 30, bottom: 15),
+                                          padding: const EdgeInsets.only(left: 30.0, top: 30, bottom: 15),
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
@@ -861,73 +834,46 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                         ),
                                       ),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 8.0),
+                                        padding: const EdgeInsets.only(bottom: 8.0),
                                         child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: List<Widget>.generate(
-                                                snapshot.data.documents.length,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: List<Widget>.generate(snapshot.data.documents.length,
                                                 (int index) {
                                               return Visibility(
                                                 visible: index != 3,
                                                 child: GestureDetector(
                                                   onTap: () {
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                OrderPage(snapshot
-                                                                    .data
-                                                                    .documents[
-                                                                        index]
-                                                                    .documentID)));
+                                                    Navigator.of(context).push(MaterialPageRoute(
+                                                        builder: (context) => OrderPage(
+                                                            snapshot.data.documents[index].documentID)));
                                                   },
                                                   child: RecentOrder(
-                                                      orderDate: snapshot.data
-                                                              .documents[index]
-                                                          ['date'],
-                                                      orderCount: snapshot
-                                                          .data
-                                                          .documents[index]
-                                                              ['count']
-                                                          .toInt(),
-                                                      orderImage: snapshot.data
-                                                              .documents[index]
-                                                          ['image'],
-                                                      orderPrice: snapshot
-                                                          .data
-                                                          .documents[index]
-                                                              ['total']
-                                                          .toString()),
+                                                      orderDate: snapshot.data.documents[index]['date'],
+                                                      orderCount:
+                                                          snapshot.data.documents[index]['count'].toInt(),
+                                                      orderImage: snapshot.data.documents[index]['image'],
+                                                      orderPrice:
+                                                          snapshot.data.documents[index]['total'].toString()),
                                                 ),
                                               );
                                             })),
                                       ),
                                       Visibility(
-                                        visible:
-                                            snapshot.data.documents.length > 0,
+                                        visible: snapshot.data.documents.length > 0,
                                         child: MaterialButton(
                                           shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              side: BorderSide(
-                                                  color: Colors.grey[200])),
+                                              borderRadius: BorderRadius.circular(10.0),
+                                              side: BorderSide(color: Colors.grey[200])),
                                           onPressed: () {
                                             Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Orders(uid: uid)));
+                                                MaterialPageRoute(builder: (context) => Orders(uid: uid)));
                                           },
                                           color: Colors.grey[200],
                                           elevation: 0,
                                           textColor: Colors.white,
                                           minWidth: 0,
                                           height: 0,
-                                          padding: EdgeInsets.only(
-                                              left: 20,
-                                              top: 10,
-                                              right: 20,
-                                              bottom: 10),
+                                          padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 10),
                                           child: Text(
                                             "View All Orders",
                                             style: TextStyle(
@@ -950,8 +896,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                         Column(
                           children: <Widget>[
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 30.0, top: 10, bottom: 10),
+                              padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
@@ -966,27 +911,17 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                               ),
                             ),
                             if (this_user != null)
-                              for (var index = 0;
-                                  index < this_user.data["address"].length;
-                                  index++)
+                              for (var index = 0; index < this_user.data["address"].length; index++)
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 30.0,
-                                      bottom: 10,
-                                      left: 30,
-                                      top: 12),
+                                  padding: const EdgeInsets.only(right: 30.0, bottom: 10, left: 30, top: 12),
                                   child: GestureDetector(
                                     onTap: () {
-                                      bool isDefault = chosen_address ==
-                                          this_user.data["address"][index]
-                                              ["id"];
+                                      bool isDefault =
+                                          chosen_address == this_user.data["address"][index]["id"];
                                       Navigator.of(context)
                                           .push(MaterialPageRoute(
                                               builder: (context) => EditAddress(
-                                                  this_user.data["address"],
-                                                  index,
-                                                  isDefault,
-                                                  uid)))
+                                                  this_user.data["address"], index, isDefault, uid)))
                                           .then((_) {
                                         setState(() {});
                                       });
@@ -995,28 +930,22 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                       decoration: BoxDecoration(
                                           boxShadow: [
                                             BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.1),
+                                              color: Colors.grey.withOpacity(0.1),
                                               spreadRadius: 2.2,
                                               blurRadius: 2.5,
                                               offset: Offset(0, 4),
                                             ),
                                           ],
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15))),
+                                          borderRadius: BorderRadius.all(Radius.circular(15))),
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: <Widget>[
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8.0),
+                                            padding: const EdgeInsets.only(left: 8.0),
                                             child: Icon(
                                               Icons.place,
-                                              color: chosen_address ==
-                                                      this_user.data["address"]
-                                                          [index]["id"]
+                                              color: chosen_address == this_user.data["address"][index]["id"]
                                                   ? Colors.black
                                                   : Colors.grey[400],
                                               size: 36,
@@ -1025,37 +954,23 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                           Padding(
                                             padding: const EdgeInsets.all(8.5),
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.start,
                                               children: <Widget>[
                                                 Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
+                                                  mainAxisAlignment: MainAxisAlignment.start,
                                                   children: <Widget>[
                                                     Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 10.0,
-                                                              left: 0,
-                                                              bottom: 5),
+                                                      padding: const EdgeInsets.only(
+                                                          top: 10.0, left: 0, bottom: 5),
                                                       child: Text(
-                                                        this_user
-                                                                .data["address"]
-                                                            [index]["name"],
+                                                        this_user.data["address"][index]["name"],
                                                         style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize:
-                                                              Adaptive.sp(13),
-                                                          fontFamily:
-                                                              'Axiforma',
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: Adaptive.sp(13),
+                                                          fontFamily: 'Axiforma',
                                                           color: chosen_address ==
-                                                                  this_user.data[
-                                                                          "address"]
-                                                                      [
-                                                                      index]["id"]
+                                                                  this_user.data["address"][index]["id"]
                                                               ? Colors.black
                                                               : Colors.grey[500],
                                                         ),
@@ -1064,35 +979,21 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                                   ],
                                                 ),
                                                 Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisAlignment: MainAxisAlignment.start,
                                                   children: <Widget>[
                                                     Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 0.0,
-                                                              bottom: 8),
+                                                      padding: const EdgeInsets.only(left: 0.0, bottom: 8),
                                                       child: Text(
-                                                        this_user.data[
-                                                                    "address"]
-                                                                [index]
-                                                            ["street_address"],
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        textAlign:
-                                                            TextAlign.left,
+                                                        this_user.data["address"][index]["street_address"],
+                                                        overflow: TextOverflow.ellipsis,
+                                                        textAlign: TextAlign.left,
                                                         style: TextStyle(
                                                           height: 1.1,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          fontSize:
-                                                              Adaptive.sp(13),
-                                                          fontFamily:
-                                                              'Axiforma',
-                                                          color:
-                                                              Colors.grey[500],
+                                                          fontWeight: FontWeight.normal,
+                                                          fontSize: Adaptive.sp(13),
+                                                          fontFamily: 'Axiforma',
+                                                          color: Colors.grey[500],
                                                         ),
                                                       ),
                                                     ),
@@ -1116,8 +1017,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           onPressed: () {
                             Navigator.of(context)
                                 .push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        AddAddress(this_user.data["address"])))
+                                    builder: (context) => AddAddress(this_user.data["address"])))
                                 .then((_) {
                               setState(() {});
                             });
@@ -1127,8 +1027,7 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                           textColor: Colors.white,
                           minWidth: 0,
                           height: 0,
-                          padding: EdgeInsets.only(
-                              left: 20, top: 10, right: 20, bottom: 10),
+                          padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 10),
                           child: Text(
                             "Add New Address",
                             style: TextStyle(
@@ -1167,9 +1066,8 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 SizedBox(width: 20),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => Privacy()));
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (context) => Privacy()));
                                   },
                                   child: Text(
                                     "Privacy Policy",
@@ -1184,13 +1082,11 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) => Terms()));
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(builder: (context) => Terms()));
                                     },
                                     child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 15.0),
+                                      padding: const EdgeInsets.only(left: 15.0),
                                       child: Text(
                                         "Terms & Conditions",
                                         style: TextStyle(
