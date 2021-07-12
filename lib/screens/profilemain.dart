@@ -16,6 +16,8 @@ import 'package:dolovery_app/widgets/recentorder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -365,49 +367,61 @@ class ProfileScreenState extends State<ProfileMainScreen> {
                       }),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 50.0),
+                  padding: const EdgeInsets.only(bottom: 20.0),
                   child: Image.asset(
                     'assets/images/doloverywhiteback.png',
                     width: 30.0.w,
                   ),
                 ),
+                (Platform.isIOS)
+                    ? Visibility(
+                        visible: _readtosignin,
+                        child: Container(
+                          height: Adaptive.h(6),
+                          child: SignInButton(Buttons.AppleDark,
+                              shape: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide.none), onPressed: () {
+                            _readtosignin = false;
+
+                            hideSignIn();
+                            signInWithApple();
+                          }),
+                        ),
+                      )
+                    : Container(),
+                SizedBox(height: Adaptive.h(2)),
                 Visibility(
                   visible: _readtosignin,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0),
-                    child: GestureDetector(
-                      child: Image.asset('assets/images/fblogin.jpg', width: 75.0.w),
-                      onTap: () {
+                  child: Container(
+                    height: Adaptive.h(6),
+                    child: SignInButton(
+                      Buttons.Facebook,
+                      shape: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none),
+                      onPressed: () {
                         hideSignIn();
                         signUpWithFacebook();
                       },
                     ),
                   ),
                 ),
+                SizedBox(height: Adaptive.h(2)),
                 Visibility(
                   visible: _readtosignin,
-                  child: GestureDetector(
-                      child: Image.asset('assets/images/glogin.jpg', width: 75.0.w),
-                      onTap: () {
-                        _readtosignin = false;
+                  child: Container(
+                    height: Adaptive.h(6),
+                    child: SignInButton(Buttons.Google,
+                        shape: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide.none), onPressed: () {
+                      _readtosignin = false;
 
-                        hideSignIn();
-                        _googleSignUp();
-                      }),
+                      hideSignIn();
+                      _googleSignUp();
+                    }),
+                  ),
                 ),
-                (Platform.isIOS)
-                    ? Visibility(
-                        visible: _readtosignin,
-                        child: GestureDetector(
-                            child: Image.asset('assets/images/applesignin.png', width: 75.0.w),
-                            onTap: () {
-                              _readtosignin = false;
-
-                              hideSignIn();
-                              signInWithApple();
-                            }),
-                      )
-                    : Container(),
                 Visibility(
                   visible: !_readtosignin,
                   child: Padding(
