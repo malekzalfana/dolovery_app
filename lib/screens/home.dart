@@ -1073,7 +1073,7 @@ class HomeScreenState extends State<HomeScreen> {
                                       ? EdgeInsets.zero
                                       : EdgeInsets.only(left: Adaptive.w(12)),
                                   crossAxisCount: 2,
-                                  childAspectRatio: (Device.screenType != ScreenType.tablet) ? 0.65 : 0.75,
+                                  childAspectRatio: (Device.screenType != ScreenType.tablet) ? 0.65 : 0.70,
                                   controller: new ScrollController(keepScrollOffset: false),
                                   shrinkWrap: true,
                                   scrollDirection: Axis.vertical,

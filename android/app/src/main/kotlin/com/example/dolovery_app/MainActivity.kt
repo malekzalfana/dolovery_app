@@ -1,4 +1,4 @@
-package com.example.dolovery_app
+package com.behindpixel.dolovery
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:420692199803:android:a01c4cadcd27617c2c15de",
+        "android_client_info": {
+          "package_name": "com.behindpixel.dolovery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "420692199803-k8fk5jaq00ap5gmu64n5ums9ru6e69s4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC04MdK4d1DgKNkBWMhQLcdrxUk5scCILQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420692199803-k8fk5jaq00ap5gmu64n5ums9ru6e69s4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "420692199803-p9ui1sr9ircr92fe4d06kou6r6p3bh2p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.doloveryApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:420692199803:android:fbcafa570490546d2c15de",
         "android_client_info": {
           "package_name": "com.example.dolovery_app"
@@ -15,19 +51,43 @@
       },
       "oauth_client": [
         {
-          "client_id": "420692199803-ue0p5eplgsm5lmuidcj06o7aonds3bdv.apps.googleusercontent.com",
+          "client_id": "420692199803-00l7bcjdt1tujhe58mdl0q1jornaecrj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.dolovery_app",
-            "certificate_hash": "5417ade0e8562bf2a0837e69aa9cc797293a831d"
+            "certificate_hash": "9d402faf11b118dd66eb7946ea77a8914c989b05"
           }
         },
         {
-          "client_id": "420692199803-or2pr5g2vd8ohnuf2u9tr46dlepkecs2.apps.googleusercontent.com",
+          "client_id": "420692199803-3ts6qdt3ce20q3lq02sqpg2jhnp18p6k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.dolovery_app",
             "certificate_hash": "d81555983ca59f7d15ac9d26934feb1866865f36"
+          }
+        },
+        {
+          "client_id": "420692199803-6tlc0ien558qitssf522ln1tqnttsp4f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dolovery_app",
+            "certificate_hash": "c144665d93b1178a8fcfdb3e8ad812f6437d7fdc"
+          }
+        },
+        {
+          "client_id": "420692199803-jvjro539rv5cffgst8m99b8kkmt7ddnq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dolovery_app",
+            "certificate_hash": "669e0f6e0e24b0721ff4f6fe1a4282f9df02959c"
+          }
+        },
+        {
+          "client_id": "420692199803-tgiruhjnsr4t0umphgevdcc9pdl3lafr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dolovery_app",
+            "certificate_hash": "5417ade0e8562bf2a0837e69aa9cc797293a831d"
           }
         },
         {
